@@ -53,13 +53,13 @@
 </template>
 
 <script>
-import swIcon from '../sw-icon/sw-icon.vue';
+import SwIcon from '../sw-icon/sw-icon.vue';
 
 export default {
   name: 'sw-alert',
 
   components: {
-    'sw-icon': swIcon,
+    'sw-icon': SwIcon,
   },
 
   props: {

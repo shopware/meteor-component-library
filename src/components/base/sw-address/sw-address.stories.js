@@ -15,4 +15,16 @@ const Template = (args, { argTypes }) => ({
 
 export const Default = Template.bind({});
 // More on args: https://storybook.js.org/docs/vue/writing-stories/args
-Default.args = {};
+Default.args = {
+  headline: 'Address',
+  address: {
+    salutation: 'Mister',
+    title: 'Doctor',
+    firstName: 'John',
+    lastName: 'Doe',
+    street: 'Main St 123',
+    zipcode: '12456',
+    city: 'Anytown',
+    country: { name: 'Germany' },
+  },
+};

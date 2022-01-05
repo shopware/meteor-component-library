@@ -25,10 +25,16 @@
 </template>
 
 <script>
+import SwBaseField from '../sw-base-field/sw-base-field.vue';
+
 export default {
   name: 'sw-block-field',
 
   inheritAttrs: false,
+
+  components: {
+    'sw-base-field': SwBaseField,
+  },
 
   props: {
     size: {
@@ -76,7 +82,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../../assets/scss/variables.scss";
+@import "../../../assets/scss/variables.scss";
 
 $sw-field-transition: border-color 0.3s ease-out, background 0.3s ease;
 

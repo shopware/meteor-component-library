@@ -44,10 +44,16 @@
 </template>
 
 <script>
+import SwBlockField from '../sw-block-field/sw-block-field.vue';
+
 export default {
   name: 'sw-contextual-field',
 
   inheritAttrs: false,
+
+  components: {
+    'sw-block-field': SwBlockField,
+  },
 
   computed: {
     hasPrefix() {
@@ -64,7 +70,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../../assets/scss/variables.scss";
+@import "../../../assets/scss/variables.scss";
 
 $sw-field-transition: border-color 0.3s ease-out;
 

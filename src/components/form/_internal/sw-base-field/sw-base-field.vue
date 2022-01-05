@@ -49,10 +49,21 @@
 </template>
 
 <script>
+import SwInheritanceSwitch from '../../../base/sw-inheritance-switch/sw-inheritance-switch.vue';
+import SwHelpText from '../../../base/sw-help-text/sw-help-text.vue';
+import SwFieldError from '../sw-field-error/sw-field-error.vue';
+import { createId } from '../../../../utils/uuid';
+
 export default {
   name: 'sw-base-field',
 
   inheritAttrs: false,
+
+  components: {
+    'sw-inheritance-switch': SwInheritanceSwitch,
+    'sw-help-text': SwHelpText,
+    'sw-field-error': SwFieldError,
+  },
 
   props: {
     name: {
@@ -120,7 +131,7 @@ export default {
 
   data() {
     return {
-      id: utils.createId(),
+      id: createId(),
     };
   },
 
@@ -163,7 +174,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../../assets/scss/variables.scss";
+@import "../../../assets/scss/variables.scss";
 
 .sw-field {
   width: 100%;

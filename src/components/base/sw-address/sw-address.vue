@@ -80,8 +80,14 @@
 </template>
 
 <script>
+import salutation from '../../../filters/salutation.filter';
+
 export default {
   name: 'sw-address',
+
+  filters: {
+    salutation,
+  },
 
   props: {
     address: {

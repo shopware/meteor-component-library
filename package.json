@@ -13,9 +13,16 @@
   "dependencies": {
     "apexcharts": "^3.32.0",
     "core-js": "^3.6.5",
+    "date-fns": "2.23.0",
+    "date-fns-tz": "1.1.6",
+    "flatpickr": "4.6.3",
+    "lodash-es": "^4.17.21",
+    "punycode": "^2.1.1",
+    "uuid": "^8.3.2",
     "vue": "^2.6.11",
     "vue-apexcharts": "^1.6.2",
     "vue-class-component": "^7.2.3",
+    "vue-i18n": "^8.26.8",
     "vue-property-decorator": "^9.1.2"
   },
   "devDependencies": {
