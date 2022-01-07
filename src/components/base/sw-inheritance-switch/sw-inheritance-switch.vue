@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import SwTooltipDirective from '../../../directives/tooltip.directive';
 import SwIcon from '../sw-icon/sw-icon.vue';
 
 export default {
@@ -37,6 +38,10 @@ export default {
 
   components: {
     'sw-icon': SwIcon,
+  },
+
+  directives: {
+    tooltip: SwTooltipDirective,
   },
 
   props: {
@@ -60,6 +65,10 @@ export default {
   },
 
   methods: {
+    // todo: remove mock
+    $tc(path) {
+      return path;
+    },
     onClickRestoreInheritance() {
       if (this.disabled) {
         return;

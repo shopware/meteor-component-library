@@ -12,7 +12,7 @@
     />
 
     <span class="sw-label__caption">
-        <slot>{% block sw_label_slot_default %}{% endblock %}</slot>
+        <slot></slot>
     </span>
 
     <button
@@ -32,12 +32,14 @@
 
 <script>
 import SwIcon from '../sw-icon/sw-icon.vue';
+import SwColorBadge from '../../utils/sw-color-badge/sw-color-badge.vue';
 
 export default {
   name: 'sw-label',
 
   components: {
     'sw-icon': SwIcon,
+    'sw-color-badge': SwColorBadge,
   },
 
   props: {
@@ -112,6 +114,33 @@ export default {
 <style lang="scss">
 @import "../../assets/scss/variables.scss";
 @import "../../assets/scss/mixins.scss";
+
+@mixin sw-label-variant($color-background, $color-text, $color-border, $color-border-normal) {
+  background-color: $color-background;
+  border-color: $color-border-normal;
+  color: $color-text;
+
+  &.sw-label--small::before {
+    background: $color-border;
+  }
+
+  .sw-label__dismiss {
+    color: $color-text;
+
+    .sw-icon {
+      color: $color-text;
+    }
+  }
+
+  &.sw-label--ghost {
+    background: transparent;
+    border-color: $color-border;
+  }
+
+  &.sw-label--dismissable:hover {
+    border-color: $color-border;
+  }
+}
 
 $sw-label-border-radius: $border-radius-default / 2;
 $sw-label-pill-border-radius: 50px;
@@ -241,54 +270,27 @@ $sw-label-pill-border-radius: 50px;
   }
 
   &.sw-label--info:not(&--appearance-badged) {
-    sw-label-variant($color-shopware-brand-50, $color-shopware-brand-500, $color-shopware-brand-500, $color-shopware-brand-100);
+    @include sw-label-variant($color-shopware-brand-50, $color-shopware-brand-500, $color-shopware-brand-500, $color-shopware-brand-100);
   }
 
   &.sw-label--success:not(&--appearance-badged) {
-    sw-label-variant($color-emerald-50, $color-emerald-500, $color-emerald-500, $color-emerald-100);
+    @include sw-label-variant($color-emerald-50, $color-emerald-500, $color-emerald-500, $color-emerald-100);
   }
 
   &.sw-label--danger:not(&--appearance-badged) {
-    sw-label-variant($color-crimson-50, $color-crimson-500, $color-crimson-500, $color-crimson-100);
+    @include sw-label-variant($color-crimson-50, $color-crimson-500, $color-crimson-500, $color-crimson-100);
   }
 
   &.sw-label--warning:not(&--appearance-badged) {
-    sw-label-variant($color-pumpkin-spice-50, $color-pumpkin-spice-500, $color-pumpkin-spice-500, $color-pumpkin-spice-100);
+    @include sw-label-variant($color-pumpkin-spice-50, $color-pumpkin-spice-500, $color-pumpkin-spice-500, $color-pumpkin-spice-100);
   }
 
   &.sw-label--neutral:not(&--appearance-badged) {
-    sw-label-variant($color-gray-50, $color-darkgray-200, $color-gray-300, $color-gray-100);
+    @include sw-label-variant($color-gray-50, $color-darkgray-200, $color-gray-300, $color-gray-100);
   }
 
   &.sw-label--primary:not(&--appearance-badged) {
-    sw-label-variant($color-shopware-brand-500, $color-shopware-brand-50, $color-shopware-brand-500, $color-shopware-brand-100);
-  }
-
-  @mixin sw-label-variant($color-background, $color-text, $color-border, $color-border-normal) {
-    background-color: $color-background;
-    border-color: $color-border-normal;
-    color: $color-text;
-
-    &.sw-label--small::before {
-      background: $color-border;
-    }
-
-    .sw-label__dismiss {
-      color: $color-text;
-
-      .sw-icon {
-        color: $color-text;
-      }
-    }
-
-    &.sw-label--ghost {
-      background: transparent;
-      border-color: $color-border;
-    }
-
-    &.sw-label--dismissable:hover {
-      border-color: $color-border;
-    }
+    @include sw-label-variant($color-shopware-brand-500, $color-shopware-brand-50, $color-shopware-brand-500, $color-shopware-brand-100);
   }
 }
 </style>

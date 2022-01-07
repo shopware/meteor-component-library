@@ -97,7 +97,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../../assets/scss/variables.scss";
+@import "../../assets/scss/variables";
 
 .sw-card {
   max-width: 960px;

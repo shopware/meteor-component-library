@@ -64,11 +64,9 @@
 </template>
 
 <script>
+import { createId } from '../../../utils/uuid';
 import SwIcon from '../sw-icon/sw-icon.vue';
 import SwLoader from '../../utils/sw-loader/sw-loader.vue';
-
-// const { Component } = Shopware;
-// const utils = Shopware.Utils;
 
 export default {
   name: 'sw-modal',
@@ -80,7 +78,7 @@ export default {
 
   inheritAttrs: false,
 
-  inject: ['shortcutService'],
+  // inject: ['shortcutService'],
 
   props: {
     title: {
@@ -133,7 +131,7 @@ export default {
 
   data() {
     return {
-      id: utils.createId(),
+      id: createId(),
     };
   },
 
@@ -171,7 +169,7 @@ export default {
 
   methods: {
     createdComponent() {
-      this.shortcutService.stopEventListener();
+      // this.shortcutService.stopEventListener();
     },
 
     mountedComponent() {
@@ -189,7 +187,7 @@ export default {
     },
 
     destroyedComponent() {
-      this.shortcutService.startEventListener();
+      // this.shortcutService.startEventListener();
     },
 
     setFocusToModal() {

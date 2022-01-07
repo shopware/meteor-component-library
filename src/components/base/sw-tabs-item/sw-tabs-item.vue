@@ -30,8 +30,7 @@
 </template>
 
 <script>
-// const { Component } = Shopware;
-// const types = Shopware.Utils.types;
+import { isEmpty } from 'lodash-es';
 
 export default {
   name: 'sw-tabs-item',
@@ -79,7 +78,7 @@ export default {
 
   computed: {
     isNative() {
-      return types.isEmpty(this.route);
+      return isEmpty(this.route);
     },
 
     tabsItemClasses() {
@@ -144,20 +143,21 @@ export default {
     },
     checkIfRouteMatchesLink() {
       this.$nextTick().then(() => {
-        /**
-         * Prevent endless loop with checking if the route exists. Because a router-link with a
-         * non existing route has always the class 'router-link-active'
-         */
-        const resolvedRoute = this.$router.resolve(this.route);
-        const routeExists = resolvedRoute.resolved.matched.length > 0;
-        if (!routeExists) {
-          return;
-        }
+        // todo: activate or change when routing works
+        // /**
+        //  * Prevent endless loop with checking if the route exists. Because a router-link with a
+        //  * non existing route has always the class 'router-link-active'
+        //  */
+        // const resolvedRoute = this.$router.resolve(this.route);
+        // const routeExists = resolvedRoute.resolved.matched.length > 0;
+        // if (!routeExists) {
+        //   return;
+        // }
 
-        const routeIsActive = this.$el.classList.contains('router-link-active');
-        if (routeIsActive) {
-          this.$parent.setActiveItem(this);
-        }
+        // const routeIsActive = this.$el.classList.contains('router-link-active');
+        // if (routeIsActive) {
+        //   this.$parent.setActiveItem(this);
+        // }
       });
     },
   },

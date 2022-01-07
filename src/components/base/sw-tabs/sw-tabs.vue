@@ -52,10 +52,9 @@
 </template>
 
 <script>
+import { throttle } from 'lodash-es';
+import { getScrollbarHeight } from '../../../utils/dom';
 import SwIcon from '../sw-icon/sw-icon.vue';
-// const { Component } = Shopware;
-// const util = Shopware.Utils;
-// const dom = Shopware.Utils.dom;
 
 export default {
   name: 'sw-tabs',
@@ -193,7 +192,7 @@ export default {
     mountedComponent() {
       const tabContent = this.$refs.swTabContent;
 
-      tabContent.addEventListener('scroll', util.throttle(() => {
+      tabContent.addEventListener('scroll', throttle(() => {
         const rightEnd = tabContent.scrollWidth - tabContent.offsetWidth;
         const leftDistance = tabContent.scrollLeft;
 
@@ -282,7 +281,7 @@ export default {
     },
 
     addScrollbarOffset() {
-      this.scrollbarOffset = dom.getScrollbarHeight(this.$refs.swTabContent);
+      this.scrollbarOffset = getScrollbarHeight(this.$refs.swTabContent);
     },
   },
 };

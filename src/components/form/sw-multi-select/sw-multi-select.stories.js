@@ -1,18 +1,19 @@
-import SwCard from './sw-card.vue';
+import SwMultiSelect from './sw-multi-select.vue';
 
-// More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
-  title: 'Shopware/base/sw-card',
-  component: SwCard,
+  title: 'Shopware/form/sw-multi-select',
+  component: SwMultiSelect,
 };
 
 // More on component templates: https://storybook.js.org/docs/vue/writing-stories/introduction#using-args
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
-  components: { SwCard },
-  template: '<sw-card v-bind="$props"></sw-card>',
+  components: { SwMultiSelect },
+  template: '<sw-multi-select v-bind="$props"></sw-multi-select>',
 });
 
 export const Default = Template.bind({});
 // More on args: https://storybook.js.org/docs/vue/writing-stories/args
-Default.args = {};
+Default.args = {
+  label: 'Multi select',
+};
