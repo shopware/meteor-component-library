@@ -5,7 +5,7 @@
         v-if="searchable"
         class="sw-tree__search"
       >
-        <sw-field
+        <sw-text-field
           v-model="currentTreeSearch"
           name="treeSearch"
           :placeholder="$tc('sw-tree.general.placeholderSearch')"
@@ -15,7 +15,7 @@
           <template #prefix>
             <sw-icon name="default-action-search" />
           </template>
-        </sw-field>
+        </sw-text-field>
       </div>
     </slot>
 
@@ -143,8 +143,26 @@
 </template>
 
 <script>
+import SwTextField from '../../form/sw-text-field/sw-text-field.vue';
+import SwIcon from '../../base/sw-icon/sw-icon.vue';
+import SwButton from '../../base/sw-button/sw-button.vue';
+import SwLoader from '../../utils/sw-loader/sw-loader.vue';
+import SwTreeItem from '../sw-tree-item/sw-tree-item.vue';
+import SwTreeInputField from '../sw-tree-input-field/sw-tree-input-field.vue';
+import SwModal from '../../base/sw-modal/sw-modal.vue';
+
 export default {
   name: 'sw-tree',
+
+  components: {
+    'sw-tree-item': SwTreeItem,
+    'sw-tree-input-field': SwTreeInputField,
+    'sw-text-field': SwTextField,
+    'sw-icon': SwIcon,
+    'sw-button': SwButton,
+    'sw-loader': SwLoader,
+    'sw-modal': SwModal,
+  },
 
   props: {
     items: {
@@ -352,7 +370,7 @@ export default {
           return;
         }
 
-        if (parentId === null && typeof this.items.find(i => i.id === item.parentId) !== 'undefined') {
+        if (parentId === null && typeof this.items.find((i) => i.id === item.parentId) !== 'undefined') {
           return;
         }
 
@@ -369,8 +387,8 @@ export default {
           data: item,
           id: item.id,
           schema: item.schema,
-          parentId: parentId,
-          childCount: childCount,
+          parentId,
+          childCount,
           children: this.getTreeItems(item.id),
           initialOpened: false,
           active: false,
@@ -464,8 +482,8 @@ export default {
       const sourceTree = this.findTreeByParentId(draggedComponent.parentId);
       const targetTree = this.findTreeByParentId(droppedComponent.parentId);
 
-      const dragItemIdx = sourceTree.findIndex(i => i.id === draggedComponent.id);
-      const dropItemIdx = targetTree.findIndex(i => i.id === droppedComponent.id);
+      const dragItemIdx = sourceTree.findIndex((i) => i.id === draggedComponent.id);
+      const dropItemIdx = targetTree.findIndex((i) => i.id === droppedComponent.id);
 
       if (dragItemIdx < 0 || dropItemIdx < 0) {
         return;
@@ -600,8 +618,8 @@ export default {
 
       const targetTree = this.findTreeByParentId(contextItem.parentId);
 
-      const newItemIdx = this.treeItems.findIndex(i => i.id === newTreeItem.id);
-      const contextItemIdx = targetTree.findIndex(i => i.id === contextItem.id);
+      const newItemIdx = this.treeItems.findIndex((i) => i.id === newTreeItem.id);
+      const contextItemIdx = targetTree.findIndex((i) => i.id === contextItem.id);
 
       if (pos === 'before') {
         targetTree.splice(contextItemIdx, 1, newTreeItem, contextItem);
@@ -626,8 +644,8 @@ export default {
       return {
         data: elem,
         id: elem.id,
-        parentId: parentId,
-        childCount: childCount,
+        parentId,
+        childCount,
         children: 0,
         initialOpened: false,
         active: false,
@@ -636,7 +654,7 @@ export default {
 
     deleteElement(item) {
       const targetTree = this.findTreeByParentId(item.parentId);
-      const deletedItemIdx = targetTree.findIndex(i => i.id === item.id);
+      const deletedItemIdx = targetTree.findIndex((i) => i.id === item.id);
       if (item.children.length > 0) {
         item.children.forEach((child) => {
           child.data.isDeleted = true;
