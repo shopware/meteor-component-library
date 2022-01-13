@@ -245,10 +245,6 @@ export default {
   },
 
   methods: {
-    // todo: remove mock
-    $tc(path) {
-      return path;
-    },
     isSelected(item) {
       return this.getKey(item, this.valueProperty) === this.value;
     },

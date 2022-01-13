@@ -126,10 +126,6 @@ export default {
 
       this.showPassword = !this.showPassword;
     },
-    // todo: remove mock
-    $tc(path) {
-      return path;
-    },
   },
 };
 </script>

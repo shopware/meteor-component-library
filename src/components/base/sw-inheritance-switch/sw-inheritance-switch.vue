@@ -65,10 +65,6 @@ export default {
   },
 
   methods: {
-    // todo: remove mock
-    $tc(path) {
-      return path;
-    },
     onClickRestoreInheritance() {
       if (this.disabled) {
         return;
