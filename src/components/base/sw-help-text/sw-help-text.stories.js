@@ -1,7 +1,7 @@
 import SwHelpText from './sw-help-text.vue';
 
 export default {
-  title: 'Shopware/base/sw-help-text',
+  title: 'Components/base/sw-help-text',
   component: SwHelpText,
 };
 

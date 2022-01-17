@@ -1,7 +1,7 @@
 import SwCheckboxField from './sw-checkbox-field.vue';
 
 export default {
-  title: 'Shopware/form/sw-checkbox-field',
+  title: 'Components/form/sw-checkbox-field',
   component: SwCheckboxField,
 };
 

@@ -2,7 +2,7 @@ import SwLabel from './sw-label.vue';
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
-  title: 'Shopware/base/sw-label',
+  title: 'Components/base/sw-label',
   component: SwLabel,
 };
 

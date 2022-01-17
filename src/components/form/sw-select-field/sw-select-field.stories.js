@@ -1,7 +1,7 @@
 import SwSelectField from './sw-select-field.vue';
 
 export default {
-  title: 'Shopware/form/sw-select-field',
+  title: 'Components/form/sw-select-field',
   component: SwSelectField,
 };
 

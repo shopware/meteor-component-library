@@ -1,7 +1,7 @@
 import SwColorpicker from './sw-colorpicker.vue';
 
 export default {
-  title: 'Shopware/form/sw-colorpicker',
+  title: 'Components/form/sw-colorpicker',
   component: SwColorpicker,
 };
 

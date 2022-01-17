@@ -1,7 +1,7 @@
 import SwTextareaField from './sw-textarea-field.vue';
 
 export default {
-  title: 'Shopware/form/sw-textarea-field',
+  title: 'Components/form/sw-textarea-field',
   component: SwTextareaField,
 };
 

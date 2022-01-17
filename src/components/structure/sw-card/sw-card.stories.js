@@ -2,7 +2,7 @@ import SwCard from './sw-card.vue';
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
-  title: 'Shopware/structure/sw-card',
+  title: 'Components/structure/sw-card',
   component: SwCard,
 };
 

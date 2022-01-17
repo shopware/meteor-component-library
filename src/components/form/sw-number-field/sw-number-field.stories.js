@@ -1,7 +1,7 @@
 import SwNumberField from './sw-number-field.vue';
 
 export default {
-  title: 'Shopware/form/sw-number-field',
+  title: 'Components/form/sw-number-field',
   component: SwNumberField,
 };
 

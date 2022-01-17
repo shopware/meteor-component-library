@@ -1,7 +1,7 @@
 import SwUrlField from './sw-url-field.vue';
 
 export default {
-  title: 'Shopware/form/sw-url-field',
+  title: 'Components/form/sw-url-field',
   component: SwUrlField,
 };
 

@@ -2,7 +2,7 @@ import SwInheritanceSwitch from './sw-inheritance-switch.vue';
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
-  title: 'Shopware/base/sw-inheritance-switch',
+  title: 'Components/base/sw-inheritance-switch',
   component: SwInheritanceSwitch,
 };
 

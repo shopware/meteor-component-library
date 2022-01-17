@@ -1,12 +1,48 @@
 import SwAvatar from './sw-avatar.vue';
 
-// More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
-  title: 'Shopware/base/sw-avatar',
+  title: 'Components/base/sw-avatar',
   component: SwAvatar,
+  args: {
+    firstName: 'John',
+    lastName: 'Doe',
+    variant: 'circle',
+    placeholder: false,
+  },
+  argTypes: {
+    color: {
+      control: 'color',
+    },
+    imageUrl: {
+      control: {
+        type: 'text',
+      },
+    },
+    size: {
+      description: 'Size of the avatar in px. Use like in css for example: "48px".',
+      control: {
+        type: 'text',
+      },
+    },
+    placeholder: {
+      control: {
+        type: 'boolean',
+      },
+    },
+    sourceContext: {
+      control: {
+        type: 'array',
+      },
+    },
+    variant: {
+      control: {
+        type: 'select',
+        options: ['circle', 'square'],
+      },
+    },
+  },
 };
 
-// More on component templates: https://storybook.js.org/docs/vue/writing-stories/introduction#using-args
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   components: { SwAvatar },
@@ -14,5 +50,4 @@ const Template = (args, { argTypes }) => ({
 });
 
 export const Default = Template.bind({});
-// More on args: https://storybook.js.org/docs/vue/writing-stories/args
-Default.args = {};
+Default.storyName = 'sw-avatar';

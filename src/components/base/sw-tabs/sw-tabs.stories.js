@@ -2,7 +2,7 @@ import SwTabs from './sw-tabs.vue';
 import SwTabsItem from '../sw-tabs-item/sw-tabs-item.vue';
 
 export default {
-  title: 'Shopware/base/sw-tabs',
+  title: 'Components/base/sw-tabs',
   component: SwTabs,
 };
 

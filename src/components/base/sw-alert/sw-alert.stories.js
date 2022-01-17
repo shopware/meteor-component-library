@@ -1,12 +1,30 @@
 import SwAlert from './sw-alert.vue';
 
-// More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
-  title: 'Shopware/base/sw-alert',
+  title: 'Components/base/sw-alert',
   component: SwAlert,
+  args: {
+    variant: 'info',
+    appearance: 'default',
+    title: 'Alert',
+    closable: false,
+    showIcon: true,
+  },
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['info', 'warning', 'error', 'success'],
+    },
+    appearance: {
+      control: 'select',
+      options: ['default', 'notification', 'system'],
+    },
+    notificationIndex: {
+      control: 'text',
+    },
+  },
 };
 
-// More on component templates: https://storybook.js.org/docs/vue/writing-stories/introduction#using-args
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   components: { SwAlert },
@@ -14,5 +32,4 @@ const Template = (args, { argTypes }) => ({
 });
 
 export const Default = Template.bind({});
-// More on args: https://storybook.js.org/docs/vue/writing-stories/args
-Default.args = {};
+Default.storyName = 'sw-alert';

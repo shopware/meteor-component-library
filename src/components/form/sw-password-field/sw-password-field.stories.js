@@ -1,7 +1,7 @@
 import SwPasswordField from './sw-password-field.vue';
 
 export default {
-  title: 'Shopware/form/sw-password-field',
+  title: 'Components/form/sw-password-field',
   component: SwPasswordField,
 };
 

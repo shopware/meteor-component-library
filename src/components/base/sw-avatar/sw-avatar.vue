@@ -21,7 +21,7 @@
 </template>
 
 <script>
-//const { cloneDeep } = Shopware.Utils.object;
+import cloneDeep from 'lodash-es/cloneDeep';
 
 const colors = [
   '#FFD700',

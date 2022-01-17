@@ -1,7 +1,7 @@
 import SwEmailField from './sw-email-field.vue';
 
 export default {
-  title: 'Shopware/form/sw-email-field',
+  title: 'Components/form/sw-email-field',
   component: SwEmailField,
 };
 

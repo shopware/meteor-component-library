@@ -1,7 +1,7 @@
 import SwSingleSelect from './sw-single-select.vue';
 
 export default {
-  title: 'Shopware/form/sw-single-select',
+  title: 'Components/form/sw-single-select',
   component: SwSingleSelect,
 };
 

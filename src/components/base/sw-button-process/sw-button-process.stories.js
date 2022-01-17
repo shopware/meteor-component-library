@@ -2,7 +2,7 @@ import SwButtonProcess from './sw-button-process.vue';
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
-  title: 'Shopware/base/sw-button-process',
+  title: 'Components/base/sw-button-process',
   component: SwButtonProcess,
 };
 

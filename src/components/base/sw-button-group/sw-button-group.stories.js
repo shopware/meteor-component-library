@@ -3,7 +3,7 @@ import SwButton from '../sw-button/sw-button.vue';
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
-  title: 'Shopware/base/sw-button-group',
+  title: 'Components/base/sw-button-group',
   component: SwButtonGroup,
 };
 

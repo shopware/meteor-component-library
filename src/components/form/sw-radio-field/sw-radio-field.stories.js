@@ -1,7 +1,7 @@
 import SwRadioField from './sw-radio-field.vue';
 
 export default {
-  title: 'Shopware/form/sw-radio-field',
+  title: 'Components/form/sw-radio-field',
   component: SwRadioField,
 };
 

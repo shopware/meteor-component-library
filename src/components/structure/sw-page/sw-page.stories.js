@@ -2,7 +2,7 @@ import SwPage from './sw-page.vue';
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
-  title: 'Shopware/structure/sw-page',
+  title: 'Components/structure/sw-page',
   component: SwPage,
 };
 

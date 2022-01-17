@@ -1,7 +1,7 @@
 import SwMultiSelect from './sw-multi-select.vue';
 
 export default {
-  title: 'Shopware/form/sw-multi-select',
+  title: 'Components/form/sw-multi-select',
   component: SwMultiSelect,
 };
 

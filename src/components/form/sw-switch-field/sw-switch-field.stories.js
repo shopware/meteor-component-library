@@ -1,7 +1,7 @@
 import SwSwitchField from './sw-switch-field.vue';
 
 export default {
-  title: 'Shopware/form/sw-switch-field',
+  title: 'Components/form/sw-switch-field',
   component: SwSwitchField,
 };
 
