@@ -30,9 +30,8 @@
 
 <script>
 import VueApexCharts from 'vue-apexcharts';
-// const { Component } = Shopware;
-// const { object } = Shopware.Utils;
-// const { warn } = Shopware.Utils.debug;
+import objectMerge from 'lodash-es/merge';
+import { deepCopyObject } from '../../../utils/object';
 
 export default {
   name: 'sw-chart',
@@ -77,15 +76,6 @@ export default {
       default: 400,
     },
 
-    /**
-     * @deprecated tag:v6.5.0 - Will be replaced, use fillEmptyValues instead
-     */
-    fillEmptyDates: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-
     fillEmptyValues: {
       type: String,
       required: false,
@@ -115,7 +105,7 @@ export default {
 
   computed: {
     mergedOptions() {
-      return object.merge(
+      return objectMerge(
         {},
         this.defaultOptions,
         this.options,
@@ -124,6 +114,7 @@ export default {
     },
 
     mergedLabels() {
+      console.log(this);
       return this.options.labels ? [...this.options.labels, ...this.generatedLabels] : this.generatedLabels;
     },
 
@@ -133,12 +124,9 @@ export default {
         return this.convertedSeriesStructure;
       }
 
-      let optimizedSeries = object.deepCopyObject(this.series);
+      let optimizedSeries = deepCopyObject(this.series);
 
-      /**
-       * @deprecated tag:v6.5.0 - fillEmptyDates will be replaced by fillEmptyValues
-       */
-      if (this.fillEmptyValues || this.fillEmptyDates) {
+      if (this.fillEmptyValues) {
         optimizedSeries = this.addZeroValuesToSeries(optimizedSeries);
       }
 
@@ -193,19 +181,20 @@ export default {
     },
 
     defaultLocale() {
-      const { adminLocaleLanguage } = Shopware.State.getters;
-
-      // get all available languages in "apexcharts/dist/locales/**.json"
-      const languageFiles = require.context('../../../../../node_modules/apexcharts/dist/locales', false, /.json/);
-
-      // change string from "./en.json" to "en"
-      const allowedLocales = languageFiles.keys()
-        .map((filePath) => filePath.replace('./', ''))
-        .map((filePath) => filePath.replace('.json', ''));
-
-      if (allowedLocales.includes(adminLocaleLanguage)) {
-        return adminLocaleLanguage;
-      }
+      // todo: refactoring
+      // const { adminLocaleLanguage } = Shopware.State.getters;
+      //
+      // // get all available languages in "apexcharts/dist/locales/**.json"
+      // const languageFiles = require.context('../../../../../node_modules/apexcharts/dist/locales', false, /.json/);
+      //
+      // // change string from "./en.json" to "en"
+      // const allowedLocales = languageFiles.keys()
+      //   .map((filePath) => filePath.replace('./', ''))
+      //   .map((filePath) => filePath.replace('.json', ''));
+      //
+      // if (allowedLocales.includes(adminLocaleLanguage)) {
+      //   return adminLocaleLanguage;
+      // }
 
       return 'en';
     },
@@ -291,7 +280,7 @@ export default {
     },
 
     sortSeries(series) {
-      const newSeries = object.deepCopyObject(series);
+      const newSeries = deepCopyObject(series);
 
       newSeries.forEach((serie) => {
         serie.data = serie.data.sort((a, b) => ((a.x && b.x) ? a.x - b.x : a - b));
@@ -305,7 +294,7 @@ export default {
       const zeroValues = this.getZeroValues();
 
       // copy series
-      const newSeries = object.deepCopyObject(series);
+      const newSeries = deepCopyObject(series);
 
       // add zero values for each serie
       newSeries.forEach((serie) => {
@@ -321,13 +310,6 @@ export default {
     },
 
     setDateTime(date) {
-      /**
-       * @deprecated tag:v6.5.0 - fillEmptyDates will be replaced by fillEmptyValues, so this if can be removed
-       */
-      if (this.fillEmptyDates) {
-        this.fillEmptyValues = 'day';
-      }
-
       switch (this.fillEmptyValues) {
         case 'day':
         default:
@@ -345,13 +327,6 @@ export default {
     },
 
     incrementByTimeUnit(date) {
-      /**
-       * @deprecated tag:v6.5.0 - fillEmptyDates will be replaced by fillEmptyValues, so this if can be removed
-       */
-      if (this.fillEmptyDates) {
-        this.fillEmptyValues = 'day';
-      }
-
       switch (this.fillEmptyValues) {
         case 'day':
         default:
@@ -370,11 +345,8 @@ export default {
 
     getZeroValues() {
       // check if empty dates should filled and xaxis is datetime
-      /**
-       * @deprecated tag:v6.5.0 - fillEmptyDates will be replaced by fillEmptyValues
-       */
       if (!(
-        (this.fillEmptyValues || this.fillEmptyDates)
+        (this.fillEmptyValues)
         && this.options.xaxis && this.options.xaxis.type === 'datetime'
       )) {
         return [];
@@ -382,7 +354,7 @@ export default {
 
       // check if min date is provided
       if (!this.options.xaxis.min) {
-        warn('To fill dates without values you have to set a min value timestamp for the xaxis');
+        console.warn('To fill dates without values you have to set a min value timestamp for the xaxis');
         return [];
       }
 
