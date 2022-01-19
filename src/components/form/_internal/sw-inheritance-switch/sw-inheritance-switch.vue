@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import SwTooltipDirective from '../../../directives/tooltip.directive';
-import SwIcon from '../sw-icon/sw-icon.vue';
+import SwTooltipDirective from '../../../../directives/tooltip.directive';
+import SwIcon from '../../../base/sw-icon/sw-icon.vue';
 
 export default {
   name: 'sw-inheritance-switch',

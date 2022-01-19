@@ -6,7 +6,6 @@
   >
 
     <div class="sw-rating-stars__placeholder">
-
       <sw-icon
         v-for="currentStar in maxStars"
         :key="`placeholder${currentStar}`"
@@ -17,7 +16,6 @@
     </div>
 
     <div class="sw-rating-stars__value">
-
       <sw-icon
         v-for="currentStar in Math.floor(cappedValue)"
         :key="`full${currentStar}`"

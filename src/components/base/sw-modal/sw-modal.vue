@@ -78,6 +78,7 @@ export default {
 
   inheritAttrs: false,
 
+  // todo: implement alternative (if required)
   // inject: ['shortcutService'],
 
   props: {

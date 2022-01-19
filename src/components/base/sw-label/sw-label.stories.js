@@ -1,12 +1,37 @@
 import SwLabel from './sw-label.vue';
 
-// More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
   title: 'Components/base/sw-label',
   component: SwLabel,
+  args: {
+    size: 'default',
+    appearance: 'default',
+    ghost: false,
+    caps: false,
+    dismissable: true,
+  },
+  argTypes: {
+    variant: {
+      control: {
+        type: 'select',
+        options: ['info', 'danger', 'success', 'warning', 'neutral', 'primary'],
+      },
+    },
+    size: {
+      control: {
+        type: 'select',
+        options: ['small', 'medium', 'default'],
+      },
+    },
+    appearance: {
+      control: {
+        type: 'select',
+        options: ['default', 'pill', 'circle', 'badged'],
+      },
+    },
+  },
 };
 
-// More on component templates: https://storybook.js.org/docs/vue/writing-stories/introduction#using-args
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   components: { SwLabel },
@@ -14,7 +39,7 @@ const Template = (args, { argTypes }) => ({
 });
 
 export const Default = Template.bind({});
-// More on args: https://storybook.js.org/docs/vue/writing-stories/args
+Default.storyName = 'sw-label';
 Default.args = {
   variant: 'warning',
   appearance: 'pill',

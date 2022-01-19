@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import SwInheritanceSwitch from '../../../base/sw-inheritance-switch/sw-inheritance-switch.vue';
+import SwInheritanceSwitch from '../sw-inheritance-switch/sw-inheritance-switch.vue';
 import SwHelpText from '../../../base/sw-help-text/sw-help-text.vue';
 import SwFieldError from '../sw-field-error/sw-field-error.vue';
 import { createId } from '../../../../utils/uuid';

@@ -1,3 +1,7 @@
+import Vue from 'vue';
+import { createId } from '../utils/uuid';
+import { hasOwnProperty } from '../utils/object';
+
 const availableTooltipPlacements = [
   'top',
   'right',
@@ -22,7 +26,7 @@ class Tooltip {
    * @param {boolean} obj.showOnDisabledElements
    */
   constructor({
-    id = utils.createId(),
+    id = createId(),
     placement = 'top',
     message,
     width = 200,
@@ -348,7 +352,7 @@ class Tooltip {
    */
   static validatePlacement(placement) {
     if (!availableTooltipPlacements.includes(placement)) {
-      debug.warn(
+      console.warn(
         'Tooltip Directive',
         `The modifier has to be one of these "${availableTooltipPlacements.join(',')}"`,
       );
@@ -363,7 +367,7 @@ class Tooltip {
    */
   static validateMessage(message) {
     if (typeof message !== 'string') {
-      debug.warn('Tooltip Directive', 'The tooltip needs a message with type string');
+      console.warn('Tooltip Directive', 'The tooltip needs a message with type string');
     }
 
     return message;
@@ -379,7 +383,7 @@ class Tooltip {
     }
 
     if (typeof width !== 'number' || width < 1) {
-      debug.warn('Tooltip Directive', 'The tooltip width has to be a number greater 0');
+      console.warn('Tooltip Directive', 'The tooltip width has to be a number greater 0');
       return 200;
     }
 
@@ -392,7 +396,7 @@ class Tooltip {
    */
   static validateDelay(delay) {
     if (typeof delay !== 'number' || delay < 1) {
-      debug.warn('Tooltip Directive', 'The tooltip delay has to be a number greater 0');
+      console.warn('Tooltip Directive', 'The tooltip delay has to be a number greater 0');
       return 100;
     }
 
