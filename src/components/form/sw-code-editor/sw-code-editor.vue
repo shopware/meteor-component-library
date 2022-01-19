@@ -14,48 +14,48 @@
       :content="value"
       tabindex="1"
     ></div>
-    <div
-      v-if="feature.isActive('FEATURE_NEXT_15172') && sanitizeInput"
-      class="sw-code-editor__sanitize-bar"
-    >
-      <div
-        v-if="contentWasSanitized"
-        class="sw-code-editor__sanitized-hint"
-        :class="{'sw-code-editor__sanitized-hint--visible': contentWasSanitized}"
-      >
-        <sw-circle-icon
-          icon-name="default-badge-info"
-          :size="30"
-          variant="warning"
-        />
-        <p class="sw-code-editor__sanitize-text">
-          {{ $tc('global.sw-code-editor.sanitizedHint') }}
-        </p>
-      </div>
-      <div
-        class="sw-code-editor__sanitize-info"
-        :class="{'sw-code-editor__sanitize-info--visible': !contentWasSanitized}"
-      >
-        <sw-circle-icon
-          icon-name="default-badge-info"
-          :size="30"
-          variant="info"
-        />
-        <p class="sw-code-editor__sanitize-text">
-          {{ $tc('global.sw-code-editor.sanitizeInfo') }}
-        </p>
-      </div>
+<!--    <div-->
+<!--      v-if="feature.isActive('FEATURE_NEXT_15172') && sanitizeInput"-->
+<!--      class="sw-code-editor__sanitize-bar"-->
+<!--    >-->
+<!--      <div-->
+<!--        v-if="contentWasSanitized"-->
+<!--        class="sw-code-editor__sanitized-hint"-->
+<!--        :class="{'sw-code-editor__sanitized-hint&#45;&#45;visible': contentWasSanitized}"-->
+<!--      >-->
+<!--        <sw-circle-icon-->
+<!--          icon-name="default-badge-info"-->
+<!--          :size="30"-->
+<!--          variant="warning"-->
+<!--        />-->
+<!--        <p class="sw-code-editor__sanitize-text">-->
+<!--          {{ $tc('global.sw-code-editor.sanitizedHint') }}-->
+<!--        </p>-->
+<!--      </div>-->
+<!--      <div-->
+<!--        class="sw-code-editor__sanitize-info"-->
+<!--        :class="{'sw-code-editor__sanitize-info&#45;&#45;visible': !contentWasSanitized}"-->
+<!--      >-->
+<!--        <sw-circle-icon-->
+<!--          icon-name="default-badge-info"-->
+<!--          :size="30"-->
+<!--          variant="info"-->
+<!--        />-->
+<!--        <p class="sw-code-editor__sanitize-text">-->
+<!--          {{ $tc('global.sw-code-editor.sanitizeInfo') }}-->
+<!--        </p>-->
+<!--      </div>-->
 
-    </div>
+<!--    </div>-->
   </div>
 </template>
 
 <script>
-// import Ace from 'ace-builds/src-noconflict/ace';
-// import { setCompleters, textCompleter } from 'ace-builds/src-noconflict/ext-language_tools';
-// import 'ace-builds/src-noconflict/mode-twig';
-// const utils = Shopware.Utils;
-import SwCircleIcon from '../../base/sw-circle-icon/sw-circle-icon.vue';
+import Ace from 'ace-builds/src-noconflict/ace';
+import { setCompleters, textCompleter } from 'ace-builds/src-noconflict/ext-language_tools';
+import 'ace-builds/src-noconflict/mode-twig';
+// import SwCircleIcon from '../../base/sw-circle-icon/sw-circle-icon.vue';
+import { createId } from '../../../utils/uuid';
 
 export default {
   name: 'sw-code-editor',
@@ -65,9 +65,9 @@ export default {
     // 'userInputSanitizeService',
   ],
 
-  components: {
-    'sw-circle-icon': SwCircleIcon,
-  },
+  // components: {
+  //   'sw-circle-icon': SwCircleIcon,
+  // },
 
   props: {
     value: {
@@ -157,7 +157,7 @@ export default {
   data() {
     return {
       editor: {},
-      editorId: utils.createId(),
+      editorId: createId(),
       contentWasSanitized: false,
     };
   },

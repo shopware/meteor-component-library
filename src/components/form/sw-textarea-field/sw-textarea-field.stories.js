@@ -3,9 +3,11 @@ import SwTextareaField from './sw-textarea-field.vue';
 export default {
   title: 'Components/form/sw-textarea-field',
   component: SwTextareaField,
+  args: {
+    label: 'Textareafield',
+  },
 };
 
-// More on component templates: https://storybook.js.org/docs/vue/writing-stories/introduction#using-args
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   components: { SwTextareaField },
@@ -13,7 +15,4 @@ const Template = (args, { argTypes }) => ({
 });
 
 export const Default = Template.bind({});
-// More on args: https://storybook.js.org/docs/vue/writing-stories/args
-Default.args = {
-  label: 'Textareafield',
-};
+Default.storyName = 'sw-textarea-field';

@@ -3,9 +3,11 @@ import SwSingleSelect from './sw-single-select.vue';
 export default {
   title: 'Components/form/sw-single-select',
   component: SwSingleSelect,
+  args: {
+    label: 'Single select',
+  },
 };
 
-// More on component templates: https://storybook.js.org/docs/vue/writing-stories/introduction#using-args
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   components: { SwSingleSelect },
@@ -13,7 +15,4 @@ const Template = (args, { argTypes }) => ({
 });
 
 export const Default = Template.bind({});
-// More on args: https://storybook.js.org/docs/vue/writing-stories/args
-Default.args = {
-  label: 'Single select',
-};
+Default.storyName = 'sw-single-select';

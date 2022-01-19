@@ -11,6 +11,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "ace-builds": "^1.4.13",
     "apexcharts": "^3.33.0",
     "core-js": "^3.6.5",
     "date-fns": "2.23.0",

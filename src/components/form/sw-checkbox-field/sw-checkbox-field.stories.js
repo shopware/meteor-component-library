@@ -3,9 +3,13 @@ import SwCheckboxField from './sw-checkbox-field.vue';
 export default {
   title: 'Components/form/sw-checkbox-field',
   component: SwCheckboxField,
+  args: {
+    label: 'Checkbox',
+    disabled: false,
+    bordered: false,
+  },
 };
 
-// More on component templates: https://storybook.js.org/docs/vue/writing-stories/introduction#using-args
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   components: { SwCheckboxField },
@@ -13,7 +17,4 @@ const Template = (args, { argTypes }) => ({
 });
 
 export const Default = Template.bind({});
-// More on args: https://storybook.js.org/docs/vue/writing-stories/args
-Default.args = {
-  label: 'Checkbox',
-};
+Default.storyName = 'sw-checkbox-field';

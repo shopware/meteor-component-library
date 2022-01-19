@@ -3,9 +3,11 @@ import SwSwitchField from './sw-switch-field.vue';
 export default {
   title: 'Components/form/sw-switch-field',
   component: SwSwitchField,
+  args: {
+    label: 'Switchfield',
+  },
 };
 
-// More on component templates: https://storybook.js.org/docs/vue/writing-stories/introduction#using-args
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   components: { SwSwitchField },
@@ -13,7 +15,4 @@ const Template = (args, { argTypes }) => ({
 });
 
 export const Default = Template.bind({});
-// More on args: https://storybook.js.org/docs/vue/writing-stories/args
-Default.args = {
-  label: 'Switchfield',
-};
+Default.storyName = 'sw-switch-field';

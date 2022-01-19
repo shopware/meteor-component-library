@@ -3,9 +3,11 @@ import SwColorpicker from './sw-colorpicker.vue';
 export default {
   title: 'Components/form/sw-colorpicker',
   component: SwColorpicker,
+  args: {
+    label: 'Colorpicker',
+  },
 };
 
-// More on component templates: https://storybook.js.org/docs/vue/writing-stories/introduction#using-args
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   components: { SwColorpicker },
@@ -13,7 +15,4 @@ const Template = (args, { argTypes }) => ({
 });
 
 export const Default = Template.bind({});
-// More on args: https://storybook.js.org/docs/vue/writing-stories/args
-Default.args = {
-  label: 'Colorpicker',
-};
+Default.storyName = 'sw-colorpicker';
