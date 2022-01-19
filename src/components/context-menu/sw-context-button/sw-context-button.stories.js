@@ -1,7 +1,7 @@
 import SwContextButton from './sw-context-button.vue';
 
 export default {
-  title: 'Components/contextmenu/sw-context-button',
+  title: 'Components/context-menu/sw-context-button',
   component: SwContextButton,
   args: {
     showMenuOnStartup: false,
@@ -12,7 +12,7 @@ export default {
     disabled: false,
     autoClose: true,
     autoCloseOutsideClick: false,
-    zIndeX: 9000,
+    zIndex: 9000,
   },
   argTypes: {
     menuHorizontalAlign: {
