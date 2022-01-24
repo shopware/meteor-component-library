@@ -377,9 +377,9 @@
 import { droppable, draggable } from '../../../directives/dragdrop.directive';
 import SwIcon from '../../base/sw-icon/sw-icon.vue';
 import SwCheckboxField from '../../form/sw-checkbox-field/sw-checkbox-field.vue';
-import SwContextButton from '../../contextmenu/sw-context-button/sw-context-button.vue';
+import SwContextButton from '../../context-menu/sw-context-button/sw-context-button.vue';
 import SwLoader from '../../utils/sw-loader/sw-loader.vue';
-import SwContextMenuItem from '../../contextmenu/sw-context-menu-item/sw-context-menu-item.vue';
+import SwContextMenuItem from '../../context-menu/sw-context-menu-item/sw-context-menu-item.vue';
 import SwVnodeRenderer from '../_internal/sw-vnode-renderer/sw-vnode-renderer.vue';
 import SwTooltipDirective from '../../../directives/tooltip.directive';
 import SwConfirmField from '../../form/_internal/sw-confirm-field/sw-confirm-field.vue';

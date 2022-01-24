@@ -1,18 +1,21 @@
 import SwPage from './sw-page.vue';
+import SwCardView from '../sw-card-view/sw-card-view.vue';
+import SwCard from '../sw-card/sw-card.vue';
 
-// More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
   title: 'Components/structure/sw-page',
   component: SwPage,
+  args: {
+    showSmartBar: false,
+    showSearchBar: false,
+  },
 };
 
-// More on component templates: https://storybook.js.org/docs/vue/writing-stories/introduction#using-args
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
-  components: { SwPage },
-  template: '<sw-page v-bind="$props"></sw-page>',
+  components: { SwPage, SwCardView, SwCard },
+  template: '<sw-page v-bind="$props" style="height: 550px;"><template slot="content"><sw-card-view><sw-card title="Card1" large></sw-card><sw-card title="Card2" large></sw-card></sw-card-view></template></sw-page>',
 });
 
 export const Default = Template.bind({});
-// More on args: https://storybook.js.org/docs/vue/writing-stories/args
-Default.args = {};
+Default.storyName = 'sw-page';

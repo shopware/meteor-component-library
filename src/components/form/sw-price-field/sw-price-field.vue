@@ -261,6 +261,7 @@ export default {
 
   computed: {
     calculatePriceApiService() {
+      // todo: replace service
       return Application.getContainer('factory').apiService.getByName('calculate-price');
     },
 

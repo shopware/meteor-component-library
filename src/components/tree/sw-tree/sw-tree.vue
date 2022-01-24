@@ -143,6 +143,8 @@
 </template>
 
 <script>
+import { debounce } from 'lodash-es';
+import { afterSort } from '../../../utils/sort';
 import SwTextField from '../../form/sw-text-field/sw-text-field.vue';
 import SwIcon from '../../base/sw-icon/sw-icon.vue';
 import SwButton from '../../base/sw-button/sw-button.vue';
@@ -399,7 +401,7 @@ export default {
           [this.afterIdProperty]: item[this.afterIdProperty],
         });
       });
-      return sort.afterSort(treeItems, this.afterIdProperty);
+      return afterSort(treeItems, this.afterIdProperty);
     },
 
     updateSorting(items) {
