@@ -4,23 +4,12 @@
       class="sw-loader__container"
       :style="loaderSize"
     >
-      <svg
-        class="sw-loader__element"
-        :width="size"
-        :height="size"
-        viewBox="0 0 66 66"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <circle
-          class="sw-loader__path"
-          fill="none"
-          stroke-width="6"
-          stroke-linecap="round"
-          cx="33"
-          cy="33"
-          r="30"
-        />
-      </svg>
+      <div class="sw-loader-element">
+        <div :style="{ borderWidth: borderWidth }"></div>
+        <div :style="{ borderWidth: borderWidth }"></div>
+        <div :style="{ borderWidth: borderWidth }"></div>
+        <div :style="{ borderWidth: borderWidth }"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -34,15 +23,35 @@ export default {
       type: String,
       required: false,
       default: '50px',
+      validator(value) {
+        return /^(12|[2-9][0-9]|[1-9][2-9]|[1-9]\d{2,})px$/.test(value);
+      },
     },
   },
 
   computed: {
     loaderSize() {
       return {
-        width: this.size,
-        height: this.size,
+        width: `${this.numericSize}px`,
+        height: `${this.numericSize}px`,
       };
+    },
+    numericSize() {
+      const numericSize = parseInt(this.size, 10);
+
+      if (Number.isNaN(numericSize)) {
+        return 50;
+      }
+
+      if (numericSize < 12) {
+        return 50;
+      }
+
+      return numericSize;
+    },
+
+    borderWidth() {
+      return `${Math.floor(this.numericSize / 12)}px`;
     },
   },
 };
@@ -54,7 +63,6 @@ export default {
 $sw-loader-color-overlay: rgba(255, 255, 255, 0.8);
 $sw-loader-element-color: $color-shopware-brand-500;
 $sw-loader-rotate-duration: 1.4s;
-$sw-loader-colors-duration: 5.6s;
 $sw-loader-z-index: $z-index-loader;
 
 .sw-loader {
@@ -72,9 +80,6 @@ $sw-loader-z-index: $z-index-loader;
   .sw-loader__container {
     display: grid;
     grid-auto-columns: auto;
-    align-items: center;
-    justify-items: center;
-    justify-content: center;
     text-align: center;
     position: relative;
     top: 50%;
@@ -82,54 +87,28 @@ $sw-loader-z-index: $z-index-loader;
     transform: translate(-50%, -50%);
   }
 
-  .sw-loader__element {
-    animation: sw-loader-rotator $sw-loader-rotate-duration linear infinite;
-  }
+  .sw-loader-element {
+    div {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-width: 4px;
+      border-style: solid;
+      border-radius: 50%;
+      border-color: $sw-loader-element-color transparent transparent transparent;
+      animation: sw-loader-rotator $sw-loader-rotate-duration cubic-bezier(0.5, 0, 0.5, 1) infinite;
 
-  .sw-loader__path {
-    stroke-dasharray: 187;
-    stroke-dashoffset: 0;
-    transform-origin: center;
-    animation:
-      sw-loader-dash $sw-loader-rotate-duration ease-in-out infinite,
-      sw-loader-colors $sw-loader-colors-duration ease-in-out infinite;
-  }
+      &:nth-child(1) {
+        animation-delay: -0.45s;
+      }
 
-  @keyframes sw-loader-colors {
-    0% {
-      stroke: $sw-loader-element-color;
-    }
+      &:nth-child(2) {
+        animation-delay: -0.3s;
+      }
 
-    25% {
-      stroke: lighten($sw-loader-element-color, 25%);
-    }
-
-    50% {
-      stroke: saturate($sw-loader-element-color, 50%);
-    }
-
-    75% {
-      stroke: lighten($sw-loader-element-color, 25%);
-    }
-
-    100% {
-      stroke: $sw-loader-element-color;
-    }
-  }
-
-  @keyframes sw-loader-dash {
-    0% {
-      stroke-dashoffset: 187;
-    }
-
-    50% {
-      stroke-dashoffset: 46.75;
-      transform: rotate(135deg);
-    }
-
-    100% {
-      stroke-dashoffset: 187;
-      transform: rotate(450deg);
+      &:nth-child(3) {
+        animation-delay: -0.15s;
+      }
     }
   }
 
@@ -139,7 +118,7 @@ $sw-loader-z-index: $z-index-loader;
     }
 
     100% {
-      transform: rotate(270deg);
+      transform: rotate(360deg);
     }
   }
 }
