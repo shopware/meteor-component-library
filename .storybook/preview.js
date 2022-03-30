@@ -14,18 +14,22 @@ export const i18n = new VueI18n({
   }
 });
 
-export const decorators = [(story) => ({
-  components: {story},
-  template: '<story />',
-  i18n,
-})];
+export const decorators = [
+  (story, context) => {
+    return {
+      components: { story },
+      template: '<story />',
+      i18n,
+    }
+  }
+];
 
-export const parameters = {
-  actions: { argTypesRegex: "^on[A-Z].*" },
-  controls: {
-    matchers: {
-      color: /(background|color)$/i,
-      date: /Date$/,
-    },
-  },
-}
+// export const parameters = {
+//   actions: { argTypesRegex: "^on[A-Z].*" },
+//   controls: {
+//     matchers: {
+//       color: /(background|color)$/i,
+//       date: /Date$/,
+//     },
+//   },
+// }

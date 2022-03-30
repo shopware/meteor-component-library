@@ -110,6 +110,8 @@ export default {
   components: {
     'sw-select-base': SwSelectBase,
     'sw-select-result-list': SwSelectResultList,
+    // TODO: add result list
+    // 'sw-select-result': SwSelectResult,
     'sw-highlight-text': SwHighlightText,
   },
 

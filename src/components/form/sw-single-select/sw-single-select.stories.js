@@ -5,6 +5,21 @@ export default {
   component: SwSingleSelect,
   args: {
     label: 'Single select',
+    value: 'shirt',
+    options: [
+      {
+        label: 'Shirt',
+        value: 'shirt',
+      },
+      {
+        label: 'Jeans',
+        value: 'jeans',
+      },
+      {
+        label: 'Pullover',
+        value: 'pullover',
+      },
+    ],
   },
 };
 

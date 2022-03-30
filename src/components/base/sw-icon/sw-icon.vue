@@ -1,12 +1,14 @@
 <template>
-  <component
+  <!-- TODO: this needs to be a real icon -->
+  <span>⚙️</span>
+  <!-- <component
     :is="iconName"
     class="sw-icon"
     :class="classes"
     :style="styles"
     :aria-hidden="decorative"
     v-on="$listeners"
-  />
+  /> -->
 </template>
 
 <script>

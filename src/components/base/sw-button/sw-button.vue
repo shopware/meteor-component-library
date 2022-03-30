@@ -66,6 +66,10 @@ export default {
       required: false,
       default: false,
     },
+    /**
+     * Change the look of the button
+     * @values primary, ghost, danger, ghost-danger, contrast, context
+     */
     variant: {
       type: String,
       required: false,
