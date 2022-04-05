@@ -93,7 +93,8 @@ class Tooltip {
    * @param {string} obj.appearance
    * @param {boolean} obj.showOnDisabledElements
    */
-  update({ message,
+  update({
+    message,
     placement,
     width,
     showDelay,
@@ -101,7 +102,8 @@ class Tooltip {
     disabled,
     appearance,
     showOnDisabledElements,
-    zIndex }) {
+    zIndex,
+  }) {
     if (message && this._message !== message) {
       this._message = Tooltip.validateMessage(message);
       this._DOMElement.innerHTML = this._message;
@@ -325,14 +327,13 @@ class Tooltip {
         top = `${boundingBox.top - this._DOMElement.offsetHeight - secureOffset}px`;
         left = `${boundingBox.left + (boundingBox.width / 2) - this._DOMElement.offsetWidth / 2}px`;
     }
-    return { top: top, left: left };
+    return { top, left };
   }
 
   _isElementInViewport(element) {
     // get position
     const boundingClientRect = element.getBoundingClientRect();
-    const windowHeight =
-      window.innerHeight || document.documentElement.clientHeight;
+    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
     const windowWidth = window.innerWidth || document.documentElement.clientWidth;
 
     // calculate which borders are in viewport
@@ -417,25 +418,25 @@ function createOrUpdateTooltip(el, { value, modifiers }) {
   message = message ? message.trim() : '';
 
   const placement = value.position || Object.keys(modifiers)[0];
-  const showDelay = value.showDelay;
-  const hideDelay = value.hideDelay;
-  const disabled = value.disabled;
-  const appearance = value.appearance;
-  const width = value.width;
-  const showOnDisabledElements = value.showOnDisabledElements;
-  const zIndex = value.zIndex;
+  const { showDelay } = value;
+  const { hideDelay } = value;
+  const { disabled } = value;
+  const { appearance } = value;
+  const { width } = value;
+  const { showOnDisabledElements } = value;
+  const { zIndex } = value;
 
   const configuration = {
     element: el,
-    message: message,
-    placement: placement,
-    width: width,
-    showDelay: showDelay,
-    hideDelay: hideDelay,
-    disabled: disabled,
-    appearance: appearance,
-    showOnDisabledElements: showOnDisabledElements,
-    zIndex: zIndex,
+    message,
+    placement,
+    width,
+    showDelay,
+    hideDelay,
+    disabled,
+    appearance,
+    showOnDisabledElements,
+    zIndex,
   };
 
   if (el.hasAttribute('tooltip-id')) {

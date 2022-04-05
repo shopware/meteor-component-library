@@ -41,9 +41,7 @@ DeviceHelper.prototype = Object.assign(DeviceHelper.prototype, {
   },
 
   removeResizeListener(component) {
-    this.listeners = this.listeners.filter((listenerObject) => {
-      return component !== listenerObject.component;
-    });
+    this.listeners = this.listeners.filter((listenerObject) => component !== listenerObject.component);
 
     return true;
   },

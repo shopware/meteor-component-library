@@ -75,7 +75,7 @@ export default {
     },
 
     styles() {
-      let size = this.size;
+      let { size } = this;
 
       if (!Number.isNaN(parseFloat(size)) && !Number.isNaN(size - 0)) {
         size = `${size}px`;

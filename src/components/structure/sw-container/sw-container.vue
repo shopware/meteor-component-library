@@ -91,7 +91,7 @@ export default {
         return cssGrid;
       }
 
-      Object.keys(this.breakpoints).find(breakpoint => {
+      Object.keys(this.breakpoints).find((breakpoint) => {
         const currentBreakpointWidth = Number.parseInt(breakpoint, 10);
         const currentBreakpoint = this.breakpoints[breakpoint];
 

@@ -267,9 +267,7 @@ export default {
 
     priceForCurrency: {
       get() {
-        const priceForCurrency = Object.values(this.price).find((price) => {
-          return price.currencyId === this.currency?.id;
-        });
+        const priceForCurrency = Object.values(this.price).find((price) => price.currencyId === this.currency?.id);
 
         // check if price exists
         if (priceForCurrency) {
@@ -305,9 +303,7 @@ export default {
         return this.inherited;
       }
 
-      const priceForCurrency = Object.values(this.price).find((price) => {
-        return price.currencyId === this.currency.id;
-      });
+      const priceForCurrency = Object.values(this.price).find((price) => price.currencyId === this.currency.id);
 
       return !priceForCurrency;
     },
@@ -431,10 +427,10 @@ export default {
       this.$emit('price-calculate', true);
       return new Promise((resolve) => {
         if (
-          !value ||
-          typeof value !== 'number' ||
-          !this.priceForCurrency[outputType] ||
-          !outputType
+          !value
+          || typeof value !== 'number'
+          || !this.priceForCurrency[outputType]
+          || !outputType
         ) {
           return null;
         }
@@ -470,7 +466,7 @@ export default {
 
     keymonitor(event) {
       if (event.key === ',') {
-        const value = event.target.value;
+        const { value } = event.target;
         event.target.value = value.replace(/,/, '.');
       }
     },

@@ -1,4 +1,6 @@
-import { within, fireEvent, findByRole, userEvent } from '@storybook/testing-library';
+import {
+  within, fireEvent, findByRole, userEvent,
+} from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
 import { action } from '@storybook/addon-actions';
 import SwButton from './sw-button.vue';

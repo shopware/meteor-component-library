@@ -5,81 +5,87 @@ export default {
     },
 
     createNotificationSuccess(config) {
-      const notification = Object.assign({
+      const notification = {
         variant: 'success',
         title: this.$tc('global.default.success'),
-      }, config);
+        ...config,
+      };
 
       this.createNotification(notification);
     },
 
     createNotificationInfo(config) {
-      const notification = Object.assign({
+      const notification = {
         variant: 'info',
         title: this.$tc('global.default.info'),
-      }, config);
+        ...config,
+      };
 
       this.createNotification(notification);
     },
 
     createNotificationWarning(config) {
-      const notification = Object.assign({
+      const notification = {
         variant: 'warning',
         title: this.$tc('global.default.warning'),
-      }, config);
+        ...config,
+      };
 
       this.createNotification(notification);
     },
 
     createNotificationError(config) {
-      const notification = Object.assign({
+      const notification = {
         variant: 'error',
         title: this.$tc('global.default.error'),
-      }, config);
+        ...config,
+      };
 
       this.createNotification(notification);
     },
 
     createSystemNotificationSuccess(config) {
-      const notification = Object.assign({
+      const notification = {
         variant: 'success',
         system: true,
-      }, config);
+        ...config,
+      };
 
       this.createNotification(notification);
     },
 
     createSystemNotificationInfo(config) {
-      const notification = Object.assign({
+      const notification = {
         variant: 'info',
         system: true,
-      }, config);
+        ...config,
+      };
 
       this.createNotification(notification);
     },
 
     createSystemNotificationWarning(config) {
-      const notification = Object.assign({
+      const notification = {
         variant: 'warning',
         system: true,
-      }, config);
+        ...config,
+      };
 
       this.createNotification(notification);
     },
 
     createSystemNotificationError(config) {
-      const notification = Object.assign({
+      const notification = {
         variant: 'error',
         system: true,
-      }, config);
+        ...config,
+      };
 
       this.createNotification(notification);
     },
 
     createSystemNotification(config) {
-      const notification = Object.assign({
-        system: true,
-      }, config);
+      const notification = { system: true, ...config };
 
       this.createNotification(notification);
     },

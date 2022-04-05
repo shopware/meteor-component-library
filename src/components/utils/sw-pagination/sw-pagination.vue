@@ -136,7 +136,7 @@ export default {
 
     displayedPages() {
       const maxLength = this.totalVisible;
-      const currentPage = this.currentPage;
+      const { currentPage } = this;
 
       if (this.maxPage <= maxLength) {
         return this.range(1, this.maxPage);
@@ -185,11 +185,11 @@ export default {
     },
 
     possibleSteps() {
-      const total = this.total;
+      const { total } = this;
       const stepsSorted = [...this.steps].sort((a, b) => a - b);
 
       let lastStep;
-      const possibleSteps = stepsSorted.filter(x => {
+      const possibleSteps = stepsSorted.filter((x) => {
         if (lastStep > total) return false;
         lastStep = x;
         return true;

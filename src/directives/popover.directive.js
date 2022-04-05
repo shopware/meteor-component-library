@@ -35,8 +35,7 @@ const customStylingBlacklist = ['width', 'position', 'top', 'left', 'right', 'bo
 function calculateOutsideEdges(el) {
   // get position
   const boundingClientRect = el.getBoundingClientRect();
-  const windowHeight =
-    window.innerHeight || document.documentElement.clientHeight;
+  const windowHeight = window.innerHeight || document.documentElement.clientHeight;
   const windowWidth = window.innerWidth || document.documentElement.clientWidth;
 
   // calculate which edges are in viewport
@@ -44,7 +43,7 @@ function calculateOutsideEdges(el) {
     top: boundingClientRect.top > 0,
     right: boundingClientRect.right < windowWidth,
     bottom: boundingClientRect.bottom < windowHeight,
-    left: boundingClientRect.left > 0
+    left: boundingClientRect.left > 0,
   };
 
   // remove all existing placement classes
@@ -71,13 +70,13 @@ function calculateOutsideEdges(el) {
 }
 
 function setElementPosition(element, refElement, config) {
-  const originElement = refElement ? refElement : element;
+  const originElement = refElement || element;
   const elementPosition = originElement.getBoundingClientRect();
 
   let targetElement = originElement;
   let targetPosition = {
     top: 0,
-    left: 0
+    left: 0,
   };
 
   if (config.targetSelector && config.targetSelector.length > 0) {
@@ -137,7 +136,7 @@ function registerVirtualScrollingElement(modifiedElement, vnodeContext, config) 
   virtualScrollingElements.set(uid, {
     el: modifiedElement,
     ref: vnodeContext.$el,
-    config
+    config,
   });
 }
 

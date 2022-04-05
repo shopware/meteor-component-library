@@ -216,8 +216,8 @@ function isEventOverElement(event, el) {
 
   const box = el.getBoundingClientRect();
 
-  return pageX >= box.x && pageX <= (box.x + box.width) &&
-    pageY >= box.y && pageY <= (box.y + box.height);
+  return pageX >= box.x && pageX <= (box.x + box.width)
+    && pageY >= box.y && pageY <= (box.y + box.height);
 }
 
 /**
@@ -342,9 +342,9 @@ function validateDrop() {
   let customDropValidation = true;
 
   // Validate if the drag and drop are using the same drag group.
-  if (currentDrag === null ||
-    currentDrop === null ||
-    currentDrop.dropConfig.dragGroup !== currentDrag.dragConfig.dragGroup) {
+  if (currentDrag === null
+    || currentDrop === null
+    || currentDrop.dropConfig.dragGroup !== currentDrag.dragConfig.dragGroup) {
     valid = false;
   }
 
@@ -384,7 +384,7 @@ function validateDrag() {
 }
 
 function mergeConfigs(defaultConfig, binding) {
-  const mergedConfig = Object.assign({}, defaultConfig);
+  const mergedConfig = { ...defaultConfig };
 
   if (isObject(binding.value)) {
     Object.assign(mergedConfig, binding.value);
@@ -469,7 +469,7 @@ export const droppable = {
   unbind(el, binding) {
     const dropConfig = mergeConfigs(defaultDropConfig, binding);
 
-    dropZones.splice(dropZones.findIndex(zone => zone.el === el), 1);
+    dropZones.splice(dropZones.findIndex((zone) => zone.el === el), 1);
 
     el.classList.remove(dropConfig.droppableCls);
     el.removeEventListener('mouseenter', enterDropZone.bind(this, el, dropConfig));
@@ -477,7 +477,7 @@ export const droppable = {
   },
 
   update: (el, binding) => {
-    const dropZone = dropZones.find(zone => zone.el === el);
+    const dropZone = dropZones.find((zone) => zone.el === el);
 
     if (isObject(binding.value)) {
       Object.assign(dropZone.dropConfig, binding.value);
