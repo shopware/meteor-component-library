@@ -3,13 +3,13 @@
     class="sw-description-list"
     :style="descriptionListStyles"
   >
-    <slot></slot>
+    <slot />
   </dl>
 </template>
 
 <script>
 export default {
-  name: 'sw-description-list',
+  name: 'SwDescriptionList',
 
   props: {
     grid: {

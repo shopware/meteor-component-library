@@ -49,14 +49,14 @@
           <slot name="modal-loader">
             <sw-loader v-if="isLoading" />
           </slot>
-          <slot></slot>
+          <slot />
         </div>
 
         <footer
           v-if="hasFooterSlot"
           class="sw-modal__footer"
         >
-          <slot name="modal-footer"></slot>
+          <slot name="modal-footer" />
         </footer>
       </div>
     </div>
@@ -69,7 +69,7 @@ import SwIcon from '../sw-icon/sw-icon.vue';
 import SwLoader from '../../utils/sw-loader/sw-loader.vue';
 
 export default {
-  name: 'sw-modal',
+  name: 'SwModal',
 
   components: {
     'sw-icon': SwIcon,

@@ -33,8 +33,8 @@
           v-else
           class="sw-pagination__list-separator"
         >
-                {{ pageNum }}
-            </span>
+          {{ pageNum }}
+        </span>
       </li>
     </ul>
 
@@ -78,7 +78,7 @@ import SwIcon from '../../base/sw-icon/sw-icon.vue';
 import SwSelectField from '../../form/sw-select-field/sw-select-field.vue';
 
 export default {
-  name: 'sw-pagination',
+  name: 'SwPagination',
 
   components: {
     'sw-icon': SwIcon,

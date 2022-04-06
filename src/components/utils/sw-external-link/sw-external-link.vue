@@ -7,7 +7,7 @@
     class="sw-external-link"
     :class="classes"
   >
-    <slot></slot>
+    <slot />
     <sw-icon
       class="sw-external-link__icon"
       :size="iconSize"
@@ -21,26 +21,26 @@
     :class="classes"
     @click="onClick"
   >
-    <slot></slot>
+    <slot />
     <sw-icon
       class="sw-external-link__icon"
       :size="iconSize"
       :name="icon"
     />
-</span>
+  </span>
 </template>
 
 <script>
 import SwIcon from '../../base/sw-icon/sw-icon.vue';
 
 export default {
-  name: 'sw-external-link',
-
-  inheritAttrs: false,
+  name: 'SwExternalLink',
 
   components: {
     'sw-icon': SwIcon,
   },
+
+  inheritAttrs: false,
 
   props: {
     small: {

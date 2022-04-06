@@ -3,13 +3,13 @@
     class="sw-container"
     :style="currentCssGrid"
   >
-    <slot></slot>
+    <slot />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'sw-container',
+  name: 'SwContainer',
 
   props: {
     columns: {
@@ -70,11 +70,9 @@ export default {
     },
 
     registerResizeListener() {
-      const that = this;
-
       this.$device.onResize({
         listener() {
-          that.updateCssGrid();
+          this.updateCssGrid();
         },
         component: this,
       });

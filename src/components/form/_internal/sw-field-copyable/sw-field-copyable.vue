@@ -2,11 +2,11 @@
   <!-- eslint-disable-next-line vuejs-accessibility/mouse-events-have-key-events -->
   <sw-icon
     v-tooltip="{
-        message: tooltipText,
-        width: 220,
-        position: 'top',
-        showDelay: 300,
-        hideDelay: 0
+      message: tooltipText,
+      width: 220,
+      position: 'top',
+      showDelay: 300,
+      hideDelay: 0
     }"
     class="sw-field-copyable"
     name="small-copy"
@@ -22,7 +22,7 @@ import SwNotificationMixin from '../../../../mixins/notification.mixin';
 import { copyToClipboard as copyToClipboardUtil } from '../../../../utils/dom';
 
 export default {
-  name: 'sw-field-copyable',
+  name: 'SwFieldCopyable',
 
   directives: {
     tooltip: SwTooltipDirective,

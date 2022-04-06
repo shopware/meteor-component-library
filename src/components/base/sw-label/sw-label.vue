@@ -12,7 +12,7 @@
     />
 
     <span class="sw-label__caption">
-        <slot></slot>
+      <slot />
     </span>
 
     <button
@@ -22,12 +22,11 @@
       @click.prevent.stop="$emit('dismiss')"
     >
 
-        <slot name="dismiss-icon">
-            <sw-icon name="small-default-x-line-medium" />
-        </slot>
+      <slot name="dismiss-icon">
+        <sw-icon name="small-default-x-line-medium" />
+      </slot>
     </button>
-</span>
-
+  </span>
 </template>
 
 <script>
@@ -35,7 +34,7 @@ import SwIcon from '../sw-icon/sw-icon.vue';
 import SwColorBadge from '../../utils/sw-color-badge/sw-color-badge.vue';
 
 export default {
-  name: 'sw-label',
+  name: 'SwLabel',
 
   components: {
     'sw-icon': SwIcon,

@@ -14,14 +14,15 @@
       <slot
         name="prefix"
         v-bind="{ disabled, identification }"
-      ></slot>
+      />
     </template>
 
+    <!-- eslint-disable-next-line vue/no-unused-vars, vue/no-template-shadow -->
     <template #sw-field-input="{ identification, error, disabled, size, setFocusClass, removeFocusClass, hasSuffix, hasPrefix }">
       <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
       <input
-        v-bind="$attrs"
         :id="createInputId(identification)"
+        v-bind="$attrs"
         type="text"
         :name="identification"
         :disabled="disabled"
@@ -35,14 +36,16 @@
       >
     </template>
 
+    <!-- eslint-disable vue/no-unused-vars -->
     <template
       v-if="copyable || hasSuffix"
       #sw-contextual-field-suffix="{ disabled, identification }"
     >
+      <!-- eslint-enable vue/no-unused-vars -->
       <slot
         name="suffix"
         v-bind="{ identification }"
-      ></slot>
+      />
       <sw-field-copyable
         v-if="copyable"
         :display-name="identification"
@@ -52,7 +55,7 @@
     </template>
 
     <template #label>
-      <slot name="label"></slot>
+      <slot name="label" />
     </template>
   </sw-contextual-field>
 </template>
@@ -64,8 +67,7 @@ import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 import SwValidationMixin from '../../../mixins/validation.mixin';
 
 export default {
-  name: 'sw-text-field',
-  inheritAttrs: false,
+  name: 'SwTextField',
 
   components: {
     'sw-contextual-field': SwContextualField,
@@ -77,6 +79,7 @@ export default {
     SwValidationMixin,
     // Mixin.getByName('remove-api-error'),
   ],
+  inheritAttrs: false,
 
   props: {
     // FIXME: add type and default value to property

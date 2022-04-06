@@ -44,6 +44,7 @@ export function regex(value, expression) {
  * @returns {boolean}
  */
 export function email(value) {
+  // eslint-disable-next-line no-useless-escape
   const emailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   return regex(value, emailValidation);

@@ -1,16 +1,6 @@
 <script>
 export default {
-  name: 'sw-highlight-text',
-
-  render(createElement) {
-    return createElement(
-      'div',
-      {
-        class: 'sw-highlight-text',
-        domProps: { innerHTML: this.searchAndReplace() },
-      },
-    );
-  },
+  name: 'SwHighlightText',
 
   props: {
     searchTerm: {
@@ -46,6 +36,16 @@ export default {
     escapeRegExp(string) {
       return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
     },
+  },
+
+  render(createElement) {
+    return createElement(
+      'div',
+      {
+        class: 'sw-highlight-text',
+        domProps: { innerHTML: this.searchAndReplace() },
+      },
+    );
   },
 };
 </script>

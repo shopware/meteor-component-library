@@ -8,22 +8,21 @@
       <slot
         name="header"
         v-bind="{ expanded }"
-      >
-        </slot>
+      />
     </div>
 
     <div
       v-if="expanded"
       class="sw-collapse__content"
     >
-      <slot name="content"></slot>
+      <slot name="content" />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'sw-collapse',
+  name: 'SwCollapse',
 
   props: {
     expandOnLoading: {

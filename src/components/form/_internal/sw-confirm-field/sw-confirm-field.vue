@@ -19,44 +19,44 @@
       v-show="isEditing"
       class="sw-confirm-field__button-list"
     >
-        {% block sw_confirm_field_cancel_button %}
-        <sw-button
-          :disabled="disabled"
-          class="sw-confirm-field__button sw-confirm-field__button--cancel"
-          square
-          size="x-small"
-          tabindex="-1"
-          @click="onCancelSubmit"
-        >
+      {% block sw_confirm_field_cancel_button %}
+      <sw-button
+        :disabled="disabled"
+        class="sw-confirm-field__button sw-confirm-field__button--cancel"
+        square
+        size="x-small"
+        tabindex="-1"
+        @click="onCancelSubmit"
+      >
 
-            {% block sw_field_inline_cancel_submit_button_icon %}
-            <sw-icon
-              small
-              name="small-default-x-line-small"
-            />
-            {% endblock %}
-        </sw-button>
+        {% block sw_field_inline_cancel_submit_button_icon %}
+        <sw-icon
+          small
+          name="small-default-x-line-small"
+        />
         {% endblock %}
+      </sw-button>
+      {% endblock %}
 
-        {% block sw_confirm_field_confirm_button %}
-        <sw-button
-          class="sw-confirm-field__button sw-confirm-field__button--submit"
-          :disabled="preventEmptySubmit && !draft || disabled"
-          square
-          size="x-small"
-          variant="primary"
-          tabindex="-1"
-          @click="onSubmitValue"
-        >
+      {% block sw_confirm_field_confirm_button %}
+      <sw-button
+        class="sw-confirm-field__button sw-confirm-field__button--submit"
+        :disabled="preventEmptySubmit && !draft || disabled"
+        square
+        size="x-small"
+        variant="primary"
+        tabindex="-1"
+        @click="onSubmitValue"
+      >
 
-            {% block sw_field_inline_submit_button_icon %}
-            <sw-icon
-              small
-              name="small-default-checkmark-line-small"
-            />
-            {% endblock %}
-        </sw-button>
+        {% block sw_field_inline_submit_button_icon %}
+        <sw-icon
+          small
+          name="small-default-checkmark-line-small"
+        />
         {% endblock %}
+      </sw-button>
+      {% endblock %}
     </span>
   </div>
 </template>
@@ -65,7 +65,7 @@
 import SwTextField from '../../sw-text-field/sw-text-field.vue';
 
 export default {
-  name: 'sw-confirm-field',
+  name: 'SwConfirmField',
 
   components: {
     'sw-text-field': SwTextField,

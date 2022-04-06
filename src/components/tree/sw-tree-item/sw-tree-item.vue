@@ -3,17 +3,15 @@
     class="sw-tree-item"
     :class="styling"
   >
-
     <div
       v-droppable="{ dragGroup: 'sw-tree-item', data: item }"
       v-draggable="dragConf"
       class="sw-tree-item__element"
     >
-
       <div
         v-if="item.childCount <= 0"
         class="sw-tree-item__leaf"
-      ></div>
+      />
 
       <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
       <div
@@ -21,7 +19,6 @@
         class="sw-tree-item__toggle"
         @click="openTreeItem(); getTreeItemChildren(item)"
       >
-
         <sw-loader
           v-if="isLoading"
           size="14"
@@ -76,16 +73,15 @@
       <div
         ref="item"
         v-tooltip="{
-                message: item.disabledToolTipText,
-                disabled: !item.disabledToolTipText,
-            }"
+          message: item.disabledToolTipText,
+          disabled: !item.disabledToolTipText,
+        }"
         class="sw-tree-item__content"
       >
         <slot
           name="content"
           v-bind="{ item, openTreeItem, getName }"
         >
-
           <template v-if="currentEditElement === item.data.id">
             <sw-confirm-field
               v-model="item.data.name"
@@ -116,7 +112,6 @@
       </div>
 
       <div class="sw-tree-item__actions">
-
         <sw-icon
           v-if="shouldShowActiveState"
           size="6"
@@ -141,7 +136,6 @@
             class="sw-tree-item__context_button"
             :disabled="isDisabled"
           >
-
             <sw-context-menu-item
               v-if="allowCreateWithoutPosition"
               class="sw-tree-item__without-position-action"
@@ -186,7 +180,6 @@
             </sw-context-menu-item>
 
             <div class="sw-context-menu__group">
-
               <sw-context-menu-item @click="onChangeRoute(item)">
                 {{ $tc('global.default.edit') }}
               </sw-context-menu-item>
@@ -231,16 +224,14 @@
           :get-is-highlighted="getIsHighlighted"
           @check-item="emitCheckedItem"
         >
-
+          <!-- eslint-disable-next-line vue/no-unused-vars, vue/no-template-shadow -->
           <template #content="{ item, openTreeItem, getName: innerGetName }">
-
             <sw-vnode-renderer
               v-if="$scopedSlots.content"
               :node="$scopedSlots.content({ item, openTreeItem, getName })"
             />
 
             <template v-else>
-
               <template v-if="currentEditElement === item.data.id">
                 <sw-confirm-field
                   v-model="item.data.name"
@@ -270,8 +261,8 @@
             </template>
           </template>
 
+          <!-- eslint-disable-next-line vue/no-template-shadow -->
           <template #actions="{ item, openTreeItem }">
-
             <sw-vnode-renderer
               v-if="$scopedSlots.actions"
               :node="$scopedSlots.actions({ item, openTreeItem })"
@@ -280,7 +271,6 @@
               v-else
               class="sw-tree-item__actions"
             >
-
               <sw-icon
                 v-if="shouldShowActiveState"
                 size="6"
@@ -304,7 +294,6 @@
                   v-tooltip="toolTip"
                   :disabled="isDisabled"
                 >
-
                   <sw-context-menu-item
                     v-if="allowCreateWithoutPosition"
                     class="sw-tree-item__without-position-action"
@@ -349,7 +338,6 @@
                   </sw-context-menu-item>
 
                   <div class="sw-context-menu__group">
-
                     <sw-context-menu-item @click="onChangeRoute(item)">
                       {{ $tc('global.default.edit') }}
                     </sw-context-menu-item>
@@ -385,7 +373,7 @@ import SwTooltipDirective from '../../../directives/tooltip.directive';
 import SwConfirmField from '../../form/_internal/sw-confirm-field/sw-confirm-field.vue';
 
 export default {
-  name: 'sw-tree-item',
+  name: 'SwTreeItem',
 
   components: {
     'sw-loader': SwLoader,

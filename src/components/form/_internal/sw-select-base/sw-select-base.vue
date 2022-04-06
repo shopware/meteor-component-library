@@ -6,6 +6,7 @@
     :disabled="disabled"
     v-on="$listeners"
   >
+    <!-- eslint-disable-next-line vue/no-template-shadow, vue/no-unused-vars -->
     <template #sw-field-input="{ identification, error, disabled, size, setFocusClass, removeFocusClass }">
       <div
         ref="selectWrapper"
@@ -19,7 +20,7 @@
         <slot
           name="sw-select-selection"
           v-bind="{ identification, error, disabled, size, expand, collapse }"
-        ></slot>
+        />
         <div class="sw-select__selection-indicators">
           <sw-loader
             v-if="isLoading"
@@ -54,13 +55,13 @@
           <slot
             name="results-list"
             v-bind="{ collapse }"
-          ></slot>
+          />
         </transition>
       </template>
     </template>
 
     <template #label>
-      <slot name="label"></slot>
+      <slot name="label" />
     </template>
   </sw-block-field>
 </template>
@@ -71,7 +72,7 @@ import SwIcon from '../../../base/sw-icon/sw-icon.vue';
 import SwLoader from '../../../utils/sw-loader/sw-loader.vue';
 
 export default {
-  name: 'sw-select-base',
+  name: 'SwSelectBase',
 
   components: {
     'sw-block-field': SwBlockField,

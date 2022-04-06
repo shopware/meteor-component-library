@@ -26,7 +26,7 @@
       </div>
 
       <div class="sw-alert__message">
-        <slot></slot>
+        <slot />
       </div>
     </div>
 
@@ -34,7 +34,7 @@
       v-if="hasActionSlot"
       class="sw-alert__actions"
     >
-      <slot name="actions"></slot>
+      <slot name="actions" />
     </div>
 
     <button
@@ -56,7 +56,7 @@
 import SwIcon from '../sw-icon/sw-icon.vue';
 
 export default {
-  name: 'sw-alert',
+  name: 'SwAlert',
 
   components: {
     'sw-icon': SwIcon,

@@ -30,18 +30,18 @@
           class="sw-field__toggle-password-visibility"
           @click="onTogglePasswordVisibility(disabled)"
         >
-                <sw-icon
-                  v-if="showPassword"
-                  name="default-eye-crossed"
-                  small
-                />
+          <sw-icon
+            v-if="showPassword"
+            name="default-eye-crossed"
+            small
+          />
 
-                <sw-icon
-                  v-else
-                  name="default-eye-open"
-                  small
-                />
-            </span>
+          <sw-icon
+            v-else
+            name="default-eye-open"
+            small
+          />
+        </span>
       </div>
     </template>
 
@@ -58,7 +58,7 @@
     </template>
 
     <template #label>
-      <slot name="label"></slot>
+      <slot name="label" />
     </template>
   </sw-contextual-field>
 </template>
@@ -69,15 +69,15 @@ import SwFieldCopyable from '../_internal/sw-field-copyable/sw-field-copyable.vu
 import SwTextField from '../sw-text-field/sw-text-field.vue';
 
 export default {
-  name: 'sw-password-field',
-
-  extends: SwTextField,
+  name: 'SwPasswordField',
 
   components: {
     'sw-contextual-field': SwContextualField,
     'sw-icon': SwIcon,
     'sw-field-copyable': SwFieldCopyable,
   },
+
+  extends: SwTextField,
 
   props: {
     passwordToggleAble: {

@@ -5,7 +5,6 @@
     v-on="$listeners"
   >
     <template #sw-field-input="{ identification, error, disabled, size, setFocusClass, removeFocusClass }">
-
       <div
         v-if="hasPrefix"
         class="sw-field__addition is--prefix"
@@ -13,13 +12,13 @@
         <slot
           name="sw-contextual-field-prefix"
           v-bind="{ disabled, identification }"
-        ></slot>
+        />
       </div>
 
       <slot
         name="sw-field-input"
         v-bind="{ identification, error, disabled, size, setFocusClass, removeFocusClass, hasSuffix, hasPrefix }"
-      ></slot>
+      />
 
       <div
         v-if="hasSuffix"
@@ -28,18 +27,17 @@
         <slot
           name="sw-contextual-field-suffix"
           v-bind="{ disabled, identification }"
-        ></slot>
+        />
       </div>
     </template>
 
     <template #hint>
-      <slot name="hint"></slot>
+      <slot name="hint" />
     </template>
 
     <template #label>
-      <slot name="label"></slot>
+      <slot name="label" />
     </template>
-
   </sw-block-field>
 </template>
 
@@ -47,13 +45,13 @@
 import SwBlockField from '../sw-block-field/sw-block-field.vue';
 
 export default {
-  name: 'sw-contextual-field',
-
-  inheritAttrs: false,
+  name: 'SwContextualField',
 
   components: {
     'sw-block-field': SwBlockField,
   },
+
+  inheritAttrs: false,
 
   computed: {
     hasPrefix() {

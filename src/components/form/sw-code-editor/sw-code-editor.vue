@@ -1,10 +1,10 @@
 <template>
   <div class="sw-code-editor">
-
     <div
       v-if="label.length"
       class="sw-code-editor__label"
-    >{{ label }}
+    >
+      {{ label }}
     </div>
 
     <!-- eslint-disable-next-line vuejs-accessibility/tabindex-no-positive -->
@@ -13,40 +13,40 @@
       class="sw-code-editor__editor"
       :content="value"
       tabindex="1"
-    ></div>
-<!--    <div-->
-<!--      v-if="feature.isActive('FEATURE_NEXT_15172') && sanitizeInput"-->
-<!--      class="sw-code-editor__sanitize-bar"-->
-<!--    >-->
-<!--      <div-->
-<!--        v-if="contentWasSanitized"-->
-<!--        class="sw-code-editor__sanitized-hint"-->
-<!--        :class="{'sw-code-editor__sanitized-hint&#45;&#45;visible': contentWasSanitized}"-->
-<!--      >-->
-<!--        <sw-circle-icon-->
-<!--          icon-name="default-badge-info"-->
-<!--          :size="30"-->
-<!--          variant="warning"-->
-<!--        />-->
-<!--        <p class="sw-code-editor__sanitize-text">-->
-<!--          {{ $tc('global.sw-code-editor.sanitizedHint') }}-->
-<!--        </p>-->
-<!--      </div>-->
-<!--      <div-->
-<!--        class="sw-code-editor__sanitize-info"-->
-<!--        :class="{'sw-code-editor__sanitize-info&#45;&#45;visible': !contentWasSanitized}"-->
-<!--      >-->
-<!--        <sw-circle-icon-->
-<!--          icon-name="default-badge-info"-->
-<!--          :size="30"-->
-<!--          variant="info"-->
-<!--        />-->
-<!--        <p class="sw-code-editor__sanitize-text">-->
-<!--          {{ $tc('global.sw-code-editor.sanitizeInfo') }}-->
-<!--        </p>-->
-<!--      </div>-->
+    />
+    <!--    <div-->
+    <!--      v-if="feature.isActive('FEATURE_NEXT_15172') && sanitizeInput"-->
+    <!--      class="sw-code-editor__sanitize-bar"-->
+    <!--    >-->
+    <!--      <div-->
+    <!--        v-if="contentWasSanitized"-->
+    <!--        class="sw-code-editor__sanitized-hint"-->
+    <!--        :class="{'sw-code-editor__sanitized-hint&#45;&#45;visible': contentWasSanitized}"-->
+    <!--      >-->
+    <!--        <sw-circle-icon-->
+    <!--          icon-name="default-badge-info"-->
+    <!--          :size="30"-->
+    <!--          variant="warning"-->
+    <!--        />-->
+    <!--        <p class="sw-code-editor__sanitize-text">-->
+    <!--          {{ $tc('global.sw-code-editor.sanitizedHint') }}-->
+    <!--        </p>-->
+    <!--      </div>-->
+    <!--      <div-->
+    <!--        class="sw-code-editor__sanitize-info"-->
+    <!--        :class="{'sw-code-editor__sanitize-info&#45;&#45;visible': !contentWasSanitized}"-->
+    <!--      >-->
+    <!--        <sw-circle-icon-->
+    <!--          icon-name="default-badge-info"-->
+    <!--          :size="30"-->
+    <!--          variant="info"-->
+    <!--        />-->
+    <!--        <p class="sw-code-editor__sanitize-text">-->
+    <!--          {{ $tc('global.sw-code-editor.sanitizeInfo') }}-->
+    <!--        </p>-->
+    <!--      </div>-->
 
-<!--    </div>-->
+    <!--    </div>-->
   </div>
 </template>
 
@@ -58,7 +58,7 @@ import 'ace-builds/src-noconflict/mode-twig';
 import { createId } from '../../../utils/uuid';
 
 export default {
-  name: 'sw-code-editor',
+  name: 'SwCodeEditor',
 
   inject: [
     // 'feature',
@@ -269,12 +269,12 @@ export default {
         const textCompleterCloned = JSON.parse(JSON.stringify(textCompleter));
 
         if (this.completionMode === 'entity') {
-          textCompleterCloned.identifierRegexps = [/[\[\]\.a-zA-Z_0-9\$\-\u00A2-\uFFFF]/];
+          textCompleterCloned.identifierRegexps = [/[[\].a-zA-Z_0-9$\-\u00A2-\uFFFF]/];
 
           textCompleterCloned.getCompletions = function getComps(editor, session, pos, prefix, callback) {
-            this.identifierRegexps = [/[\[\][a-zA-Z_0-9\$\-\u00A2-\uFFFF]/];
+            this.identifierRegexps = [/[[\][a-zA-Z_0-9$\-\u00A2-\uFFFF]/];
             callback(null, completerFunction(prefix));
-            this.identifierRegexps = [/[\[\]\.a-zA-Z_0-9\$\-\u00A2-\uFFFF]/];
+            this.identifierRegexps = [/[[\].a-zA-Z_0-9$\-\u00A2-\uFFFF]/];
           };
 
           textCompleterCloned.completerFunction = completerFunction;

@@ -3,18 +3,17 @@
     class="sw-tabs"
     :class="tabClasses"
   >
-
     <div
       ref="swTabContent"
       class="sw-tabs__content"
       :style="tabContentStyle"
     >
-      <slot :active="active"></slot>
+      <slot :active="active" />
       <span
         class="sw-tabs__slider"
         :class="sliderClasses"
         :style="sliderStyle"
-      ></span>
+      />
     </div>
 
     <button
@@ -45,9 +44,8 @@
       <slot
         name="content"
         :active="active"
-      ></slot>
+      />
     </div>
-
   </div>
 </template>
 
@@ -57,7 +55,7 @@ import { getScrollbarHeight } from '../../../utils/dom';
 import SwIcon from '../sw-icon/sw-icon.vue';
 
 export default {
-  name: 'sw-tabs',
+  name: 'SwTabs',
 
   components: {
     'sw-icon': SwIcon,
@@ -203,11 +201,10 @@ export default {
       this.checkIfNeedScroll();
       this.addScrollbarOffset();
 
-      const that = this;
       this.$device.onResize({
         listener() {
-          that.checkIfNeedScroll();
-          that.addScrollbarOffset();
+          this.checkIfNeedScroll();
+          this.addScrollbarOffset();
         },
         component: this,
       });

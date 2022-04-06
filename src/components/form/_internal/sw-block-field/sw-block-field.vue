@@ -10,16 +10,16 @@
         <slot
           name="sw-field-input"
           v-bind="{ identification, error, disabled, size, setFocusClass, removeFocusClass }"
-        ></slot>
+        />
       </div>
     </template>
 
     <template #hint>
-      <slot name="hint"></slot>
+      <slot name="hint" />
     </template>
 
     <template #label>
-      <slot name="label"></slot>
+      <slot name="label" />
     </template>
   </sw-base-field>
 </template>
@@ -28,13 +28,13 @@
 import SwBaseField from '../sw-base-field/sw-base-field.vue';
 
 export default {
-  name: 'sw-block-field',
-
-  inheritAttrs: false,
+  name: 'SwBlockField',
 
   components: {
     'sw-base-field': SwBaseField,
   },
+
+  inheritAttrs: false,
 
   props: {
     size: {

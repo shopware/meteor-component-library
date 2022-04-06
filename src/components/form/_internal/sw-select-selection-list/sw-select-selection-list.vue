@@ -9,7 +9,6 @@
       :class="'sw-select-selection-list__item-holder--' + index"
       :data-id="selection[valueProperty]"
     >
-
       <slot
         name="selected-option"
         v-bind="{ selection, defaultLabel: selection[labelProperty], disabled }"
@@ -20,14 +19,14 @@
           @dismiss="onClickDismiss(selection)"
         >
           <span class="sw-select-selection-list__item">
-                    <slot
-                      name="label-property"
-                      v-bind="{ item: selection, index, labelProperty, valueProperty }"
-                    >
-                        {{ selection[labelProperty] }}
-                    </slot>
-                </span>
-          </sw-label>
+            <slot
+              name="label-property"
+              v-bind="{ item: selection, index, labelProperty, valueProperty }"
+            >
+              {{ selection[labelProperty] }}
+            </slot>
+          </span>
+        </sw-label>
       </slot>
     </li>
 
@@ -75,7 +74,7 @@ import SwLabel from '../../../base/sw-label/sw-label.vue';
 import SwButton from '../../../base/sw-button/sw-button.vue';
 
 export default {
-  name: 'sw-select-selection-list',
+  name: 'SwSelectSelectionList',
 
   // inject: ['feature'],
 

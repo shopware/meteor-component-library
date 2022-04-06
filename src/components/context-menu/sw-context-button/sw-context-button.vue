@@ -29,7 +29,7 @@
         :class="contextMenuClass"
         :style="menuStyles"
       >
-        <slot></slot>
+        <slot />
       </sw-context-menu>
     </sw-popover>
   </div>
@@ -41,7 +41,7 @@ import SwPopover from '../../utils/sw-popover/sw-popover.vue';
 import SwContextMenu from '../sw-context-menu/sw-context-menu.vue';
 
 export default {
-  name: 'sw-context-button.vue',
+  name: 'SwContextButtonVue',
 
   components: {
     'sw-icon': SwIcon,

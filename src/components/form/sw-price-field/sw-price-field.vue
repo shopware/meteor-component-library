@@ -2,14 +2,12 @@
   <div
     class="sw-price-field"
     :class="{
-        'sw-price-field--label': label,
-        'sw-price-field--compact': compact,
-        'sw-price-field--disabled': isDisabled
+      'sw-price-field--label': label,
+      'sw-price-field--compact': compact,
+      'sw-price-field--disabled': isDisabled
     }"
   >
-
     <div class="price-field-grid">
-
       {# TODO: check selectors #}
       <sw-field
         v-model="priceForCurrency.gross"
@@ -41,9 +39,9 @@
       <button
         class="sw-price-field__lock"
         :class="{
-                'is--locked': priceForCurrency.linked,
-                'is--disabled': isDisabled
-            }"
+          'is--locked': priceForCurrency.linked,
+          'is--disabled': isDisabled
+        }"
         @click="onLockSwitch"
       >
         <sw-icon
@@ -121,7 +119,7 @@
 
 <script>
 export default {
-  name: 'sw-price-field',
+  name: 'SwPriceField',
 
   inheritAttrs: false,
 
@@ -261,7 +259,8 @@ export default {
 
   computed: {
     calculatePriceApiService() {
-      // todo: replace service
+      // TODO: replace service
+      // eslint-disable-next-line no-undef
       return Application.getContainer('factory').apiService.getByName('calculate-price');
     },
 
@@ -395,11 +394,10 @@ export default {
       }
       this.$emit('price-calculate', true);
 
-      this.requestTaxValue(value, 'net').then((res) => {
+      return this.requestTaxValue(value, 'net').then((res) => {
         const newValue = this.priceForCurrency.net + res;
         this.priceForCurrency.gross = parseFloat(newValue.toPrecision(14));
       });
-      return true;
     },
 
     convertGrossToNet(value) {
@@ -416,11 +414,10 @@ export default {
       }
       this.$emit('price-calculate', true);
 
-      this.requestTaxValue(value, 'gross').then((res) => {
+      return this.requestTaxValue(value, 'gross').then((res) => {
         const newValue = this.priceForCurrency.gross - res;
         this.priceForCurrency.net = parseFloat(newValue.toPrecision(14));
       });
-      return true;
     },
 
     requestTaxValue(value, outputType) {

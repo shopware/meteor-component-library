@@ -7,7 +7,6 @@
     @inheritance-remove="$emit('inheritance-remove', $event)"
     v-on="$listeners"
   >
-
     <template
       v-if="hasPrefix"
       #sw-contextual-field-prefix="{ disabled, identification }"
@@ -15,12 +14,11 @@
       <slot
         name="prefix"
         v-bind="{disabled, identification}"
-      ></slot>
+      />
     </template>
 
-    <template
-      #sw-field-input="{ identification, error, disabled, size, setFocusClass, removeFocusClass, hasSuffix, hasPrefix }"
-    >
+    <!-- eslint-disable-next-line vue/no-unused-vars -->
+    <template #sw-field-input="{ identification, error, disabled, size, setFocusClass, removeFocusClass, hasSuffix, hasPrefix }">
       <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
       <input
         :id="identification"
@@ -44,7 +42,7 @@
       <slot
         name="suffix"
         v-bind="{ identification }"
-      ></slot>
+      />
       <sw-field-copyable
         v-if="copyable"
         :display-name="identification"
@@ -60,7 +58,7 @@ import SwTextField from '../sw-text-field/sw-text-field.vue';
 // import SwContextualField from '../_internal/sw-contextual-field/sw-contextual-field.vue';
 
 export default {
-  name: 'sw-email-field',
+  name: 'SwEmailField',
 
   extends: SwTextField,
 

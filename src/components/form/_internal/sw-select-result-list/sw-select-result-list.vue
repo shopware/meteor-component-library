@@ -12,18 +12,18 @@
         :class="{ 'sw-select-result-list__content_empty': isLoading && (!options || options.length <= 0) }"
         @scroll="onScroll"
       >
-        <slot name="before-item-list"></slot>
+        <slot name="before-item-list" />
 
         <ul class="sw-select-result-list__item-list">
           <template v-for="(item, index) in options">
             <slot
               name="result-item"
               v-bind="{ item, index }"
-            ></slot>
+            />
           </template>
         </ul>
 
-        <slot name="after-item-list"></slot>
+        <slot name="after-item-list" />
 
         <div
           v-if="!isLoading && options && options.length < 1"
@@ -45,7 +45,7 @@ import SwPopover from '../../../utils/sw-popover/sw-popover.vue';
 import SwIcon from '../../../base/sw-icon/sw-icon.vue';
 
 export default {
-  name: 'sw-select-result-list',
+  name: 'SwSelectResultList',
 
   components: {
     'sw-popover': SwPopover,

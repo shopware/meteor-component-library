@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'sw-field-error',
+  name: 'SwFieldError',
 
   props: {
     error: {

@@ -3,13 +3,13 @@
     class="sw-card-section"
     :class="cardSectionClasses"
   >
-    <slot></slot>
+    <slot />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'sw-card-section',
+  name: 'SwCardSection',
 
   props: {
     divider: {

@@ -12,26 +12,26 @@
         <div
           v-if="showSmartBar && showSearchBar"
           class="sw-page__smart-bar-divider"
-        ></div>
+        />
 
         <div class="sw-page__back-btn-container">
           <slot name="smart-bar-back">
-<!--            <router-link-->
-<!--              v-if="parentRoute"-->
-<!--              class="smart-bar__back-btn"-->
-<!--              :to="{ name: parentRoute }"-->
-<!--              :style="{ 'color': pageColor }"-->
-<!--            >-->
-<!--              <sw-icon-->
-<!--                name="default-arrow-head-left"-->
-<!--                small-->
-<!--              />-->
-<!--              <sw-icon-->
-<!--                v-if="module && module.icon"-->
-<!--                :name="module.icon"-->
-<!--                small-->
-<!--              />-->
-<!--            </router-link>-->
+            <!--            <router-link-->
+            <!--              v-if="parentRoute"-->
+            <!--              class="smart-bar__back-btn"-->
+            <!--              :to="{ name: parentRoute }"-->
+            <!--              :style="{ 'color': pageColor }"-->
+            <!--            >-->
+            <!--              <sw-icon-->
+            <!--                name="default-arrow-head-left"-->
+            <!--                small-->
+            <!--              />-->
+            <!--              <sw-icon-->
+            <!--                v-if="module && module.icon"-->
+            <!--                :name="module.icon"-->
+            <!--                small-->
+            <!--              />-->
+            <!--            </router-link>-->
           </slot>
         </div>
 
@@ -45,11 +45,11 @@
           </div>
 
           <div class="smart-bar__language-switch">
-            <slot name="language-switch"></slot>
+            <slot name="language-switch" />
           </div>
 
           <div class="smart-bar__actions">
-            <slot name="smart-bar-actions"></slot>
+            <slot name="smart-bar-actions" />
           </div>
         </div>
       </template>
@@ -65,7 +65,7 @@
         class="sw-page__side-content"
       >
         <div class="sw-page__side-content-inner">
-          <slot name="side-content"></slot>
+          <slot name="side-content" />
         </div>
       </div>
       <div class="sw-page__main-content">
@@ -73,7 +73,7 @@
           class="sw-page__main-content-inner"
           v-on="additionalEventListeners"
         >
-          <slot name="content"></slot>
+          <slot name="content" />
         </div>
       </div>
 
@@ -81,10 +81,9 @@
         v-if="hasSidebarSlot"
         class="sw-page__sidebar"
       >
-        <slot name="sidebar"></slot>
+        <slot name="sidebar" />
       </div>
     </div>
-
   </div>
 </template>
 
@@ -92,7 +91,7 @@
 import { getScrollbarWidth } from '../../../utils/dom';
 
 export default {
-  name: 'sw-page',
+  name: 'SwPage',
 
   props: {
     showSmartBar: {

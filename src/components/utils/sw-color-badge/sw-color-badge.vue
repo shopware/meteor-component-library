@@ -5,13 +5,13 @@
     v-bind="$attrs"
     :style="colorStyle"
   >
-    <slot></slot>
-</span>
+    <slot />
+  </span>
 </template>
 
 <script>
 export default {
-  name: 'sw-color-badge',
+  name: 'SwColorBadge',
   props: {
     variant: {
       type: String,

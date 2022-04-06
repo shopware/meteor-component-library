@@ -6,8 +6,8 @@
     <template v-if="needOneDimensionalArray">
       <apexchart
         v-for="(serie, index) in optimizedSeries"
-        v-bind="$attrs"
         :key="`multiple-chart-${index}`"
+        v-bind="$attrs"
         :type="type"
         :options="mergedOptions"
         :series="serie.data"
@@ -34,13 +34,13 @@ import objectMerge from 'lodash-es/merge';
 import { deepCopyObject } from '../../../utils/object';
 
 export default {
-  name: 'sw-chart',
-
-  inheritAttrs: false,
+  name: 'SwChart',
 
   components: {
     apexchart: VueApexCharts,
   },
+
+  inheritAttrs: false,
 
   props: {
     type: {

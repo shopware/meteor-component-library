@@ -18,7 +18,6 @@
           class="sw-field__radio-option group-bordered"
           :class="{ 'sw-field__radio-option-checked': currentIndex === index }"
         >
-
           <div class="sw-field__radio-input">
             <input
               :id="`${identification}-${index}`"
@@ -29,7 +28,7 @@
               :checked="currentIndex === index"
               @change="onChange"
             >
-            <div class="sw-field__radio-state"></div>
+            <div class="sw-field__radio-state" />
           </div>
 
           <!-- eslint-disable-next-line vuejs-accessibility/label-has-for -->
@@ -51,7 +50,7 @@
           <slot
             :name="`custom-field-${option.value}`"
             v-bind="{ option, disabled, checked: currentIndex === index }"
-          ></slot>
+          />
         </div>
       </div>
 
@@ -64,7 +63,7 @@
     </template>
 
     <template #label>
-      <slot name="label"></slot>
+      <slot name="label" />
     </template>
   </sw-base-field>
 </template>
@@ -75,9 +74,7 @@ import SwHelpText from '../../base/sw-help-text/sw-help-text.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 
 export default {
-  name: 'sw-radio-field',
-
-  inheritAttrs: false,
+  name: 'SwRadioField',
 
   components: {
     'sw-base-field': SwBaseField,
@@ -88,6 +85,8 @@ export default {
     SwFormFieldMixin,
     // Mixin.getByName('remove-api-error'),
   ],
+
+  inheritAttrs: false,
 
   model: {
     prop: 'value',

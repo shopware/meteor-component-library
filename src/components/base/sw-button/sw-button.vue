@@ -1,16 +1,16 @@
 <template>
-<!--  <router-link-->
-<!--    v-if="routerLink"-->
-<!--    :to="routerLink"-->
-<!--    class="sw-button"-->
-<!--    :event="!disabled ? 'click' : ''"-->
-<!--    :class="buttonClasses"-->
-<!--    v-bind="$attrs"-->
-<!--  >-->
-<!--    <span class="sw-button__content">-->
-<!--        <slot></slot>-->
-<!--    </span>-->
-<!--  </router-link>-->
+  <!--  <router-link-->
+  <!--    v-if="routerLink"-->
+  <!--    :to="routerLink"-->
+  <!--    class="sw-button"-->
+  <!--    :event="!disabled ? 'click' : ''"-->
+  <!--    :class="buttonClasses"-->
+  <!--    v-bind="$attrs"-->
+  <!--  >-->
+  <!--    <span class="sw-button__content">-->
+  <!--        <slot></slot>-->
+  <!--    </span>-->
+  <!--  </router-link>-->
 
   <a
     v-if="link"
@@ -22,7 +22,7 @@
     v-bind="$attrs"
   >
     <span class="sw-button__content">
-        <slot></slot>
+      <slot />
     </span>
   </a>
 
@@ -44,17 +44,16 @@
       class="sw-button__content"
       :class="contentVisibilityClass"
     >
-        <slot></slot>
+      <slot />
     </span>
   </button>
-
 </template>
 
-<script>
+<script lang="ts">
 import swIcon from '../sw-icon/sw-icon.vue';
 
 export default {
-  name: 'sw-button',
+  name: 'SwButton',
 
   components: {
     'sw-icon': swIcon,

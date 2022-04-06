@@ -2,9 +2,9 @@
   <div
     class="sw-inheritance-switch"
     :class="{
-        'sw-inheritance-switch--disabled': disabled,
-        'sw-inheritance-switch--is-inherited': isInherited,
-        'sw-inheritance-switch--is-not-inherited': !isInherited,
+      'sw-inheritance-switch--disabled': disabled,
+      'sw-inheritance-switch--is-inherited': isInherited,
+      'sw-inheritance-switch--is-not-inherited': !isInherited,
     }"
   >
     <sw-icon
@@ -34,7 +34,7 @@ import SwTooltipDirective from '../../../../directives/tooltip.directive';
 import SwIcon from '../../../base/sw-icon/sw-icon.vue';
 
 export default {
-  name: 'sw-inheritance-switch',
+  name: 'SwInheritanceSwitch',
 
   components: {
     'sw-icon': SwIcon,

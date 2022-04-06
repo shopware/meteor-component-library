@@ -35,7 +35,7 @@
     <slot
       name="sw-field-input"
       v-bind="{identification, error, disabled}"
-    ></slot>
+    />
 
     <sw-field-error :error="error" />
 
@@ -43,7 +43,7 @@
       v-if="$slots.hint"
       class="sw-field__hint"
     >
-      <slot name="hint"></slot>
+      <slot name="hint" />
     </div>
   </div>
 </template>
@@ -55,15 +55,15 @@ import SwFieldError from '../sw-field-error/sw-field-error.vue';
 import { createId } from '../../../../utils/uuid';
 
 export default {
-  name: 'sw-base-field',
-
-  inheritAttrs: false,
+  name: 'SwBaseField',
 
   components: {
     'sw-inheritance-switch': SwInheritanceSwitch,
     'sw-help-text': SwHelpText,
     'sw-field-error': SwFieldError,
   },
+
+  inheritAttrs: false,
 
   props: {
     name: {

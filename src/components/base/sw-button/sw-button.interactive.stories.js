@@ -1,8 +1,5 @@
-import {
-  within, fireEvent, findByRole, userEvent,
-} from '@storybook/testing-library';
+import { within, userEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
-import { action } from '@storybook/addon-actions';
 import SwButton from './sw-button.vue';
 
 export default {
@@ -40,7 +37,7 @@ TestDefaultSlot.storyName = 'Should allow to change the text by using the slot';
 TestDefaultSlot.args = {
   default: 'The new button text',
 };
-TestDefaultSlot.play = async ({ args }) => {
+TestDefaultSlot.play = async () => {
   // we can't use canvasElement because it is not available anymore
   const canvas = within(document.getElementById('root'));
 

@@ -16,7 +16,6 @@
         @focus="setFocusClass"
         @blur="removeFocusClass"
       >
-
         <option
           v-if="placeholder"
           class="sw-field--select__placeholder-option"
@@ -63,9 +62,7 @@ import SwIcon from '../../base/sw-icon/sw-icon.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 
 export default {
-  name: 'sw-select-field',
-
-  inheritAttrs: false,
+  name: 'SwSelectField',
 
   components: {
     'sw-block-field': SwBlockField,
@@ -77,6 +74,8 @@ export default {
     SwFormFieldMixin,
     // Mixin.getByName('remove-api-error'),
   ],
+
+  inheritAttrs: false,
 
   model: {
     prop: 'value',

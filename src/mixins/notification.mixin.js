@@ -1,5 +1,6 @@
 export default {
   methods: {
+    // eslint-disable-next-line no-unused-vars
     createNotification(notification) {
       // return Shopware.State.dispatch('notification/createNotification', notification);
     },

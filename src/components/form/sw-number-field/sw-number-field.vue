@@ -13,7 +13,7 @@
       <slot
         name="prefix"
         v-bind="{ disabled, identification }"
-      ></slot>
+      />
     </template>
 
     <template #sw-field-input="{ identification, error, disabled, size, setFocusClass, removeFocusClass }">
@@ -42,7 +42,7 @@
       <slot
         name="suffix"
         v-bind="{ identification }"
-      ></slot>
+      />
       <sw-field-copyable
         v-if="copyable"
         :display-name="identification"
@@ -52,7 +52,7 @@
     </template>
 
     <template #label>
-      <slot name="label"></slot>
+      <slot name="label" />
     </template>
   </sw-contextual-field>
 </template>
@@ -63,15 +63,15 @@ import SwContextualField from '../_internal/sw-contextual-field/sw-contextual-fi
 import SwFieldCopyable from '../_internal/sw-field-copyable/sw-field-copyable.vue';
 
 export default {
-  name: 'sw-number-field',
-  inheritAttrs: false,
-
-  extends: SwTextField,
+  name: 'SwNumberField',
 
   components: {
     'sw-contextual-field': SwContextualField,
     'sw-field-copyable': SwFieldCopyable,
   },
+
+  extends: SwTextField,
+  inheritAttrs: false,
 
   model: {
     prop: 'value',

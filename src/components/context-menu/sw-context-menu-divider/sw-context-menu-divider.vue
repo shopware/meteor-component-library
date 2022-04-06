@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'sw-context-menu-divider',
+  name: 'SwContextMenuDivider',
 };
 </script>
 

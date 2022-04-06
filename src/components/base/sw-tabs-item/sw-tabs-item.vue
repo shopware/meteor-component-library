@@ -6,7 +6,7 @@
     v-bind="$attrs"
     @click="clickEvent"
   >
-    <slot></slot>
+    <slot />
   </a>
 
 <!--  <router-link-->
@@ -33,7 +33,7 @@
 import { isEmpty } from 'lodash-es';
 
 export default {
-  name: 'sw-tabs-item',
+  name: 'SwTabsItem',
 
   inheritAttrs: false,
 

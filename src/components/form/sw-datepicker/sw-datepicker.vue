@@ -11,7 +11,7 @@
     @inheritance-remove="$emit('inheritance-remove', $event)"
     v-on="additionalEventListeners"
   >
-
+    <!-- eslint-disable-next-line vue/no-template-shadow -->
     <template #sw-field-input="{ identification, disabled }">
       <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
       <input
@@ -50,7 +50,7 @@
     </template>
 
     <template #label>
-      <slot name="label"></slot>
+      <slot name="label" />
     </template>
   </sw-contextual-field>
 </template>
@@ -80,9 +80,7 @@ const allEvents = [
 ];
 
 export default {
-  name: 'sw-datepicker',
-
-  inheritAttrs: false,
+  name: 'SwDatepicker',
 
   components: {
     'sw-contextual-field': SwContextualField,
@@ -93,6 +91,8 @@ export default {
     SwFormFieldMixin,
     // Mixin.getByName('remove-api-error'),
   ],
+
+  inheritAttrs: false,
 
   props: {
     value: {
@@ -150,7 +150,9 @@ export default {
       return this.$refs.flatpickrInput;
     },
 
+    // eslint-disable-next-line vue/return-in-computed-property
     locale() {
+      // TODO: Add the return value back
       // return Shopware.State.getters.adminLocaleLanguage || 'en';
     },
 
@@ -209,6 +211,8 @@ export default {
     },
 
     userTimeZone() {
+      // TODO: Add this functionality back
+      // eslint-disable-next-line no-undef
       return Shopware?.State?.get('session')?.currentUser?.timeZone ?? 'UTC';
     },
 

@@ -1,24 +1,54 @@
+require("@rushstack/eslint-patch/modern-module-resolution")
+
 module.exports = {
   root: true,
+  extends: [
+    'eslint:recommended',
+    'plugin:vue/recommended',
+  ],
   env: {
-    node: true,
+    browser: true,
+    es6: true,
   },
-  extends: ['plugin:vue/essential', '@vue/airbnb', '@vue/typescript/recommended', 'plugin:storybook/recommended'],
+  parser: 'vue-eslint-parser',
   parserOptions: {
-    ecmaVersion: 2020,
+    parser: "@typescript-eslint/parser",
+    project: './tsconfig.json',
+    extraFileExtensions: ['.vue'],
   },
-  rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'import/no-extraneous-dependencies': 'off',
-    quotes: ['error', 'single', {
-      allowTemplateLiterals: true,
-    }],
-  },
-  overrides: [{
-    files: ['**/__tests__/*.{j,t}s?(x)', '**/tests/unit/**/*.spec.{j,t}s?(x)'],
-    env: {
-      jest: true,
-    },
-  }],
-};
+  overrides: [
+    {
+      files: ['**/*.ts', '**/*.vue'],
+      parser: 'vue-eslint-parser',
+      parserOptions: {
+        parser: "@typescript-eslint/parser",
+        project: './tsconfig.json',
+        extraFileExtensions: ['.vue'],
+      },
+      extends: [
+        'eslint:recommended',
+        'plugin:vue/recommended',
+        'plugin:@typescript-eslint/recommended',
+        'plugin:@typescript-eslint/recommended-requiring-type-checking',
+        '@vue/eslint-config-typescript',
+      ],
+      rules: {
+        /** 
+         * Rules need to be disabled because we can't differ between
+         * JS and TS .vue files: https://github.com/vuejs/vue-eslint-parser/issues/104
+         */
+        '@typescript-eslint/no-unsafe-return': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
+        '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-empty-function': 'off',
+        '@typescript-eslint/no-floating-promises': 'off',
+        '@typescript-eslint/explicit-module-boundary-types': 'off',
+        '@typescript-eslint/restrict-template-expressions': 'off',
+        '@typescript-eslint/restrict-plus-operands': 'off',
+        '@typescript-eslint/unbound-method': 'off',
+        'no-prototype-builtins': 'off'
+      }
+    }
+  ]
+}

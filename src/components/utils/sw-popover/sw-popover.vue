@@ -6,7 +6,7 @@
       :class="popoverClass"
       :style="componentStyle"
     >
-      <slot></slot>
+      <slot />
     </div>
   </div>
 </template>
@@ -15,7 +15,7 @@
 import SwPopoverDirective from '../../../directives/popover.directive';
 
 export default {
-  name: 'sw-popover',
+  name: 'SwPopover',
 
   directives: {
     popover: SwPopoverDirective,

@@ -7,6 +7,7 @@
     @select-collapsed="onSelectCollapsed"
     v-on="$listeners"
   >
+    <!-- eslint-disable-next-line vue/no-unused-vars -->
     <template #sw-select-selection="{ identification, error, disabled, size, expand, collapse }">
       <sw-select-selection-list
         ref="selectionList"
@@ -18,6 +19,7 @@
         @last-item-delete="removeLastItem"
         @search-term-change="onSearchTermChange"
       >
+        <!-- eslint-disable-next-line vue/no-template-shadow -->
         <template #label-property="{ item, index, labelProperty, valueProperty }">
           <slot
             name="selection-label-property"
@@ -25,9 +27,9 @@
           >
             {{ getKey(item, labelProperty) }}
           </slot>
-          </template>
-        </sw-select-selection-list>
-      </template>
+        </template>
+      </sw-select-selection-list>
+    </template>
     <template #results-list>
       <sw-select-result-list
         ref="swSelectResultList"
@@ -39,7 +41,7 @@
         @item-select="addItem"
       >
         <template #before-item-list>
-          <slot name="before-item-list"></slot>
+          <slot name="before-item-list" />
         </template>
         <template #result-item="{ item, index }">
           <slot
@@ -66,18 +68,18 @@
                   {{ getKey(item, labelProperty) }}
                 </template>
               </slot>
-              </li>
+            </li>
           </slot>
         </template>
 
         <template #after-item-list>
-          <slot name="after-item-list"></slot>
+          <slot name="after-item-list" />
         </template>
-        </sw-select-result-list>
-      </template>
+      </sw-select-result-list>
+    </template>
 
     <template #label>
-      <slot name="label"></slot>
+      <slot name="label" />
     </template>
   </sw-select-base>
 </template>
@@ -90,9 +92,7 @@ import SwSelectSelectionList from '../_internal/sw-select-selection-list/sw-sele
 import SwHighlightText from '../../base/sw-highlight-text/sw-highlight-text.vue';
 
 export default {
-  name: 'sw-multi-select',
-
-  inheritAttrs: false,
+  name: 'SwMultiSelect',
 
   components: {
     'sw-select-base': SwSelectBase,
@@ -100,6 +100,8 @@ export default {
     'sw-select-selection-list': SwSelectSelectionList,
     'sw-highlight-text': SwHighlightText,
   },
+
+  inheritAttrs: false,
 
   // mixins: [
   //   Mixin.getByName('remove-api-error'),

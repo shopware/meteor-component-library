@@ -3,19 +3,18 @@
     class="sw-address"
     :class="addressClasses"
   >
-
     <div
       v-if="headline"
       class="sw-address__headline"
     >
       {{ headline }}
-<!--      <router-link-->
-<!--        v-if="showEditButton && editLink"-->
-<!--        class="sw-address-headline-link"-->
-<!--        :to="editLink"-->
-<!--      >-->
-<!--        {{ $tc('global.default.edit') }}-->
-<!--      </router-link>-->
+      <!--      <router-link-->
+      <!--        v-if="showEditButton && editLink"-->
+      <!--        class="sw-address-headline-link"-->
+      <!--        :to="editLink"-->
+      <!--      >-->
+      <!--        {{ $tc('global.default.edit') }}-->
+      <!--      </router-link>-->
     </div>
 
     <div class="sw-address__body">
@@ -64,16 +63,16 @@
       </div>
 
       <div class="sw-address__line">
-            <span v-if="address.countryState && address.countryState.name">
-                {{ address.countryState.name }},
-            </span>
+        <span v-if="address.countryState && address.countryState.name">
+          {{ address.countryState.name }},
+        </span>
 
         <span
           v-if="address.country && address.country.name"
           class="sw-address__country"
         >
-                {{ address.country.name }}
-            </span>
+          {{ address.country.name }}
+        </span>
       </div>
     </div>
   </div>
@@ -83,7 +82,7 @@
 import salutation from '../../../filters/salutation.filter';
 
 export default {
-  name: 'sw-address',
+  name: 'SwAddress',
 
   filters: {
     salutation,

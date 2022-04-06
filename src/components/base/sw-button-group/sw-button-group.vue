@@ -3,13 +3,13 @@
     class="sw-button-group"
     :class="buttonGroupClasses"
   >
-    <slot></slot>
-</span>
+    <slot />
+  </span>
 </template>
 
 <script>
 export default {
-  name: 'sw-button-group',
+  name: 'SwButtonGroup',
 
   props: {
     block: {

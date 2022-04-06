@@ -1,14 +1,14 @@
 <template>
   <div class="sw-card-view">
     <div class="sw-card-view__content">
-      <slot></slot>
+      <slot />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'sw-card-view',
+  name: 'SwCardView',
 };
 </script>
 

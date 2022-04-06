@@ -15,7 +15,7 @@
           @change="onChange"
         >
         <div class="sw-field__switch-state">
-          <div class="sw-field__switch-state-knob"></div>
+          <div class="sw-field__switch-state-knob" />
         </div>
       </div>
 
@@ -29,10 +29,9 @@
         @inheritance-remove="$emit('inheritance-remove', $event)"
       >
         <template #label>
-          <slot name="label"></slot>
+          <slot name="label" />
         </template>
       </sw-base-field>
-
     </div>
     <sw-field-error :error="error" />
   </div>
@@ -42,11 +41,11 @@
 import SwCheckboxField from '../sw-checkbox-field/sw-checkbox-field.vue';
 
 export default {
-  name: 'sw-switch-field',
-
-  inheritAttrs: false,
+  name: 'SwSwitchField',
 
   extends: SwCheckboxField,
+
+  inheritAttrs: false,
 
   props: {
     noMarginTop: {

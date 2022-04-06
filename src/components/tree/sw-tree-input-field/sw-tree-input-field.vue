@@ -3,9 +3,7 @@
     class="sw-tree-item sw-tree-input-field is--no-children"
     :class="classes"
   >
-
     <div class="sw-tree-item__element">
-
       <div class="sw-tree-item__icon">
         <sw-icon
           v-if="!disabled"
@@ -27,8 +25,8 @@
           v-if="disabled"
           class="sw-tree-input-field__language-warning"
         >
-                {{ $tc('sw-tree.general.actions.actionsDisabledInLanguage') }}.
-            </span>
+          {{ $tc('sw-tree.general.actions.actionsDisabledInLanguage') }}.
+        </span>
       </div>
     </div>
   </div>
@@ -39,7 +37,7 @@ import SwIcon from '../../base/sw-icon/sw-icon.vue';
 import SwConfirmField from '../../form/_internal/sw-confirm-field/sw-confirm-field.vue';
 
 export default {
-  name: 'sw-tree-input-field',
+  name: 'SwTreeInputField',
 
   components: {
     'sw-icon': SwIcon,

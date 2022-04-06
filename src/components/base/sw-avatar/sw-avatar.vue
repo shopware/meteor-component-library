@@ -7,15 +7,15 @@
     role="img"
   >
     <slot>
-        <span
-          v-if="showInitials"
-          class="sw-avatar__initials"
-        >
-            {{ avatarInitials }}
-        </span>
-        <span v-if="showPlaceholder">
-            <sw-icon name="default-avatar-single" />
-        </span>
+      <span
+        v-if="showInitials"
+        class="sw-avatar__initials"
+      >
+        {{ avatarInitials }}
+      </span>
+      <span v-if="showPlaceholder">
+        <sw-icon name="default-avatar-single" />
+      </span>
     </slot>
   </span>
 </template>
@@ -39,7 +39,7 @@ const colors = [
 ];
 
 export default {
-  name: 'sw-avatar',
+  name: 'SwAvatar',
 
   props: {
     color: {

@@ -31,9 +31,8 @@
         @inheritance-restore="$emit('inheritance-restore', $event)"
         @inheritance-remove="$emit('inheritance-remove', $event)"
       >
-
         <template #label>
-          <slot name="label"></slot>
+          <slot name="label" />
         </template>
       </sw-base-field>
     </div>
@@ -50,8 +49,7 @@ import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 import { createId } from '../../../utils/uuid';
 
 export default {
-  name: 'sw-checkbox-field',
-  inheritAttrs: false,
+  name: 'SwCheckboxField',
 
   components: {
     'sw-icon': SwIcon,
@@ -63,6 +61,7 @@ export default {
     SwFormFieldMixin,
     // Mixin.getByName('remove-api-error'),
   ],
+  inheritAttrs: false,
 
   model: {
     prop: 'value',

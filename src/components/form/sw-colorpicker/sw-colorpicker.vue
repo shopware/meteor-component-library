@@ -16,14 +16,15 @@
           <div
             class="sw-colorpicker__previewColor"
             :style="{ background: previewColorValue }"
-          ></div>
+          />
           <div
             class="sw-colorpicker__previewBackground"
             :class="{'is--invalid': !isColorValid}"
-          ></div>
+          />
         </div>
       </template>
 
+      <!-- eslint-disable-next-line vue/no-template-shadow -->
       <template #sw-field-input="{ disabled }">
         <input
           v-model="colorValue"
@@ -36,9 +37,8 @@
       </template>
 
       <template #label>
-        <slot name="label"></slot>
+        <slot name="label" />
       </template>
-
     </sw-contextual-field>
 
     <sw-popover
@@ -56,7 +56,7 @@
           <div
             class="sw-colorpicker__colorpicker-selector"
             :style="selectorStyles"
-          ></div>
+          />
         </div>
         <div class="sw-colorpicker__row">
           <div class="sw-colorpicker__sliders">
@@ -90,11 +90,11 @@
             <div
               class="sw-colorpicker__colorpicker-previewColor"
               :style="{ background: previewColorValue}"
-            ></div>
+            />
             <div
               class="sw-colorpicker__colorpicker-previewBackground"
               :class="{ 'is--invalid': !isColorValid }"
-            ></div>
+            />
           </div>
         </div>
 
@@ -196,7 +196,7 @@ import SwPopover from '../../utils/sw-popover/sw-popover.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 
 export default {
-  name: 'sw-colorpicker',
+  name: 'SwColorpicker',
 
   components: {
     'sw-contextual-field': SwContextualField,
@@ -295,7 +295,7 @@ export default {
 
     sliderBackground() {
       // eslint-disable-next-line max-len
-      return `linear-gradient(90deg, hsla(${this.hueValue}, ${this.saturationValue}%, ${this.luminanceValue}%, 0), hsl(${this.hueValue}, ${this.saturationValue}%, ${this.luminanceValue}%)), url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 20 20\' width=\'100%25\' height=\'100%25\'%3E%3Crect width=\'10\' height=\'10\' x=\'00\' y=\'00\' fill=\'%23cdd5db\' /%3E%3Crect width=\'10\' height=\'10\' x=\'10\' y=\'10\' fill=\'%23cdd5db\' /%3E%3C/svg%3E")`;
+      return `linear-gradient(90deg, hsla(${this.hueValue}, ${this.saturationValue}%, ${this.luminanceValue}%, 0), hsl(${this.hueValue}, ${this.saturationValue}%, ${this.luminanceValue}%)), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' width='100%25' height='100%25'%3E%3Crect width='10' height='10' x='00' y='00' fill='%23cdd5db' /%3E%3Crect width='10' height='10' x='10' y='10' fill='%23cdd5db' /%3E%3C/svg%3E")`;
     },
 
     isColorValid() {

@@ -14,20 +14,21 @@
         :class="prefixClass"
         @click="changeMode(disabled)"
       >
-            <sw-icon
-              v-if="sslActive"
-              name="default-lock-closed"
-              :small="true"
-            />
-            <sw-icon
-              v-else
-              name="default-lock-open"
-              :small="true"
-            />
-            {{ urlPrefix }}
-        </span>
+        <sw-icon
+          v-if="sslActive"
+          name="default-lock-closed"
+          :small="true"
+        />
+        <sw-icon
+          v-else
+          name="default-lock-open"
+          :small="true"
+        />
+        {{ urlPrefix }}
+      </span>
     </template>
 
+    <!-- eslint-disable-next-line vue/no-unused-vars, vue/no-template-shadow -->
     <template #sw-field-input="{ identification, error, disabled, size, setFocusClass, removeFocusClass }">
       <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
       <input
@@ -57,9 +58,8 @@
     </template>
 
     <template #label>
-      <slot name="label"></slot>
+      <slot name="label" />
     </template>
-
   </sw-contextual-field>
 </template>
 
@@ -70,18 +70,14 @@ import SwIcon from '../../base/sw-icon/sw-icon.vue';
 import UnicodeUriFilter from '../../../filters/unicode-uri.filter';
 
 const URL_REGEX = {
-  PROTOCOL: /([a-zA-Z0-9]+\:\/\/)+/,
+  PROTOCOL: /([a-zA-Z0-9]+:\/\/)+/,
   PROTOCOL_HTTP: /^https?:\/\//,
   SSL: /^\s*https:\/\//,
   TRAILING_SLASH: /\/+$/,
 };
 
 export default {
-  name: 'sw-url-field',
-
-  inheritAttrs: false,
-
-  extends: SwTextField,
+  name: 'SwUrlField',
 
   components: {
     'sw-icon': SwIcon,
@@ -90,6 +86,10 @@ export default {
   filters: {
     unicodeUri: UnicodeUriFilter,
   },
+
+  extends: SwTextField,
+
+  inheritAttrs: false,
 
   props: {
     error: {

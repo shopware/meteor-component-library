@@ -5,14 +5,14 @@
         class="sw-progress-bar__value"
         :style="{ width: styleWidth }"
         :class="progressClasses"
-      ></div>
+      />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'sw-progress-bar',
+  name: 'SwProgressBar',
 
   props: {
     value: {

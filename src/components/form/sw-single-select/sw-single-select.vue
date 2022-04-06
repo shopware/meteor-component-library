@@ -9,6 +9,7 @@
     @select-collapsed="onSelectCollapsed"
     v-on="$listeners"
   >
+    <!-- eslint-disable-next-line vue/no-unused-vars -->
     <template #sw-select-selection="{ identification, error, disabled, size, setFocusClass, removeFocusClass }">
       <div class="sw-single-select__selection">
         <div
@@ -53,7 +54,7 @@
         @item-select="setValue"
       >
         <template #before-item-list>
-          <slot name="before-item-list"></slot>
+          <slot name="before-item-list" />
         </template>
 
         <template #result-item="{ item, index }">
@@ -87,13 +88,13 @@
         </template>
 
         <template #after-item-list>
-          <slot name="after-item-list"></slot>
+          <slot name="after-item-list" />
         </template>
       </sw-select-result-list>
     </template>
 
     <template #label>
-      <slot name="label"></slot>
+      <slot name="label" />
     </template>
   </sw-select-base>
 </template>
@@ -105,7 +106,7 @@ import SwSelectResultList from '../_internal/sw-select-result-list/sw-select-res
 import SwHighlightText from '../../base/sw-highlight-text/sw-highlight-text.vue';
 
 export default {
-  name: 'sw-single-select',
+  name: 'SwSingleSelect',
 
   components: {
     'sw-select-base': SwSelectBase,

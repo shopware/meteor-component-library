@@ -18,7 +18,7 @@ import SwLabel from '../sw-label/sw-label.vue';
 import SwIcon from '../sw-icon/sw-icon.vue';
 
 export default {
-  name: 'sw-circle-icon',
+  name: 'SwCircleIcon',
 
   components: {
     'sw-label': SwLabel,

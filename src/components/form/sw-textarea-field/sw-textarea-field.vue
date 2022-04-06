@@ -18,7 +18,7 @@
         @input="onInput"
         @focus="setFocusClass"
         @blur="removeFocusClass"
-      ></textarea>
+      />
     </template>
   </sw-block-field>
 </template>
@@ -28,18 +28,18 @@ import SwBlockField from '../_internal/sw-block-field/sw-block-field.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 
 export default {
-  name: 'sw-textarea-field',
+  name: 'SwTextareaField',
 
   components: {
     'sw-block-field': SwBlockField,
   },
 
-  inheritAttrs: false,
-
   mixins: [
     SwFormFieldMixin,
     // Mixin.getByName('remove-api-error'),
   ],
+
+  inheritAttrs: false,
 
   props: {
     value: {

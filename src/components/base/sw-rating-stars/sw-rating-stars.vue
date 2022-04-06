@@ -4,7 +4,6 @@
     class="sw-rating-stars"
     :style="dynamicWidthStyle"
   >
-
     <div class="sw-rating-stars__placeholder">
       <sw-icon
         v-for="currentStar in maxStars"
@@ -40,7 +39,7 @@ import SwIcon from '../sw-icon/sw-icon.vue';
 import SwTooltipDirective from '../../../directives/tooltip.directive';
 
 export default {
-  name: 'sw-rating-stars',
+  name: 'SwRatingStars',
 
   components: {
     'sw-icon': SwIcon,

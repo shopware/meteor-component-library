@@ -46,7 +46,6 @@
 
     <div class="sw-tree__content">
       <div class="tree-items">
-
         <sw-tree-input-field
           v-if="hasNoItems && allowCreateCategories"
           :disabled="disableContextMenu"
@@ -66,7 +65,6 @@
           :selectedItemsPathIds="selectedItemsPathIds"
           :checkedItemIds="checkedItemIds"
         >
-
           <sw-tree-item
             v-for="item in treeItems"
             :key="item.id"
@@ -77,11 +75,9 @@
             :active-item-ids="checkedItemIds"
             @check-item="checkItem"
           />
-
         </slot>
 
         <sw-loader v-if="isLoading" />
-
       </div>
     </div>
 
@@ -154,7 +150,7 @@ import SwTreeInputField from '../sw-tree-input-field/sw-tree-input-field.vue';
 import SwModal from '../../base/sw-modal/sw-modal.vue';
 
 export default {
-  name: 'sw-tree',
+  name: 'SwTree',
 
   components: {
     'sw-tree-item': SwTreeItem,

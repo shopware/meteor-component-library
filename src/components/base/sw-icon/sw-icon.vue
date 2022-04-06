@@ -14,7 +14,7 @@
 <script>
 
 export default {
-  name: 'sw-icon',
+  name: 'SwIcon',
 
   props: {
     name: {
@@ -96,6 +96,8 @@ export default {
   methods: {
     createdComponent() {
       if (this.color && this.multicolor) {
+        // TODO: Import warn
+        // eslint-disable-next-line no-undef
         warn(
           this.$options.name,
           `The color of "${this.name}" cannot be adjusted because it is a multicolor icon.`,

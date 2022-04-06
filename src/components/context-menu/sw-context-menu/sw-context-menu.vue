@@ -1,14 +1,14 @@
 <template>
   <div class="sw-context-menu">
     <div class="sw-context-menu__content">
-      <slot></slot>
+      <slot />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'sw-context-menu',
+  name: 'SwContextMenu',
 };
 </script>
 

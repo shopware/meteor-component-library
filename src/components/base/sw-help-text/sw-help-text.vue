@@ -1,16 +1,16 @@
 <template>
   <span
     v-tooltip="{
-        message: text,
-        width: width,
-        position: tooltipPosition,
-        showDelay: showDelay,
-        hideDelay: hideDelay
+      message: text,
+      width: width,
+      position: tooltipPosition,
+      showDelay: showDelay,
+      hideDelay: hideDelay
     }"
     class="sw-help-text"
   >
     <sw-icon name="small-questionmark" />
-</span>
+  </span>
 </template>
 
 <script>
@@ -18,7 +18,7 @@ import SwIcon from '../sw-icon/sw-icon.vue';
 import SwTooltipDirective from '../../../directives/tooltip.directive';
 
 export default {
-  name: 'sw-help-text',
+  name: 'SwHelpText',
 
   components: {
     'sw-icon': SwIcon,

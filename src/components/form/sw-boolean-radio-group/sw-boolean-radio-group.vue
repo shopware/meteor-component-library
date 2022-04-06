@@ -1,18 +1,18 @@
 <template>
   <sw-radio-field
+    v-model="castedValue"
     class="sw-boolean-radio-group"
     v-bind="$attrs"
     :options="options"
-    v-model="castedValue"
-    :bordered="bordered">
-  </sw-radio-field>
+    :bordered="bordered"
+  />
 </template>
 
 <script>
 import SwRadioField from '../sw-radio-field/sw-radio-field.vue';
 
 export default {
-  name: 'sw-boolean-radio-group',
+  name: 'SwBooleanRadioGroup',
 
   components: {
     'sw-radio-field': SwRadioField,

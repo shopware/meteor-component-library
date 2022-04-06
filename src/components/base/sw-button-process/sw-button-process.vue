@@ -4,7 +4,6 @@
     v-bind="$attrs"
     v-on="$listeners"
   >
-
     <sw-icon
       v-if="processSuccess"
       class="sw-button-process__status-indicator"
@@ -14,7 +13,7 @@
       class="sw-button-process__content"
       :class="contentVisibilityClass"
     >
-        <slot></slot>
+      <slot />
     </span>
   </sw-button>
 </template>
@@ -24,7 +23,7 @@ import swButton from '../sw-button/sw-button.vue';
 import swIcon from '../sw-icon/sw-icon.vue';
 
 export default {
-  name: 'sw-button-process',
+  name: 'SwButtonProcess',
 
   components: {
     'sw-button': swButton,

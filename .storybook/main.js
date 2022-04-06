@@ -24,9 +24,6 @@ module.exports = {
       module: {
         ...config.module,
         rules: [
-          // this conflicts with the rules of storybook
-          // TODO: check if interactions work now
-          // ...custom.module.rules,
           ...config.module.rules,
         ]
       },

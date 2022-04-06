@@ -21,13 +21,13 @@
       </div>
     </slot>
 
-    <slot name="tabs"></slot>
+    <slot name="tabs" />
 
     <div
       v-if="!!$slots.toolbar"
       class="sw-card__toolbar"
     >
-      <slot name="toolbar"></slot>
+      <slot name="toolbar" />
     </div>
 
     <div class="sw-card__content">
@@ -36,16 +36,15 @@
         class="sw-card__context-menu"
       >
         <sw-context-button>
-          <slot name="context-actions"></slot>
+          <slot name="context-actions" />
         </sw-context-button>
       </div>
-      <slot></slot>
+      <slot />
       <slot
         name="grid"
         :title="title"
-      >
-      </slot>
-      <slot name="footer"></slot>
+      />
+      <slot name="footer" />
 
       <sw-loader v-if="isLoading" />
     </div>

@@ -5,10 +5,10 @@
       :style="loaderSize"
     >
       <div class="sw-loader-element">
-        <div :style="{ borderWidth: borderWidth }"></div>
-        <div :style="{ borderWidth: borderWidth }"></div>
-        <div :style="{ borderWidth: borderWidth }"></div>
-        <div :style="{ borderWidth: borderWidth }"></div>
+        <div :style="{ borderWidth: borderWidth }" />
+        <div :style="{ borderWidth: borderWidth }" />
+        <div :style="{ borderWidth: borderWidth }" />
+        <div :style="{ borderWidth: borderWidth }" />
       </div>
     </div>
   </div>
@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  name: 'sw-loader',
+  name: 'SwLoader',
 
   props: {
     size: {
