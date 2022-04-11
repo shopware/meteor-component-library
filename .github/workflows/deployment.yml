@@ -28,9 +28,14 @@ jobs:
       - name: Create the static pages directory locally in CI
         run: npm run build-storybook
 
+      - name: Deploy preview
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./storybook-static/
+
       - name: Deploy 🚀
         if: github.ref == 'refs/heads/main'
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages
-          folder: storybook-static
+          folder: ./storybook-static/
