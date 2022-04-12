@@ -42,5 +42,7 @@ jobs:
     - name: Install dependencies (if the cached directory was not found)
       if: steps.node-cache.outputs.cache-hit != 'true'
       run: npm ci
+    - name: Install Playwright
+      run: npx playwright install
     - name: Run Tests
       run: npm run test-storybook:ci
