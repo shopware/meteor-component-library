@@ -199,7 +199,7 @@ $sw-avatar-size-default: 40px;
   display: inline-block;
   width: $sw-avatar-size-default;
   height: $sw-avatar-size-default;
-  border-radius: 100%;
+  border-radius: 8px;
   background: $color-gray-200 no-repeat center center;
   background-size: cover;
   text-align: center;
