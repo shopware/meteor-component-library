@@ -10,7 +10,8 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "test-storybook": "test-storybook",
-    "test-storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npm run build-storybook --quiet && npx http-server storybook-static --port 6006 --silent\" \"wait-on tcp:6006 && npm run test-storybook\""
+    "test-storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npm run build-storybook --quiet && npx http-server storybook-static --port 6006 --silent\" \"wait-on tcp:6006 && npm run test-storybook\"",
+    "chromatic": "npx chromatic --project-token=41a314617e62"
   },
   "dependencies": {
     "@rushstack/eslint-patch": "^1.1.1",
@@ -52,6 +53,7 @@
     "@vue/test-utils": "^1.0.3",
     "babel-loader": "^8.2.3",
     "chokidar-cli": "^3.0.0",
+    "chromatic": "^6.5.4",
     "concurrently": "^7.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.20.2",
