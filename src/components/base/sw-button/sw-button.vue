@@ -205,7 +205,7 @@ $sw-button-transition: all 0.15s ease-out;
   }
 
   &.sw-button--primary {
-     background: $color-shopware-brand-900;
+     background: $color-shopware-brand-500;
      color: $color-white;
      line-height: 36px;
      border: 0 none;
