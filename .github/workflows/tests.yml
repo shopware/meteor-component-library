@@ -45,4 +45,11 @@ jobs:
     - name: Install Playwright
       run: npx playwright install
     - name: Run Tests
+      id: storybookTests
       run: npm run test-storybook:ci
+    - name: Archive visual test diffs
+      uses: actions/upload-artifact@v3
+      if: always() && (steps.storybookTests.outcome == 'failure')
+      with:
+        name: visual-test-diffs
+        path: __snapshots__/__diff_output__

@@ -25,3 +25,4 @@ pnpm-debug.log*
 storybook-static
 test-results/
 playwright-report/
+__snapshots__/diff_output__/

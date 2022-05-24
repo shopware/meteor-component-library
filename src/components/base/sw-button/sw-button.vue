@@ -1,21 +1,9 @@
 <template>
-  <!--  <router-link-->
-  <!--    v-if="routerLink"-->
-  <!--    :to="routerLink"-->
-  <!--    class="sw-button"-->
-  <!--    :event="!disabled ? 'click' : ''"-->
-  <!--    :class="buttonClasses"-->
-  <!--    v-bind="$attrs"-->
-  <!--  >-->
-  <!--    <span class="sw-button__content">-->
-  <!--        <slot></slot>-->
-  <!--    </span>-->
-  <!--  </router-link>-->
-
   <a
     v-if="link"
     :href="!disabled ? link : ''"
     target="_blank"
+    role="button"
     rel="noopener"
     class="sw-button"
     :class="buttonClasses"
@@ -60,6 +48,9 @@ export default {
   },
 
   props: {
+    /**
+     * Disables the button
+     */
     disabled: {
       type: Boolean,
       required: false,
@@ -73,7 +64,6 @@ export default {
       type: String,
       required: false,
       default: '',
-      validValues: ['primary', 'ghost', 'danger', 'ghost-danger', 'contrast', 'context'],
       validator(value) {
         if (!value.length) {
           return true;
@@ -81,11 +71,14 @@ export default {
         return ['primary', 'ghost', 'danger', 'ghost-danger', 'contrast', 'context'].includes(value);
       },
     },
+    /**
+     * Change the size of the button
+     * @values x-small, small, large
+     */
     size: {
       type: String,
       required: false,
       default: '',
-      validValues: ['x-small', 'small', 'large'],
       validator(value) {
         if (!value.length) {
           return true;
@@ -93,27 +86,35 @@ export default {
         return ['x-small', 'small', 'large'].includes(value);
       },
     },
+    /**
+     * The button will be rendered as a square. You need to consider the text length
+     * if you activate this propety.
+     */
     square: {
       type: Boolean,
       required: false,
       default: false,
     },
+    /**
+     * Renders the button as a block element instead of an inline-block element. The button
+     * fills up all horizontal space.
+     */
     block: {
       type: Boolean,
       required: false,
       default: false,
     },
-    // FIXME: add required flag
-    // eslint-disable-next-line vue/require-default-prop
-    // routerLink: {
-    //   type: Object,
-    //   required: false,
-    // },
+    /**
+     * If a link is provided then the user gets redirected to a new tab on a click.
+     */
     link: {
       type: String,
       required: false,
       default: null,
     },
+    /**
+     * Shows a loading indicator instead of the text.
+     */
     isLoading: {
       type: Boolean,
       default: false,
@@ -124,8 +125,8 @@ export default {
   computed: {
     buttonClasses() {
       return {
-        [`sw-button--${this.variant}`]: this.variant,
-        [`sw-button--${this.size}`]: this.size,
+        [`sw-button--${this.variant}`]: !!this.variant,
+        [`sw-button--${this.size}`]: !!this.size,
         'sw-button--block': this.block,
         'sw-button--disabled': this.disabled,
         'sw-button--square': this.square,
