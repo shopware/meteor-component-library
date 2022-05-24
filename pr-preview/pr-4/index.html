@@ -37,10 +37,18 @@
         /* eslint-enable object-shorthand */
       })
     );
-  };</script><style>/* Hide all interaction tests in the menu */
-  [id$='interaction-tests'] {
+  };</script><style>/* 
+   * Hide all interaction tests in the menu
+   * in development
+   */
+   body:not(.show-interaction-tests) [id$='interaction-tests'],
+   body:not(.show-interaction-tests) [data-parent-id='interaction-tests'] {
     display: none !important;
-  }</style><style>#root[hidden],
+   }</style><script>setTimeout(() => {
+    if (window.CONFIG_TYPE === 'DEVELOPMENT') {
+      document.body.classList.add('show-interaction-tests');
+    }
+  }, 0)</script><style>#root[hidden],
       #docs-root[hidden] {
         display: none !important;
       }</style></head><body><div id="root"></div><div id="docs-root"></div><script>window['CONFIG_TYPE'] = "PRODUCTION";
