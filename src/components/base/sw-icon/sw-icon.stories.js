@@ -4,7 +4,7 @@ export default {
   title: 'Components/base/sw-icon',
   component: SwIcon,
   args: {
-    name: 'default-building-shop',
+    name: 'regular-products',
     color: '#3498db',
     small: false,
     large: false,

@@ -1,5 +1,5 @@
 <template>
-  <sw-block-field
+  <sw-block-field-deprecated
     class="sw-select"
     :class="swFieldClasses"
     v-bind="$attrs"
@@ -63,11 +63,11 @@
     <template #label>
       <slot name="label" />
     </template>
-  </sw-block-field>
+  </sw-block-field-deprecated>
 </template>
 
 <script>
-import SwBlockField from '../sw-block-field/sw-block-field.vue';
+import SwBlockFieldDeprecated from '../sw-block-field-deprecated/sw-block-field-deprecated.vue';
 import SwIcon from '../../../base/sw-icon/sw-icon.vue';
 import SwLoader from '../../../utils/sw-loader/sw-loader.vue';
 
@@ -75,7 +75,7 @@ export default {
   name: 'SwSelectBase',
 
   components: {
-    'sw-block-field': SwBlockField,
+    'sw-block-field-deprecated': SwBlockFieldDeprecated,
     'sw-icon': SwIcon,
     'sw-loader': SwLoader,
   },

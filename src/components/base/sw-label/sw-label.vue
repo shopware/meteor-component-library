@@ -111,6 +111,7 @@ export default {
 </script>
 
 <style lang="scss">
+@use "sass:math";
 @import "../../assets/scss/variables.scss";
 @import "../../assets/scss/mixins.scss";
 
@@ -141,7 +142,7 @@ export default {
   }
 }
 
-$sw-label-border-radius: $border-radius-default / 2;
+$sw-label-border-radius: math.div($border-radius-default, 2);
 $sw-label-pill-border-radius: 50px;
 
 .sw-label {

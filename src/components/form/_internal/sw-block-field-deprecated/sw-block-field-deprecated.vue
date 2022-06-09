@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import SwBaseField from '../sw-base-field/sw-base-field.vue';
+import SwBaseField from '../sw-base-field-deprecated/sw-base-field-deprecated.vue';
 
 export default {
   name: 'SwBlockField',

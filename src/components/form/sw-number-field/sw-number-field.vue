@@ -1,5 +1,5 @@
 <template>
-  <sw-contextual-field
+  <sw-contextual-field-deprecated
     class="sw-field--number"
     v-bind="$attrs"
     :name="formFieldName"
@@ -54,19 +54,19 @@
     <template #label>
       <slot name="label" />
     </template>
-  </sw-contextual-field>
+  </sw-contextual-field-deprecated>
 </template>
 
 <script>
 import SwTextField from '../sw-text-field/sw-text-field.vue';
-import SwContextualField from '../_internal/sw-contextual-field/sw-contextual-field.vue';
+import SwContextualFieldDeprecated from '../_internal/sw-contextual-field-deprecated/sw-contextual-field-deprecated.vue';
 import SwFieldCopyable from '../_internal/sw-field-copyable/sw-field-copyable.vue';
 
 export default {
   name: 'SwNumberField',
 
   components: {
-    'sw-contextual-field': SwContextualField,
+    'sw-contextual-field-deprecated': SwContextualFieldDeprecated,
     'sw-field-copyable': SwFieldCopyable,
   },
 

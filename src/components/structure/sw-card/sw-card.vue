@@ -305,7 +305,7 @@ export default {
     }
 
     .sw-tabs__arrow {
-      top: (56px / 2);
+      top: 28px;
       padding: 0 12px 0 12px;
     }
 

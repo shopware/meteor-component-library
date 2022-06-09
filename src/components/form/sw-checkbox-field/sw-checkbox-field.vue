@@ -43,7 +43,7 @@
 
 <script>
 import SwIcon from '../../base/sw-icon/sw-icon.vue';
-import SwBaseField from '../_internal/sw-base-field/sw-base-field.vue';
+import SwBaseField from '../_internal/sw-base-field-deprecated/sw-base-field-deprecated.vue';
 import SwFieldError from '../_internal/sw-field-error/sw-field-error.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 import { createId } from '../../../utils/uuid';

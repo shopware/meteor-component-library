@@ -64,7 +64,7 @@ export default {
       type: String,
       required: false,
       default: '',
-      validator(value) {
+      validator(value: string) {
         if (!value.length) {
           return true;
         }
@@ -79,7 +79,7 @@ export default {
       type: String,
       required: false,
       default: '',
-      validator(value) {
+      validator(value: string) {
         if (!value.length) {
           return true;
         }
@@ -123,7 +123,7 @@ export default {
   },
 
   computed: {
-    buttonClasses() {
+    buttonClasses(): {[key: string]: unknown} {
       return {
         [`sw-button--${this.variant}`]: !!this.variant,
         [`sw-button--${this.size}`]: !!this.size,
