@@ -379,7 +379,7 @@ $sw-page-smart-bar-headline-font-weight: 600;
     .sw-tooltip--wrapper {
       margin-left: 8px;
 
-      &:first-child {
+      &:first-of-type {
         margin-left: 0;
       }
     }

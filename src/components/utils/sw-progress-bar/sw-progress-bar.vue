@@ -50,6 +50,7 @@ export default {
 </script>
 
 <style lang="scss">
+@use "sass:math";
 @import "../../assets/scss/variables.scss";
 
 $sw-progress-bar-value-color:       $color-shopware-brand-500;
@@ -64,14 +65,14 @@ $sw-progress-bar-height:            8px;
     width: 100%;
     height: 100%;
     background-color: $sw-progress-bar-background-color;
-    border-radius: $sw-progress-bar-height / 2;
+    border-radius: math.div($sw-progress-bar-height, 2);
   }
 
   .sw-progress-bar__value {
     transition: 1s width linear;
     height: 100%;
     background-color: $sw-progress-bar-value-color;
-    border-radius: $sw-progress-bar-height / 2;
+    border-radius: math.div($sw-progress-bar-height, 2);
   }
 
   .sw-progress-bar__value--no-transition {

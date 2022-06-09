@@ -1,5 +1,5 @@
 <template>
-  <sw-contextual-field
+  <sw-contextual-field-deprecated
     class="sw-field--datepicker"
     :class="{ 'has--focus': isDatepickerOpen }"
     v-bind="$attrs"
@@ -52,7 +52,7 @@
     <template #label>
       <slot name="label" />
     </template>
-  </sw-contextual-field>
+  </sw-contextual-field-deprecated>
 </template>
 
 <script>
@@ -60,7 +60,7 @@ import Flatpickr from 'flatpickr';
 import 'flatpickr/dist/l10n';
 import { zonedTimeToUtc, utcToZonedTime } from 'date-fns-tz';
 import 'flatpickr/dist/flatpickr.css';
-import SwContextualField from '../_internal/sw-contextual-field/sw-contextual-field.vue';
+import SwContextualFieldDeprecated from '../_internal/sw-contextual-field-deprecated/sw-contextual-field-deprecated.vue';
 import SwIcon from '../../base/sw-icon/sw-icon.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 
@@ -83,7 +83,7 @@ export default {
   name: 'SwDatepicker',
 
   components: {
-    'sw-contextual-field': SwContextualField,
+    'sw-contextual-field-deprecated': SwContextualFieldDeprecated,
     'sw-icon': SwIcon,
   },
 

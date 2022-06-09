@@ -9,7 +9,7 @@
     }"
     class="sw-help-text"
   >
-    <sw-icon name="small-questionmark" />
+    <sw-icon name="regular-questionmark-s" />
   </span>
 </template>
 

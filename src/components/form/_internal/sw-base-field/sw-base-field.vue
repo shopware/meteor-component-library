@@ -1,12 +1,9 @@
 <template>
   <div
     class="sw-field"
-    :class="swFieldClasses"
+    :class="classes"
   >
-    <div
-      v-if="hasLabel"
-      class="sw-field__label"
-    >
+    <div class="sw-field__label">
       <sw-inheritance-switch
         v-if="isInheritanceField"
         :disabled="disableInheritanceToggle"
@@ -15,15 +12,12 @@
         v-on="$listeners"
       />
 
-      <!-- eslint-disable-next-line vuejs-accessibility/label-has-for -->
       <label
         v-if="showLabel"
         :for="identification"
         :class="swFieldLabelClasses"
       >
-        <slot name="label">
-          {{ label }}
-        </slot>
+        <slot name="label" />
       </label>
 
       <sw-help-text
@@ -32,26 +26,60 @@
         :text="helpText"
       />
     </div>
-    <slot
-      name="sw-field-input"
-      v-bind="{identification, error, disabled}"
-    />
 
-    <sw-field-error :error="error" />
+    <div class="sw-block-field__block">
+      <div
+        class="sw-field__addition is--prefix"
+      >
+        <slot
+          name="field-prefix"
+          v-bind="{ disabled, identification }"
+        />
+      </div>
+
+      <slot
+        name="element"
+        v-bind="{ disabled, identification }"
+      />
+
+      <div
+        v-if="copyable"
+        class="sw-field__addition"
+      >
+        <sw-field-copyable
+          :display-name="identification"
+          :copyable-text="copyableText"
+          :tooltip="copyableTooltip"
+        />
+      </div>
+
+      <div
+        v-else
+        class="sw-field__addition"
+      >
+        <slot
+          name="field-suffix"
+          v-bind="{ disabled, identification }"
+        />
+      </div>
+    </div>
+
+    <slot name="error" />
 
     <div
-      v-if="$slots.hint"
       class="sw-field__hint"
     >
-      <slot name="hint" />
+      <slot name="field-hint" />
     </div>
   </div>
 </template>
 
 <script>
 import SwInheritanceSwitch from '../sw-inheritance-switch/sw-inheritance-switch.vue';
+import SwFieldCopyable from '../sw-field-copyable/sw-field-copyable.vue';
 import SwHelpText from '../../../base/sw-help-text/sw-help-text.vue';
-import SwFieldError from '../sw-field-error/sw-field-error.vue';
+import SwValidationMixin from '../../../../mixins/validation.mixin';
+import SwFormFieldMixin from '../../../../mixins/form-field.mixin';
 import { createId } from '../../../../utils/uuid';
 
 export default {
@@ -60,72 +88,119 @@ export default {
   components: {
     'sw-inheritance-switch': SwInheritanceSwitch,
     'sw-help-text': SwHelpText,
-    'sw-field-error': SwFieldError,
+    'sw-field-copyable': SwFieldCopyable,
   },
 
-  inheritAttrs: false,
+  mixins: [
+    SwFormFieldMixin,
+    SwValidationMixin,
+  ],
 
   props: {
-    name: {
-      type: String,
-      required: false,
-      default: null,
-    },
-
-    label: {
-      type: String,
-      required: false,
-      default: null,
-    },
-
-    helpText: {
-      type: String,
-      required: false,
-      default: null,
-    },
-
-    isInvalid: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-
-    error: {
-      type: [Object],
-      required: false,
-      default() {
-        return null;
-      },
-    },
-
+    /**
+     * Determines if the field is disabled.
+     */
     disabled: {
       type: Boolean,
       required: false,
       default: false,
     },
 
+    /**
+     * Determines if the field is required.
+     */
     required: {
       type: Boolean,
       required: false,
       default: false,
     },
 
+    /**
+     * Toggles the inheritance visualization.
+     */
     isInherited: {
       type: Boolean,
       required: false,
       default: false,
     },
 
+    /**
+     * Determines if the field is inheritable.
+     */
     isInheritanceField: {
       type: Boolean,
       required: false,
       default: false,
     },
 
+    /**
+     * Determines the active state of the inheritance toggle.
+     */
     disableInheritanceToggle: {
       type: Boolean,
       required: false,
       default: false,
+    },
+
+    /**
+     * Toggles the copy function of the text field.
+     */
+    copyable: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    /**
+     * If set to true the tooltip will change on successful copy.
+     */
+    copyableTooltip: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    hasFocus: {
+      type: Boolean,
+      required: true,
+    },
+
+    /**
+     * A text that helps the user to understand what this field does.
+     */
+    helpText: {
+      type: String,
+      required: false,
+      default: '',
+    },
+
+    copyableText: {
+      type: String,
+      required: false,
+      default: '',
+    },
+
+    /**
+     * The size of the text field.
+     *
+     * @values small, medium, default
+     */
+    size: {
+      type: String,
+      required: false,
+      default: 'default',
+      validator(val) {
+        return ['small', 'medium', 'default'].includes(val);
+      },
+    },
+
+    /**
+     * @ignore
+     */
+    name: {
+      type: String,
+      required: false,
+      default: null,
     },
   },
 
@@ -144,20 +219,8 @@ export default {
       return `sw-field--${this.id}`;
     },
 
-    hasLabel() {
-      return !!this.helpText || this.isInheritanceField || this.showLabel;
-    },
-
-    hasError() {
-      return this.isInvalid || !!this.error;
-    },
-
-    swFieldClasses() {
-      return {
-        'has--error': this.hasError,
-        'is--disabled': this.disabled,
-        'is--inherited': this.isInherited,
-      };
+    showLabel() {
+      return !!this.$slots.label || !!this.$scopedSlots?.label?.();
     },
 
     swFieldLabelClasses() {
@@ -166,20 +229,221 @@ export default {
       };
     },
 
-    showLabel() {
-      return !!this.label || !!this.$slots.label || !!this.$scopedSlots?.label?.();
+    classes() {
+      return [
+        {
+          'has--error': this.hasError,
+          'is--disabled': this.disabled,
+          'is--inherited': this.isInherited,
+          'has--focus': this.hasFocus,
+        },
+        this.swBlockSize,
+      ];
     },
-  },
-};
+
+    swBlockSize() {
+      return `sw-field--${this.size}`;
+    },
+
+    hasError() {
+      return this.$slots.error || this.$scopedSlots.error();
+    }
+  }
+}
 </script>
 
 <style lang="scss">
 @import "../../../assets/scss/variables.scss";
 
+$sw-field-transition: border-color 0.3s ease-out;
+$sw-field-transition: border-color 0.3s ease-out, background 0.3s ease;
+
 .sw-field {
   width: 100%;
   margin-bottom: 32px;
 
+  .sw-field__help-text {
+    align-self: center;
+  }
+
+  &.has--error {
+    margin-bottom: 12px;
+  }
+
+  &__hint {
+    margin-top: 4px;
+    font-size: $font-size-extra-small;
+    color: $color-gray-500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__hint :empty {
+    display: none;
+  }
+
+  input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px $color-white inset;
+  }
+
+  .sw-block-field__block {
+    display: flex;
+  }
+
+  input,
+  select,
+  textarea {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 12px 16px;
+    border: none;
+    background: $color-white;
+    font-size: $font-size-small;
+    font-family: $font-family-default;
+    line-height: 22px;
+    transition: $sw-field-transition;
+    color: $color-darkgray-200;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    &:invalid,
+    &:-moz-submit-invalid,
+    &:-moz-ui-invalid {
+      box-shadow: none;
+    }
+
+    &:disabled {
+      background: $color-gray-100;
+      border-color: $color-gray-300;
+      cursor: default !important;
+    }
+
+    &::placeholder {
+      color: lighten($color-darkgray-200, 25%);
+    }
+  }
+
+  .sw-block-field__block {
+    border: 1px solid $color-gray-300;
+    border-radius: $border-radius-default;
+    overflow: hidden;
+  }
+
+  &.has--focus {
+    .sw-block-field__block {
+      border-color: $color-shopware-brand-500;
+      box-shadow: 0 0 4px lighten($color-shopware-brand-500, 30%);
+    }
+  }
+
+  &.has--error {
+    .sw-block-field__block {
+      border-color: $color-crimson-500;
+    }
+  }
+
+  &.has--error.has--focus {
+    .sw-block-field__block {
+      box-shadow: 0 0 4px lighten($color-crimson-500, 30%);
+    }
+  }
+
+  .sw-field--select__options .sw-icon {
+    margin-bottom: 5px;
+  }
+
+  &.sw-field--small {
+    margin-bottom: 0;
+
+    input,
+    textarea,
+    select {
+      padding: 4px 16px;
+    }
+  }
+
+  &.sw-field--medium {
+    margin-bottom: 6px;
+
+    input,
+    textarea,
+    select {
+      padding: 8px 16px;
+    }
+  }
+
+  .sw-field__addition {
+    display: flex;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+    min-width: 50px;
+    background: $color-gray-50;
+    border-left: 1px solid $color-gray-300;
+    border-right: none;
+    line-height: 22px;
+    padding: 12px 15px;
+    font-size: $font-size-small;
+    color: $color-darkgray-200;
+    transition: $sw-field-transition;
+
+    &:empty {
+      display: none;
+    }
+
+    .sw-icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    &.is--prefix {
+      border-right: 1px solid $color-gray-300;
+      border-left: none;
+
+      &:empty {
+        display: none;
+      }
+    }
+  }
+
+  &.is--disabled {
+    .sw-field__addition {
+      background: $color-gray-100;
+    }
+  }
+
+  &.sw-field--small {
+    .sw-field__addition {
+      padding: 4px 16px;
+    }
+  }
+
+  &.sw-field--medium {
+    .sw-field__addition {
+      padding: 8px 16px;
+    }
+  }
+
+  // Inheritance
+  .sw-field__inheritance-icon {
+    margin-right: 8px;
+  }
+
+  .sw-field__button-restore {
+    color: $color-darkgray-200;
+    padding: 0 8px;
+    border: none;
+    background: none;
+    outline: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+  }
+
+  // Label
   .sw-field__label {
     display: flex;
     line-height: 16px;
@@ -197,42 +461,10 @@ export default {
     color: $color-shopware-brand-500;
   }
 
-  .sw-field__inheritance-icon {
-    margin-right: 8px;
-  }
-
-  .sw-field__button-restore {
-    color: $color-darkgray-200;
-    padding: 0 8px;
-    border: none;
-    background: none;
-    outline: none;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    cursor: pointer;
-  }
-
-  .sw-field__help-text {
-    align-self: center;
-  }
-
   &.is--inherited {
     .sw-field__label {
       color: $color-module-purple-900;
     }
-  }
-
-  &.has--error {
-    margin-bottom: 12px;
-  }
-
-  &__hint {
-    margin-top: 4px;
-    font-size: $font-size-extra-small;
-    color: $color-gray-500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
   }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="sw-colorpicker">
-    <sw-contextual-field
+    <sw-contextual-field-deprecated
       v-bind="$attrs"
       :name="formFieldName"
       :disabled="disabled"
@@ -39,7 +39,7 @@
       <template #label>
         <slot name="label" />
       </template>
-    </sw-contextual-field>
+    </sw-contextual-field-deprecated>
 
     <sw-popover
       v-if="visible"
@@ -191,7 +191,7 @@
 
 <script>
 import { debounce } from 'lodash-es';
-import SwContextualField from '../_internal/sw-contextual-field/sw-contextual-field.vue';
+import SwContextualFieldDeprecated from '../_internal/sw-contextual-field-deprecated/sw-contextual-field-deprecated.vue';
 import SwPopover from '../../utils/sw-popover/sw-popover.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 
@@ -199,13 +199,12 @@ export default {
   name: 'SwColorpicker',
 
   components: {
-    'sw-contextual-field': SwContextualField,
+    'sw-contextual-field-deprecated': SwContextualFieldDeprecated,
     'sw-popover': SwPopover,
   },
 
   mixins: [
     SwFormFieldMixin,
-  //   Mixin.getByName('remove-api-error'),
   ],
 
   props: {

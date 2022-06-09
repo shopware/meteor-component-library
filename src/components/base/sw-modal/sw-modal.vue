@@ -219,6 +219,7 @@ export default {
 </script>
 
 <style lang="scss">
+@use "sass:math";
 @import "../../assets/scss/variables.scss";
 
 $sw-modal-color-backdrop: rgba(0, 0, 0, 0.4);
@@ -245,7 +246,7 @@ $sw-modal-transition-timing-function: cubic-bezier(0.68, -0.55, 0.26, 1.55);
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 0 ($sw-modal-gap / 2);
+  padding: 0 math.div($sw-modal-gap, 2);
 
   .sw-modal__dialog {
     background-color: $color-white;

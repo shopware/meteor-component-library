@@ -1,5 +1,5 @@
 <template>
-  <sw-contextual-field
+  <sw-contextual-field-deprecated
     class="sw-field--email"
     v-bind="$attrs"
     :name="formFieldName"
@@ -50,20 +50,20 @@
         :tooltip="copyableTooltip"
       />
     </template>
-  </sw-contextual-field>
+  </sw-contextual-field-deprecated>
 </template>
 
 <script>
 import SwTextField from '../sw-text-field/sw-text-field.vue';
-// import SwContextualField from '../_internal/sw-contextual-field/sw-contextual-field.vue';
+import SwContextualFieldDeprecated from '../_internal/sw-contextual-field-deprecated/sw-contextual-field-deprecated.vue';
 
 export default {
   name: 'SwEmailField',
 
-  extends: SwTextField,
+  components: {
+    'sw-contextual-field-deprecated': SwContextualFieldDeprecated,
+  },
 
-  // components: {
-  //   'sw-contextual-field': SwContextualField,
-  // },
+  extends: SwTextField,
 };
 </script>

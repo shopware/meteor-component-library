@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import SwBlockField from '../sw-block-field/sw-block-field.vue';
+import SwBlockField from '../sw-block-field-deprecated/sw-block-field-deprecated.vue';
 
 export default {
   name: 'SwContextualField',

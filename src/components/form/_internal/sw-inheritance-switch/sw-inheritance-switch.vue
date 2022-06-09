@@ -12,7 +12,7 @@
       key="inherit-icon"
       v-tooltip="{ message: $tc('global.sw-field.tooltipRemoveInheritance'), disabled: disabled }"
       :multicolor="true"
-      :name="disabled ? 'custom-inherited-disabled' : 'custom-inherited'"
+      name="regular-lock-s"
       size="16"
       @click="onClickRemoveInheritance"
     />
@@ -22,7 +22,7 @@
       v-tooltip="{ message: $tc('global.sw-field.tooltipRestoreInheritance'), disabled: disabled }"
       :class="unInheritClasses"
       :multicolor="true"
-      name="custom-uninherited"
+      name="regular-lock-open-s"
       size="16"
       @click="onClickRestoreInheritance"
     />

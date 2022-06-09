@@ -1,5 +1,5 @@
 <template>
-  <sw-block-field
+  <sw-block-field-deprecated
     class="sw-field--textarea"
     v-bind="$attrs"
     :name="formFieldName"
@@ -20,18 +20,18 @@
         @blur="removeFocusClass"
       />
     </template>
-  </sw-block-field>
+  </sw-block-field-deprecated>
 </template>
 
 <script>
-import SwBlockField from '../_internal/sw-block-field/sw-block-field.vue';
+import SwBlockFieldDeprecated from '../_internal/sw-block-field-deprecated/sw-block-field-deprecated.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 
 export default {
   name: 'SwTextareaField',
 
   components: {
-    'sw-block-field': SwBlockField,
+    'sw-block-field-deprecated': SwBlockFieldDeprecated,
   },
 
   mixins: [

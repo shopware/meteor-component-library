@@ -1,5 +1,5 @@
 <template>
-  <sw-base-field
+  <sw-base-field-deprecated
     class="sw-field--radio"
     :class="classes"
     :name="formFieldName"
@@ -65,11 +65,11 @@
     <template #label>
       <slot name="label" />
     </template>
-  </sw-base-field>
+  </sw-base-field-deprecated>
 </template>
 
 <script>
-import SwBaseField from '../_internal/sw-base-field/sw-base-field.vue';
+import SwBaseFieldDeprecated from '../_internal/sw-base-field-deprecated/sw-base-field-deprecated.vue';
 import SwHelpText from '../../base/sw-help-text/sw-help-text.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 
@@ -77,7 +77,7 @@ export default {
   name: 'SwRadioField',
 
   components: {
-    'sw-base-field': SwBaseField,
+    'sw-base-field-deprecated': SwBaseFieldDeprecated,
     'sw-help-text': SwHelpText,
   },
 
