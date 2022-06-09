@@ -7,10 +7,10 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "eslint --ext .js,.ts,.vue src",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "SHOW_INTERACTIONS=true start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "test-storybook": "test-storybook",
-    "test-storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npm run build-storybook --quiet && npx http-server storybook-static --port 6006 --silent\" \"wait-on tcp:6006 && npm run test-storybook\""
+    "test-storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npm run build-storybook -- --quiet && npx http-server storybook-static --port 6006 --silent\" \"wait-on tcp:6006 && npm run test-storybook\""
   },
   "dependencies": {
     "@rushstack/eslint-patch": "^1.1.1",
@@ -20,6 +20,7 @@
     "date-fns": "2.23.0",
     "date-fns-tz": "1.1.6",
     "flatpickr": "4.6.3",
+    "jest-image-snapshot": "^4.5.1",
     "lodash-es": "^4.17.21",
     "punycode": "^2.1.1",
     "uuid": "^8.3.2",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
+    "@storybook/addon-a11y": "^6.4.20",
     "@storybook/addon-actions": "^6.4.20",
     "@storybook/addon-essentials": "^6.4.20",
     "@storybook/addon-interactions": "^6.4.20",
@@ -40,6 +42,7 @@
     "@storybook/testing-library": "^0.0.9",
     "@storybook/vue": "^6.4.20",
     "@types/jest": "^24.0.19",
+    "@types/node": "^17.0.36",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -58,8 +61,10 @@
     "eslint-plugin-storybook": "^0.5.7",
     "eslint-plugin-vue": "^6.2.2",
     "jest": "^27.5.1",
+    "rimraf": "^3.0.2",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
+    "storybook-dark-mode": "^1.1.0",
     "typescript": "~4.1.5",
     "vue-loader": "^15.9.8",
     "vue-template-compiler": "^2.6.11",

@@ -6,23 +6,13 @@ export default {
   argTypes: {
     click: {
       action: 'click',
+      table: {
+        category: 'Events'
+      }
     },
-    // default: {
-    //   control: { type: 'text' },
-    // },
-    // variant: {
-    //   control: { type: 'select' },
-    //   options: ['primary', 'ghost', 'danger', 'ghost-danger', 'contrast', 'context'],
-    // },
-    // size: {
-    //   control: { type: 'select' },
-    //   options: ['x-small', 'small', 'large'],
-    // },
-    // link: {
-    //   control: {
-    //     type: 'text',
-    //   },
-    // },
+    default: {
+      control: { type: 'text' },
+    },
   },
 };
 
@@ -34,7 +24,12 @@ const Template = (args, { argTypes }) => ({
 
 export const Default = Template.bind();
 Default.args = {
-  default: `Primary button`,
+  default: 'Button',
   variant: 'primary',
   size: 'small',
+  disabled: false,
+  square: false,
+  block: false,
+  isLoading: false,
 };
+Default.storyName = 'sw-button';
