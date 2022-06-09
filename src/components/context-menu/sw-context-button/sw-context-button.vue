@@ -7,6 +7,8 @@
   >
     <slot name="button">
       <button
+        role="button"
+        aria-haspopup="menu"
         class="sw-context-button__button"
         :class="contextButtonClass"
       >
@@ -91,7 +93,7 @@ export default {
     icon: {
       type: String,
       required: false,
-      default: 'small-more',
+      default: 'solid-ellipsis-h',
     },
 
     disabled: {
