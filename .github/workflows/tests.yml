@@ -52,4 +52,4 @@ jobs:
       if: always() && (steps.storybookTests.outcome == 'failure')
       with:
         name: visual-test-diffs
-        path: __snapshots__/__diff_output__
+        path: __snapshots__

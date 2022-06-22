@@ -1,36 +1,7 @@
 <template>
-  <!--  <router-link-->
-  <!--    v-if="routerLink"-->
-  <!--    :to="routerLink"-->
-  <!--    class="sw-context-menu-item"-->
-  <!--    :class="contextMenuItemStyles"-->
-  <!--    :disabled="disabled"-->
-  <!--    :event="disabled ? null : 'click'"-->
-  <!--    :target="disabled ? null : target"-->
-  <!--    v-on="contextListeners"-->
-  <!--  >-->
-  <!--    <slot name="icon">-->
-  <!--      <sw-icon-->
-  <!--        v-if="icon"-->
-  <!--        :name="icon"-->
-  <!--        small-->
-  <!--      />-->
-  <!--    </slot>-->
-
-  <!--    <span-->
-  <!--      class="sw-context-menu-item__text"-->
-  <!--      :class="{ 'is&#45;&#45;disabled': disabled }"-->
-  <!--    >-->
-  <!--        <slot></slot>-->
-  <!--    </span>-->
-  <!--  </router-link>-->
-
-  <!-- TODO: Develop a router-link replacement -->
-  <div v-if="false" />
-
   <div
-    v-else
     class="sw-context-menu-item"
+    role="menuitem"
     :class="contextMenuItemStyles"
     v-on="contextListeners"
   >

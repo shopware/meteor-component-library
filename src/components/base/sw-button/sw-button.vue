@@ -22,11 +22,10 @@
     v-bind="$attrs"
     v-on="disabled ? null : $listeners"
   >
-    <sw-icon
+    <sw-loader
       v-if="isLoading"
-      name="default-web-loading-circle"
+      size="16px"
       class="sw-button__loader"
-      size="20px"
     />
     <span
       class="sw-button__content"
@@ -38,13 +37,13 @@
 </template>
 
 <script lang="ts">
-import swIcon from '../sw-icon/sw-icon.vue';
+import swLoader from '../../utils/sw-loader/sw-loader.vue';
 
 export default {
   name: 'SwButton',
 
   components: {
-    'sw-icon': swIcon,
+    'sw-loader': swLoader,
   },
 
   props: {
@@ -427,26 +426,13 @@ $sw-button-transition: all 0.15s ease-out;
      padding-right: 0;
      text-align: center;
 
-  .sw-button__content {
-    display: inline;
-  }
+    .sw-button__content {
+      display: inline;
+    }
   }
 
   .sw-button__loader {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    animation: spin 2s linear infinite;
-  }
-
-  @keyframes spin {
-    from {
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-
-    to {
-      transform: translate(-50%, -50%) rotate(360deg);
-    }
+    border-radius: $border-radius-default;
   }
 }
 
