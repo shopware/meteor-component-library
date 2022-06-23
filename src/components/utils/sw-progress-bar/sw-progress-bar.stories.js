@@ -4,8 +4,11 @@ export default {
   title: 'Components/utils/sw-progress-bar',
   component: SwProgressBar,
   args: {
-    value: 10,
-    maxValue: 100,
+    value: 121,
+    maxValue: 356,
+    label: 'Example progress bar',
+    error: null,
+    progressLabelType: '',
   },
 };
 
@@ -16,4 +19,16 @@ const Template = (args, { argTypes }) => ({
 });
 
 export const Default = Template.bind({});
-Default.storyName = 'sw-progress-bar';
+Default.storyName = 'Minimal';
+
+export const Extended = Template.bind({});
+Extended.storyName = 'Extended';
+Extended.args = {
+  ...Default.args,
+  value: 277,
+  error: {
+    code: 500,
+    detail: 'Error while loading'
+  },
+  progressLabelType: 'kb'
+}
