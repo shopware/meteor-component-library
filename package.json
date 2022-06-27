@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "eslint --ext .js,.ts,.vue src",
     "storybook": "SHOW_INTERACTIONS=true start-storybook -p 6006",
@@ -15,7 +13,7 @@
   },
   "dependencies": {
     "@rushstack/eslint-patch": "^1.1.1",
-    "@shopware-ag/meteor-icon-kit": "^2.1.0",
+    "@shopware-ag/meteor-icon-kit": "^4.0.0",
     "ace-builds": "^1.4.13",
     "apexcharts": "^3.33.0",
     "core-js": "^3.6.5",

@@ -429,6 +429,7 @@ $sw-field-transition: border-color 0.3s ease-out, background 0.3s ease;
 
   // Inheritance
   .sw-field__inheritance-icon {
+    margin-left: 4px;
     margin-right: 8px;
   }
 

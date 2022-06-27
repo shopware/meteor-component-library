@@ -1,219 +1,250 @@
 <template>
-  <div class="sw-colorpicker">
-    <sw-contextual-field-deprecated
-      v-bind="$attrs"
-      :name="formFieldName"
-      :disabled="disabled"
-      @inheritance-restore="$emit('inheritance-restore', $event)"
-      @inheritance-remove="$emit('inheritance-remove', $event)"
-    >
-      <template #sw-contextual-field-prefix>
-        <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
+  <sw-base-field
+    class="sw-colorpicker"
+    :disabled="disabled"
+    :required="required"
+    :is-inherited="isInherited"
+    :is-inheritance-field="isInheritanceField"
+    :disable-inheritance-toggle="disableInheritanceToggle"
+    :has-focus="hasFocus"
+    :help-text="helpText"
+    :name="name"
+  >
+    <template #label>
+      {{ label }}
+    </template>
+
+    <template #field-prefix>
+      <div
+        class="sw-colorpicker__previewWrapper"
+        role="button"
+        :aria-pressed="visible"
+        aria-label="colorpicker-toggle"
+        @click="toggleColorPicker"
+      >
         <div
-          class="sw-colorpicker__previewWrapper"
-          @click="toggleColorPicker"
-        >
-          <div
-            class="sw-colorpicker__previewColor"
-            :style="{ background: previewColorValue }"
-          />
-          <div
-            class="sw-colorpicker__previewBackground"
-            :class="{'is--invalid': !isColorValid}"
-          />
-        </div>
-      </template>
-
-      <!-- eslint-disable-next-line vue/no-template-shadow -->
-      <template #sw-field-input="{ disabled }">
-        <input
-          v-model="colorValue"
-          class="sw-colorpicker__input"
-          spellcheck="false"
-          :disabled="disabled"
-          :readonly="readonly"
-          @click="onClickInput"
-        >
-      </template>
-
-      <template #label>
-        <slot name="label" />
-      </template>
-    </sw-contextual-field-deprecated>
-
-    <sw-popover
-      v-if="visible"
-      class="sw-colorpicker__colorpicker-position"
-      :z-index="zIndex"
-    >
-      <div class="sw-colorpicker__colorpicker">
+          class="sw-colorpicker__previewColor"
+          :style="{ background: previewColorValue }"
+        />
         <div
-          ref="colorPicker"
-          class="sw-colorpicker__colorpicker-selection"
-          :style="{ backgroundColor: selectorBackground }"
-          @mousedown="setDragging"
-        >
-          <div
-            class="sw-colorpicker__colorpicker-selector"
-            :style="selectorStyles"
-          />
-        </div>
-        <div class="sw-colorpicker__row">
-          <div class="sw-colorpicker__sliders">
-            <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-            <input
-              v-model.number="hueValue"
-              class="sw-colorpicker__colorpicker-slider-range"
-              type="range"
-              min="0"
-              max="360"
-              step="1"
-            >
-
-            <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-            <input
-              v-if="alpha"
-              v-model.number="alphaValue"
-              class="sw-colorpicker__alpha-slider"
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              :style="{ backgroundImage: sliderBackground }"
-            >
-          </div>
-
-          <div
-            class="sw-colorpicker__colorpicker-wrapper"
-            :class="{ 'is--small': !alpha }"
-          >
-            <div
-              class="sw-colorpicker__colorpicker-previewColor"
-              :style="{ background: previewColorValue}"
-            />
-            <div
-              class="sw-colorpicker__colorpicker-previewBackground"
-              :class="{ 'is--invalid': !isColorValid }"
-            />
-          </div>
-        </div>
-
-        <div class="sw-colorpicker__row sw-colorpicker__input-row">
-          <div class="sw-colorpicker__row-column">
-            <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-            <input
-              v-model.lazy="hexValue"
-              class="sw-colorpicker__colorpicker-input is--hex"
-              type="text"
-              spellcheck="false"
-            >
-            <span
-              v-if="colorLabels"
-              class="sw-colorpicker__row-column-label"
-            >HEX</span>
-          </div>
-
-          <div class="sw-colorpicker__row-column">
-            <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-            <input
-              v-model.number="redValue"
-              class="sw-colorpicker__colorpicker-input"
-              type="number"
-              min="0"
-              max="255"
-              step="1"
-              placeholder="0"
-            >
-            <span
-              v-if="colorLabels"
-              class="sw-colorpicker__row-column-label"
-            >R</span>
-          </div>
-
-          <div class="sw-colorpicker__row-column">
-            <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-            <input
-              v-model.number="greenValue"
-              class="sw-colorpicker__colorpicker-input"
-              type="number"
-              min="0"
-              max="255"
-              step="1"
-              placeholder="0"
-            >
-            <span
-              v-if="colorLabels"
-              class="sw-colorpicker__row-column-label"
-            >G</span>
-          </div>
-
-          <div class="sw-colorpicker__row-column">
-            <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-            <input
-              v-model.number="blueValue"
-              class="sw-colorpicker__colorpicker-input"
-              type="number"
-              min="0"
-              max="255"
-              step="1"
-              placeholder="0"
-            >
-            <span
-              v-if="colorLabels"
-              class="sw-colorpicker__row-column-label"
-            >B</span>
-          </div>
-
-          <div
-            v-if="alpha"
-            class="sw-colorpicker__row-column"
-          >
-            <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-            <input
-              v-model.number="integerAlpha"
-              class="sw-colorpicker__colorpicker-input"
-              type="number"
-              min="0"
-              max="100"
-              step="1"
-              placeholder="0"
-            >
-            <span
-              v-if="colorLabels"
-              class="sw-colorpicker__row-column-label"
-            >Alpha</span>
-          </div>
-        </div>
+          class="sw-colorpicker__previewBackground"
+          :class="{'is--invalid': !isColorValid}"
+        />
       </div>
-    </sw-popover>
-  </div>
+    </template>
+
+    <template #element>
+      <input
+        v-model="colorValue"
+        aria-label="colorpicker-color-value"
+        class="sw-colorpicker__input"
+        spellcheck="false"
+        :disabled="disabled"
+        :readonly="readonly"
+        @click="onClickInput"
+      >
+
+      <sw-popover
+        v-if="visible"
+        class="sw-colorpicker__colorpicker-position"
+        :z-index="zIndex"
+      >
+        <div class="sw-colorpicker__colorpicker">
+          <div
+            ref="colorPicker"
+            class="sw-colorpicker__colorpicker-selection"
+            :style="{ backgroundColor: selectorBackground }"
+            @mousedown="setDragging"
+          >
+            <div
+              class="sw-colorpicker__colorpicker-selector"
+              :style="selectorStyles"
+            />
+          </div>
+          <div class="sw-colorpicker__row">
+            <div class="sw-colorpicker__sliders">
+              <input
+                v-model.number="hueValue"
+                aria-label="colorpicker-color-range"
+                class="sw-colorpicker__colorpicker-slider-range"
+                type="range"
+                min="0"
+                max="360"
+                step="1"
+              >
+
+              <input
+                v-if="alpha"
+                v-model.number="alphaValue"
+                class="sw-colorpicker__alpha-slider"
+                aria-label="colorpicker-alpha-range"
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                :style="{ backgroundImage: sliderBackground }"
+              >
+            </div>
+
+            <div
+              class="sw-colorpicker__colorpicker-wrapper"
+              :class="{ 'is--small': !alpha }"
+            >
+              <div
+                class="sw-colorpicker__colorpicker-previewColor"
+                :style="{ background: previewColorValue}"
+              />
+              <div
+                class="sw-colorpicker__colorpicker-previewBackground"
+                :class="{ 'is--invalid': !isColorValid }"
+              />
+            </div>
+          </div>
+
+          <div class="sw-colorpicker__row sw-colorpicker__input-row">
+            <div class="sw-colorpicker__row-column">
+              <input
+                v-model.lazy="hexValue"
+                class="sw-colorpicker__colorpicker-input is--hex"
+                aria-label="hex-value"
+                type="text"
+                spellcheck="false"
+              >
+              <label
+                v-if="colorLabels"
+                class="sw-colorpicker__row-column-label"
+              >HEX</label>
+            </div>
+
+            <div class="sw-colorpicker__row-column">
+              <input
+                v-model.number="redValue"
+                class="sw-colorpicker__colorpicker-input"
+                aria-label="red-value"
+                type="number"
+                min="0"
+                max="255"
+                step="1"
+                placeholder="0"
+              >
+              <label
+                v-if="colorLabels"
+                class="sw-colorpicker__row-column-label"
+              >R</label>
+            </div>
+
+            <div class="sw-colorpicker__row-column">
+              <input
+                v-model.number="greenValue"
+                class="sw-colorpicker__colorpicker-input"
+                aria-label="green-value"
+                type="number"
+                min="0"
+                max="255"
+                step="1"
+                placeholder="0"
+              >
+              <label
+                v-if="colorLabels"
+                class="sw-colorpicker__row-column-label"
+              >G</label>
+            </div>
+
+            <div class="sw-colorpicker__row-column">
+              <input
+                v-model.number="blueValue"
+                class="sw-colorpicker__colorpicker-input"
+                aria-label="blue-value"
+                type="number"
+                min="0"
+                max="255"
+                step="1"
+                placeholder="0"
+              >
+              <label
+                v-if="colorLabels"
+                class="sw-colorpicker__row-column-label"
+              >B</label>
+            </div>
+
+            <div
+              v-if="alpha"
+              class="sw-colorpicker__row-column"
+            >
+              <input
+                v-model.number="integerAlpha"
+                class="sw-colorpicker__colorpicker-input"
+                aria-label="alpha-value"
+                type="number"
+                min="0"
+                max="100"
+                step="1"
+                placeholder="0"
+              >
+              <label
+                v-if="colorLabels"
+                class="sw-colorpicker__row-column-label"
+              >Alpha</label>
+            </div>
+          </div>
+        </div>
+      </sw-popover>
+    </template>
+
+    <template #error>
+      <sw-field-error
+        v-if="error"
+        :error="error"
+      />
+    </template>
+  </sw-base-field>
 </template>
 
 <script>
 import { debounce } from 'lodash-es';
-import SwContextualFieldDeprecated from '../_internal/sw-contextual-field-deprecated/sw-contextual-field-deprecated.vue';
+import SwBaseField from "../_internal/sw-base-field/sw-base-field";
 import SwPopover from '../../utils/sw-popover/sw-popover.vue';
-import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 
 export default {
   name: 'SwColorpicker',
 
   components: {
-    'sw-contextual-field-deprecated': SwContextualFieldDeprecated,
     'sw-popover': SwPopover,
+    'sw-base-field': SwBaseField,
   },
 
-  mixins: [
-    SwFormFieldMixin,
-  ],
-
   props: {
+    /**
+     * The value of the colorpicker field.
+     */
     value: {
       type: String,
       required: false,
       default: '',
     },
 
+    /**
+     * A label for your text field. Usually used to guide the user what value this field controls.
+     */
+    label: {
+      type: String,
+      required: false,
+      default: null,
+    },
+
+    /**
+     * A text that helps the user to understand what this field does.
+     */
+    helpText: {
+      type: String,
+      required: false,
+      default: null,
+    },
+
+  /**
+   * Change the output value which gets emitted and shown in the field.
+   * @values auto, hex, hsl, rgb
+   */
     colorOutput: {
       type: String,
       required: false,
@@ -226,24 +257,72 @@ export default {
       ],
     },
 
+    /**
+     * If activated then the color value can contain alpha values
+     */
     alpha: {
       type: Boolean,
       required: false,
       default: true,
     },
 
+    /**
+     * Determines if the field is disabled.
+     */
     disabled: {
       type: Boolean,
       required: false,
       default: false,
     },
 
+    /**
+     * Determines if the field is required.
+     */
+    required: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    /**
+     * Toggles the inheritance visualization.
+     */
+    isInherited: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    /**
+     * Determines if the field is inheritable.
+     */
+    isInheritanceField: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    /**
+     * Determines the active state of the inheritance toggle.
+     */
+    disableInheritanceToggle: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    /**
+     * Determines if the field can be edited
+     */
     readonly: {
       type: Boolean,
       required: false,
       default: false,
     },
 
+    /**
+     * Toggle the labels above each field inside the colorpicker
+     */
     colorLabels: {
       type: Boolean,
       required: false,
@@ -252,6 +331,27 @@ export default {
 
     zIndex: {
       type: [Number, null],
+      required: false,
+      default: null,
+    },
+
+    // TODO: Add tests for error
+    /**
+     * An error in your business logic related to this field.
+     *
+     * @example {"code": 500, "detail": "Error while saving"}
+     */
+    error: {
+      type: Object,
+      required: false,
+      default: null,
+    },
+
+    /**
+     * @ignore
+     */
+    name: {
+      type: String,
       required: false,
       default: null,
     },
@@ -267,6 +367,7 @@ export default {
       saturationValue: 50,
       hueValue: 0,
       alphaValue: 1,
+      hasFocus: false,
     };
   },
 
@@ -519,6 +620,10 @@ export default {
     },
 
     debounceEmitColorValue: debounce(function emitValue() {
+      /**
+       * Emits the selected color value
+       * @property {string} this.colorValue the new color value
+       */
       this.$emit('input', this.colorValue);
     }, 50),
 
@@ -954,6 +1059,14 @@ export default {
 
       this.toggleColorPicker();
     },
+
+    setFocusClass() {
+      this.hasFocus = true;
+    },
+
+    removeFocusClass() {
+      this.hasFocus = false;
+    },
   },
 };
 </script>
@@ -1001,7 +1114,7 @@ export default {
 
   &__colorpicker-position {
     position: absolute;
-    top: calc(100% + 5px);
+    top: calc(100% + 2px);
     left: 0;
     width: 240px;
   }

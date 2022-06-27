@@ -4,7 +4,19 @@ export default {
   title: 'Components/form/sw-colorpicker',
   component: SwColorpicker,
   args: {
-    label: 'Colorpicker',
+    label: 'Colorpicker example',
+    value: '#0fcff5',
+    colorOutput: 'auto',
+    disabled: false,
+    readonly: false,
+    alpha: true,
+    colorLabels: true,
+    zIndex: null,
+    helpText: '',
+    required: false,
+    isInherited: false,
+    isInheritanceField: false,
+    disableInheritanceToggle: false,
   },
 };
 

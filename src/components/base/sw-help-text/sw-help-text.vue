@@ -8,8 +8,11 @@
       hideDelay: hideDelay
     }"
     class="sw-help-text"
+    role="tooltip"
+    aria-label="help-text"
   >
     <sw-icon name="regular-questionmark-s" />
+    <span class="sw-help-text__tooltip-text">{{ text }}</span>
   </span>
 </template>
 
@@ -78,8 +81,12 @@ export default {
   pointer-events: auto;
 
   .sw-icon {
-    width: 14px;
-    height: 14px;
+    width: 10px;
+    height: 10px;
+  }
+
+  &__tooltip-text {
+    display: none;
   }
 }
 </style>
