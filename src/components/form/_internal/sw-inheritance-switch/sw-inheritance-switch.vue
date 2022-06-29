@@ -13,7 +13,7 @@
       v-tooltip="{ message: $tc('global.sw-field.tooltipRemoveInheritance'), disabled: disabled }"
       :multicolor="true"
       name="regular-lock-s"
-      size="16"
+      size="14"
       @click="onClickRemoveInheritance"
     />
     <sw-icon
@@ -23,7 +23,7 @@
       :class="unInheritClasses"
       :multicolor="true"
       name="regular-lock-open-s"
-      size="16"
+      size="14"
       @click="onClickRestoreInheritance"
     />
   </div>
