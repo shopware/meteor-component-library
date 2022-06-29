@@ -19,12 +19,15 @@ export default {
   name: 'SwLoader',
 
   props: {
+    /**
+     * Define the size of the loader. Should be a string containing "${yourNumber}px"
+     */
     size: {
       type: String,
       required: false,
       default: '50px',
       validator(value) {
-        return /^(12|[2-9][0-9]|[1-9][2-9]|[1-9]\d{2,})px$/.test(value);
+        return value.endsWith('px');
       },
     },
   },
@@ -43,15 +46,13 @@ export default {
         return 50;
       }
 
-      if (numericSize < 12) {
-        return 50;
-      }
-
       return numericSize;
     },
 
     borderWidth() {
-      return `${Math.floor(this.numericSize / 12)}px`;
+      const borderWith = Number(this.numericSize / 12).toPrecision(2);
+
+      return `${borderWith}px`;
     },
   },
 };
