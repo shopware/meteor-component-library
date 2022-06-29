@@ -2,6 +2,7 @@
   <div
     v-if="!!error"
     class="sw-field__error"
+    aria-label="Error message"
   >
     {{ errorMessage }}
   </div>

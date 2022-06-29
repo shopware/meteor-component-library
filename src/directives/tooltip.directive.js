@@ -180,6 +180,8 @@ class Tooltip {
     element.innerHTML = this._message;
     element.style.width = `${this._width}px`;
     element.setAttribute('aria-hidden', 'false');
+    element.setAttribute('aria-role', 'tooltip');
+    element.setAttribute('aria-label', 'currently-opened-tooltip');
     element.classList.add('sw-tooltip');
     element.classList.add(`sw-tooltip--${this._appearance}`);
     element.style.zIndex = this._zIndex;
