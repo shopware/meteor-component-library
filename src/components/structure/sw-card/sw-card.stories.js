@@ -1,7 +1,6 @@
 import SwCard from './sw-card.vue';
 import SwContextMenuItem from '../../context-menu/sw-context-menu-item/sw-context-menu-item.vue'
 import SwTabs from '../../base/sw-tabs/sw-tabs.vue'
-import SwTabsItem from '../../base/sw-tabs-item/sw-tabs-item.vue'
 import SwAvatar from '../../base/sw-avatar/sw-avatar.vue'
 
 export default {
@@ -42,7 +41,7 @@ export default {
 };
 
 const MinimalTemplate = (args, { argTypes }) => ({
-  components: { SwCard, SwContextMenuItem, SwTabs, SwTabsItem, SwAvatar },
+  components: { SwCard, SwContextMenuItem, SwTabs, SwAvatar },
   props: Object.keys(argTypes),
   template: `
   <sw-card v-bind="$props">
@@ -53,7 +52,7 @@ const MinimalTemplate = (args, { argTypes }) => ({
 });
 
 const ExtendedTemplate = (args, { argTypes }) => ({
-  components: { SwCard, SwContextMenuItem, SwTabs, SwTabsItem, SwAvatar },
+  components: { SwCard, SwContextMenuItem, SwTabs, SwAvatar },
   props: Object.keys(argTypes),
   template: `
   <sw-card v-bind="$props">
@@ -70,13 +69,12 @@ const ExtendedTemplate = (args, { argTypes }) => ({
              slot="tabs"
              :default-item="activeTab"
              @new-item-active="setContent"
-    >
-      <template #default="{ active }">
-        <sw-tabs-item name="tabA" :active-tab="active">Tab A</sw-tabs-item>
-        <sw-tabs-item name="tabB" :active-tab="active">Tab B</sw-tabs-item>
-        <sw-tabs-item name="tabC" :active-tab="active">Tab C</sw-tabs-item>
-      </template>
-    </sw-tabs>
+             :items="[
+                { label: 'Tab A', name: 'tabA' },
+                { label: 'Tab B', name: 'tabB' },
+                { label: 'Tab C', name: 'tabC' },
+             ]"
+    ></sw-tabs>
     <div slot="footer" v-html="$props.footer"></div>
     <div v-if="$props.avatar" slot="avatar">
       <sw-avatar firstName="Max" lastName="Mustermann" variant="square" />

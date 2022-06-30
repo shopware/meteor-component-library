@@ -3,7 +3,9 @@
     ref="swContextButton"
     class="sw-context-button"
     :class="contextClass"
+    tabindex="0"
     @click="onClickButton"
+    @keyup.enter="onClickButton"
   >
     <slot name="button">
       <button
@@ -17,6 +19,8 @@
           small
           decorative
         />
+
+        <slot name="button-text" />
       </button>
     </slot>
 
@@ -127,6 +131,12 @@ export default {
       required: false,
       default: 9000,
     },
+
+    hasError: {
+      type: Boolean,
+      required: false,
+      default: false,
+    }
   },
 
   data() {
@@ -146,6 +156,7 @@ export default {
       return {
         'is--disabled': this.disabled,
         'is--active': this.showMenu,
+        'has--error': this.hasError,
       };
     },
 
@@ -260,10 +271,21 @@ $sw-context-button-color-disabled:  $color-gray-100;
     line-height: 20px;
     padding: 0 8px;
     outline: none;
+    font-family: $font-family-default;
 
     &:hover,
     &.is--active {
       border-color: $sw-context-button-color-border;
+    }
+  }
+
+  &.has--error {
+    .sw-context-button__button {
+      .sw-icon {
+        color: $sw-context-button-color-text;
+      }
+
+      color: $color-crimson-300;
     }
   }
 

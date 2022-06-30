@@ -10,7 +10,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'SwIcon',
 
@@ -91,6 +90,8 @@ export default {
 
   > svg {
     vertical-align: middle;
+    width: 100%;
+    height: 100%;
   }
 
   &.sw-icon--fill > svg {

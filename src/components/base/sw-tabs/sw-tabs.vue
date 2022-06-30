@@ -1,80 +1,131 @@
 <template>
-  <div
+  <priority-plus
+    ref="priorityPlus"
+    #default="{ mainItems, moreItems }"
     class="sw-tabs"
     :class="tabClasses"
+    :list="items"
   >
-    <div
-      ref="swTabContent"
-      class="sw-tabs__content"
-      :style="tabContentStyle"
-    >
-      <slot :active="active" />
+    <ul role="tablist">
       <span
-        class="sw-tabs__slider"
+        class="sw-tabs--slider"
         :class="sliderClasses"
         :style="sliderStyle"
       />
-    </div>
 
-    <button
-      v-if="isScrollable"
-      class="sw-tabs__arrow sw-tabs__arrow--left"
-      :class="arrowClassesLeft"
-      @click="scrollTo('left')"
-    >
-      <sw-icon
-        name="small-arrow-medium-left"
-        small
-      />
-    </button>
+      <template v-if="!vertical">
+        <li
+          v-for="item in mainItems"
+          :key="item.name"
+          ref="items"
+          class="sw-tabs--item"
+          :class="getItemClasses(item)"
+          :data-item-name="item.name"
+          role="tab"
+          :aria-selected="item.name === activeItemName"
+          :tabindex="0"
+          @click="setActiveItem(item.name)"
+          @keyup.enter="setActiveItem(item.name)"
+        >
+          {{ item.label }}
 
-    <button
-      v-if="isScrollable"
-      class="sw-tabs__arrow sw-tabs__arrow--right"
-      :class="arrowClassesRight"
-      @click="scrollTo('right')"
-    >
-      <sw-icon
-        name="small-arrow-medium-right"
-        small
-      />
-    </button>
+          <sw-icon
+            v-if="item.hasError"
+            class="sw-tabs--error-badge"
+            name="solid-exclamation-circle"
+          />
 
-    <div class="sw-tabs__custom-content">
-      <slot
-        name="content"
-        :active="active"
-      />
-    </div>
-  </div>
+          <sw-color-badge 
+            v-if="item.badge"
+            :variant="item.badge"
+            rounded
+          />
+        </li>
+
+        <sw-context-button
+          v-if="moreItems.length"
+          ref="more-items-button"
+          :has-error="moreItems.some(i => i.hasError)"
+        >
+          <template #button-text>
+            <!-- Add translation  -->
+            More
+          </template>
+
+          <sw-context-menu-item
+            v-for="moreItem in moreItems"
+            :key="moreItem.name"
+            :variant="getContextMenuItemVariant(moreItem)"
+            role="tab"
+            :aria-selected="moreItem.name === activeItemName"
+            @click="setActiveItem(moreItem.name)"
+            @keyup.enter="setActiveItem(moreItem.name)"
+          >
+            {{ moreItem.label }}
+          </sw-context-menu-item>
+        </sw-context-button>
+      </template>
+
+      <template v-if="vertical">
+        <li
+          v-for="item in [...mainItems, ...moreItems]"
+          :key="item.name"
+          ref="items"
+          class="sw-tabs--item"
+          :class="getItemClasses(item)"
+          :data-item-name="item.name"
+          @click="setActiveItem(item.name)"
+        >
+          {{ item.label }}
+        </li>
+      </template>
+    </ul>
+  </priority-plus>
 </template>
 
-<script>
-import { throttle } from 'lodash-es';
-import { getScrollbarHeight } from '../../../utils/dom';
-import SwIcon from '../sw-icon/sw-icon.vue';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+import SwContextButton from '../../context-menu/sw-context-button/sw-context-button.vue';
+import SwContextMenuItem from '../../context-menu/sw-context-menu-item/sw-context-menu-item.vue';
+import SwColorBadge from '../../utils/sw-color-badge/sw-color-badge.vue';
+import SwIcon from '../../base/sw-icon/sw-icon.vue';
+import PriorityPlus from '../../_internal/sw-priority-plus-navigation.vue';
 
-export default {
+interface TabItem {
+  label: string;
+  name: string;
+  hasError?: boolean;
+  disabled?: boolean;
+  badge?: 'positive'|'critical'|'warning'|'info';
+  onClick?: (name: string) => void;
+  // @internal - will be added by priority plus menu component
+  hidden?: boolean;
+}
+
+export default Vue.extend({
   name: 'SwTabs',
 
   components: {
-    'sw-icon': SwIcon,
+    'sw-context-button': SwContextButton,
+    'sw-context-menu-item': SwContextMenuItem,
+    'priority-plus': PriorityPlus,
+    'sw-color-badge': SwColorBadge,
+    'sw-icon': SwIcon
   },
 
   props: {
-    isVertical: {
+    items: {
+      type: Array as PropType<TabItem[]>,
+      required: true,
+    },
+
+    vertical: {
       type: Boolean,
       required: false,
       default: false,
     },
 
     small: {
-      type: Boolean,
-      required: false,
-      default: true,
-    },
-
-    alignRight: {
       type: Boolean,
       required: false,
       default: false,
@@ -87,334 +138,296 @@ export default {
     },
   },
 
-  data() {
+  data(): {
+    refreshKey: boolean,
+    activeItemName: string,
+    showMoreItems: boolean,
+  } {
     return {
-      active: this.defaultItem || '',
-      isScrollable: false,
-      activeItem: null,
-      scrollLeftPossible: false,
-      scrollRightPossible: true,
-      firstScroll: false,
-      scrollbarOffset: '',
+      // refreshKey is for recalculating specific computed properties
+      refreshKey: true,
+      activeItemName: '',
+      showMoreItems: false,
     };
   },
 
   computed: {
-    tabClasses() {
+    tabClasses(): Record<string, boolean> {
+      this.refreshKey;
+
       return {
-        'sw-tabs--vertical': this.isVertical,
-        'sw-tabs--small': this.small,
-        'sw-tabs--scrollable': this.isScrollable,
-        'sw-tabs--align-right': this.alignRight,
-        'sw-tabs--scrollbar-active': this.scrollbarOffset > 0,
+        'sw-tabs--vertical': this.vertical,
+        'sw-tabs--small': this.small
       };
     },
 
-    arrowClassesLeft() {
-      return {
-        'sw-tabs__arrow--disabled': !this.scrollLeftPossible,
-      };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    activeDomItem(): any|undefined {
+      this.refreshKey;
+
+      // Access "this.activeItemName" before to react dynamically on changes
+      const activeItemName = this.activeItemName;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const domItems = this.$refs.items ? this.$refs.items as any[] : [];
+      
+      const activeDomItem = domItems.find(item => {
+        return item.getAttribute('data-item-name') === activeItemName;
+      })
+
+      return activeDomItem;
     },
 
-    arrowClassesRight() {
-      return {
-        'sw-tabs__arrow--disabled': !this.scrollRightPossible,
-      };
-    },
+    sliderPosition(): number {
+      this.refreshKey;
 
-    sliderLength() {
-      if (this.$children[this.activeItem]) {
-        const activeChildren = this.$children[this.activeItem];
-        return this.isVertical ? activeChildren.$el.offsetHeight : activeChildren.$el.offsetWidth;
+      if (!this.activeDomItem && !this.activeItem) {
+        return 0;
       }
-      return 0;
-    },
 
-    activeTabHasErrors() {
-      return this.$children[this.activeItem] && this.$children[this.activeItem].hasError;
-    },
-
-    sliderClasses() {
-      return { 'has--error': this.activeTabHasErrors };
-    },
-
-    sliderMovement() {
-      if (this.$children[this.activeItem]) {
-        const activeChildren = this.$children[this.activeItem];
-        return this.isVertical ? activeChildren.$el.offsetTop : activeChildren.$el.offsetLeft;
+      if (
+        this.activeItem &&
+        this.activeItem.hidden &&
+        this.$refs['more-items-button']
+      ) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return (this.$refs['more-items-button'] as any).$el.offsetLeft
       }
-      return 0;
+
+      return this.vertical ? this.activeDomItem.offsetTop : this.activeDomItem.offsetLeft;
     },
 
-    sliderStyle() {
-      if (this.isVertical) {
+    sliderLength(): number {
+      this.refreshKey;
+
+      if (!this.activeDomItem && !this.activeItem) {
+        return 0;
+      }
+
+      if (
+        this.activeItem &&
+        this.activeItem.hidden &&
+        this.$refs['more-items-button']
+      ) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return (this.$refs['more-items-button'] as any).$el.offsetWidth
+      }
+
+      return this.vertical 
+        ? this.activeDomItem.offsetHeight
+        : this.activeDomItem.offsetWidth;
+    },
+
+    activeItem(): TabItem|undefined {
+      this.refreshKey;
+
+      return this.items.find(item => {
+        return item.name === this.activeItemName;
+      });
+    },
+
+    sliderClasses(): Record<string, boolean> {
+      this.refreshKey;
+
+      return {
+        'sw-tabs--slider__has-error': (this.activeItem && this.activeItem.hasError) || false,
+      }
+    },
+
+    sliderStyle(): string {
+      this.refreshKey;
+
+      if (this.vertical) {
         return `
-                    transform: translate(0, ${this.sliderMovement}px) rotate(${this.alignRight ? '-90deg' : '90deg'});
-                    width: ${this.sliderLength}px;
-                `;
+            transform: translate(0, ${this.sliderPosition}px) rotate(90deg);
+            width: ${this.sliderLength}px;
+        `;
       }
 
       return `
-                transform: translate(${this.sliderMovement}px, 0) rotate(0deg);
-                width: ${this.sliderLength}px;
-                bottom: ${this.scrollbarOffset}px;
-            `;
-    },
-
-    tabContentStyle() {
-      return {
-        'padding-bottom': `${this.scrollbarOffset}px`,
-      };
-    },
+          transform: translate(${this.sliderPosition}px, 0) rotate(0deg);
+          width: ${this.sliderLength}px;
+      `;
+    }
   },
 
   watch: {
-    $route() {
-      this.updateActiveItem();
-    },
-
-    activeTabHasErrors() {
-      this.recalculateSlider();
-    },
-  },
-
-  created() {
-    this.createdComponent();
+    items: 'handleResize',
+    vertical: 'handleResize',
+    small: 'handleResize',
   },
 
   mounted() {
-    this.mountedComponent();
+    this.setActiveItem(this.defaultItem);
+
+    // @ts-expect-error $device helper is not registered in TS yet
+    this.$device.onResize({
+      listener() {
+        this.handleResize();
+      },
+      component: this,
+      scope: this,
+    });
+  },
+
+  beforeDestroy() {
+    // @ts-expect-error $device helper is not registered in TS yet
+    this.$device.removeResizeListener(this);
   },
 
   methods: {
-    mountedComponent() {
-      const tabContent = this.$refs.swTabContent;
+    handleClick(itemName: string): void {
+      this.setActiveItem(itemName);
+      this.$emit('new-item-active', itemName);
 
-      tabContent.addEventListener('scroll', throttle(() => {
-        const rightEnd = tabContent.scrollWidth - tabContent.offsetWidth;
-        const leftDistance = tabContent.scrollLeft;
+      const matchingItem = this.items.find(item => item.name === itemName);
 
-        this.scrollRightPossible = !(rightEnd - leftDistance < 5);
-        this.scrollLeftPossible = !(leftDistance < 5);
-      }, 100));
-
-      this.checkIfNeedScroll();
-      this.addScrollbarOffset();
-
-      this.$device.onResize({
-        listener() {
-          this.checkIfNeedScroll();
-          this.addScrollbarOffset();
-        },
-        component: this,
-      });
-      this.recalculateSlider();
-    },
-
-    recalculateSlider() {
-      window.setTimeout(() => {
-        const { activeItem } = this;
-        this.activeItem = null;
-        this.activeItem = activeItem;
-      }, 0);
-    },
-
-    createdComponent() {
-      this.updateActiveItem();
-    },
-
-    updateActiveItem() {
-      this.$nextTick().then(() => {
-        const firstActiveTabItem = this.$children.find((child) => child.$el.nodeType === 1 && child.$el.classList.contains('sw-tabs-item--active'));
-
-        if (!firstActiveTabItem) {
-          return;
-        }
-
-        this.activeItem = this.$children.indexOf(firstActiveTabItem);
-        if (!this.firstScroll) {
-          this.scrollToItem(firstActiveTabItem);
-        }
-        this.firstScroll = true;
-      });
-    },
-
-    scrollTo(direction) {
-      if (!['left', 'right'].includes(direction)) {
+      if (!matchingItem || !matchingItem.onClick) {
         return;
       }
 
-      const tabContent = this.$refs.swTabContent;
-      const tabContentWidth = tabContent.offsetWidth;
-
-      if (direction === 'right') {
-        tabContent.scrollLeft += (tabContentWidth / 2);
-        return;
-      }
-      tabContent.scrollLeft += -(tabContentWidth / 2);
+      matchingItem.onClick(itemName);
     },
 
-    checkIfNeedScroll() {
-      const tabContent = this.$refs.swTabContent;
-      this.isScrollable = tabContent.scrollWidth !== tabContent.offsetWidth;
-    },
-
-    setActiveItem(item) {
-      this.$emit('new-item-active', item);
-      this.active = item.name;
-      this.updateActiveItem();
-    },
-
-    scrollToItem(item) {
-      const tabContent = this.$refs.swTabContent;
-      const tabContentWidth = tabContent.offsetWidth;
-      const itemOffset = item.$el.offsetLeft;
-      const itemWidth = item.$el.clientWidth;
-
-      if ((tabContentWidth / 2) < itemOffset) {
-        const scrollWidth = itemOffset - (tabContentWidth / 2) + (itemWidth / 2);
-        tabContent.scrollLeft = scrollWidth;
+    getItemClasses(item: TabItem) {
+      return {
+        'sw-tabs--item__has-error': item.hasError,
+        'sw-tabs--item__is-active': item.name === this.activeItemName,
       }
     },
 
-    addScrollbarOffset() {
-      this.scrollbarOffset = getScrollbarHeight(this.$refs.swTabContent);
+    getContextMenuItemVariant(item: TabItem): string|undefined {
+      if (item.hasError) {
+        return 'danger';
+      }
+
+      if (item.name === this.activeItemName) {
+        return 'active'
+      }
+
+      if (item.badge === 'warning') {
+        return 'warning'
+      }
+
+      if (item.badge === 'positive') {
+        return 'success'
+      }
+
+      if (item.badge === 'critical') {
+        return 'danger'
+      }
+      
+      return undefined;
     },
-  },
-};
+
+    setActiveItem(itemName: string): void {
+      this.activeItemName = `${itemName}`;
+      this.refreshKey = !this.refreshKey;
+    },
+
+    handleResize() {
+      if (this.$refs.priorityPlus) {
+        this.refreshKey = !this.refreshKey;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (this.$refs.priorityPlus as any).handleResize().then(() => {
+          this.refreshKey = !this.refreshKey;
+        })
+      }
+    },
+
+    toggleMoreTabItems() {
+      this.showMoreItems = !this.showMoreItems;
+    }
+  }
+});
 </script>
 
 <style lang="scss">
 @import "../../assets/scss/variables.scss";
 
 .sw-tabs {
+  display: flex;
   position: relative;
-
-  .sw-tabs__content {
-    position: relative;
-    display: flex;
-    overflow: auto;
-    scroll-behavior: smooth;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    &::before {
-      content: "";
-      display: block;
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 2px;
-      background-color: $color-gray-300;
-      pointer-events: none;
-    }
-
-    .sw-tooltip--wrapper {
-      display: flex;
-    }
-  }
-
-  .sw-tabs__slider {
-    transform-origin: top left;
-    transition: 0.2s all ease-in-out;
-    position: absolute;
-    bottom: 0;
-    height: 2px;
-    background-color: $color-shopware-brand-500;
-
-    &.has--error {
-      background-color: $color-crimson-500;
-    }
-  }
-
-  .sw-tabs__arrow {
-    transition: 0.3s all ease-in-out;
-    position: absolute;
-    left: 0;
-    top: 21px;
-    transform: translate(0, -50%);
-    border: none;
-    background-color: transparent;
-
-    &.sw-tabs__arrow--right {
-      left: auto;
-      right: 0;
-    }
-
-    &.sw-tabs__arrow--disabled {
-      cursor: default !important;
-      opacity: 0.25;
-    }
-
-    .sw-icon {
-      transition: 0.3s all ease;
-    }
-
-    &:focus {
-      outline: none;
-    }
-
-    &:hover {
-      outline: none;
-      cursor: pointer;
-
-      .sw-icon {
-        color: $color-shopware-brand-500;
-      }
-    }
-  }
-
-  .sw-tabs__custom-content {
-    padding: 20px 0;
-  }
-
-  &.sw-tabs--vertical {
-    .sw-tabs__content {
-      flex-direction: column;
-
-      .sw-tabs__slider {
-        bottom: auto;
-        top: 0;
-        left: 2px;
-      }
-
-      &::before {
-        display: none;
-      }
-    }
-
-    &.sw-tabs--align-right {
-      .sw-tabs__content {
-        .sw-tabs-item { /* stylelint-disable-line */
-          text-align: right;
-        }
-
-        .sw-tabs__slider { /* stylelint-disable-line */
-          transform-origin: bottom right;
-          left: auto;
-          right: 0;
-          top: -2px;
-        }
-      }
-    }
-  }
+  box-shadow: inset 0 -1px 0 $color-gray-300;
 
   &.sw-tabs--small {
     max-width: 800px;
     margin: 0 auto 15px auto;
   }
 
-  &.sw-tabs--scrollable {
-    padding: 0 20px;
+  &.sw-tabs--vertical {
+    flex-direction: column;
+    box-shadow: none;
+
+    li {
+      border-bottom: none;
+      border-left: 1px solid $color-gray-300;
+    }
+
+    .sw-tabs--slider {
+      top: 0;
+      bottom: auto;
+    }
   }
 
-  &.sw-tabs--scrollbar-active {
-    .sw-tabs__content {
-      &::before {
-        display: none;
-      }
+  .sw-tabs--item {
+    display: inline-block;
+    border-bottom: 1px solid $color-gray-300;
+    padding: 10px 16px;
+    white-space: nowrap;
+    font-size: $font-size-default;
+    cursor: pointer;
+    color: $color-darkgray-200;
+
+    &__has-error {
+      color: $color-crimson-300;
+      border-bottom: 1px solid $color-crimson-300;
+    }
+
+    &__is-active {
+      color: $color-black;
+    }
+
+    &__has-error.sw-tabs--item__is-active {
+      color: $color-crimson-500;
+    }
+  }
+
+  .sw-tabs--slider {
+    transform-origin: top left;
+    transition: 0.2s all ease-in-out;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background-color: $color-shopware-brand-500;
+    z-index: 1;
+
+    &__has-error {
+      background-color: $color-crimson-500;
+    }
+  }
+
+  .sw-context-button {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid $color-gray-300;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: $font-size-default;
+    }
+  }
+
+  .sw-tabs--error-badge {
+    margin-left: 2px;
+    width: 12px;
+    height: 12px;
+
+    > svg {
+      width: 100% !important;
+      height: 100% !important;
     }
   }
 }
