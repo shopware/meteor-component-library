@@ -11,7 +11,10 @@
     role="tooltip"
     aria-label="help-text"
   >
-    <sw-icon name="regular-questionmark-s" />
+    <sw-icon
+      data-testid="sw-help-text__icon"
+      name="solid-question-circle-s"
+    />
     <span class="sw-help-text__tooltip-text">{{ text }}</span>
   </span>
 </template>
@@ -69,21 +72,11 @@ export default {
 @import "../../assets/scss/variables.scss";
 
 .sw-help-text {
-  width: 16px;
-  height: 16px;
-  background-color: $color-shopware-brand-500;
-  color: $color-white;
-  border-radius: 50%;
-  line-height: 0;
+  color: $color-shopware-brand-500;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   pointer-events: auto;
-
-  .sw-icon {
-    width: 10px;
-    height: 10px;
-  }
 
   &__tooltip-text {
     display: none;

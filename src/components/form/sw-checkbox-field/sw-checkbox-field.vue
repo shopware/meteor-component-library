@@ -5,34 +5,42 @@
   >
     <div class="sw-field--checkbox__content">
       <div class="sw-field__checkbox">
-        <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
         <input
           :id="identification"
           type="checkbox"
           :name="identification"
           :checked="inputState"
-          :disabled="disabled"
+          :disabled="isDisabled"
           @change="onChange"
         >
         <div class="sw-field__checkbox-state">
           <sw-icon
-            name="small-default-checkmark-line-small"
+            v-if="!partial"
+            name="regular-checkmark-xxs"
+            size="16"
+          />
+
+          <sw-icon
+            v-else
+            name="solid-minus-xxs"
             size="16"
           />
         </div>
       </div>
 
       <sw-base-field
-        v-bind="$attrs"
-        :disabled="disabled"
+        :disabled="isDisabled"
         :is-inheritance-field="isInheritanceField"
         :is-inherited="isInherited"
         :name="identification"
+        :has-focus="false"
+        :help-text="helpText"
+        :required="required"
         @inheritance-restore="$emit('inheritance-restore', $event)"
         @inheritance-remove="$emit('inheritance-remove', $event)"
       >
         <template #label>
-          <slot name="label" />
+          {{ label }}
         </template>
       </sw-base-field>
     </div>
@@ -43,7 +51,7 @@
 
 <script>
 import SwIcon from '../../base/sw-icon/sw-icon.vue';
-import SwBaseField from '../_internal/sw-base-field-deprecated/sw-base-field-deprecated.vue';
+import SwBaseField from '../_internal/sw-base-field/sw-base-field.vue';
 import SwFieldError from '../_internal/sw-field-error/sw-field-error.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 import { createId } from '../../../utils/uuid';
@@ -59,47 +67,86 @@ export default {
 
   mixins: [
     SwFormFieldMixin,
-    // Mixin.getByName('remove-api-error'),
   ],
+
   inheritAttrs: false,
 
-  model: {
-    prop: 'value',
-    event: 'change',
-  },
-
   props: {
+    /**
+     * A label for the checkbox.
+     */
+    label: {
+      type: String,
+      required: true,
+    },
+
+    /**
+     * Toggles the disabled state of the checkbox.
+     */
     disabled: {
       type: Boolean,
       required: false,
       default: false,
     },
 
-    value: {
+    /**
+     * Determines the checked state of the checkbox.
+     */
+    checked: {
       type: Boolean,
       required: false,
       default: null,
     },
 
+    /**
+     * Determines if the field is partially checked.
+     */
+    partial: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    /**
+     * Inherited value from another SalesChannel.
+     */
     inheritedValue: {
       type: Boolean,
       required: false,
       default: null,
     },
 
-    ghostValue: {
-      type: Boolean,
-      required: false,
-      default: null,
-    },
-
+    /**
+     * Error object for this field.
+     */
     error: {
       type: Object,
       required: false,
       default: null,
     },
 
+    /**
+     * Determines if the field is surrounded by a border.
+     */
     bordered: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    /**
+     * Help text with additional information for the field.
+     */
+    helpText: {
+      type: String,
+      required: false,
+      default: null,
+    },
+
+    /**
+     * Marks the field as required with an asterix.
+     */
+    required: {
       type: Boolean,
       required: false,
       default: false,
@@ -108,7 +155,7 @@ export default {
 
   data() {
     return {
-      currentValue: this.value,
+      currentValue: this.checked,
       id: createId(),
     };
   },
@@ -119,7 +166,6 @@ export default {
         'has--error': this.hasError,
         'is--disabled': this.disabled,
         'is--inherited': this.isInherited,
-        'sw-field__checkbox--ghost': this.ghostValue,
         'is--bordered': this.bordered,
       };
     },
@@ -133,6 +179,10 @@ export default {
     },
 
     inputState() {
+      if (this.isInherited) {
+        return this.inheritedValue;
+      }
+
       return this.currentValue || false;
     },
 
@@ -149,10 +199,14 @@ export default {
       }
       return this.isInheritanceField && this.currentValue === null;
     },
+
+    isDisabled() {
+      return this.disabled || this.isInherited;
+    },
   },
 
   watch: {
-    value() { this.currentValue = this.value; },
+    checked() { this.currentValue = this.checked; },
   },
 
   methods: {
@@ -176,6 +230,14 @@ $sw-field-color-inherited: $color-module-purple-900;
 .sw-field--checkbox {
   margin-bottom: 22px;
 
+  .sw-inheritance-switch {
+    &.sw-field__inheritance-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
   .sw-field--checkbox__content {
     display: grid;
     grid-template-columns: 16px 1fr;
@@ -184,11 +246,19 @@ $sw-field-color-inherited: $color-module-purple-900;
 
   .sw-field {
     margin-bottom: 0;
+
+    .sw-block-field__block {
+      border: none;
+    }
+  }
+
+  .sw-field--default {
+    display: flex;
   }
 
   .sw-field__label {
     margin-bottom: 0;
-    margin-left: 10px;
+    margin-left: 4px;
   }
 
   .sw-field__checkbox {
@@ -225,7 +295,9 @@ $sw-field-color-inherited: $color-module-purple-900;
         border-color: $sw-field-color-focus;
 
         .sw-icon {
-          display: inline-block;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
       }
 
@@ -235,7 +307,6 @@ $sw-field-color-inherited: $color-module-purple-900;
         color: lighten($sw-field-color-text, 40%);
 
         .sw-icon {
-          display: inline-block;
           color: lighten($sw-field-color-text, 40%);
         }
       }
@@ -296,27 +367,9 @@ $sw-field-color-inherited: $color-module-purple-900;
     border-radius: 4px;
     border: 1px solid $color-gray-300;
     padding: 16px;
-  }
-}
 
-.sw-field--checkbox.sw-field__checkbox--ghost {
-  .sw-field__checkbox input[type="checkbox"]:not(:checked) ~ .sw-field__checkbox-state {
-    background-color: transparent;
-    border: 1px solid $color-shopware-brand-500;
-
-    .sw-icon {
-      display: inline-block;
-      color: $color-shopware-brand-500;
-    }
-  }
-
-  &.is--disabled {
-    .sw-field__checkbox input[type="checkbox"]:not(:checked) ~ .sw-field__checkbox-state {
-      border: 1px solid $color-gray-300;
-
-      .sw-icon {
-        color: $color-gray-300;
-      }
+    &.has--error {
+      border-color: $sw-field-color-error;
     }
   }
 }

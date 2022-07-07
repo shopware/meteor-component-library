@@ -11,9 +11,9 @@
       v-if="isInherited"
       key="inherit-icon"
       v-tooltip="{ message: $tc('global.sw-field.tooltipRemoveInheritance'), disabled: disabled }"
+      data-testid="sw-inheritance-switch-icon"
       :multicolor="true"
       name="regular-lock-s"
-      size="14"
       @click="onClickRemoveInheritance"
     />
     <sw-icon
