@@ -246,7 +246,7 @@ export default {
     },
 
     hasError() {
-      return this.$slots.error || this.$scopedSlots.error();
+      return this.$slots.error || (this.$scopedSlots.error && this.$scopedSlots.error());
     }
   }
 }
@@ -263,6 +263,7 @@ $sw-field-transition: border-color 0.3s ease-out, background 0.3s ease;
   margin-bottom: 32px;
 
   .sw-field__help-text {
+    margin-left: 4px;
     align-self: center;
   }
 
@@ -430,7 +431,7 @@ $sw-field-transition: border-color 0.3s ease-out, background 0.3s ease;
   // Inheritance
   .sw-field__inheritance-icon {
     margin-left: 4px;
-    margin-right: 8px;
+    margin-right: 4px;
   }
 
   .sw-field__button-restore {

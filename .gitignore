@@ -1,6 +1,7 @@
 .DS_Store
 node_modules
 /dist
+.yalc/
 
 
 # local env files
@@ -14,6 +15,7 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Editor directories and files
+yalc.lock
 .idea
 .vscode
 *.suo

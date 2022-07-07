@@ -109,17 +109,14 @@ export default {
 <style lang="scss">
 @import "../../assets/scss/variables.scss";
 @import "../../assets/scss/mixins.scss";
+@import "node_modules/@shopware-ag/meteor-icon-kit/icons/meteor-icon-kit.scss";
 
 .sw-icon {
-  @include size(24px);
-
   display: inline-block;
   vertical-align: middle;
   line-height: 0;
 
   > svg {
-    width: 100%;
-    height: 100%;
     vertical-align: middle;
   }
 
