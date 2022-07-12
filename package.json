@@ -1,5 +1,5 @@
 {
-  "name": "sw-admin-component-library",
+  "name": "@shopware-ag/meteor-component-library",
   "version": "0.1.0",
   "private": true,
   "scripts": {
