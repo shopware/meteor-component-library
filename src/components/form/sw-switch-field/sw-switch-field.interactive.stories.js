@@ -1,23 +1,28 @@
 import { within, userEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
-import SwCheckboxField from './sw-checkbox-field.vue';
-import defaultCheckboxField, { Default as Template } from './sw-checkbox-field.stories';
+import SwSwitchField from './sw-switch-field';
+import defaultSwitchField, { Default as Template } from './sw-switch-field.stories';
 
 export default {
-  ...defaultCheckboxField,
-  title: 'Interaction Tests/form/sw-checkbox-field',
-  component: SwCheckboxField,
+  ...defaultSwitchField,
+  title: 'Interaction Tests/form/sw-switch-field',
+  component: SwSwitchField,
 };
 
 export const TestLabel = Template.bind();
-TestLabel.storyName = 'Should display label';
+TestLabel.storyName = 'Label should function';
 TestLabel.args = {
   label: 'label',
+  checked: false,
 };
 TestLabel.play = async ({ args }) => {
   const canvas = within(document.getElementById('root'));
 
   await expect(canvas.getByText(args.label)).toBeDefined();
+
+  await userEvent.click(canvas.getByText(args.label));
+
+  expect(canvas.getByRole('checkbox').checked).toBe(true);
 };
 
 export const VisualTestCheckable = Template.bind();
@@ -146,18 +151,4 @@ VisualTestHelpText.play = async () => {
   await expect(canvas.getByTestId('sw-help-text__icon')).toBeDefined();
 
   await userEvent.click(canvas.getByTestId('sw-help-text__icon'));
-};
-
-export const VisualTestPartialChecked = Template.bind();
-VisualTestPartialChecked.storyName = 'Partial checked should be displayed';
-VisualTestPartialChecked.args = {
-  label: 'Partial checked label',
-  partial: true,
-  checked: true,
-};
-VisualTestPartialChecked.play = async () => {
-  // we can't use canvasElement because it is not available anymore
-  const canvas = within(document.getElementById('root'));
-
-  await expect(canvas.getByRole('checkbox').checked).toBe(true);
 };
