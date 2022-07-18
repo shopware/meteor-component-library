@@ -6,18 +6,11 @@ export default {
   args: {
     name: 'regular-products',
     color: '#3498db',
-    small: false,
-    large: false,
     multicolor: false,
     decorative: false,
   },
   argTypes: {
     name: {
-      control: {
-        type: 'text',
-      },
-    },
-    size: {
       control: {
         type: 'text',
       },

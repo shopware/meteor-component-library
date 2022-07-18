@@ -56,7 +56,7 @@
 import SwIcon from '../sw-icon/sw-icon.vue';
 
 export default {
-  name: 'SwAlert',
+  name: 'SwBanner',
 
   components: {
     'sw-icon': SwIcon,

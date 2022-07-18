@@ -1,7 +1,8 @@
-import SwSwitchField from './sw-switch-field.vue';
+import SwCheckbox from './sw-checkbox.vue';
+
 export default {
-  title: 'Components/form/sw-switch-field',
-  component: SwSwitchField,
+  title: 'Components/form/sw-checkbox',
+  component: SwCheckbox,
   argTypes: {
     change: {
       action: 'change',
@@ -26,15 +27,17 @@ export default {
     },
   },
   args: {
-    label: 'Switchfield',
+    label: 'Checkbox',
+    disabled: false,
+    bordered: false,
   },
 };
 
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
-  components: { SwSwitchField },
-  template: '<sw-switch-field v-bind="$props" @change="change" @inheritance-remove="inheritanceRemove"></sw-switch-field>',
+  components: { SwCheckbox },
+  template: '<sw-checkbox v-bind="$props" @change="change" @inheritance-remove="inheritanceRemove"></sw-checkbox>',
 });
 
 export const Default = Template.bind({});
-Default.storyName = 'sw-switch-field';
+Default.storyName = 'sw-checkbox';

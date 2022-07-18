@@ -59,7 +59,7 @@ import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 import { createId } from '../../../utils/uuid';
 
 export default {
-  name: 'SwCheckboxField',
+  name: 'SwCheckbox',
 
   components: {
     'sw-icon': SwIcon,
@@ -325,12 +325,12 @@ $sw-field-color-inherited: $color-module-purple-900;
         color: $sw-field-color-text;
         border: 1px solid $sw-field-color-border;
         border-radius: 4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         .sw-icon {
           display: none;
-          position: absolute;
-          top: -1px;
-          left: -1px;
           color: $sw-field-color-background;
         }
       }

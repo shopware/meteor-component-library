@@ -112,14 +112,14 @@ export default {
     /**
      * The size of the text field.
      *
-     * @values small, medium, default
+     * @values small, default
      */
     size: {
       type: String,
       required: false,
       default: 'default',
       validator(val) {
-        return ['small', 'medium', 'default'].includes(val);
+        return ['small', 'default'].includes(val);
       },
     },
 

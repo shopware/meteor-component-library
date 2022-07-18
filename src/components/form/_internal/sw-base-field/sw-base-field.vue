@@ -183,14 +183,14 @@ export default {
     /**
      * The size of the text field.
      *
-     * @values small, medium, default
+     * @values small, default
      */
     size: {
       type: String,
       required: false,
       default: 'default',
       validator(val) {
-        return ['small', 'medium', 'default'].includes(val);
+        return ['small', 'default'].includes(val);
       },
     },
 
@@ -280,10 +280,6 @@ $sw-field-transition: border-color 0.3s ease-out, background 0.3s ease;
     gap: 8px;
   }
 
-  &__hint :empty {
-    display: none;
-  }
-
   input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 1000px $color-white inset;
   }
@@ -298,7 +294,7 @@ $sw-field-transition: border-color 0.3s ease-out, background 0.3s ease;
     display: block;
     width: 100%;
     min-width: 0;
-    padding: 12px 16px;
+    padding: 13px 16px;
     border: none;
     background: $color-white;
     font-size: $font-size-small;
@@ -362,17 +358,7 @@ $sw-field-transition: border-color 0.3s ease-out, background 0.3s ease;
     input,
     textarea,
     select {
-      padding: 4px 16px;
-    }
-  }
-
-  &.sw-field--medium {
-    margin-bottom: 6px;
-
-    input,
-    textarea,
-    select {
-      padding: 8px 16px;
+      padding: 5px 16px;
     }
   }
 
@@ -395,11 +381,6 @@ $sw-field-transition: border-color 0.3s ease-out, background 0.3s ease;
       display: none;
     }
 
-    .sw-icon {
-      width: 16px;
-      height: 16px;
-    }
-
     &.is--prefix {
       border-right: 1px solid $color-gray-300;
       border-left: none;
@@ -418,13 +399,7 @@ $sw-field-transition: border-color 0.3s ease-out, background 0.3s ease;
 
   &.sw-field--small {
     .sw-field__addition {
-      padding: 4px 16px;
-    }
-  }
-
-  &.sw-field--medium {
-    .sw-field__addition {
-      padding: 8px 16px;
+      padding: 5px 16px;
     }
   }
 

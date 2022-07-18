@@ -1,18 +1,18 @@
 <template>
-  <sw-contextual-field-deprecated
+  <sw-base-field
     class="sw-field--datepicker"
     :class="{ 'has--focus': isDatepickerOpen }"
     v-bind="$attrs"
     :required="required"
     :name="formFieldName"
     :disabled="disabled"
-    @sw-contextual-field-suffix-clicked="openDatepicker"
+    :has-focus="isDatepickerOpen"
     @inheritance-restore="$emit('inheritance-restore', $event)"
     @inheritance-remove="$emit('inheritance-remove', $event)"
     v-on="additionalEventListeners"
   >
     <!-- eslint-disable-next-line vue/no-template-shadow -->
-    <template #sw-field-input="{ identification, disabled }">
+    <template #element="{ identification, disabled }">
       <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
       <input
         :id="identification"
@@ -24,35 +24,27 @@
       >
       <sw-icon
         v-if="!required && timezoneFormattedValue && !disabled"
+        data-testid="sw-datepicker-clear-button"
         class="sw-field--datepicker__button-reset-value"
-        name="small-default-x-line-small"
-        small
+        name="regular-times-xs"
         @click="unsetValue"
       />
     </template>
 
     <template
       v-if="showTimeZoneHint"
-      #hint
+      #field-hint
     >
       <sw-icon
         name="solid-clock"
-        size="12px"
       />
-      {{ userTimeZone }}
-    </template>
-
-    <template #sw-contextual-field-suffix>
-      <sw-icon
-        :name="suffixName"
-        @click.stop="openDatepicker"
-      />
+      {{ timeZone }}
     </template>
 
     <template #label>
-      <slot name="label" />
+      {{ label }}
     </template>
-  </sw-contextual-field-deprecated>
+  </sw-base-field>
 </template>
 
 <script>
@@ -60,7 +52,7 @@ import Flatpickr from 'flatpickr';
 import 'flatpickr/dist/l10n';
 import { zonedTimeToUtc, utcToZonedTime } from 'date-fns-tz';
 import 'flatpickr/dist/flatpickr.css';
-import SwContextualFieldDeprecated from '../_internal/sw-contextual-field-deprecated/sw-contextual-field-deprecated.vue';
+import SwBaseField from "../_internal/sw-base-field/sw-base-field";
 import SwIcon from '../../base/sw-icon/sw-icon.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 
@@ -83,18 +75,35 @@ export default {
   name: 'SwDatepicker',
 
   components: {
-    'sw-contextual-field-deprecated': SwContextualFieldDeprecated,
+    'sw-base-field': SwBaseField,
     'sw-icon': SwIcon,
   },
 
   mixins: [
     SwFormFieldMixin,
-    // Mixin.getByName('remove-api-error'),
   ],
 
   inheritAttrs: false,
 
   props: {
+    label: {
+      type: String,
+      required: false,
+      default: null,
+    },
+
+    locale: {
+      type: String,
+      required: false,
+      default: 'en',
+    },
+
+    timeZone: {
+      type: String,
+      required: false,
+      default: 'UTC',
+    },
+
     value: {
       type: String,
       required: false,
@@ -111,10 +120,9 @@ export default {
     dateType: {
       type: String,
       default: 'date',
-      /* @deprecated tag:v6.5.0 'datetime-local' can be removed */
-      validValues: ['time', 'date', 'datetime', 'datetime-local'],
+      validValues: ['time', 'date', 'datetime'],
       validator(value) {
-        return ['time', 'date', 'datetime', 'datetime-local'].includes(value);
+        return ['time', 'date', 'datetime'].includes(value);
       },
     },
 
@@ -150,12 +158,6 @@ export default {
       return this.$refs.flatpickrInput;
     },
 
-    // eslint-disable-next-line vue/return-in-computed-property
-    locale() {
-      // TODO: Add the return value back
-      // return Shopware.State.getters.adminLocaleLanguage || 'en';
-    },
-
     currentFlatpickrConfig() {
       if (this.flatpickrInstance === null) {
         return {};
@@ -176,21 +178,12 @@ export default {
       return this.flatpickrInstance.config.altFormat;
     },
 
-    suffixName() {
-      if (this.noCalendar) {
-        return 'default-time-clock';
-      }
-
-      return 'default-calendar-full';
-    },
-
     noCalendar() {
       return this.dateType === 'time';
     },
 
     enableTime() {
-      /* @deprecated tag:v6.5.0 'datetime-local' can be removed */
-      return this.noCalendar || ['datetime', 'datetime-local'].includes(this.dateType);
+      return this.noCalendar || this.dateType === 'datetime';
     },
 
     additionalEventListeners() {
@@ -210,12 +203,6 @@ export default {
       return listeners;
     },
 
-    userTimeZone() {
-      // TODO: Add this functionality back
-      // eslint-disable-next-line no-undef
-      return Shopware?.State?.get('session')?.currentUser?.timeZone ?? 'UTC';
-    },
-
     timezoneFormattedValue: {
       get() {
         if (!this.value) {
@@ -227,10 +214,10 @@ export default {
         }
 
         // convert from UTC timezone to user timezone (represented as UTC)
-        const userTimezoneDate = utcToZonedTime(this.value, this.userTimeZone);
+        const timeZoneDate = utcToZonedTime(this.value, this.timeZone);
 
         // get the time converted to the user timezone
-        return userTimezoneDate.toISOString();
+        return timeZoneDate.toISOString();
       },
       set(newValue) {
         if (newValue === null) {
@@ -244,7 +231,7 @@ export default {
         }
 
         // convert from user timezone (represented as UTC) to UTC timezone
-        const utcDate = zonedTimeToUtc(new Date(newValue), this.userTimeZone);
+        const utcDate = zonedTimeToUtc(new Date(newValue), this.timeZone);
 
         // emit the UTC time so that the v-model value always work in UTC time (which is needed for the server)
         this.$emit('input', utcDate.toISOString());
@@ -252,10 +239,7 @@ export default {
     },
 
     showTimeZoneHint() {
-      return [
-        'datetime',
-        'datetime-local',
-      ].includes(this.dateType);
+      return this.dateType === 'datetime';
     },
   },
 
@@ -544,15 +528,10 @@ $sw-datepicker-color-text-selected: $color-white;
 }
 
 .sw-field--datepicker {
-  &:not(.is--disabled) {
-    .sw-field__addition {
-      cursor: pointer;
-    }
-
-    .sw-icon {
-      &:hover {
-        color: darken($sw-datepicker-color-font, 20%);
-      }
+  .sw-field__hint {
+    svg#meteor-icon-kit__solid-clock {
+      width: 12px;
+      height: 12px;
     }
   }
 
@@ -563,8 +542,8 @@ $sw-datepicker-color-text-selected: $color-white;
   .sw-field--datepicker__button-reset-value {
     position: absolute;
     cursor: pointer;
-    right: 63px;
-    top: 14px;
+    right: 14px;
+    top: 19px;
   }
 
   &.sw-field--small {

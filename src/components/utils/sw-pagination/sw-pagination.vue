@@ -53,7 +53,7 @@
       v-if="steps.length > 1"
       class="sw-pagination__per-page"
     >
-      <sw-select-field
+      <sw-select
         size="small"
         name="perPage"
         :label="$tc('global.sw-pagination.labelItemsPerPage')"
@@ -68,21 +68,21 @@
         >
           {{ step }}
         </option>
-      </sw-select-field>
+      </sw-select>
     </div>
   </div>
 </template>
 
 <script>
 import SwIcon from '../../base/sw-icon/sw-icon.vue';
-import SwSelectField from '../../form/sw-select-field/sw-select-field.vue';
+import SwSelect from '../../form/sw-select/sw-select.vue';
 
 export default {
   name: 'SwPagination',
 
   components: {
     'sw-icon': SwIcon,
-    'sw-select-field': SwSelectField,
+    'sw-select': SwSelect,
   },
 
   props: {

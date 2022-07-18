@@ -29,51 +29,54 @@ VisualTestPrimaryVariant.args = {
 };
 
 export const VisualTestGhostVariant = Default.bind();
-VisualTestGhostVariant.storyName = 'Render the ghost variant';
+VisualTestGhostVariant.storyName = 'Render primary ghost variant';
 VisualTestGhostVariant.args = {
   ...Default.args,
-  default: 'Ghost button',
-  variant: 'ghost'
+  default: 'Primary ghost button',
+  variant: 'primary',
+  ghost: true,
 };
 
-export const VisualTestDangerVariant = Default.bind();
-VisualTestDangerVariant.storyName = 'Render the danger variant';
-VisualTestDangerVariant.args = {
+export const VisualTestSecondaryVariant = Default.bind();
+VisualTestSecondaryVariant.storyName = 'Render secondary variant';
+VisualTestSecondaryVariant.args = {
   ...Default.args,
-  default: 'Danger button',
-  variant: 'danger'
+  default: 'Secondary button',
+  variant: 'secondary',
 };
 
-export const VisualTestGhostDangerVariant = Default.bind();
-VisualTestGhostDangerVariant.storyName = 'Render the ghost danger variant';
-VisualTestGhostDangerVariant.args = {
+export const VisualTestSecondaryGhostVariant = Default.bind();
+VisualTestSecondaryGhostVariant.storyName = 'Render secondary ghost variant';
+VisualTestSecondaryGhostVariant.args = {
   ...Default.args,
-  default: 'Ghost danger button',
-  variant: 'ghost-danger'
+  default: 'Secondary ghost button',
+  variant: 'secondary',
+  ghost: true,
 };
 
-export const VisualTestContrastVariant = Default.bind();
-VisualTestContrastVariant.storyName = 'Render the contrast variant';
-VisualTestContrastVariant.args = {
+export const VisualTestCriticalVariant = Default.bind();
+VisualTestCriticalVariant.storyName = 'Render the critical variant';
+VisualTestCriticalVariant.args = {
   ...Default.args,
-  default: 'Contrast button',
-  variant: 'contrast'
+  default: 'Critical button',
+  variant: 'critical'
 };
 
-export const VisualTestContextVariant = Default.bind();
-VisualTestContextVariant.storyName = 'Render the context variant';
-VisualTestContextVariant.args = {
+export const VisualTestCriticalGhostVariant = Default.bind();
+VisualTestCriticalGhostVariant.storyName = 'Render the critical ghost variant';
+VisualTestCriticalGhostVariant.args = {
   ...Default.args,
-  default: 'Context button',
-  variant: 'context'
+  default: 'Critical button',
+  variant: 'critical',
+  ghost: true,
 };
 
-export const VisualTestXSmallSize = Default.bind();
-VisualTestXSmallSize.storyName = 'Render the x-small size';
-VisualTestXSmallSize.args = {
+export const VisualTestActionVariant = Default.bind();
+VisualTestActionVariant.storyName = 'Render the action variant';
+VisualTestActionVariant.args = {
   ...Default.args,
-  default: 'X-Small button',
-  size: 'x-small'
+  default: 'Action button',
+  variant: 'action'
 };
 
 export const VisualTestSmallSize = Default.bind();
@@ -82,6 +85,14 @@ VisualTestSmallSize.args = {
   ...Default.args,
   default: 'Small button',
   size: 'small'
+};
+
+export const VisualTestDefaultSize = Default.bind();
+VisualTestDefaultSize.storyName = 'Render the default size';
+VisualTestDefaultSize.args = {
+  ...Default.args,
+  default: 'Default button',
+  size: 'default'
 };
 
 export const VisualTestLargeSize = Default.bind();

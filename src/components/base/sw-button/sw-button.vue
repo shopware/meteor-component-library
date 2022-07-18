@@ -57,7 +57,7 @@ export default {
     },
     /**
      * Change the look of the button
-     * @values primary, ghost, danger, ghost-danger, contrast, context
+     * @values primary, secondary, critical, action
      */
     variant: {
       type: String,
@@ -67,12 +67,17 @@ export default {
         if (!value.length) {
           return true;
         }
-        return ['primary', 'ghost', 'danger', 'ghost-danger', 'contrast', 'context'].includes(value);
+        return ['primary', 'secondary', 'critical', 'action'].includes(value);
       },
+    },
+    ghost: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
     /**
      * Change the size of the button
-     * @values x-small, small, large
+     * @values small, default, large
      */
     size: {
       type: String,
@@ -82,7 +87,7 @@ export default {
         if (!value.length) {
           return true;
         }
-        return ['x-small', 'small', 'large'].includes(value);
+        return ['small', 'default', 'large'].includes(value);
       },
     },
     /**
@@ -125,6 +130,7 @@ export default {
     buttonClasses(): {[key: string]: unknown} {
       return {
         [`sw-button--${this.variant}`]: !!this.variant,
+        [`sw-button--${this.variant}-ghost`]: !!this.ghost,
         [`sw-button--${this.size}`]: !!this.size,
         'sw-button--block': this.block,
         'sw-button--disabled': this.disabled,
@@ -181,250 +187,228 @@ $sw-button-transition: all 0.15s ease-out;
 
   &:hover:not(.sw-button--disabled),
   &:hover:not([disabled]) {
-     background: $color-gray-100;
-   }
+    background: $color-gray-100;
+  }
 
   &:active:not(.sw-button--disabled) {
-     background: $color-gray-200;
-     border-color: $color-gray-400;
-   }
+    background: $color-gray-200;
+    border-color: $color-gray-400;
+  }
 
   &:disabled,
   &.sw-button--disabled {
-     color: $color-gray-500;
-     border-color: $color-gray-200;
-     cursor: not-allowed;
+    color: $color-gray-500;
+    border-color: $color-gray-200;
+    cursor: not-allowed;
 
-  .sw-icon {
-    color: $color-gray-400;
-  }
+    .sw-icon {
+      color: $color-gray-400;
+    }
   }
 
   .sw-icon {
     color: $color-gray-800;
   }
 
+  .sw-button--small {
+    line-height: 20px;
+  }
+
+  .sw-button--default {
+    line-height: 28px;
+  }
+
+  .sw-button--large {
+    line-height: 44px;
+  }
+
   &.sw-button--primary {
-     background: $color-shopware-brand-500;
-     color: $color-white;
-     line-height: 36px;
-     border: 0 none;
-
-  .sw-icon {
+    background: $color-shopware-brand-500;
     color: $color-white;
+    line-height: 36px;
+    border: 0 none;
+
+    .sw-icon {
+      color: $color-white;
+    }
+
+    &-ghost {
+      background: none;
+      border: 1px solid $color-shopware-brand-500;
+      color: $color-shopware-brand-500;
+    }
+
+    &-ghost:hover {
+      background: $color-shopware-brand-50;
+    }
+
+    &-ghost:active {
+      background: $color-shopware-brand-100;
+    }
+
+    &:not(&-ghost):hover {
+      background: $color-shopware-brand-700;
+    }
+
+    &:not(&-ghost):active {
+      background: $color-shopware-brand-800;
+    }
+
+    &:disabled,
+    &.sw-button--disabled {
+      background: $color-shopware-brand-200;
+    }
+
+    &.sw-button--square .sw-icon {
+      color: $color-white;
+    }
   }
 
-  &.sw-button--x-small {
-     line-height: 20px;
-   }
-
-  &.sw-button--small {
-     line-height: 28px;
-   }
-
-  &.sw-button--large {
-     line-height: 44px;
-   }
-
-  &:hover {
-     background: $color-shopware-brand-700;
-   }
-
-  &:active {
-     background: $color-shopware-brand-800;
-   }
-
-  &:disabled,
-  &.sw-button--disabled {
-     background: $color-shopware-brand-200;
-   }
-
-  &.sw-button--square .sw-icon {
-     color: $color-white;
-   }
-  }
-
-  &.sw-button--contrast {
-     background: $color-module-yellow-500;
-     color: $color-darkgray-200;
-     line-height: 36px;
-     border: 0 none;
-
-  .sw-icon {
+  &.sw-button--secondary {
+    background: $color-gray-50;
     color: $color-darkgray-200;
+    line-height: 36px;
+    border: 1px solid $color-gray-400;
+
+    &-ghost {
+      background: none;
+    }
+
+    .sw-icon {
+      color: $color-white;
+    }
+
+    &:hover {
+      background: $color-gray-200;
+    }
+
+    &:active {
+      background: $color-gray-100;
+    }
+
+    &:disabled,
+    &.sw-button--disabled {
+      background: #F4F7FA;
+      border: 1px solid $color-gray-200;
+      color: $color-gray-500;
+    }
+
+    &.sw-button--square .sw-icon {
+      color: $color-white;
+    }
   }
 
-  &.sw-button--x-small {
-     line-height: 20px;
-   }
-
-  &.sw-button--small {
-     line-height: 28px;
-   }
-
-  &.sw-button--large {
-     line-height: 44px;
-   }
-
-  &:hover {
-     background: $color-module-yellow-700;
-   }
-
-  &:active {
-     background: $color-module-yellow-800;
-   }
-
-  &:disabled,
-  &.sw-button--disabled {
-     background: $color-module-yellow-200;
-     color: $color-gray-800;
-
-  .sw-icon {
-    color: $color-gray-400;
-  }
-  }
-  }
-
-  &.sw-button--danger {
-     background: $color-crimson-500;
-     color: $color-white;
-     line-height: 36px;
-     border: 0 none;
-
-  .sw-icon {
+  &.sw-button--critical {
+    background: $color-crimson-500;
     color: $color-white;
+    line-height: 36px;
+    border: 0 none;
+
+    .sw-icon {
+      color: $color-white;
+    }
+
+    &-ghost {
+      background: none;
+      border: 1px solid $color-crimson-500;
+      color: $color-crimson-500;
+    }
+
+    &-ghost:hover {
+      background: none;
+      border: 1px solid $color-crimson-700;
+      color: $color-crimson-700;
+    }
+
+    &-ghost:active {
+      background: $color-crimson-100;
+    }
+
+    &-ghost:disabled {
+      border: 1px solid $color-crimson-200;
+      color: $color-crimson-200;
+    }
+
+    &:not(&-ghost):hover {
+      background: $color-crimson-700;
+    }
+
+    &:not(&-ghost):active {
+      background: $color-crimson-800;
+    }
+
+    &:not(&-ghost):disabled {
+      background: $color-crimson-200;
+
+      .sw-icon {
+        color: $color-white;
+      }
+    }
   }
 
-  &.sw-button--x-small {
-     line-height: 20px;
-   }
+  &.sw-button--action {
+    border: 1px solid $color-gray-300;
+    background-color: $color-white;
+    color: $color-black;
 
-  &.sw-button--small {
-     line-height: 28px;
-   }
+    .sw-icon {
+      color: $color-darkgray-800;
+    }
 
-  &.sw-button--large {
-     line-height: 44px;
-   }
+    &:hover {
+      background-color: $color-gray-100;
+      color: $color-darkgray-200;
+    }
 
-  &:hover {
-     background: $color-crimson-700;
-   }
-
-  &:active {
-     background: $color-crimson-800;
-   }
-
-  &:disabled,
-  &.sw-button--disabled {
-     background: $color-crimson-200;
-
-  .sw-icon {
-    color: $color-white;
-  }
-  }
-  }
-
-  &.sw-button--ghost {
-     background-color: transparent;
-     border-color: $color-shopware-brand-500;
-     color: $color-shopware-brand-500;
-
-  .sw-icon {
-    color: $color-shopware-brand-500;
-  }
-
-  &:hover {
-     background-color: $color-shopware-brand-50;
-   }
-
-  &:active {
-     background-color: $color-shopware-brand-100;
-   }
-
-  &:disabled,
-  &.sw-button--disabled {
-     background-color: transparent;
-     border-color: $color-shopware-brand-200;
-     color: $color-shopware-brand-200;
-
-  .sw-icon {
-    color: $color-shopware-brand-200;
-  }
-  }
-  }
-
-  &.sw-button--ghost-danger {
-     background: transparent;
-     border-color: $color-crimson-500;
-     color: $color-crimson-500;
-
-  &:hover {
-     background: $color-crimson-50;
-   }
-
-  &:active {
-     background: $color-crimson-100;
-   }
-  }
-
-  &.sw-button--context {
-     border: none;
-     background-color: transparent;
-     color: $color-darkgray-800;
-
-  .sw-icon {
-    color: $color-darkgray-800;
-  }
-
-  &:hover {
-     background-color: $color-gray-100;
-   }
+    &:disabled {
+      background-color: $color-gray-50;
+      color: $color-gray-500;
+    }
   }
 
   &.sw-button--block {
-     display: block;
-     width: 100%;
-   }
+    display: block;
+    width: 100%;
+  }
 
   &.sw-button--x-small {
-     padding-left: 10px;
-     padding-right: 10px;
-     font-size: 12px;
-     line-height: 18px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 12px;
+    line-height: 18px;
 
-  &.sw-button--square {
-     width: 24px;
-   }
+    &.sw-button--square {
+      width: 24px;
+    }
   }
 
   &.sw-button--small {
-     padding-left: 15px;
-     padding-right: 15px;
-     font-size: 12px;
-     line-height: 26px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 12px;
+    line-height: 26px;
 
-  &.sw-button--square {
-     width: 32px;
-   }
+    &.sw-button--square {
+      width: 32px;
+    }
   }
 
   &.sw-button--large {
-     padding-left: 28px;
-     padding-right: 28px;
-     line-height: 42px;
-     font-size: 15px;
+    padding-left: 28px;
+    padding-right: 28px;
+    line-height: 42px;
+    font-size: 15px;
 
-  &.sw-button--square {
-     width: 48px;
-   }
+    &.sw-button--square {
+      width: 48px;
+    }
   }
 
   &.sw-button--square {
-     width: 40px;
-     padding-left: 0;
-     padding-right: 0;
-     text-align: center;
+    width: 40px;
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
 
     .sw-button__content {
       display: inline;
@@ -435,5 +419,4 @@ $sw-button-transition: all 0.15s ease-out;
     border-radius: $border-radius-default;
   }
 }
-
 </style>

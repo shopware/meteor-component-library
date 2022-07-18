@@ -24,21 +24,6 @@ export default {
       required: false,
       default: null,
     },
-    small: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-    large: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-    size: {
-      type: String,
-      required: false,
-      default: null,
-    },
     title: {
       type: String,
       required: false,
@@ -65,24 +50,12 @@ export default {
       return [
         `icon--${this.name}`,
         this.multicolor ? 'sw-icon--multicolor' : 'sw-icon--fill',
-        {
-          'sw-icon--small': this.small,
-          'sw-icon--large': this.large,
-        },
       ];
     },
 
     styles() {
-      let { size } = this;
-
-      if (!Number.isNaN(parseFloat(size)) && !Number.isNaN(size - 0)) {
-        size = `${size}px`;
-      }
-
       return {
         color: this.color,
-        width: size,
-        height: size,
       };
     },
   },
@@ -127,14 +100,6 @@ export default {
     use {
       fill: currentColor;
     }
-  }
-
-  &.sw-icon--small {
-    @include size(16px);
-  }
-
-  &.sw-icon--large {
-    @include size(32px);
   }
 }
 </style>
