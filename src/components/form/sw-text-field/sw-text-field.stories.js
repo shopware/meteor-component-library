@@ -36,6 +36,7 @@ export default {
 
 // Vue component to render the sw-text-field
 const Template = (args, { argTypes }) => ({
+  template: '<div><sw-text-field v-bind="$props" v-model="currentValue" @change="change"><template #prefix>{{ $props.prefix }}</template><template #suffix>{{ $props.suffix }}</template><template #hint>{{ $props.hint }}</template></sw-text-field><h4 style="display: none;">hidden</h4></div>',
   components: { SwTextField },
   // argTypes contains all props of text field
   props: Object.keys(argTypes),
@@ -51,7 +52,6 @@ const Template = (args, { argTypes }) => ({
       this.currentValue = v;
     }
   },
-  template: '<div><sw-text-field v-bind="$props" v-model="currentValue" @change="change"><template #prefix>{{ $props.prefix }}</template><template #suffix>{{ $props.suffix }}</template><template #hint>{{ $props.hint }}</template></sw-text-field><h4 style="display: none;">hidden</h4></div>',
   created() {
     this.currentValue = this.value;
   }

@@ -62,7 +62,7 @@ import SwIcon from '../../base/sw-icon/sw-icon.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 
 export default {
-  name: 'SwSelectField',
+  name: 'SwSelect',
 
   components: {
     'sw-block-field-deprecated': SwBlockFieldDeprecated,

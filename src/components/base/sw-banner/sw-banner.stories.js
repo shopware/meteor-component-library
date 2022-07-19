@@ -1,8 +1,8 @@
-import SwAlert from './sw-alert.vue';
+import SwBanner from './sw-banner.vue';
 
 export default {
-  title: 'Components/base/sw-alert',
-  component: SwAlert,
+  title: 'Components/base/sw-banner',
+  component: SwBanner,
   args: {
     variant: 'info',
     appearance: 'default',
@@ -27,9 +27,9 @@ export default {
 
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
-  components: { SwAlert },
-  template: '<sw-alert v-bind="$props"></sw-alert>',
+  components: { SwBanner },
+  template: '<sw-banner v-bind="$props"></sw-banner>',
 });
 
 export const Default = Template.bind({});
-Default.storyName = 'sw-alert';
+Default.storyName = 'sw-banner';

@@ -28,7 +28,7 @@ import SwBlockFieldDeprecated from '../_internal/sw-block-field-deprecated/sw-bl
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 
 export default {
-  name: 'SwTextareaField',
+  name: 'SwTextarea',
 
   components: {
     'sw-block-field-deprecated': SwBlockFieldDeprecated,

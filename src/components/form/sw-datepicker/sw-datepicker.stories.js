@@ -6,12 +6,31 @@ export default {
   args: {
     label: 'Datepicker',
   },
+  argTypes: {
+    input: {
+      action: 'input',
+      table: {
+        category: 'Events'
+      }
+    },
+  },
 };
 
 const Template = (args, { argTypes }) => ({
+  template: '<sw-datepicker v-bind="$props" v-model="currentValue" @input="input"></sw-datepicker>',
   props: Object.keys(argTypes),
   components: { SwDatepicker },
-  template: '<sw-datepicker v-bind="$props"></sw-datepicker>',
+  data() {
+    return { currentValue: '' }
+  },
+  watch: {
+    value(v) {
+      this.currentValue = v;
+    }
+  },
+  created() {
+    this.currentValue = this.value;
+  },
 });
 
 export const Default = Template.bind({});

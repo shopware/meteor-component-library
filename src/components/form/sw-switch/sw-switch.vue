@@ -52,7 +52,7 @@ import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 import { createId } from '../../../utils/uuid';
 
 export default {
-  name: 'SwSwitchField',
+  name: 'SwSwitch',
 
   components: {
     'sw-base-field': SwBaseField,

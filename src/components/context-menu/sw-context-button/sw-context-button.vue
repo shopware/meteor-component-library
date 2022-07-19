@@ -93,7 +93,7 @@ export default {
     icon: {
       type: String,
       required: false,
-      default: 'solid-ellipsis-h',
+      default: 'solid-ellipsis-h-s',
     },
 
     disabled: {
