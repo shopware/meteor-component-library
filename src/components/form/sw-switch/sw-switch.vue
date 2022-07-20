@@ -346,6 +346,10 @@ $sw-field--switch-color-error: $color-crimson-500;
     }
 
     &.has--error {
+      .sw-block-field__block {
+        background: $color-crimson-50;
+      }
+
       &.sw-field--switch-bordered {
         .sw-field--switch__content {
           border: 1px solid $sw-field--switch-color-error;

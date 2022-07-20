@@ -338,6 +338,7 @@ $sw-field-transition: border-color 0.3s ease-out, background 0.3s ease;
 
   &.has--error {
     .sw-block-field__block {
+      background: $color-crimson-50;
       border-color: $color-crimson-500;
     }
   }

@@ -1,42 +1,64 @@
 <template>
-  <sw-block-field-deprecated
+  <sw-base-field
     class="sw-field--textarea"
     v-bind="$attrs"
     :name="formFieldName"
+    :has-focus="hasFocus"
+    :required="required"
+    :disabled="disabled"
+    :help-text="helpText"
+    :is-inheritance-field="isInheritanceField"
+    :is-inherited="isInherited"
     @inheritance-restore="$emit('inheritance-restore', $event)"
     @inheritance-remove="$emit('inheritance-remove', $event)"
   >
-    <template #sw-field-input="{identification, helpText, error, disabled, setFocusClass, removeFocusClass }">
+    <template #label>
+      {{ label }}
+    </template>
+
+    <template #element="{identification, helpText, error, disabled }">
       <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
       <textarea
         :id="identification"
         :name="identification"
         :placeholder="placeholder"
         :disabled="disabled"
-        :value="currentValue"
+        :value="inputState"
         @change="onChange"
         @input="onInput"
-        @focus="setFocusClass"
-        @blur="removeFocusClass"
+        @focus="setFocus"
+        @blur="removeFocus"
       />
     </template>
-  </sw-block-field-deprecated>
+
+    <template #error>
+      <sw-field-error
+        v-if="error"
+        :error="error"
+      />
+    </template>
+
+    <template #field-hint>
+      <slot name="hint" />
+    </template>
+  </sw-base-field>
 </template>
 
 <script>
-import SwBlockFieldDeprecated from '../_internal/sw-block-field-deprecated/sw-block-field-deprecated.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
+import SwBaseField from '../_internal/sw-base-field/sw-base-field.vue';
+import SwFieldError from "../_internal/sw-field-error/sw-field-error";
 
 export default {
   name: 'SwTextarea',
 
   components: {
-    'sw-block-field-deprecated': SwBlockFieldDeprecated,
+    'sw-base-field': SwBaseField,
+    'sw-field-error': SwFieldError,
   },
 
   mixins: [
     SwFormFieldMixin,
-    // Mixin.getByName('remove-api-error'),
   ],
 
   inheritAttrs: false,
@@ -48,17 +70,81 @@ export default {
       default: null,
     },
 
+    /**
+     * Inherited value from another SalesChannel.
+     */
+    inheritedValue: {
+      type: String,
+      required: false,
+      default: null,
+    },
+
+    label: {
+      type: String,
+      required: true,
+    },
+
     placeholder: {
       type: String,
       required: false,
       default: null,
     },
+
+    helpText: {
+      type: String,
+      required: false,
+      default: null,
+    },
+
+    required: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    error: {
+      type: Object,
+      required: false,
+      default: null,
+    }
   },
 
   data() {
     return {
-      currentValue: this.value || '',
+      currentValue: this.value,
+      hasFocus: false,
     };
+  },
+
+  computed: {
+    inputState() {
+      if (this.isInherited) {
+        return this.inheritedValue;
+      }
+
+      return this.currentValue || '';
+    },
+
+    isInheritanceField() {
+      if (this.$attrs.isInheritanceField) {
+        return true;
+      }
+      return this.inheritedValue !== null;
+    },
+
+    isInherited() {
+      if (this.$attrs.isInherited) {
+        return true;
+      }
+
+      return this.isInheritanceField && this.currentValue === null;
+    },
   },
 
   watch: {
@@ -73,6 +159,13 @@ export default {
     onChange(event) {
       this.$emit('change', event.target.value);
     },
+
+    setFocus() {
+      this.hasFocus = true;
+    },
+    removeFocus() {
+      this.hasFocus = false;
+    },
   },
 };
 </script>
@@ -80,12 +173,18 @@ export default {
 <style lang="scss">
 @import "../../assets/scss/variables.scss";
 
-.sw-field.sw-block-field.sw-field--textarea {
+.sw-field--textarea {
   textarea {
     line-height: 22px;
     min-height: 125px;
     max-height: 300px;
     resize: vertical;
+  }
+
+  &.has--error {
+    textarea {
+      background: $color-crimson-50;
+    }
   }
 }
 </style>
