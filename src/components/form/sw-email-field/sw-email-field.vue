@@ -1,27 +1,36 @@
 <template>
-  <sw-contextual-field-deprecated
+  <sw-base-field
     class="sw-field--email"
     v-bind="$attrs"
-    :name="formFieldName"
+    :name="name"
+    :has-focus="hasFocus"
+    :copyable="copyable"
+    :copyable-tooltip="copyableTooltip"
+    :copyable-text="currentValue"
+    :help-text="helpText"
+    :size="size"
+    :required="required"
+    :disabled="disabled"
+    :is-inherited="isInherited"
+    :is-inheritance-field="isInheritanceField"
     @inheritance-restore="$emit('inheritance-restore', $event)"
     @inheritance-remove="$emit('inheritance-remove', $event)"
     v-on="$listeners"
   >
-    <template
-      v-if="hasPrefix"
-      #sw-contextual-field-prefix="{ disabled, identification }"
-    >
-      <slot
-        name="prefix"
-        v-bind="{disabled, identification}"
-      />
+    <template #label>
+      {{ label }}
     </template>
 
-    <!-- eslint-disable-next-line vue/no-unused-vars -->
-    <template #sw-field-input="{ identification, error, disabled, size, setFocusClass, removeFocusClass, hasSuffix, hasPrefix }">
-      <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
+    <template
+      #field-prefix
+    >
+      <slot name="prefix" />
+    </template>
+
+    <template #element="{ identification, disabled }">
       <input
         :id="identification"
+        ref="input"
         type="email"
         :name="identification"
         :disabled="disabled"
@@ -29,41 +38,91 @@
         :placeHolder="placeholder"
         @input="onInput"
         @change="onChange"
-        @focus="setFocusClass"
-        @blur="removeFocusClass"
+        @focus="setFocus"
+        @blur="removeFocus"
         v-on="additionalListeners"
       >
     </template>
 
     <template
-      v-if="copyable || hasSuffix"
-      #sw-contextual-field-suffix="{disabled, identification}"
+      #field-suffix
     >
-      <slot
-        name="suffix"
-        v-bind="{ identification }"
-      />
-      <sw-field-copyable
-        v-if="copyable"
-        :display-name="identification"
-        :copyable-text="currentValue"
-        :tooltip="copyableTooltip"
+      <slot name="suffix" />
+    </template>
+
+    <template #error>
+      <sw-field-error
+        v-if="computedError"
+        :error="computedError"
       />
     </template>
-  </sw-contextual-field-deprecated>
+
+    <template #field-hint>
+      <slot name="hint" />
+    </template>
+  </sw-base-field>
 </template>
 
 <script>
 import SwTextField from '../sw-text-field/sw-text-field.vue';
-import SwContextualFieldDeprecated from '../_internal/sw-contextual-field-deprecated/sw-contextual-field-deprecated.vue';
+import SwBaseField from '../_internal/sw-base-field/sw-base-field.vue';
 
 export default {
   name: 'SwEmailField',
 
   components: {
-    'sw-contextual-field-deprecated': SwContextualFieldDeprecated,
+    'sw-base-field': SwBaseField,
   },
 
   extends: SwTextField,
+
+  data() {
+    return {
+      hasFocus: false,
+      validationError: null,
+    };
+  },
+
+  computed: {
+    computedError() {
+      if (this.validationError) {
+        return this.validationError;
+      }
+
+      return this.error;
+    },
+  },
+
+  mounted() {
+    if (!this.value) {
+      return;
+    }
+
+    this.checkValidity();
+  },
+
+  methods: {
+    setFocus() {
+      this.hasFocus = true;
+    },
+
+    removeFocus() {
+      this.hasFocus = false;
+
+      this.checkValidity();
+    },
+
+    checkValidity() {
+      if (this.$refs.input.checkValidity()) {
+        this.validationError = null;
+
+        return;
+      }
+
+      this.validationError = {
+        detail: this.$refs.input.validationMessage,
+      };
+    }
+  }
 };
 </script>
