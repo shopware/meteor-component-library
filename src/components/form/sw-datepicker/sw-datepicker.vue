@@ -86,30 +86,46 @@ export default {
   inheritAttrs: false,
 
   props: {
+    /**
+     * A label for the datepicker.
+     */
     label: {
       type: String,
       required: false,
       default: null,
     },
 
+    /**
+     * The locale of the datepicker.
+     */
     locale: {
       type: String,
       required: false,
       default: 'en',
     },
 
+    /**
+     * The timezone of the datepicker.
+     */
     timeZone: {
       type: String,
       required: false,
       default: 'UTC',
     },
 
+    /**
+     * The value of the datepicker.
+     */
     value: {
       type: String,
       required: false,
       default: null,
     },
 
+    /**
+     * The configuration of the datepicker.
+     * For reference @see https://flatpickr.js.org/options/
+     */
     config: {
       type: Object,
       default() {
@@ -117,6 +133,9 @@ export default {
       },
     },
 
+    /**
+     * Configures the type of the datepicker.
+     */
     dateType: {
       type: String,
       default: 'date',
@@ -126,18 +145,27 @@ export default {
       },
     },
 
+    /**
+     * A placeholder text for the datepicker.
+     */
     placeholderText: {
       type: String,
       default: '',
       required: false,
     },
 
+    /**
+     * Determines if the datepicker is required.
+     */
     required: {
       type: Boolean,
       default: false,
       required: false,
     },
 
+    /**
+     * Determines if the datepicker is disabled.
+     */
     disabled: {
       type: Boolean,
       default: false,

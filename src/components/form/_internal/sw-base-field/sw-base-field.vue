@@ -337,6 +337,18 @@ $sw-field-transition: border-color 0.3s ease-out, background 0.3s ease;
   }
 
   &.has--error {
+    label {
+      color: $color-crimson-500;
+    }
+
+    &.sw-field input {
+      background-color: $color-crimson-50;
+    }
+
+    .sw-field__addition {
+      border-left: 1px solid $color-crimson-500;
+    }
+
     .sw-block-field__block {
       background: $color-crimson-50;
       border-color: $color-crimson-500;
