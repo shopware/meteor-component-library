@@ -1,84 +1,105 @@
 <template>
-  <sw-contextual-field-deprecated
-    class="sw-field--number"
-    v-bind="$attrs"
-    :name="formFieldName"
+  <sw-base-field
+    :disabled="disabled"
+    :required="required"
+    :is-inherited="isInherited"
+    :is-inheritance-field="isInheritanceField"
+    :disable-inheritance-toggle="disableInheritanceToggle"
+    :copyable="copyable"
+    :copyable-tooltip="copyableTooltip"
+    :copyable-text="stringRepresentation"
+    :has-focus="hasFocus"
+    :help-text="helpText"
+    :name="name"
+    :size="size"
     @inheritance-restore="$emit('inheritance-restore', $event)"
     @inheritance-remove="$emit('inheritance-remove', $event)"
   >
-    <template
-      v-if="hasPrefix"
-      #sw-contextual-field-prefix="{ disabled, identification }"
-    >
-      <slot
-        name="prefix"
-        v-bind="{ disabled, identification }"
-      />
+    <template #label>
+      {{ label }}
     </template>
 
-    <template #sw-field-input="{ identification, error, disabled, size, setFocusClass, removeFocusClass }">
-      <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
+    <template
+      #field-prefix
+    >
+      <slot name="prefix" />
+    </template>
+
+    <template #element="{identification}">
       <input
-        :id="identification"
-        :name="identification"
+        :id="createInputId(identification)"
         type="text"
+        :name="identification"
+        :disabled="disabled"
         :value="stringRepresentation"
         :placeholder="placeholder"
-        :disabled="disabled"
-        autocomplete="off"
         @input="onInput"
         @keydown.up="increaseNumberByStep"
         @keydown.down="decreaseNumberByStep"
         @change="onChange"
         @focus="setFocusClass"
         @blur="removeFocusClass"
+        v-on="additionalListeners"
       >
+
+      <div
+        class="sw-field--controls"
+        :class="controlClasses"
+      >
+        <sw-icon
+          :class="upControlClasses"
+          name="regular-chevron-up-s"
+          data-testid="sw-number-field-increase-button"
+          @click="increaseNumberByStep"
+        />
+
+        <sw-icon
+          :class="downControlClasses"
+          name="regular-chevron-down-s"
+          data-testid="sw-number-field-decrease-button"
+          @click="decreaseNumberByStep"
+        />
+      </div>
     </template>
 
     <template
-      v-if="copyable || hasSuffix"
-      #sw-contextual-field-suffix="{ disabled, identification }"
+      #field-suffix
     >
-      <slot
-        name="suffix"
-        v-bind="{ identification }"
-      />
-      <sw-field-copyable
-        v-if="copyable"
-        :display-name="identification"
-        :copyable-text="stringRepresentation"
-        :tooltip="copyableTooltip"
+      <slot name="suffix" />
+    </template>
+
+    <template #error>
+      <sw-field-error
+        v-if="error"
+        :error="error"
       />
     </template>
 
-    <template #label>
-      <slot name="label" />
+    <template #field-hint>
+      <slot name="hint" />
     </template>
-  </sw-contextual-field-deprecated>
+  </sw-base-field>
 </template>
 
 <script>
 import SwTextField from '../sw-text-field/sw-text-field.vue';
-import SwContextualFieldDeprecated from '../_internal/sw-contextual-field-deprecated/sw-contextual-field-deprecated.vue';
-import SwFieldCopyable from '../_internal/sw-field-copyable/sw-field-copyable.vue';
+import SwIcon from '../../base/sw-icon/sw-icon';
 
 export default {
   name: 'SwNumberField',
 
   components: {
-    'sw-contextual-field-deprecated': SwContextualFieldDeprecated,
-    'sw-field-copyable': SwFieldCopyable,
+    'sw-icon': SwIcon,
   },
 
   extends: SwTextField,
+
   inheritAttrs: false,
 
-  model: {
-    prop: 'value',
-    event: 'change',
-  },
-
   props: {
+    /**
+     * Defines if the number should be a floating point number or integer.
+     */
     numberType: {
       type: String,
       required: false,
@@ -89,30 +110,45 @@ export default {
       },
     },
 
+    /**
+     * Defines the amount of which the number is increased or decreased per step.
+     */
     step: {
       type: Number,
       required: false,
       default: null,
     },
 
+    /**
+     * Defines the minimum value of the number.
+     */
     min: {
       type: Number,
       required: false,
       default: null,
     },
 
+    /**
+     * Defines the maximum value of the number.
+     */
     max: {
       type: Number,
       required: false,
       default: null,
     },
 
+    /**
+     * The value of the field.
+     */
     value: {
       type: Number,
       required: false,
       default: null,
     },
 
+    /**
+     * Defines how many digits should be displayed after the decimal point.
+     */
     digits: {
       type: Number,
       required: false,
@@ -126,12 +162,18 @@ export default {
       },
     },
 
+    /**
+     * Defines if digits should be filled with zeros if the value is smaller than the minimum value.
+     */
     fillDigits: {
       type: Boolean,
       required: false,
       default: false,
     },
 
+    /**
+     * Defines if the field can be empty.
+     */
     allowEmpty: {
       type: Boolean,
       required: false,
@@ -141,7 +183,10 @@ export default {
 
   data() {
     return {
-      currentValue: this.value,
+      upControlClasses: null,
+      downControlClasses: null,
+      upHandler: null,
+      downHandler: null
     };
   },
 
@@ -177,6 +222,13 @@ export default {
       return this.fillDigits && this.numberType !== 'int'
         ? this.currentValue.toFixed(this.digits)
         : this.currentValue.toString();
+    },
+
+    controlClasses() {
+      return {
+        disabled: this.disabled,
+        error: !!this.error
+      }
     },
   },
 
@@ -216,11 +268,44 @@ export default {
     },
 
     increaseNumberByStep() {
+      if (this.disabled) {
+        return;
+      }
+
+      this.upControlClasses = {
+        'sw-icon--toggled': true,
+      };
+
+      if (this.upHandler) {
+        window.clearTimeout(this.upHandler);
+      }
+
+      this.upHandler = window.setTimeout(() => {
+        this.upControlClasses = {};
+      }, 100);
+
+
       this.computeValue((this.currentValue + this.realStep).toString());
       this.$emit('change', this.currentValue);
     },
 
     decreaseNumberByStep() {
+      if (this.disabled) {
+        return;
+      }
+
+      this.downControlClasses = {
+        'sw-icon--toggled': true,
+      };
+
+      if (this.downHandler) {
+        window.clearTimeout(this.downHandler);
+      }
+
+      this.downHandler = window.setTimeout(() => {
+        this.downControlClasses = {};
+      }, 100);
+
       this.computeValue((this.currentValue - this.realStep).toString());
       this.$emit('change', this.currentValue);
     },
@@ -285,48 +370,49 @@ export default {
       }
       return floor;
     },
-
-    // @deprecated tag:v6.5.0 - Will be removed
-    applyDigits(decimals) {
-      if (decimals.length <= this.digits) {
-        return {
-          decimals,
-          transfer: 0,
-        };
-      }
-
-      let asString = decimals.substr(0, this.digits + 1);
-      let asNumber = parseFloat(asString);
-      asNumber = Math.round(asNumber / 10);
-      asString = asNumber.toString();
-
-      if (asString.length > this.digits) {
-        return {
-          decimals: asString.substr(1, asString.length),
-          transfer: 1,
-        };
-      }
-
-      asString = '0'.repeat(this.digits - asString.length) + asString;
-      return {
-        decimals: asString,
-        transfer: 0,
-      };
-    },
   },
 };
 </script>
 
 <style lang="scss">
-.sw-field.sw-field--number {
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+@import "../../assets/scss/variables.scss";
 
-  input[type="number"] {
-    -moz-appearance: textfield;
+.sw-field {
+  &--controls {
+    background: $color-white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 42px;
+
+    &.disabled {
+      background: $color-gray-100;
+      border-color: $color-gray-300;
+      cursor: default !important;
+
+      .sw-icon:hover {
+        cursor: default !important;
+        color: $color-gray-500;
+      }
+    }
+
+    &.error {
+      background: $color-crimson-50;
+    }
+
+    .sw-icon {
+      cursor: pointer;
+      color: $color-gray-500;
+
+      &--toggled {
+        color: $color-gray-900;
+      }
+
+      &:hover {
+        color: $color-gray-900;
+      }
+    }
   }
 }
 </style>

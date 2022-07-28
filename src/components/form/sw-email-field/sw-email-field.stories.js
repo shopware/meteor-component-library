@@ -1,45 +1,11 @@
 import SwEmailField from './sw-email-field.vue';
+import baseFieldArgTypes from '../_internal/sw-base-field/arg-types';
 
 export default {
   title: 'Components/form/sw-email-field',
   component: SwEmailField,
   argTypes: {
-    change: {
-      action: 'change',
-      table: {
-        category: 'Events'
-      }
-    },
-    input: {
-      action: 'input',
-      table: {
-        category: 'Events'
-      }
-    },
-    inheritanceRemove: {
-      action: 'inheritance-remove',
-      table: {
-        category: 'Events'
-      }
-    },
-    inheritanceRestore: {
-      action: 'inheritance-restore',
-      table: {
-        category: 'Events'
-      }
-    },
-    label: {
-      control: { type: 'text' },
-    },
-    prefix: {
-      control: { type: 'text' },
-    },
-    suffix: {
-      control: { type: 'text' },
-    },
-    hint: {
-      control: { type: 'text' },
-    },
+    ...baseFieldArgTypes
   },
   args: {
     label: 'Emailfield',

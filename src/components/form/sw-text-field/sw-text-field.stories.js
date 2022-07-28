@@ -1,33 +1,11 @@
 import SwTextField from './sw-text-field.vue';
+import baseFieldArgTypes from '../_internal/sw-base-field/arg-types';
 
 export default {
   title: 'Components/form/sw-text-field',
   component: SwTextField,
   argTypes: {
-    change: {
-      action: 'change',
-      table: {
-        category: 'Events'
-      }
-    },
-    input: {
-      action: 'input',
-      table: {
-        category: 'Events'
-      }
-    },
-    label: {
-      control: { type: 'text' },
-    },
-    prefix: {
-      control: { type: 'text' },
-    },
-    suffix: {
-      control: { type: 'text' },
-    },
-    hint: {
-      control: { type: 'text' },
-    },
+    ...baseFieldArgTypes
   },
   args: {
     label: 'Textfield label',
@@ -36,7 +14,30 @@ export default {
 
 // Vue component to render the sw-text-field
 const Template = (args, { argTypes }) => ({
-  template: '<div><sw-text-field v-bind="$props" v-model="currentValue" @change="change"><template #prefix>{{ $props.prefix }}</template><template #suffix>{{ $props.suffix }}</template><template #hint>{{ $props.hint }}</template></sw-text-field><h4 style="display: none;">hidden</h4></div>',
+  template: `
+    <div>
+      <sw-text-field
+        v-bind="$props"
+        v-model="currentValue"
+        @change="change">
+          <template
+            v-if="$props.prefix"
+            #prefix>
+            {{ $props.prefix }}
+          </template>
+          <template
+            v-if="$props.suffix"
+            #suffix>
+            {{ $props.suffix }}
+          </template>
+          <template
+            v-if="$props.hint"
+            #hint>
+            {{ $props.hint }}
+          </template>
+      </sw-text-field>
+      <h4 style="display: none;">hidden</h4>
+    </div>`,
   components: { SwTextField },
   // argTypes contains all props of text field
   props: Object.keys(argTypes),
