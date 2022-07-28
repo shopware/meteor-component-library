@@ -3,6 +3,7 @@
     class="sw-context-menu-item"
     role="menuitem"
     :class="contextMenuItemStyles"
+    tabindex="0"
     v-on="contextListeners"
   >
     <slot name="icon">
@@ -65,7 +66,7 @@ export default {
         if (!value.length) {
           return true;
         }
-        return ['success', 'danger', 'warning', 'headline'].includes(value);
+        return ['success', 'danger', 'warning', 'active', 'headline'].includes(value);
       },
     },
   },
@@ -124,6 +125,14 @@ $sw-context-menu-color-warning:          $color-pumpkin-spice-500;
     .sw-icon {
       color: $sw-context-menu-color-active;
     }
+  }
+
+  &:focus {
+    outline: $sw-context-menu-color-background-hover solid 1px;
+  }
+
+  &.sw-context-menu-item--active {
+    font-weight: $font-weight-semi-bold;
   }
 
   &.sw-context-menu-item--danger {

@@ -1,5 +1,6 @@
 import { within, userEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
+import { waitUntilRendered } from '../../../_internal/test-helper';
 import SwSwitch from './sw-switch';
 import defaultSwitch, { Default as Template } from './sw-switch.stories';
 
@@ -151,4 +152,8 @@ VisualTestHelpText.play = async () => {
   await expect(canvas.getByTestId('sw-help-text__icon')).toBeDefined();
 
   await userEvent.click(canvas.getByTestId('sw-help-text__icon'));
+
+  await waitUntilRendered(() => document.querySelector('.sw-tooltip'))
+
+  await expect(document.querySelector('.sw-tooltip')).toBeDefined();
 };

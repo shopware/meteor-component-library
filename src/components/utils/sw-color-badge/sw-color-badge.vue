@@ -17,6 +17,15 @@ export default {
       type: String,
       required: false,
       default: 'default',
+      validator(value) {
+        return [
+          'default',
+          'warning',
+          'critical',
+          'positive',
+          'info'
+        ].includes(value)
+      }
     },
     color: {
       type: String,
@@ -52,8 +61,8 @@ export default {
 
 $sw-color-badge-color-fallback: $color-gray-300;
 $sw-color-badge-color-warning: $color-pumpkin-spice-500;
-$sw-color-badge-color-error: $color-crimson-500;
-$sw-color-badge-color-success: $color-emerald-500;
+$sw-color-badge-color-critical: $color-crimson-500;
+$sw-color-badge-color-positive: $color-emerald-500;
 $sw-color-badge-color-info: $color-shopware-brand-500;
 
 .sw-color-badge {
@@ -72,13 +81,13 @@ $sw-color-badge-color-info: $color-shopware-brand-500;
     background-color: $sw-color-badge-color-warning;
   }
 
-  &.is--error,
+  &.is--critical,
   &.is--danger {
-    background-color: $sw-color-badge-color-error;
+    background-color: $sw-color-badge-color-critical;
   }
 
-  &.is--success {
-    background-color: $sw-color-badge-color-success;
+  &.is--positive {
+    background-color: $sw-color-badge-color-positive;
   }
 
   &.is--info {
