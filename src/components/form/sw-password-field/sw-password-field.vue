@@ -1,14 +1,31 @@
 <template>
-  <sw-contextual-field-deprecated
+  <sw-base-field
     class="sw-field--password"
-    v-bind="$attrs"
-    :name="formFieldName"
+    :disabled="disabled"
+    :required="required"
+    :is-inherited="isInherited"
+    :is-inheritance-field="isInheritanceField"
+    :disable-inheritance-toggle="disableInheritanceToggle"
+    :copyable="copyable"
+    :copyable-tooltip="copyableTooltip"
+    :copyable-text="currentValue"
+    :has-focus="hasFocus"
+    :help-text="helpText"
+    :name="name"
+    :size="size"
     @inheritance-restore="$emit('inheritance-restore', $event)"
     @inheritance-remove="$emit('inheritance-remove', $event)"
   >
-    <template #sw-field-input="{ identification, disabled, size, setFocusClass, removeFocusClass }">
+    <template #label>
+      {{ label }}
+    </template>
+
+    <template #field-prefix>
+      <slot name="prefix" />
+    </template>
+
+    <template #element="{ identification, disabled }">
       <div class="sw-field--password__container">
-        <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
         <input
           :id="identification"
           :type="showPassword ? 'text' : 'password'"
@@ -23,7 +40,6 @@
           @blur="removeFocusClass"
           v-on="additionalListeners"
         >
-        <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
         <span
           v-if="passwordToggleAble"
           :title="showPassword ? $tc('global.sw-field.titleHidePassword') : $tc('global.sw-field.titleShowPassword')"
@@ -32,49 +48,47 @@
         >
           <sw-icon
             v-if="showPassword"
-            name="default-eye-crossed"
+            name="regular-eye-slash"
             small
           />
 
           <sw-icon
             v-else
-            name="default-eye-open"
+            data-testid="sw-password-field-show-button"
+            name="regular-eye"
             small
           />
         </span>
       </div>
     </template>
 
-    <template
-      v-if="copyable"
-      #sw-contextual-field-suffix="{ identification }"
-    >
-      <sw-field-copyable
-        v-if="copyable"
-        :display-name="identification"
-        :copyable-text="currentValue"
-        :tooltip="copyableTooltip"
+    <template #field-suffix>
+      <slot name="suffix" />
+    </template>
+
+    <template #error>
+      <sw-field-error
+        v-if="error"
+        :error="error"
       />
     </template>
 
-    <template #label>
-      <slot name="label" />
+    <template #field-hint>
+      <slot name="hint" />
     </template>
-  </sw-contextual-field-deprecated>
+  </sw-base-field>
 </template>
 <script>
-import SwContextualFieldDeprecated from '../_internal/sw-contextual-field-deprecated/sw-contextual-field-deprecated.vue';
+import SwBaseField from '../_internal/sw-base-field/sw-base-field.vue';
 import SwIcon from '../../base/sw-icon/sw-icon.vue';
-import SwFieldCopyable from '../_internal/sw-field-copyable/sw-field-copyable.vue';
 import SwTextField from '../sw-text-field/sw-text-field.vue';
 
 export default {
   name: 'SwPasswordField',
 
   components: {
-    'sw-contextual-field-deprecated': SwContextualFieldDeprecated,
+    'sw-base-field': SwBaseField,
     'sw-icon': SwIcon,
-    'sw-field-copyable': SwFieldCopyable,
   },
 
   extends: SwTextField,
@@ -151,6 +165,18 @@ export default {
   &.sw-field--password.sw-field--password--untoggable .sw-field__input {
     input {
       padding-right: 16px;
+    }
+  }
+
+  .sw-icon {
+    #meteor-icon-kit__regular-eye-slash {
+      width: 16px;
+      height: 16px;
+    }
+
+    #meteor-icon-kit__regular-eye {
+      width: 16px;
+      height: 16px;
     }
   }
 }
