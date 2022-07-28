@@ -1,36 +1,50 @@
 <template>
-  <sw-contextual-field
+  <sw-base-field
     class="sw-field--url"
-    v-bind="$attrs"
-    :error="combinedError"
-    :name="formFieldName"
+    :disabled="disabled"
+    :required="required"
+    :is-inherited="isInherited"
+    :is-inheritance-field="isInheritanceField"
+    :disable-inheritance-toggle="disableInheritanceToggle"
+    :copyable="copyable"
+    :copyable-tooltip="copyableTooltip"
+    :copyable-text="url"
+    :has-focus="hasFocus"
+    :help-text="helpText"
+    :name="name"
+    :size="size"
     @inheritance-restore="$emit('inheritance-restore', $event)"
     @inheritance-remove="$emit('inheritance-remove', $event)"
   >
-    <template #sw-contextual-field-prefix="{ disabled }">
-      <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
+    <template #label>
+      {{ label }}
+    </template>
+
+    <template #field-prefix>
       <span
         class="sw-field__url-input__prefix"
         :class="prefixClass"
+        aria-describedby="ssl-switch"
+        role="button"
         @click="changeMode(disabled)"
       >
         <sw-icon
           v-if="sslActive"
-          name="default-lock-closed"
+          name="regular-lock"
           :small="true"
         />
         <sw-icon
           v-else
-          name="default-lock-open"
+          name="regular-lock-open"
           :small="true"
         />
-        {{ urlPrefix }}
+        <span aria-describedby="url-prefix">
+          {{ urlPrefix }}
+        </span>
       </span>
     </template>
 
-    <!-- eslint-disable-next-line vue/no-unused-vars, vue/no-template-shadow -->
-    <template #sw-field-input="{ identification, error, disabled, size, setFocusClass, removeFocusClass }">
-      <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
+    <template #element="{identification}">
       <input
         :id="identification"
         type="url"
@@ -46,21 +60,18 @@
     </template>
 
     <template
-      v-if="copyable"
-      #sw-contextual-field-suffix="{ identification }"
+      #field-suffix
     >
-      <sw-field-copyable
-        v-if="copyable"
-        :display-name="identification"
-        :copyable-text="currentValue"
-        :tooltip="copyableTooltip"
-      />
+      <slot name="suffix" />
     </template>
 
-    <template #label>
-      <slot name="label" />
+    <template #error>
+      <sw-field-error
+        v-if="error"
+        :error="error"
+      />
     </template>
-  </sw-contextual-field>
+  </sw-base-field>
 </template>
 
 <script>
@@ -92,15 +103,16 @@ export default {
   inheritAttrs: false,
 
   props: {
-    error: {
-      type: Object,
-      required: false,
-      default: null,
-    },
+    /**
+     * If set to true then all url hashes will be removed
+     */
     omitUrlHash: {
       type: Boolean,
       default: false,
     },
+    /**
+     * If set to true then all query parameters will be removed
+     */
     omitUrlSearch: {
       type: Boolean,
       default: false,
@@ -164,31 +176,6 @@ export default {
 
     onBlur(event) {
       this.checkInput(event.target.value);
-    },
-
-    /**
-     * @deprecated tag:v6.5.0 - Use onBlur() instead
-     */
-    onInput(event) {
-      /**
-       * @deprecated tag:v6.5.0 - Use "input" event instead
-       */
-      this.$emit('beforeDebounce', this.url);
-      this.onDebounceInput(event);
-    },
-
-    /**
-     * @deprecated tag:v6.5.0 - Use checkInput() instead
-     */
-    onDebounceInput: debounce(function debouncedHandleInput(event) {
-      this.handleInput(event);
-    }, 2000),
-
-    /**
-     * @deprecated tag:v6.5.0 - Use checkInput() instead
-     */
-    handleInput() {
-
     },
 
     checkInput(inputValue) {
@@ -300,7 +287,13 @@ $sw-field-color-secure: $color-emerald-500;
     }
 
     .sw-icon {
+      width: 8px;
       margin-right: 4px;
+
+      > svg {
+        width: 100% !important;
+        height: 100% !important;
+      }
     }
   }
 }
