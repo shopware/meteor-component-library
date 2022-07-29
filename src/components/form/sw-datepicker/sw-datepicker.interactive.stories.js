@@ -11,6 +11,10 @@ export default {
 
 export const VisualTestDatepickerShouldOpen = Template.bind();
 VisualTestDatepickerShouldOpen.storyName = 'Should open datepicker';
+VisualTestDatepickerShouldOpen.args = {
+  ...Template.args,
+  value: new Date (Date.UTC(2012, 1, 21)).toISOString(),
+}
 VisualTestDatepickerShouldOpen.play = async () => {
   // we can't use canvasElement because it is not available anymore
   const canvas = within(document.getElementById('root'));
