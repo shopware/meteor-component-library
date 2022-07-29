@@ -3,17 +3,32 @@ import SwExternalLink from './sw-external-link.vue';
 export default {
   title: 'Components/utils/sw-external-link',
   component: SwExternalLink,
+  argTypes: {
+    click: {
+      action: 'click',
+      table: {
+        category: 'Events'
+      }
+    },
+  },
   args: {
     small: false,
-    icon: 'small-arrow-small-external',
     rel: 'noopener',
+    href: 'https://www.shopware.com',
+    disabled: false,
   },
 };
 
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   components: { SwExternalLink },
-  template: '<sw-external-link v-bind="$props">Click here</sw-external-link>',
+  template: `
+    <sw-external-link 
+      v-bind="$props"
+      @click="click"
+    >
+      Click here
+    </sw-external-link>`,
 });
 
 export const Default = Template.bind({});

@@ -1,16 +1,16 @@
 <template>
   <a
-    v-if="$attrs.hasOwnProperty('href')"
+    v-if="$attrs.hasOwnProperty('href') && !!$attrs.href"
     v-bind="$attrs"
     target="_blank"
     :rel="rel"
+    :aria-disabled="disabled"
     class="sw-external-link"
     :class="classes"
   >
     <slot />
     <sw-icon
       class="sw-external-link__icon"
-      :size="iconSize"
       :name="icon"
     />
   </a>
@@ -19,12 +19,13 @@
     v-else
     class="sw-external-link"
     :class="classes"
+    role="link"
+    :aria-disabled="disabled"
     @click="onClick"
   >
     <slot />
     <sw-icon
       class="sw-external-link__icon"
-      :size="iconSize"
       :name="icon"
     />
   </span>
@@ -43,22 +44,39 @@ export default {
   inheritAttrs: false,
 
   props: {
+    /**
+     * Render the external link in small font size
+     */
     small: {
       type: Boolean,
       required: false,
       default: false,
     },
 
-    icon: {
-      type: String,
+    /**
+     * Make the link unclickable
+     */
+    disabled: {
+      type: Boolean,
       required: false,
-      default: 'small-arrow-small-external',
+      default: false,
     },
 
+    /**
+    * Change the "rel" attribute of <a> elements
+    */
     rel: {
       type: String,
       required: false,
       default: 'noopener',
+      validator(value) {
+        return [
+          'nofollow',
+          'noopener',
+          'noreferrer',
+          'opener',
+        ].includes(value)
+      }
     },
   },
 
@@ -66,20 +84,21 @@ export default {
     classes() {
       return {
         'sw-external-link--small': this.small,
+        'sw-external-link--disabled': this.disabled,
       };
     },
 
-    iconSize() {
-      if (this.small) {
-        return '8px';
-      }
-
-      return '10px';
-    },
+    icon() {
+      return 'regular-external-link-s';
+    }
   },
 
   methods: {
     onClick(event) {
+      if (this.disabled) {
+        return;
+      }
+
       this.$emit('click', event);
     },
   },
@@ -97,17 +116,34 @@ export default {
 
   &:hover,
   &:focus {
-    color: $color-shopware-brand-600;
+    color: $color-shopware-brand-700;
   }
 
   &__icon {
+    width: 10px;
     margin-left: 4px;
+
+    > svg {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+
+  &--disabled {
+    pointer-events: none;
+    color: $color-shopware-brand-300;
+
+      &:hover,
+      &:focus {
+        color: $color-shopware-brand-300;
+      }
   }
 
   &--small {
     font-size: $font-size-extra-small;
 
     .sw-external-link__icon {
+      width: 8px;
       margin-left: 2px;
     }
   }
