@@ -4,23 +4,16 @@ export default {
   title: 'Components/base/sw-banner',
   component: SwBanner,
   args: {
-    variant: 'info',
-    appearance: 'default',
-    title: 'Alert',
-    closable: false,
-    showIcon: true,
+    title: 'This is a banner',
+    default: 'I am in the default slot of the banner',
+    variant: 'neutral',
   },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['info', 'warning', 'error', 'success'],
-    },
-    appearance: {
-      control: 'select',
-      options: ['default', 'notification', 'system'],
-    },
-    notificationIndex: {
-      control: 'text',
+    close: {
+      action: 'close',
+      table: {
+        category: 'Events'
+      }
     },
   },
 };
@@ -28,7 +21,13 @@ export default {
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   components: { SwBanner },
-  template: '<sw-banner v-bind="$props"></sw-banner>',
+  template: `
+    <sw-banner
+      v-bind="$props"
+      @close="close"
+    >
+      <div v-html="$props.default"></div>
+    </sw-banner>`,
 });
 
 export const Default = Template.bind({});
