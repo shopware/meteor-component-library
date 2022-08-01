@@ -277,8 +277,8 @@ $sw-banner-size-close: 40px;
     }
 
     .sw-icon.icon--regular-times-s {
-      width: 16px;
-      height: 16px;
+      width: 12px;
+      height: 12px;
     }
 
     .sw-icon {

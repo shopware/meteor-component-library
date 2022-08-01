@@ -55,13 +55,13 @@ VisualTestRenderWithoutIcon.args = {
   hideIcon: true,
 };
 
-export const CloseBannerBox = Template.bind({});
-CloseBannerBox.storyName = 'Close the banner';
-CloseBannerBox.args = {
+export const VisualTestCloseBannerBox = Template.bind({});
+VisualTestCloseBannerBox.storyName = 'Close the banner';
+VisualTestCloseBannerBox.args = {
   ...Template.args,
   closable: true,
 };
-CloseBannerBox.play = async ({ args }) => {
+VisualTestCloseBannerBox.play = async ({ args }) => {
   const canvas = within(document.getElementById('root'));
 
   await expect(args.close).not.toHaveBeenCalled();
