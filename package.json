@@ -1,6 +1,6 @@
 {
   "name": "@shopware-ag/meteor-component-library",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "test:unit": "vue-cli-service test:unit",
@@ -11,12 +11,13 @@
     "test-storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npm run build-storybook -- --quiet && npx http-server storybook-static --port 6006 --silent\" \"wait-on tcp:6006 && npm run test-storybook\"",
     "docker": "docker run -v $PWD:/tests:delegated -w /tests -it --rm --ipc=host mcr.microsoft.com/playwright:v1.20.0-focal /bin/bash"
   },
+  "files": [
+    "src"
+  ],
   "dependencies": {
-    "@rushstack/eslint-patch": "^1.1.1",
     "@shopware-ag/meteor-icon-kit": "^4.1.0",
     "ace-builds": "^1.4.13",
     "apexcharts": "^3.33.0",
-    "core-js": "^3.6.5",
     "date-fns": "2.23.0",
     "date-fns-tz": "1.1.6",
     "flatpickr": "4.6.3",
@@ -30,6 +31,7 @@
     "vue-property-decorator": "^9.1.2"
   },
   "devDependencies": {
+    "@rushstack/eslint-patch": "^1.1.1",
     "@babel/core": "^7.16.0",
     "@storybook/addon-a11y": "^6.5.8",
     "@storybook/addon-actions": "^6.5.8",
@@ -55,6 +57,7 @@
     "babel-loader": "^8.2.3",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^7.1.0",
+    "core-js": "^3.6.5",
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-storybook": "^0.5.12",
