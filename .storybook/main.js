@@ -18,6 +18,7 @@ module.exports = {
     interactionsDebugger: true,
   },
   "framework": "@storybook/vue",
+  staticDirs: ['../public'],
   "webpackFinal": (config) => {
     config.module.rules.push(custom.module.rules[9]);
 
