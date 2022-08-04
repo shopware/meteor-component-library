@@ -114,7 +114,6 @@ export default {
     },
 
     mergedLabels() {
-      console.log(this);
       return this.options.labels ? [...this.options.labels, ...this.generatedLabels] : this.generatedLabels;
     },
 

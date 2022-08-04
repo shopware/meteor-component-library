@@ -38,7 +38,7 @@
               @click.prevent="closeModal"
             >
               <sw-icon
-                name="small-default-x-line-medium"
+                name="regular-times-s"
                 small
               />
             </button>

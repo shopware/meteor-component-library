@@ -5,8 +5,7 @@
       v-for="(selection, index) in selections"
       v-if="!hideLabels"
       :key="selection[valueProperty]"
-      class="sw-select-selection-list__item-holder"
-      :class="'sw-select-selection-list__item-holder--' + index"
+      :class="['sw-select-selection-list__item-holder--' + index, 'sw-select-selection-list__item-holder', classBindings]"
       :data-id="selection[valueProperty]"
     >
       <slot
@@ -70,13 +69,11 @@
 </template>
 
 <script>
-import SwLabel from '../../../base/sw-label/sw-label.vue';
-import SwButton from '../../../base/sw-button/sw-button.vue';
+import SwLabel from '../../../../base/sw-label/sw-label.vue';
+import SwButton from '../../../../base/sw-button/sw-button.vue';
 
 export default {
   name: 'SwSelectSelectionList',
-
-  // inject: ['feature'],
 
   components: {
     'sw-label': SwLabel,
@@ -149,22 +146,32 @@ export default {
       required: false,
       default: false,
     },
+    multiSelection: {
+      type: Boolean,
+      required: true,
+    }
   },
 
   computed: {
-    showPlaceholder() {
-      // if (this.feature.isActive('FEATURE_NEXT_7530')) {
-      //   return (this.alwaysShowPlaceholder || (this.selections.length === 0 && this.hideLabels))
-      //     ? this.placeholder
-      //     : '';
-      // }
+    classBindings() {
+      return {
+        'sw-select-selection-list--single': !this.multiSelection,
+      };
+    },
 
-      return (this.selections.length > 0 && !this.hideLabels) ? '' : this.placeholder;
+    showPlaceholder() {
+      return (this.alwaysShowPlaceholder || (this.selections.length === 0 && this.hideLabels))
+          ? this.placeholder
+          : '';
     },
   },
 
   methods: {
     isSelectionDisabled(selection) {
+      if (!this.multiSelection) {
+        return true;
+      }
+
       if (this.disabled) {
         return true;
       }
@@ -210,7 +217,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../../../assets/scss/variables.scss";
+@import "../../../../assets/scss/variables";
 
 .sw-select-selection-list {
   display: flex;
@@ -218,9 +225,20 @@ export default {
   list-style: none;
   width: calc(100% - 30px);
 
+  &--single {
+    .sw-label {
+      border: none;
+      background: unset;
+    }
+  }
+
   .sw-select-selection-list__item-holder {
     max-width: 220px;
     line-height: 0;
+    margin: 8px 6px 0 0;
+  }
+
+  .sw-select-selection-list__load-more {
     margin: 8px 6px 0 0;
   }
 

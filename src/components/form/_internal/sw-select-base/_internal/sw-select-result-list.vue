@@ -41,8 +41,8 @@
 </template>
 
 <script>
-import SwPopover from '../../../utils/sw-popover/sw-popover.vue';
-import SwIcon from '../../../base/sw-icon/sw-icon.vue';
+import SwPopover from '../../../../utils/sw-popover/sw-popover.vue';
+import SwIcon from '../../../../base/sw-icon/sw-icon.vue';
 
 export default {
   name: 'SwSelectResultList',
@@ -264,7 +264,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../../../assets/scss/variables.scss";
+@import "../../../../assets/scss/variables";
 
 $sw-select-result-list-transition: all ease-in-out 0.2s;
 
