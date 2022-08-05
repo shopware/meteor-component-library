@@ -1,38 +1,43 @@
 <template>
-  <component
-    :is="iconName"
+  <!-- eslint-disable vue/no-v-html -->
+  <span
     class="sw-icon"
     :class="classes"
     :style="styles"
     :aria-hidden="decorative"
+    :data-testid="'sw-icon__' + name"
     v-on="$listeners"
+    v-html="iconSvgData"
   />
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
   name: 'SwIcon',
 
   props: {
+    /**
+     * The type of the icon. You can use every icon from the meteor-icon-kit:
+     * https://shopware.github.io/meteor-icon-kit/
+     */
     name: {
       type: String,
       required: true,
     },
+    /**
+     * The color of the icon.
+     */
     color: {
       type: String,
       required: false,
       default: null,
     },
-    title: {
-      type: String,
-      required: false,
-      default: '',
-    },
-    multicolor: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
+    /**
+     * If this is set to true then the icon is not detectable by screen reader. This should only
+     * be done if this icon is only decorative and has no further purpose.
+     */
     decorative: {
       type: Boolean,
       required: false,
@@ -40,42 +45,53 @@ export default {
     },
   },
 
+  data() {
+    return {
+      iconSvgData: ''
+    }
+  },
+
   computed: {
-    iconName() {
+    iconName(): string {
       return `icons-${this.name}`;
     },
 
-    classes() {
+    classes(): string[] {
       return [
         `icon--${this.name}`,
-        this.multicolor ? 'sw-icon--multicolor' : 'sw-icon--fill',
       ];
     },
 
-    styles() {
+    styles(): Record<string, string> {
       return {
         color: this.color,
       };
     },
   },
 
-  created() {
-    this.createdComponent();
+  watch: {
+    name: {
+      handler(newName) {
+        const [variant] = newName.split('-');
+        const iconName = newName.split('-').slice(1).join('-');
+
+        import(`@shopware-ag/meteor-icon-kit/icons/${variant}/${iconName}.svg`).then((iconSvgData) => {
+          if (iconSvgData.default) {
+            this.iconSvgData = iconSvgData.default;
+          } else {
+            console.error(`The SVG file for the icon name ${newName} could not be found and loaded.`)
+            this.iconSvgData = '';
+          }
+        })
+      },
+      immediate: true,
+    }
   },
 
-  methods: {
-    createdComponent() {
-      if (this.color && this.multicolor) {
-        // TODO: Import warn
-        // eslint-disable-next-line no-undef
-        warn(
-          this.$options.name,
-          `The color of "${this.name}" cannot be adjusted because it is a multicolor icon.`,
-        );
-      }
-    },
-  },
-};
+  beforeMount() {
+    this.iconSvgData = `<svg id="meteor-icon-kit__${this.name}"></svg>`
+  }
+});
 </script>
 
 <style lang="scss">
@@ -89,6 +105,7 @@ export default {
   line-height: 0;
 
   > svg {
+    fill: currentColor;
     vertical-align: middle;
     width: 100%;
     height: 100%;

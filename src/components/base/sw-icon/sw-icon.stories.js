@@ -15,14 +15,14 @@ export default {
         type: 'text',
       },
     },
-    title: {
-      control: {
-        type: 'text',
-      },
-    },
     color: {
       control: {
         type: 'color',
+      },
+    },
+    decorative: {
+      control: {
+        type: 'boolean',
       },
     },
   },
