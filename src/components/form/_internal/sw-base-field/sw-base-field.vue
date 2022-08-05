@@ -347,6 +347,10 @@ $sw-field-transition: border-color 0.3s ease-out, background 0.3s ease;
 
     .sw-field__addition {
       border-left: 1px solid $color-crimson-500;
+
+      &.is--prefix {
+        border-right: 1px solid $color-crimson-500;
+      }
     }
 
     .sw-block-field__block {

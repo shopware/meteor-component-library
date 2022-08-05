@@ -32,7 +32,7 @@
         {% block sw_field_inline_cancel_submit_button_icon %}
         <sw-icon
           small
-          name="small-default-x-line-small"
+          name="regular-times-s"
         />
         {% endblock %}
       </sw-button>
@@ -52,7 +52,7 @@
         {% block sw_field_inline_submit_button_icon %}
         <sw-icon
           small
-          name="small-default-checkmark-line-small"
+          name="regular-checkmark-xxs"
         />
         {% endblock %}
       </sw-button>

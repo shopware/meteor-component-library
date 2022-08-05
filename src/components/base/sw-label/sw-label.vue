@@ -23,7 +23,10 @@
     >
 
       <slot name="dismiss-icon">
-        <sw-icon name="small-default-x-line-medium" />
+        <sw-icon
+          data-testid="dismiss-label"
+          name="regular-times-xxs"
+        />
       </slot>
     </button>
   </span>
