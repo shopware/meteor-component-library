@@ -3,7 +3,6 @@
     v-tooltip="{
       message: text,
       width: width,
-      position: tooltipPosition,
       showDelay: showDelay,
       hideDelay: hideDelay
     }"
@@ -19,11 +18,15 @@
   </span>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import SwIcon from '../sw-icon/sw-icon.vue';
 import SwTooltipDirective from '../../../directives/tooltip.directive';
 
-export default {
+/**
+ * @internal
+ */
+export default Vue.extend({
   name: 'SwHelpText',
 
   components: {
@@ -35,37 +38,40 @@ export default {
   },
 
   props: {
+    /**
+     * The text which gets rendered in the tooltip
+     */
     text: {
       type: String,
       required: true,
       default: '',
     },
+    /**
+     * The width of the tooltip
+     */
     width: {
       type: Number,
       required: false,
       default: 200,
     },
-    tooltipPosition: {
-      type: String,
-      required: false,
-      default: 'top',
-      validValues: ['top', 'bottom', 'left', 'right'],
-      validator(value) {
-        return ['top', 'bottom', 'left', 'right'].includes(value);
-      },
-    },
+    /**
+     * Choose the delay until the tooltip gets rendered when it gets hovered
+     */
     showDelay: {
       type: Number,
       required: false,
       default: 100,
     },
+    /**
+     * Choose the delay until the tooltip gets removed the cursor leaves
+     */
     hideDelay: {
       type: Number,
       required: false,
       default: 100,
     },
   },
-};
+});
 </script>
 
 <style lang="scss">
