@@ -107,7 +107,7 @@ import SwSelectBase from '../_internal/sw-select-base/sw-select-base.vue';
 import SwSelectResultList from '../_internal/sw-select-base/_internal/sw-select-result-list.vue';
 import SwSelectResult from '../_internal/sw-select-base/_internal/sw-select-result.vue';
 import SwSelectSelectionList from '../_internal/sw-select-base/_internal/sw-select-selection-list.vue';
-import SwHighlightText from '../../base/sw-highlight-text/sw-highlight-text.vue';
+import SwHighlightText from '../../_internal/sw-highlight-text.vue';
 
 export default {
   name: 'SwSelect',

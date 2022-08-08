@@ -5,7 +5,7 @@ import defaultStory, { Default as Template } from './sw-select.stories';
 
 export default {
   ...defaultStory,
-  title: 'Interaction Tests/form/sw-select',
+  title: 'Interaction Tests/Form/sw-select',
   component: SwSelect,
 };
 

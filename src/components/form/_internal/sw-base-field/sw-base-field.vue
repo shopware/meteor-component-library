@@ -77,7 +77,7 @@
 <script>
 import SwInheritanceSwitch from '../sw-inheritance-switch/sw-inheritance-switch.vue';
 import SwFieldCopyable from '../sw-field-copyable/sw-field-copyable.vue';
-import SwHelpText from '../../../base/sw-help-text/sw-help-text.vue';
+import SwHelpText from '../../sw-help-text/sw-help-text.vue';
 import SwValidationMixin from '../../../../mixins/validation.mixin';
 import SwFormFieldMixin from '../../../../mixins/form-field.mixin';
 import { createId } from '../../../../utils/uuid';

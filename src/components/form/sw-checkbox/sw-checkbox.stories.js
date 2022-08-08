@@ -1,7 +1,7 @@
 import SwCheckbox from './sw-checkbox.vue';
 
 export default {
-  title: 'Components/form/sw-checkbox',
+  title: 'Components/Form/sw-checkbox',
   component: SwCheckbox,
   argTypes: {
     change: {

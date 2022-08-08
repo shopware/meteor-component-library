@@ -2,7 +2,7 @@ import SwNumberField from './sw-number-field.vue';
 import baseFieldArgTypes from '../_internal/sw-base-field/arg-types';
 
 export default {
-  title: 'Components/form/sw-number-field',
+  title: 'Components/Form/sw-number-field',
   component: SwNumberField,
   args: {
     label: 'Numberfield',

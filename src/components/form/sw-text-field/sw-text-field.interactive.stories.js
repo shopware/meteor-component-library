@@ -5,7 +5,7 @@ import defaultTextFieldStory, { Default as Template } from './sw-text-field.stor
 
 export default {
   ...defaultTextFieldStory,
-  title: 'Interaction Tests/form/sw-text-field',
+  title: 'Interaction Tests/Form/sw-text-field',
   component: SwTextField,
 };
 

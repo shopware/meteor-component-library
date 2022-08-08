@@ -203,7 +203,7 @@
 <script>
 import { debounce } from 'lodash-es';
 import SwBaseField from "../_internal/sw-base-field/sw-base-field";
-import SwPopover from '../../utils/sw-popover/sw-popover.vue';
+import SwPopover from '../../_internal/sw-popover/sw-popover.vue';
 
 export default {
   name: 'SwColorpicker',

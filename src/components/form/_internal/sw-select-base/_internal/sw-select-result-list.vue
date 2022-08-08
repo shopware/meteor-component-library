@@ -41,8 +41,8 @@
 </template>
 
 <script>
-import SwPopover from '../../../../utils/sw-popover/sw-popover.vue';
-import SwIcon from '../../../../base/sw-icon/sw-icon.vue';
+import SwPopover from '../../../../_internal/sw-popover/sw-popover.vue';
+import SwIcon from '../../../../icons-media/sw-icon/sw-icon.vue';
 
 export default {
   name: 'SwSelectResultList',

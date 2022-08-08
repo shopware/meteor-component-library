@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import SwIcon from '../../../base/sw-icon/sw-icon.vue';
+import SwIcon from '../../../icons-media/sw-icon/sw-icon.vue';
 import SwTooltipDirective from '../../../../directives/tooltip.directive';
 import SwNotificationMixin from '../../../../mixins/notification.mixin';
 import { copyToClipboard as copyToClipboardUtil } from '../../../../utils/dom';

@@ -69,8 +69,8 @@
 </template>
 
 <script>
-import SwLabel from '../../../../base/sw-label/sw-label.vue';
-import SwButton from '../../../../base/sw-button/sw-button.vue';
+import SwLabel from '../../../../_internal/sw-label.vue';
+import SwButton from '../../../sw-button/sw-button.vue';
 
 export default {
   name: 'SwSelectSelectionList',

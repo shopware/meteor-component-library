@@ -5,7 +5,7 @@ import defaultStory, { Default as Template } from './sw-password-field.stories';
 
 export default {
   ...defaultStory,
-  title: 'Interaction Tests/form/sw-password-field',
+  title: 'Interaction Tests/Form/sw-password-field',
   component: SwPasswordField,
 };
 

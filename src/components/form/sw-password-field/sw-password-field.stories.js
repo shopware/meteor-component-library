@@ -2,7 +2,7 @@ import SwPasswordField from './sw-password-field.vue';
 import baseFieldArgTypes from '../_internal/sw-base-field/arg-types';
 
 export default {
-  title: 'Components/form/sw-password-field',
+  title: 'Components/Form/sw-password-field',
   component: SwPasswordField,
   args: {
     label: 'Passwordfield',

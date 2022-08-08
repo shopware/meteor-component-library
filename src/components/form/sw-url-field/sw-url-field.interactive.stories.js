@@ -5,7 +5,7 @@ import defaultUrlFieldStory, { Default as Template } from './sw-url-field.storie
 
 export default {
   ...defaultUrlFieldStory,
-  title: 'Interaction Tests/form/sw-url-field',
+  title: 'Interaction Tests/Form/sw-url-field',
   component: SwUrlField,
 };
 

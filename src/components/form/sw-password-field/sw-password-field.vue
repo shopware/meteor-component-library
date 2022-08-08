@@ -80,7 +80,7 @@
 </template>
 <script>
 import SwBaseField from '../_internal/sw-base-field/sw-base-field.vue';
-import SwIcon from '../../base/sw-icon/sw-icon.vue';
+import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 import SwTextField from '../sw-text-field/sw-text-field.vue';
 
 export default {
