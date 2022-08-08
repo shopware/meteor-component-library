@@ -42,7 +42,7 @@
    * in development
    */
    body:not(.show-interaction-tests) [id$='interaction-tests'],
-   body:not(.show-interaction-tests) [data-parent-id='interaction-tests'] {
+   body:not(.show-interaction-tests) [data-parent-id^='interaction-tests'] {
     display: none !important;
    }
 
@@ -54,7 +54,7 @@
       color-scheme: light;
    }</style><script>setTimeout(() => {
     if (window.CONFIG_TYPE === 'DEVELOPMENT') {
-      document.body.classList.add('show-interaction-test');
+      document.body.classList.add('show-interaction-tests');
     }
   }, 0)</script><style>#root[hidden],
       #docs-root[hidden] {
