@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import SwIcon from '../../base/sw-icon/sw-icon.vue';
+import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 import SwBaseField from '../_internal/sw-base-field/sw-base-field.vue';
 import SwFieldError from '../_internal/sw-field-error/sw-field-error.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';

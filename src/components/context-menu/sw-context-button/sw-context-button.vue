@@ -42,8 +42,8 @@
 </template>
 
 <script>
-import SwIcon from '../../base/sw-icon/sw-icon.vue';
-import SwPopover from '../../utils/sw-popover/sw-popover.vue';
+import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
+import SwPopover from '../../_internal/sw-popover/sw-popover.vue';
 import SwContextMenu from '../sw-context-menu/sw-context-menu.vue';
 
 export default {

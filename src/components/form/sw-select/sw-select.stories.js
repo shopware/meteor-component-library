@@ -1,7 +1,7 @@
 import SwSelect from './sw-select.vue';
 
 export default {
-  title: 'Components/form/sw-select',
+  title: 'Components/Form/sw-select',
   component: SwSelect,
   args: {
     label: 'Select',

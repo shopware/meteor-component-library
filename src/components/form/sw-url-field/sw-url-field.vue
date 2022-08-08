@@ -77,7 +77,7 @@
 <script>
 import { debounce } from 'lodash-es';
 import SwTextField from '../sw-text-field/sw-text-field.vue';
-import SwIcon from '../../base/sw-icon/sw-icon.vue';
+import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 import UnicodeUriFilter from '../../../filters/unicode-uri.filter';
 
 const URL_REGEX = {

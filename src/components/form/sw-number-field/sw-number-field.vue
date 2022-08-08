@@ -83,7 +83,7 @@
 
 <script>
 import SwTextField from '../sw-text-field/sw-text-field.vue';
-import SwIcon from '../../base/sw-icon/sw-icon';
+import SwIcon from '../../icons-media/sw-icon/sw-icon';
 
 export default {
   name: 'SwNumberField',

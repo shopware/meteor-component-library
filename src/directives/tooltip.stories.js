@@ -1,4 +1,4 @@
-import SwIcon from '../components/base/sw-icon/sw-icon.vue';
+import SwIcon from '../components/icons-media/sw-icon/sw-icon.vue';
 import TooltipDirective from './tooltip.directive';
 
 export default {
@@ -16,7 +16,7 @@ export default {
   argTypes: {
     appearance: {
       control: {
-        type: 'radio', 
+        type: 'radio',
         options: ['dark', 'light'],
       },
     },

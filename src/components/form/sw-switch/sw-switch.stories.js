@@ -1,6 +1,6 @@
 import SwSwitch from './sw-switch.vue';
 export default {
-  title: 'Components/form/sw-switch',
+  title: 'Components/Form/sw-switch',
   component: SwSwitch,
   argTypes: {
     change: {

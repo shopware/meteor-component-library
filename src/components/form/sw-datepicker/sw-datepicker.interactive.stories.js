@@ -5,7 +5,7 @@ import defaultDatepickerStory, { Default as Template } from './sw-datepicker.sto
 
 export default {
   ...defaultDatepickerStory,
-  title: 'Interaction Tests/form/sw-datepicker',
+  title: 'Interaction Tests/Form/sw-datepicker',
   component: SwDatepicker,
 };
 

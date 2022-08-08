@@ -1,7 +1,7 @@
 import SwTextarea from './sw-textarea.vue';
 
 export default {
-  title: 'Components/form/sw-textarea',
+  title: 'Components/Form/sw-textarea',
   component: SwTextarea,
   args: {
     label: 'Textareafield',

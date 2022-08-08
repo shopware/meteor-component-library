@@ -5,7 +5,7 @@ import defaultCheckboxField, { Default as Template } from './sw-checkbox.stories
 
 export default {
   ...defaultCheckboxField,
-  title: 'Interaction Tests/form/sw-checkbox',
+  title: 'Interaction Tests/Form/sw-checkbox',
   component: SwCheckbox,
 };
 

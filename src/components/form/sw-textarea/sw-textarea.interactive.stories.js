@@ -5,7 +5,7 @@ import defaultTextareaStory, { Default as Template } from './sw-textarea.stories
 
 export default {
   ...defaultTextareaStory,
-  title: 'Interaction Tests/form/sw-textarea',
+  title: 'Interaction Tests/Form/sw-textarea',
   component: SwTextarea,
 };
 

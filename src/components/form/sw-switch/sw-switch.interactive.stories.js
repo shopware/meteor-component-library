@@ -6,7 +6,7 @@ import defaultSwitch, { Default as Template } from './sw-switch.stories';
 
 export default {
   ...defaultSwitch,
-  title: 'Interaction Tests/form/sw-switch',
+  title: 'Interaction Tests/Form/sw-switch',
   component: SwSwitch,
 };
 

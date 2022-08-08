@@ -31,7 +31,7 @@
 
 <script>
 import SwTooltipDirective from '../../../../directives/tooltip.directive';
-import SwIcon from '../../../base/sw-icon/sw-icon.vue';
+import SwIcon from '../../../icons-media/sw-icon/sw-icon.vue';
 
 export default {
   name: 'SwInheritanceSwitch',
