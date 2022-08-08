@@ -20,8 +20,9 @@
   </span>
 </template>
 
-<script>
+<script lang="ts">
 import cloneDeep from 'lodash-es/cloneDeep';
+import Vue from 'vue';
 
 const colors = [
   '#FFD700',
@@ -38,7 +39,7 @@ const colors = [
   '#3CCA88',
 ];
 
-export default {
+export default Vue.extend({
   name: 'SwAvatar',
 
   props: {
@@ -93,30 +94,36 @@ export default {
   },
 
   computed: {
-    avatarSize() {
-      const { size } = this;
-
+    avatarSize(): {
+      width: string,
+      height: string,
+    } {
       return {
-        width: size,
-        height: size,
+        width: this.size,
+        height: this.size,
       };
     },
 
-    avatarInitials() {
+    avatarInitials(): string {
       const firstNameLetter = this.firstName ? this.firstName[0] : '';
       const lastNameLetter = this.lastName ? this.lastName[0] : '';
 
       return firstNameLetter + lastNameLetter;
     },
 
-    avatarInitialsSize() {
+    avatarInitialsSize(): {
+      'font-size': string,
+      'line-height': string
+    } {
       return {
         'font-size': `${this.fontSize}px`,
         'line-height': `${this.lineHeight}px`,
       };
     },
 
-    avatarImage() {
+    avatarImage(): {
+      'background-image': string,
+    } | null {
       if (this.imageUrl) {
         return { 'background-image': `url('${this.imageUrl}')` };
       }
@@ -132,7 +139,9 @@ export default {
       return { 'background-image': `url('${previewImageUrl}')` };
     },
 
-    avatarColor() {
+    avatarColor(): {
+      'background-color': string,
+    } {
       if (this.color.length) {
         return {
           'background-color': this.color,
@@ -150,15 +159,15 @@ export default {
       };
     },
 
-    hasAvatarImage() {
+    hasAvatarImage(): boolean {
       return !!this.avatarImage && !!this.avatarImage['background-image'];
     },
 
-    showPlaceholder() {
+    showPlaceholder(): boolean {
       return this.placeholder && !this.hasAvatarImage;
     },
 
-    showInitials() {
+    showInitials(): boolean {
       return !this.placeholder && !this.hasAvatarImage;
     },
   },
@@ -181,13 +190,18 @@ export default {
     },
 
     generateAvatarInitialsSize() {
+      if (!this.$refs.swAvatar) {
+        return;
+      }
+
+      // @ts-expect-error - offsetHeight exists on element
       const avatarSize = this.$refs.swAvatar.offsetHeight;
 
       this.fontSize = Math.round(avatarSize * 0.4);
       this.lineHeight = Math.round(avatarSize * 0.98);
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

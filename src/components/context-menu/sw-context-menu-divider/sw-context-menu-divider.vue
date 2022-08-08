@@ -2,10 +2,12 @@
   <hr class="sw_context_menu_divider">
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
   name: 'SwContextMenuDivider',
-};
+});
 </script>
 
 <style lang="scss">

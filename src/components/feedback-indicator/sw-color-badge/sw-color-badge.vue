@@ -9,8 +9,10 @@
   </span>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
   name: 'SwColorBadge',
   props: {
     variant: {
@@ -40,20 +42,20 @@ export default {
   },
 
   computed: {
-    colorStyle() {
+    colorStyle(): string {
       if (!this.color.length) {
         return '';
       }
       return `background:${this.color}`;
     },
-    variantClass() {
+    variantClass(): Record<string, boolean> {
       return {
         [`is--${this.variant}`]: true,
         'is--rounded': this.rounded,
       };
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

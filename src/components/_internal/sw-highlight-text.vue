@@ -1,5 +1,7 @@
-<script>
-export default {
+<script lang="ts">
+import Vue, { VNode } from 'vue';
+
+export default Vue.extend({
   name: 'SwHighlightText',
 
   props: {
@@ -16,7 +18,7 @@ export default {
   },
 
   methods: {
-    searchAndReplace() {
+    searchAndReplace(): string {
       if (!this.text) {
         return '';
       }
@@ -33,12 +35,12 @@ export default {
     },
 
     // Remove regex special characters from search string
-    escapeRegExp(string) {
+    escapeRegExp(string: string): string {
       return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
     },
   },
 
-  render(createElement) {
+  render(createElement): VNode {
     return createElement(
       'div',
       {
@@ -47,7 +49,7 @@ export default {
       },
     );
   },
-};
+});
 </script>
 
 <style lang="scss">

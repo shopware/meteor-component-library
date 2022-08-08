@@ -29,11 +29,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue'
 import SwTooltipDirective from '../../../../directives/tooltip.directive';
 import SwIcon from '../../../icons-media/sw-icon/sw-icon.vue';
 
-export default {
+export default Vue.extend({
   name: 'SwInheritanceSwitch',
 
   components: {
@@ -59,7 +60,7 @@ export default {
   },
 
   computed: {
-    unInheritClasses() {
+    unInheritClasses(): { 'is--clickable': boolean } {
       return { 'is--clickable': !this.disabled };
     },
   },
@@ -79,7 +80,7 @@ export default {
       this.$emit('inheritance-remove');
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

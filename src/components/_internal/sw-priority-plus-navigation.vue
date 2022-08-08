@@ -1,18 +1,27 @@
-<script>
-function getWidth(el) {
+<script lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import Vue, { PropType, VNode } from 'vue';
+
+interface ItemBase {
+  hidden?: boolean,
+  [key: string]: any
+}
+
+function getWidth(el: Element) {
   const styles = window.getComputedStyle(el)
   const margin = parseFloat(styles['marginLeft']) +
     parseFloat(styles['marginRight'])
 
+  // @ts-expect-error - offsetWidth exists on this element
   return Math.ceil(el.offsetWidth + margin)
 }
 
-export default {
+export default Vue.extend({
   name: 'PriorityPlusMenu',
 
   props: {
     list: {
-      type: Array,
+      type: Array as PropType<Array<ItemBase>>,
       required: true,
       default () { return [] }
     },
@@ -22,45 +31,52 @@ export default {
     }
   },
 
-  data () {
+  data(): {
+    accumItemWidths: Array<any>
+  } {
     return {
       accumItemWidths: []
     }
   },
 
   computed: {
-    mainItems () {
+    mainItems(): Array<ItemBase> {
       return this.list.filter((item) => !item.hidden)
     },
 
-    moreItems () {
+    moreItems(): Array<ItemBase> {
       return this.list.filter((item) => item.hidden)
     },
 
-    hasHiddenItems () {
+    hasHiddenItems(): boolean {
       return !!this.moreItems.length
     }
   },
 
   beforeCreate () {
-    this.$options.propsData.list.forEach((item) => {
-      this.$set(item, 'hidden', false)
-    })
+    if (this.$options.propsData) {
+      // @ts-expect-error - list is a property in this component
+      this.$options.propsData.list.forEach((item) => {
+        this.$set(item, 'hidden', false)
+      })
+    }
   },
 
-  async mounted () {
+  async mounted() {
     await this.$nextTick()
 
     this.storeItemWidths()
     this.handleResize()
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     window.addEventListener('resize', this.handleResize)
   },
 
-  beforeUpdate () {
+  beforeUpdate() {
     this.handleResize()
   },
 
-  beforeDestroy () {
+  beforeDestroy() {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     window.removeEventListener('resize', this.handleResize)
   },
 
@@ -84,6 +100,7 @@ export default {
         els && el && ( offset = getWidth(el) * this.offsetFactor )
       }
 
+      // @ts-expect-error - offsetWidth exists on this element
       return this.$el.offsetWidth - offset
     },
 
@@ -114,11 +131,12 @@ export default {
     }
   },
 
-  render () {
+  render(): VNode {
+    // @ts-expect-error - scopedSlots return a VNode
     return this.$scopedSlots.default({
       mainItems: this.mainItems,
       moreItems: this.moreItems
     })
   }
-}
+});
 </script>

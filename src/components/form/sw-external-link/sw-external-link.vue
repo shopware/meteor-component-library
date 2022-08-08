@@ -31,10 +31,11 @@
   </span>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 
-export default {
+export default Vue.extend({
   name: 'SwExternalLink',
 
   components: {
@@ -94,7 +95,7 @@ export default {
   },
 
   methods: {
-    onClick(event) {
+    onClick(event: MouseEvent) {
       if (this.disabled) {
         return;
       }
@@ -102,7 +103,7 @@ export default {
       this.$emit('click', event);
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

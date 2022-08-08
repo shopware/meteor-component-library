@@ -35,11 +35,12 @@
   </sw-base-field>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import SwBaseField from "../../form/_internal/sw-base-field/sw-base-field.vue";
 import SwFieldError from "../../form/_internal/sw-field-error/sw-field-error.vue";
 
-export default {
+export default Vue.extend({
   name: 'SwProgressBar',
 
   components: {
@@ -93,7 +94,7 @@ export default {
   },
 
   computed: {
-    progressLabel() {
+    progressLabel(): string {
       if (!this.progressLabelType || this.progressLabelType === 'percent') {
         return this.styleWidth;
       }
@@ -101,7 +102,8 @@ export default {
       return `${this.value} ${this.progressLabelType} / ${this.maxValue} ${this.progressLabelType}`;
     },
 
-    styleWidth() {
+    styleWidth(): string {
+      // @ts-expect-error - vue can't detect value correctly
       let percentage = parseInt(this.value / this.maxValue * 100);
 
       if (percentage > 100) {
@@ -115,14 +117,17 @@ export default {
       return `${percentage}%`;
     },
 
-    progressClasses() {
+    progressClasses(): {
+      'sw-progress-bar__value--no-transition': boolean,
+      'sw-progress-bar__value--has-error': boolean,
+    } {
       return {
         'sw-progress-bar__value--no-transition': this.value < 1 || this.value >= this.maxValue,
         'sw-progress-bar__value--has-error': !!this.error,
       };
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

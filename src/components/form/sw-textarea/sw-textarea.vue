@@ -44,12 +44,13 @@
   </sw-base-field>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 import SwBaseField from '../_internal/sw-base-field/sw-base-field.vue';
-import SwFieldError from "../_internal/sw-field-error/sw-field-error";
+import SwFieldError from "../_internal/sw-field-error/sw-field-error.vue";
 
-export default {
+export default Vue.extend({
   name: 'SwTextarea',
 
   components: {
@@ -123,22 +124,24 @@ export default {
   },
 
   computed: {
-    inputState() {
+    inputState(): boolean {
       if (this.isInherited) {
+        // @ts-expect-error - exists on mixin
         return this.inheritedValue;
       }
 
+      // @ts-expect-error - exists on mixin
       return this.currentValue || '';
     },
 
-    isInheritanceField() {
+    isInheritanceField(): boolean {
       if (this.$attrs.isInheritanceField) {
         return true;
       }
       return this.inheritedValue !== null;
     },
 
-    isInherited() {
+    isInherited(): boolean {
       if (this.$attrs.isInherited) {
         return true;
       }
@@ -152,11 +155,13 @@ export default {
   },
 
   methods: {
-    onInput(event) {
+    onInput(event: Event) {
+      // @ts-expect-error - target is defined
       this.$emit('input', event.target.value);
     },
 
-    onChange(event) {
+    onChange(event: Event) {
+      // @ts-expect-error - target is defined
       this.$emit('change', event.target.value);
     },
 
@@ -167,7 +172,7 @@ export default {
       this.hasFocus = false;
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

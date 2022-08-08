@@ -14,8 +14,10 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
   name: 'SwLoader',
 
   props: {
@@ -33,13 +35,16 @@ export default {
   },
 
   computed: {
-    loaderSize() {
+    loaderSize(): {
+      width: string,
+      height: string,
+    } {
       return {
         width: `${this.numericSize}px`,
         height: `${this.numericSize}px`,
       };
     },
-    numericSize() {
+    numericSize(): number {
       const numericSize = parseInt(this.size, 10);
 
       if (Number.isNaN(numericSize)) {
@@ -49,13 +54,13 @@ export default {
       return numericSize;
     },
 
-    borderWidth() {
+    borderWidth(): string {
       const borderWith = Number(this.numericSize / 12).toPrecision(2);
 
       return `${borderWith}px`;
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

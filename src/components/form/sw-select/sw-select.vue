@@ -101,7 +101,9 @@
   </sw-select-base>
 </template>
 
-<script>
+<script lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import Vue, { PropType } from 'vue';
 import { debounce, get } from 'lodash-es';
 import SwSelectBase from '../_internal/sw-select-base/sw-select-base.vue';
 import SwSelectResultList from '../_internal/sw-select-base/_internal/sw-select-result-list.vue';
@@ -109,7 +111,7 @@ import SwSelectResult from '../_internal/sw-select-base/_internal/sw-select-resu
 import SwSelectSelectionList from '../_internal/sw-select-base/_internal/sw-select-selection-list.vue';
 import SwHighlightText from '../../_internal/sw-highlight-text.vue';
 
-export default {
+export default Vue.extend({
   name: 'SwSelect',
 
   components: {
@@ -150,7 +152,7 @@ export default {
      * Dependent on multiSelection, either a single value or an array of values.
      */
     value: {
-      type: [String, Number, Boolean, Array, null, undefined],
+      type: [String, Number, Boolean, Array, null, undefined] as PropType<string|number|boolean|Array<any>|null|undefined>,
       required: false,
       default: null,
     },
@@ -242,8 +244,10 @@ export default {
     searchFunction: {
       type: Function,
       required: false,
-      default({ options, labelProperty, searchTerm }) {
-        return options.filter((option) => {
+      default({ options, labelProperty, searchTerm }
+             :{ options: any, labelProperty: string, searchTerm: string }) 
+      {
+        return options.filter((option: any) => {
           const label = this.getKey(option, labelProperty);
           if (!label) {
             return false;
@@ -300,7 +304,7 @@ export default {
   },
 
   computed: {
-    visibleValues() {
+    visibleValues(): any[] {
       if (!this.currentValue || this.currentValue.length <= 0) {
         return [];
       }
@@ -308,7 +312,7 @@ export default {
       return this.options.filter((item) => this.currentValue.includes(this.getKey(item, this.valueProperty))).slice(0, this.limit);
     },
 
-    totalValuesCount() {
+    totalValuesCount(): number {
       if (this.currentValue.length) {
         return this.currentValue.length;
       }
@@ -316,7 +320,7 @@ export default {
       return 0;
     },
 
-    invisibleValueCount() {
+    invisibleValueCount(): number {
       if (!this.currentValue) {
         return 0;
       }
@@ -325,19 +329,19 @@ export default {
     },
 
     currentValue: {
-      get() {
+      get(): any|any[] {
         if (!this.value) {
           return [];
         }
 
         return this.value;
       },
-      set(newValue) {
+      set(newValue: any) {
         this.$emit('change', newValue);
       },
     },
 
-    visibleResults() {
+    visibleResults(): any[] {
       if (this.searchTerm) {
         return this.searchFunction(
           {
@@ -360,11 +364,11 @@ export default {
   },
 
   methods: {
-    isSelected(item) {
+    isSelected(item: any) {
       return this.currentValue.includes(this.getKey(item, this.valueProperty));
     },
 
-    addItem(item) {
+    addItem(item: any) {
       const identifier = this.getKey(item, this.valueProperty);
 
       if (this.isSelected(item) && this.enableMultiSelection) {
@@ -378,15 +382,19 @@ export default {
         this.currentValue = [...this.currentValue, identifier];
       }else if (this.currentValue !== identifier) {
         this.currentValue = identifier;
+        // @ts-expect-error - ref exists
         this.$refs.selectBase.collapse();
+        // @ts-expect-error - ref exists
         this.$refs.selectionList.blur();
       }
 
+      // @ts-expect-error - ref exists
       this.$refs.selectionList.focus();
+      // @ts-expect-error - ref exists
       this.$refs.selectionList.select();
     },
 
-    remove(item) {
+    remove(item: any) {
       this.$emit('item-remove', item);
 
       if(!Array.isArray(this.currentValue)) {
@@ -419,8 +427,11 @@ export default {
     },
 
     onSearchTermChange: debounce(function updateSearchTerm(term) {
+      // @ts-expect-error - this context exists even here
       this.searchTerm = term;
+      // @ts-expect-error - this context exists even here
       this.$emit('search-term-change', this.searchTerm);
+      // @ts-expect-error - this context exists even here
       this.resetActiveItem();
     }, 100),
 
@@ -429,19 +440,22 @@ export default {
         return;
       }
 
+      // @ts-expect-error - ref exists
       this.$refs.swSelectResultList.setActiveItemIndex(0);
     },
 
     onSelectExpanded() {
+      // @ts-expect-error - ref exists
       this.$refs.selectionList.focus();
     },
 
     onSelectCollapsed() {
       this.searchTerm = '';
+      // @ts-expect-error - ref exists
       this.$refs.selectionList.blur();
     },
 
-    getKey(object, keyPath, defaultValue) {
+    getKey(object: any, keyPath: string, defaultValue?: any) {
       return get(object, keyPath, defaultValue);
     },
 
@@ -449,5 +463,5 @@ export default {
       this.currentValue = [];
     },
   },
-};
+});
 </script>

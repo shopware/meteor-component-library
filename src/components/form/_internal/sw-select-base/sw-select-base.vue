@@ -87,13 +87,14 @@
   </sw-base-field>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import SwBaseField from '../sw-base-field/sw-base-field.vue';
 import SwIcon from '../../../icons-media/sw-icon/sw-icon.vue';
 import SwLoader from '../../../feedback-indicator/sw-loader/sw-loader.vue';
 import SwFieldError from '../../_internal/sw-field-error/sw-field-error.vue';
 
-export default {
+export default Vue.extend({
   name: 'SwSelectBase',
 
   components: {
@@ -187,7 +188,7 @@ export default {
   },
 
   computed: {
-    swFieldClasses() {
+    swFieldClasses(): { 'has--focus': boolean } {
       return { 'has--focus': this.expanded };
     },
   },
@@ -215,15 +216,17 @@ export default {
       this.$emit('select-expanded');
     },
 
-    collapse(event) {
+    collapse(event?: Event) {
       document.removeEventListener('click', this.listenToClickOutside);
       this.expanded = false;
 
+      // @ts-expect-error - target is set and contains dataset
       // do not let clearable button trigger change event
       if (event?.target?.dataset.clearableButton === undefined) {
         this.$emit('select-collapsed');
       }
 
+      // @ts-expect-error - event is a click event
       // allow to step back through form via SHIFT+TAB
       if (event && event?.shiftKey) {
         event.preventDefault();
@@ -236,34 +239,40 @@ export default {
       const myFocusable = this.$el.querySelector(focusableSelector);
       const keyboardFocusable = [
         ...document.querySelectorAll(focusableSelector),
+      // @ts-expect-error - target is set and contains dataset
       ].filter((el) => !el.hasAttribute('disabled') && el.dataset.clearableButton === undefined);
 
       keyboardFocusable.forEach((element, index) => {
         if (index > 0 && element === myFocusable) {
           const kbFocusable = keyboardFocusable[index - 1];
+          // @ts-expect-error - click exists on element
           kbFocusable.click();
+          // @ts-expect-error - focus exists on element
           kbFocusable.focus();
         }
       });
     },
 
-    listenToClickOutside(event) {
+    listenToClickOutside(event: Event) {
+      // @ts-expect-error - path exists in event
       let { path } = event;
       if (typeof path === 'undefined') {
         path = this.computePath(event);
       }
 
+      // @ts-expect-error - path contains elements
       if (!path.find((element) => element === this.$el)) {
         this.collapse();
       }
     },
 
-    computePath(event) {
+    computePath(event: Event) {
       const path = [];
       let { target } = event;
 
       while (target) {
         path.push(target);
+        // @ts-expect-error - parentElement exists on target
         target = target.parentElement;
       }
 
@@ -274,14 +283,15 @@ export default {
       this.$emit('clear');
     },
 
-    focusParentSelect(event) {
+    focusParentSelect(event: Event) {
       if (event && event?.shiftKey) {
+        // @ts-expect-error - ref selectWrapper is defined
         this.$refs.selectWrapper.click();
         event.preventDefault();
       }
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

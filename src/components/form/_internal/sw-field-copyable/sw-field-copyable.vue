@@ -15,13 +15,14 @@
   />
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import SwIcon from '../../../icons-media/sw-icon/sw-icon.vue';
 import SwTooltipDirective from '../../../../directives/tooltip.directive';
 import SwNotificationMixin from '../../../../mixins/notification.mixin';
 import { copyToClipboard as copyToClipboardUtil } from '../../../../utils/dom';
 
-export default {
+export default Vue.extend({
   name: 'SwFieldCopyable',
 
   directives: {
@@ -57,11 +58,13 @@ export default {
   },
 
   computed: {
-    tooltipText() {
+    tooltipText(): string {
       if (this.wasCopied) {
+        // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
         return this.$tc('global.sw-field-copyable.tooltip.wasCopied');
       }
 
+      // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
       return this.$tc('global.sw-field-copyable.tooltip.canCopy');
     },
   },
@@ -80,8 +83,11 @@ export default {
           this.notificationSuccess();
         }
       } catch (err) {
+        // @ts-expect-error - method is defined in mixin
         this.createNotificationError({
+          // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
           title: this.$tc('global.default.error'),
+          // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
           message: this.$tc('global.sw-field.notification.notificationCopyFailureMessage'),
         });
       }
@@ -92,7 +98,9 @@ export default {
     },
 
     notificationSuccess() {
+      // @ts-expect-error - method is defined in mixin
       this.createNotificationInfo({
+        // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
         message: this.$tc('global.sw-field.notification.notificationCopySuccessMessage'),
       });
     },
@@ -101,7 +109,7 @@ export default {
       this.wasCopied = false;
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

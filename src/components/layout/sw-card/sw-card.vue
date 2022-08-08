@@ -94,12 +94,13 @@
   </sw-ignore-class>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import SwIgnoreClass from '../../_internal/sw-ignore-class.vue'
 import SwContextButton from '../../context-menu/sw-context-button/sw-context-button.vue'
 import SwLoader from '../../feedback-indicator/sw-loader/sw-loader.vue'
 
-export default {
+export default Vue.extend({
   components: {
     'sw-ignore-class': SwIgnoreClass,
     'sw-context-button': SwContextButton,
@@ -144,7 +145,7 @@ export default {
     },
 
     computed: {
-        showHeader() {
+        showHeader(): boolean {
             return !!this.title
                 || !!this.$slots.title
                 || !!this.$scopedSlots.title
@@ -155,7 +156,7 @@ export default {
                 || !!this.$scopedSlots.avatar;
         },
 
-        hasAvatar() {
+        hasAvatar(): boolean {
             return !!this.$slots.avatar || !!this.$scopedSlots.avatar;
         },
     },
@@ -170,7 +171,7 @@ export default {
                 'has--header': !!this.showHeader,
                 'has--title': !!this.title || !!this.$slots.title || !!this.$scopedSlots.title,
                 'has--subtitle': !!this.subtitle || !!this.$slots.subtitle || !!this.$scopedSlots.subtitle,
-                'has--toolbar': !!this.toolbar || !!this.$slots.toolbar || !!this.$scopedSlots.toolbar,
+                'has--toolbar': !!this.$slots.toolbar || !!this.$scopedSlots.toolbar,
             };
 
             if (!this.$refs.swIgnoreClass) {
@@ -184,13 +185,15 @@ export default {
             const staticClasses = (this.$refs.swIgnoreClass?.$el?._prevClass ?? '').split(' ');
 
             // add attrs classes to main card
-            staticClasses.forEach((className) => {
+            staticClasses.forEach((className: string) => {
                 this.$set(classes, className, true);
             });
 
             // remove classes from ignore class
             this.$nextTick(() => {
+                // @ts-expect-error - $el exists on ref
                 if (this.$refs.swIgnoreClass?.$el?.className) {
+                    // @ts-expect-error - $el exists on ref
                     this.$refs.swIgnoreClass.$el.className = '';
                 }
             });
@@ -198,7 +201,7 @@ export default {
             return classes;
         },
     },
-};
+});
 </script>
 
 <style lang="scss">
