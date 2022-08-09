@@ -75,7 +75,8 @@ export default Vue.extend({
         const [variant] = newName.split('-');
         const iconName = newName.split('-').slice(1).join('-');
 
-        import(`@shopware-ag/meteor-icon-kit/icons/${variant}/${iconName}.svg`).then((iconSvgData) => {
+        // Need to be relative, see "https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#imports-must-start-with--or-"
+        import(`./../../../../node_modules/@shopware-ag/meteor-icon-kit/icons/${variant}/${iconName}.svg`).then((iconSvgData) => {
           if (iconSvgData.default) {
             this.iconSvgData = iconSvgData.default;
           } else {

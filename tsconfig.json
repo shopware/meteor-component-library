@@ -11,12 +11,12 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
+    "declaration": true,
     "allowJs": true,
     "baseUrl": ".",
     "types": [
       "webpack-env",
       "jest",
-      "node"
     ],
     "paths": {
       "@/*": [

@@ -43,8 +43,8 @@ class Tooltip {
     this._message = Tooltip.validateMessage(message);
     this._width = Tooltip.validateWidth(width);
     this._parentDOMElement = element;
-    this._showDelay = showDelay ?? 100;
-    this._hideDelay = hideDelay ?? 100;
+    this._showDelay = showDelay;
+    this._hideDelay = hideDelay;
     this._disabled = disabled;
     this._appearance = appearance;
     this._showOnDisabledElements = showOnDisabledElements;

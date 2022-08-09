@@ -1,17 +1,22 @@
 {
   "name": "@shopware-ag/meteor-component-library",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "scripts": {
     "test:unit": "vue-cli-service test:unit",
-    "lint": "eslint --ext .js,.ts,.vue src",
+    "lint": "vue-tsc --noEmit && eslint --ext .js,.ts,.vue src",
     "storybook": "SHOW_INTERACTIONS=true start-storybook -p 6006",
+    "build-vue": "rollup -c",
     "build-storybook": "build-storybook",
     "test-storybook": "test-storybook",
     "test-storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npm run build-storybook -- --quiet && npx http-server storybook-static --port 6006 --silent\" \"wait-on tcp:6006 && npm run test-storybook\"",
     "docker": "docker run -v $PWD:/tests:delegated -w /tests -it --rm --ipc=host mcr.microsoft.com/playwright:v1.20.0-focal /bin/bash"
   },
+  "main": "dist/common/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
   "files": [
-    "src"
+    "src",
+    "dist"
   ],
   "dependencies": {
     "@shopware-ag/meteor-icon-kit": "^4.1.0",
@@ -22,16 +27,14 @@
     "flatpickr": "4.6.3",
     "lodash-es": "^4.17.21",
     "punycode": "^2.1.1",
-    "uuid": "^8.3.2",
-    "vue": "^2.6.11",
-    "vue-apexcharts": "^1.6.2",
-    "vue-class-component": "^7.2.3",
-    "vue-i18n": "^8.26.8",
-    "vue-property-decorator": "^9.1.2"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@rushstack/eslint-patch": "^1.1.1",
     "@babel/core": "^7.16.0",
+    "@rollup/plugin-commonjs": "^22.0.2",
+    "@rollup/plugin-dynamic-import-vars": "^1.4.4",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rushstack/eslint-patch": "^1.1.1",
     "@storybook/addon-a11y": "^6.5.8",
     "@storybook/addon-actions": "^6.5.8",
     "@storybook/addon-essentials": "^6.5.8",
@@ -65,13 +68,25 @@
     "jest": "^27.5.1",
     "jest-image-snapshot": "^5.1.0",
     "rimraf": "^3.0.2",
-    "sass": "^1.26.5",
+    "rollup": "^2.77.2",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-scss": "^3.0.0",
+    "rollup-plugin-svg-import": "^1.6.0",
+    "rollup-plugin-typescript2": "^0.32.1",
+    "rollup-plugin-vue": "^5.1.9",
+    "sass": "^1.54.4",
     "sass-loader": "^8.0.2",
     "storybook-dark-mode": "^1.1.0",
     "svg-inline-loader": "^0.8.2",
     "typescript": "~4.1.5",
+    "vue": "^2.6.11",
+    "vue-apexcharts": "^1.6.2",
+    "vue-class-component": "^7.2.3",
+    "vue-i18n": "^8.26.8",
     "vue-loader": "^15.9.8",
+    "vue-property-decorator": "^9.1.2",
     "vue-template-compiler": "^2.6.11",
+    "vue-tsc": "^0.39.5",
     "wait-on": "^6.0.1"
   }
 }

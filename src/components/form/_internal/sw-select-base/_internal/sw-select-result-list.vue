@@ -48,7 +48,6 @@ import SwIcon from '../../../../icons-media/sw-icon/sw-icon.vue';
 export default Vue.extend({
   name: 'SwSelectResultList',
 
-  // @ts-expect-error - i18n is a plugin. Will be added to global variables in NEXT-22728
   i18n: {
     messages: {
       en: {
@@ -125,8 +124,8 @@ export default Vue.extend({
 
   computed: {
     emptyMessageText(): string {
-      // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
-      return this.emptyMessage || this.$tc('sw-select-result-list.messageNoResults');
+
+return this.emptyMessage || this.$tc('sw-select-result-list.messageNoResults');
     },
 
     popoverClass(): Array<string> {

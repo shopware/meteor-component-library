@@ -133,6 +133,7 @@ export default Vue.extend({
       }
 
       const avatarMedia = cloneDeep(this.sourceContext.avatarMedia);
+      // @ts-expect-error - thumbnails exists
       const thumbnailImage = avatarMedia.thumbnails.sort((a, b) => a.width - b.width)[0];
       const previewImageUrl = thumbnailImage ? thumbnailImage.url : avatarMedia.url;
 

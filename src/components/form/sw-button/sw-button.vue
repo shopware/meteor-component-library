@@ -37,9 +37,10 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import swLoader from '../../feedback-indicator/sw-loader/sw-loader.vue';
 
-export default {
+export default Vue.extend({
   name: 'SwButton',
 
   components: {
@@ -82,7 +83,7 @@ export default {
     size: {
       type: String,
       required: false,
-      default: '',
+      default: 'small',
       validator(value: string) {
         if (!value.length) {
           return true;
@@ -144,7 +145,7 @@ export default {
       };
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

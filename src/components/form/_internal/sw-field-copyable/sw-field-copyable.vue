@@ -25,7 +25,6 @@ import { copyToClipboard as copyToClipboardUtil } from '../../../../utils/dom';
 export default Vue.extend({
   name: 'SwFieldCopyable',
 
-  // @ts-expect-error - i18n is a plugin. Will be added to global variables in NEXT-22728
   i18n: {
     messages: {
       en: {
@@ -88,11 +87,9 @@ export default Vue.extend({
   computed: {
     tooltipText(): string {
       if (this.wasCopied) {
-        // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
         return this.$tc('sw-field-copyable.tooltip.wasCopied');
       }
 
-      // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
       return this.$tc('sw-field-copyable.tooltip.canCopy');
     },
   },
@@ -113,9 +110,7 @@ export default Vue.extend({
       } catch (err) {
         // @ts-expect-error - method is defined in mixin
         this.createNotificationError({
-          // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
           title: this.$tc('sw-field-copyable.errorTitle'),
-          // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
           message: this.$tc('sw-field-copyable.notificationCopyFailureMessage'),
         });
       }
@@ -128,7 +123,6 @@ export default Vue.extend({
     notificationSuccess() {
       // @ts-expect-error - method is defined in mixin
       this.createNotificationInfo({
-        // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
         message: this.$tc('sw-field-copyable.notificationCopySuccessMessage'),
       });
     },

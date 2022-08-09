@@ -182,6 +182,7 @@ export default Vue.extend({
                 return classes;
             }
 
+            // @ts-expect-error - $el exists
             const staticClasses = (this.$refs.swIgnoreClass?.$el?._prevClass ?? '').split(' ');
 
             // add attrs classes to main card

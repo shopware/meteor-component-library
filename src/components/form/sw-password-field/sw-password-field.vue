@@ -87,7 +87,6 @@ import SwTextField from '../sw-text-field/sw-text-field.vue';
 export default Vue.extend({
   name: 'SwPasswordField',
 
-  // @ts-expect-error - i18n is a plugin. Will be added to global variables in NEXT-22728
   i18n: {
     messages: {
       en: {
