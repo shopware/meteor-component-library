@@ -5,7 +5,7 @@ import defaultColorpickerStory, { Default } from './sw-colorpicker.stories';
 
 export default {
   ...defaultColorpickerStory,
-  title: 'Interaction Tests/form/sw-colorpicker',
+  title: 'Interaction Tests/Form/sw-colorpicker',
   component: SwColorpicker,
 };
 

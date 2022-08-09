@@ -1,7 +1,7 @@
 import SwColorpicker from './sw-colorpicker.vue';
 
 export default {
-  title: 'Components/form/sw-colorpicker',
+  title: 'Components/Form/sw-colorpicker',
   component: SwColorpicker,
   args: {
     label: 'Colorpicker example',

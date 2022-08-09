@@ -2,7 +2,7 @@ import SwTextField from './sw-text-field.vue';
 import baseFieldArgTypes from '../_internal/sw-base-field/arg-types';
 
 export default {
-  title: 'Components/form/sw-text-field',
+  title: 'Components/Form/sw-text-field',
   component: SwTextField,
   argTypes: {
     ...baseFieldArgTypes

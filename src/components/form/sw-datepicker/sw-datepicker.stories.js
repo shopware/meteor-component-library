@@ -1,7 +1,7 @@
 import SwDatepicker from './sw-datepicker.vue';
 
 export default {
-  title: 'Components/form/sw-datepicker',
+  title: 'Components/Form/sw-datepicker',
   component: SwDatepicker,
   args: {
     label: 'Datepicker',

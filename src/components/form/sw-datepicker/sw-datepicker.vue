@@ -53,7 +53,7 @@ import 'flatpickr/dist/l10n';
 import { zonedTimeToUtc, utcToZonedTime } from 'date-fns-tz';
 import 'flatpickr/dist/flatpickr.css';
 import SwBaseField from "../_internal/sw-base-field/sw-base-field";
-import SwIcon from '../../base/sw-icon/sw-icon.vue';
+import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 
 const allEvents = [

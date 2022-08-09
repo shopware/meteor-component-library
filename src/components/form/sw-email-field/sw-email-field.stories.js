@@ -2,7 +2,7 @@ import SwEmailField from './sw-email-field.vue';
 import baseFieldArgTypes from '../_internal/sw-base-field/arg-types';
 
 export default {
-  title: 'Components/form/sw-email-field',
+  title: 'Components/Form/sw-email-field',
   component: SwEmailField,
   argTypes: {
     ...baseFieldArgTypes

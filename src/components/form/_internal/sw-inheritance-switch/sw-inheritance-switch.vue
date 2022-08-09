@@ -10,7 +10,7 @@
     <sw-icon
       v-if="isInherited"
       key="inherit-icon"
-      v-tooltip="{ message: $tc('global.sw-field.tooltipRemoveInheritance'), disabled: disabled }"
+      v-tooltip="{ message: $tc('sw-inheritance-switch.tooltipRemoveInheritance'), disabled: disabled }"
       data-testid="sw-inheritance-switch-icon"
       :multicolor="true"
       name="regular-lock-s"
@@ -19,7 +19,7 @@
     <sw-icon
       v-else
       key="uninherit-icon"
-      v-tooltip="{ message: $tc('global.sw-field.tooltipRestoreInheritance'), disabled: disabled }"
+      v-tooltip="{ message: $tc('sw-inheritance-switch.tooltipRestoreInheritance'), disabled: disabled }"
       :class="unInheritClasses"
       :multicolor="true"
       name="regular-lock-open-s"
@@ -29,12 +29,31 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue'
 import SwTooltipDirective from '../../../../directives/tooltip.directive';
-import SwIcon from '../../../base/sw-icon/sw-icon.vue';
+import SwIcon from '../../../icons-media/sw-icon/sw-icon.vue';
 
-export default {
+export default Vue.extend({
   name: 'SwInheritanceSwitch',
+
+  // @ts-expect-error - i18n is a plugin. Will be added to global variables in NEXT-22728
+  i18n: {
+    messages : {
+      en: {
+        'sw-inheritance-switch': {
+          tooltipRemoveInheritance: 'Remove inheritance',
+          tooltipRestoreInheritance: 'Restore inheritance',
+        }
+      },
+      de: {
+        'sw-inheritance-switch': {
+          tooltipRemoveInheritance: 'Vererbung entfernen',
+          tooltipRestoreInheritance: 'Vererbung wiederherstellen',
+        }
+      }
+    },
+  },
 
   components: {
     'sw-icon': SwIcon,
@@ -59,7 +78,7 @@ export default {
   },
 
   computed: {
-    unInheritClasses() {
+    unInheritClasses(): { 'is--clickable': boolean } {
       return { 'is--clickable': !this.disabled };
     },
   },
@@ -79,7 +98,7 @@ export default {
       this.$emit('inheritance-remove');
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

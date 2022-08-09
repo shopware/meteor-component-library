@@ -2,7 +2,7 @@ import SwUrlField from './sw-url-field.vue';
 import baseFieldArgTypes from '../_internal/sw-base-field/arg-types';
 
 export default {
-  title: 'Components/form/sw-url-field',
+  title: 'Components/Form/sw-url-field',
   component: SwUrlField,
   args: {
     label: 'Url field',

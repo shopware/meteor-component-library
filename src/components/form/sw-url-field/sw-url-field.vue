@@ -74,10 +74,10 @@
   </sw-base-field>
 </template>
 
-<script>
-import { debounce } from 'lodash-es';
+<script lang="ts">
+import Vue from 'vue';
 import SwTextField from '../sw-text-field/sw-text-field.vue';
-import SwIcon from '../../base/sw-icon/sw-icon.vue';
+import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 import UnicodeUriFilter from '../../../filters/unicode-uri.filter';
 
 const URL_REGEX = {
@@ -87,7 +87,7 @@ const URL_REGEX = {
   TRAILING_SLASH: /\/+$/,
 };
 
-export default {
+export default Vue.extend({
   name: 'SwUrlField',
 
   components: {
@@ -122,6 +122,7 @@ export default {
   data() {
     return {
       sslActive: true,
+      // @ts-expect-error - value is defined in swTextField
       currentValue: this.value || '',
       errorUrl: null,
       currentDebounce: null,
@@ -129,7 +130,7 @@ export default {
   },
 
   computed: {
-    prefixClass() {
+    prefixClass(): string {
       if (this.sslActive) {
         return 'is--ssl';
       }
@@ -137,7 +138,7 @@ export default {
       return '';
     },
 
-    urlPrefix() {
+    urlPrefix(): string {
       if (this.sslActive) {
         return 'https://';
       }
@@ -145,7 +146,7 @@ export default {
       return 'http://';
     },
 
-    url() {
+    url(): string {
       const trimmedValue = this.currentValue.trim();
       if (trimmedValue === '') {
         return '';
@@ -154,13 +155,16 @@ export default {
       return `${this.urlPrefix}${trimmedValue}`;
     },
 
-    combinedError() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    combinedError(): any {
+      // @ts-expect-error - error is defined in swTextField
       return this.errorUrl || this.error;
     },
   },
 
   watch: {
     value() {
+      // @ts-expect-error - value is defined in swTextField
       this.checkInput(this.value || '');
     },
   },
@@ -174,11 +178,12 @@ export default {
       this.checkInput(this.currentValue);
     },
 
-    onBlur(event) {
+    onBlur(event: Event) {
+      // @ts-expect-error - target is defined
       this.checkInput(event.target.value);
     },
 
-    checkInput(inputValue) {
+    checkInput(inputValue: string) {
       this.errorUrl = null;
 
       if (!inputValue.length) {
@@ -187,6 +192,7 @@ export default {
         return;
       }
 
+      // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
       if (inputValue.match(URL_REGEX.PROTOCOL_HTTP)) {
         this.sslActive = this.getSSLMode(inputValue);
       }
@@ -208,7 +214,7 @@ export default {
       this.$emit('input', '');
     },
 
-    validateCurrentValue(value) {
+    validateCurrentValue(value: string) {
       const url = this.getURLInstance(value);
 
       // If the input is invalid, no URL can be constructed
@@ -232,10 +238,11 @@ export default {
         .toString()
         .replace(URL_REGEX.PROTOCOL, '')
         .replace(removeTrailingSlash, '')
+        // @ts-expect-error - filters is defined in options
         .replace(url.host, this.$options.filters.unicodeUri(url.host));
     },
 
-    changeMode(disabled) {
+    changeMode(disabled: boolean) {
       if (disabled) {
         return;
       }
@@ -244,8 +251,9 @@ export default {
       this.$emit('input', this.url);
     },
 
-    getURLInstance(value) {
+    getURLInstance(value: string) {
       try {
+        // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
         const url = value.match(URL_REGEX.PROTOCOL) ? value : `${this.urlPrefix}${value}`;
 
         return new URL(url);
@@ -256,17 +264,16 @@ export default {
       }
     },
 
-    getSSLMode(value) {
+    getSSLMode(value: string) {
+      // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
       return !!value.match(URL_REGEX.SSL);
     },
 
     setInvalidUrlError() {
-      // this.errorUrl = new ShopwareError({
-      //   code: 'INVALID_URL',
-      // });
+      console.error({ code: 'INVALID_URL' })
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

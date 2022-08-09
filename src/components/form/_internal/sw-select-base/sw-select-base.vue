@@ -1,13 +1,24 @@
 <template>
-  <sw-block-field-deprecated
+  <sw-base-field
     class="sw-select"
     :class="swFieldClasses"
     v-bind="$attrs"
     :disabled="disabled"
+    :has-focus="expanded"
+    :is-inherited="isInherited"
+    :is-inheritance-field="isInheritanceField"
+    :disable-inheritance-toggle="disableInheritanceToggle"
     v-on="$listeners"
   >
-    <!-- eslint-disable-next-line vue/no-template-shadow, vue/no-unused-vars -->
-    <template #sw-field-input="{ identification, error, disabled, size, setFocusClass, removeFocusClass }">
+    <template #label>
+      {{ label }}
+    </template>
+
+    <template #field-prefix>
+      <slot name="sw-select-prefix" />
+    </template>
+
+    <template #element="{ identification, error, size }">
       <div
         ref="selectWrapper"
         class="sw-select__selection"
@@ -32,20 +43,19 @@
             v-if="!disabled && showClearableButton"
             class="sw-select__select-indicator-hitbox"
             data-clearable-button
+            data-testid="select-clear-button"
             @click.prevent.stop="emitClear"
             @keydown.tab.stop="focusParentSelect"
           >
             <sw-icon
               class="sw-select__select-indicator sw-select__select-indicator-clear"
-              name="small-default-x-line-medium"
-              small
+              name="regular-times-xxs"
             />
           </button>
 
           <sw-icon
             class="sw-select__select-indicator"
-            name="small-arrow-medium-down"
-            small
+            name="regular-chevron-down-s"
           />
         </div>
       </div>
@@ -60,42 +70,111 @@
       </template>
     </template>
 
-    <template #label>
-      <slot name="label" />
+    <template #field-suffix>
+      <slot name="sw-select-suffix" />
     </template>
-  </sw-block-field-deprecated>
+
+    <template #field-hint>
+      <slot name="sw-select-hint" />
+    </template>
+
+    <template #error>
+      <sw-field-error
+        v-if="error"
+        :error="error"
+      />
+    </template>
+  </sw-base-field>
 </template>
 
-<script>
-import SwBlockFieldDeprecated from '../sw-block-field-deprecated/sw-block-field-deprecated.vue';
-import SwIcon from '../../../base/sw-icon/sw-icon.vue';
-import SwLoader from '../../../utils/sw-loader/sw-loader.vue';
+<script lang="ts">
+import Vue from 'vue';
+import SwBaseField from '../sw-base-field/sw-base-field.vue';
+import SwIcon from '../../../icons-media/sw-icon/sw-icon.vue';
+import SwLoader from '../../../feedback-indicator/sw-loader/sw-loader.vue';
+import SwFieldError from '../../_internal/sw-field-error/sw-field-error.vue';
 
-export default {
+export default Vue.extend({
   name: 'SwSelectBase',
 
   components: {
-    'sw-block-field-deprecated': SwBlockFieldDeprecated,
+    'sw-base-field': SwBaseField,
     'sw-icon': SwIcon,
     'sw-loader': SwLoader,
+    'sw-field-error': SwFieldError,
   },
 
   inheritAttrs: false,
 
   props: {
+    /**
+     * The label for the select field itself.
+     */
+    label: {
+      type: String,
+      required: true,
+    },
+
+    /**
+     * Toggles the loading state of the select field.
+     */
     isLoading: {
       type: Boolean,
       required: false,
       default: false,
     },
 
+    /**
+     * Disables or enables the select field.
+     */
     disabled: {
       type: Boolean,
       required: false,
       default: false,
     },
 
+    /**
+     * Toggles a button to clear all selections.
+     */
     showClearableButton: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    /**
+     * An error in your business logic related to this field.
+     *
+     * @example {"code": 500, "detail": "Error while saving"}
+     */
+    error: {
+      type: Object,
+      required: false,
+      default: null,
+    },
+
+    /**
+     * Toggles the inheritance visualization.
+     */
+    isInherited: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    /**
+     * Determines if the field is inheritable.
+     */
+    isInheritanceField: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    /**
+     * Determines the active state of the inheritance toggle.
+     */
+    disableInheritanceToggle: {
       type: Boolean,
       required: false,
       default: false,
@@ -109,7 +188,7 @@ export default {
   },
 
   computed: {
-    swFieldClasses() {
+    swFieldClasses(): { 'has--focus': boolean } {
       return { 'has--focus': this.expanded };
     },
   },
@@ -137,16 +216,18 @@ export default {
       this.$emit('select-expanded');
     },
 
-    collapse(event) {
+    collapse(event?: Event) {
       document.removeEventListener('click', this.listenToClickOutside);
       this.expanded = false;
 
+      // @ts-expect-error - target is set and contains dataset
       // do not let clearable button trigger change event
       if (event?.target?.dataset.clearableButton === undefined) {
         this.$emit('select-collapsed');
       }
 
-      // @see NEXT-16079 allow back tab-ing through form via SHIFT+TAB
+      // @ts-expect-error - event is a click event
+      // allow to step back through form via SHIFT+TAB
       if (event && event?.shiftKey) {
         event.preventDefault();
         this.focusPreviousFormElement();
@@ -158,34 +239,40 @@ export default {
       const myFocusable = this.$el.querySelector(focusableSelector);
       const keyboardFocusable = [
         ...document.querySelectorAll(focusableSelector),
+      // @ts-expect-error - target is set and contains dataset
       ].filter((el) => !el.hasAttribute('disabled') && el.dataset.clearableButton === undefined);
 
       keyboardFocusable.forEach((element, index) => {
         if (index > 0 && element === myFocusable) {
           const kbFocusable = keyboardFocusable[index - 1];
+          // @ts-expect-error - click exists on element
           kbFocusable.click();
+          // @ts-expect-error - focus exists on element
           kbFocusable.focus();
         }
       });
     },
 
-    listenToClickOutside(event) {
+    listenToClickOutside(event: Event) {
+      // @ts-expect-error - path exists in event
       let { path } = event;
       if (typeof path === 'undefined') {
         path = this.computePath(event);
       }
 
+      // @ts-expect-error - path contains elements
       if (!path.find((element) => element === this.$el)) {
         this.collapse();
       }
     },
 
-    computePath(event) {
+    computePath(event: Event) {
       const path = [];
       let { target } = event;
 
       while (target) {
         path.push(target);
+        // @ts-expect-error - parentElement exists on target
         target = target.parentElement;
       }
 
@@ -196,14 +283,15 @@ export default {
       this.$emit('clear');
     },
 
-    focusParentSelect(event) {
+    focusParentSelect(event: Event) {
       if (event && event?.shiftKey) {
+        // @ts-expect-error - ref selectWrapper is defined
         this.$refs.selectWrapper.click();
         event.preventDefault();
       }
     },
   },
-};
+});
 </script>
 
 <style lang="scss">
@@ -222,6 +310,7 @@ $sw-select-focus-transition: all ease-in-out 0.2s;
   }
 
   .sw-select__selection {
+    width: 100%;
     position: relative;
     padding: 0 8px;
     border: none;
@@ -245,10 +334,11 @@ $sw-select-focus-transition: all ease-in-out 0.2s;
   }
 
   .sw-select__selection-indicators .sw-loader {
-    position: static;
     width: 16px;
     height: 16px;
     margin: 0;
+    left: -24px;
+    top: -4px;
 
     .sw-loader__container {
       transform: none;

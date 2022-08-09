@@ -74,15 +74,16 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import SwInheritanceSwitch from '../sw-inheritance-switch/sw-inheritance-switch.vue';
 import SwFieldCopyable from '../sw-field-copyable/sw-field-copyable.vue';
-import SwHelpText from '../../../base/sw-help-text/sw-help-text.vue';
+import SwHelpText from '../../sw-help-text/sw-help-text.vue';
 import SwValidationMixin from '../../../../mixins/validation.mixin';
 import SwFormFieldMixin from '../../../../mixins/form-field.mixin';
 import { createId } from '../../../../utils/uuid';
 
-export default {
+export default Vue.extend({
   name: 'SwBaseField',
 
   components: {
@@ -211,7 +212,7 @@ export default {
   },
 
   computed: {
-    identification() {
+    identification(): string {
       if (this.name) {
         return this.name;
       }
@@ -219,17 +220,19 @@ export default {
       return `sw-field--${this.id}`;
     },
 
-    showLabel() {
+    showLabel(): boolean {
+      // @ts-expect-error - label exists on scopedSlots and if not we use optional chaining
       return !!this.$slots.label || !!this.$scopedSlots?.label?.();
     },
 
-    swFieldLabelClasses() {
+    swFieldLabelClasses(): { 'is--required': boolean } {
       return {
         'is--required': this.required,
       };
     },
 
-    classes() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    classes(): Array<any> {
       return [
         {
           'has--error': this.hasError,
@@ -241,15 +244,16 @@ export default {
       ];
     },
 
-    swBlockSize() {
+    swBlockSize(): string {
       return `sw-field--${this.size}`;
     },
 
-    hasError() {
-      return this.$slots.error || (this.$scopedSlots.error && this.$scopedSlots.error());
+    hasError(): boolean {
+      // @ts-expect-error - error method exists on scopedSlots
+      return this.$slots.error || !!(this.$scopedSlots.error && this.$scopedSlots.error());
     }
   }
-}
+});
 </script>
 
 <style lang="scss">
@@ -347,6 +351,10 @@ $sw-field-transition: border-color 0.3s ease-out, background 0.3s ease;
 
     .sw-field__addition {
       border-left: 1px solid $color-crimson-500;
+
+      &.is--prefix {
+        border-right: 1px solid $color-crimson-500;
+      }
     }
 
     .sw-block-field__block {

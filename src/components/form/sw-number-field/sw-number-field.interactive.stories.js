@@ -5,7 +5,7 @@ import defaultNumberFieldStory, { Default as Template } from './sw-number-field.
 
 export default {
   ...defaultNumberFieldStory,
-  title: 'Interaction Tests/form/sw-number-field',
+  title: 'Interaction Tests/Form/sw-number-field',
   component: SwNumberField,
 };
 

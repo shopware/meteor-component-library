@@ -5,7 +5,7 @@ import defaultEmailFieldStory, { Default as Template } from './sw-email-field.st
 
 export default {
   ...defaultEmailFieldStory,
-  title: 'Interaction Tests/form/sw-email-field',
+  title: 'Interaction Tests/Form/sw-email-field',
   component: SwEmailField,
 };
 

@@ -63,11 +63,12 @@
   </sw-base-field>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import SwTextField from '../sw-text-field/sw-text-field.vue';
 import SwBaseField from '../_internal/sw-base-field/sw-base-field.vue';
 
-export default {
+export default Vue.extend({
   name: 'SwEmailField',
 
   components: {
@@ -84,16 +85,19 @@ export default {
   },
 
   computed: {
-    computedError() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    computedError(): any {
       if (this.validationError) {
         return this.validationError;
       }
 
+      // @ts-expect-error - is defined in the extended field
       return this.error;
     },
   },
 
   mounted() {
+    // @ts-expect-error - is defined in the extended field
     if (!this.value) {
       return;
     }
@@ -113,16 +117,19 @@ export default {
     },
 
     checkValidity() {
+      // @ts-expect-error - ref is available
       if (this.$refs.input.checkValidity()) {
         this.validationError = null;
 
         return;
       }
 
+      // @ts-expect-error - validationError is defined in parent component
       this.validationError = {
+        // @ts-expect-error - ref is available
         detail: this.$refs.input.validationMessage,
       };
     }
   }
-};
+});
 </script>

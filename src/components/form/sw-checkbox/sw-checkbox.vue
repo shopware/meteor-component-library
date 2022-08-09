@@ -51,14 +51,15 @@
   </div>
 </template>
 
-<script>
-import SwIcon from '../../base/sw-icon/sw-icon.vue';
+<script lang="ts">
+import Vue from 'vue';
+import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 import SwBaseField from '../_internal/sw-base-field/sw-base-field.vue';
 import SwFieldError from '../_internal/sw-field-error/sw-field-error.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 import { createId } from '../../../utils/uuid';
 
-export default {
+export default Vue.extend({
   name: 'SwCheckbox',
 
   components: {
@@ -163,24 +164,29 @@ export default {
   },
 
   computed: {
-    swCheckboxFieldClasses() {
+    swCheckboxFieldClasses(): {
+      'has--error': boolean,
+      'is--disabled': boolean,
+      'is--inherited': boolean,
+      'is--bordered': boolean,
+    } {
       return {
-        'has--error': this.hasError,
+        'has--error': !!this.hasError,
         'is--disabled': this.disabled,
-        'is--inherited': this.isInherited,
+        'is--inherited': !!this.isInherited,
         'is--bordered': this.bordered,
       };
     },
 
-    identification() {
+    identification(): string {
       return `sw-field--${this.id}`;
     },
 
-    hasError() {
+    hasError(): boolean {
       return this.error && this.error.code !== 0;
     },
 
-    inputState() {
+    inputState(): boolean {
       if (this.isInherited) {
         return this.inheritedValue;
       }
@@ -188,21 +194,21 @@ export default {
       return this.currentValue || false;
     },
 
-    isInheritanceField() {
+    isInheritanceField(): boolean {
       if (this.$attrs.isInheritanceField) {
         return true;
       }
       return this.inheritedValue !== null;
     },
 
-    isInherited() {
+    isInherited(): boolean {
       if (this.$attrs.isInherited) {
         return true;
       }
       return this.isInheritanceField && this.currentValue === null;
     },
 
-    isDisabled() {
+    isDisabled(): boolean {
       return this.disabled || this.isInherited;
     },
   },
@@ -212,11 +218,12 @@ export default {
   },
 
   methods: {
-    onChange(changeEvent) {
+    onChange(changeEvent: Event) {
+      // @ts-expect-error - target is defined in the event
       this.$emit('change', changeEvent.target.checked);
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

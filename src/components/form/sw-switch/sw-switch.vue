@@ -45,13 +45,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import SwBaseField from '../_internal/sw-base-field/sw-base-field.vue';
 import SwFieldError from '../_internal/sw-field-error/sw-field-error.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
 import { createId } from '../../../utils/uuid';
 
-export default {
+export default Vue.extend({
   name: 'SwSwitch',
 
   components: {
@@ -137,11 +138,11 @@ export default {
   },
 
   computed: {
-    identification() {
+    identification(): string {
       return `sw-field--${this.id}`;
     },
 
-    inputState() {
+    inputState(): boolean {
       if (this.isInherited) {
         return this.inheritedValue;
       }
@@ -149,37 +150,40 @@ export default {
       return this.currentValue || false;
     },
 
-    isInheritanceField() {
+    isInheritanceField(): boolean {
       if (this.$attrs.isInheritanceField) {
         return true;
       }
       return this.inheritedValue !== null;
     },
 
-    isInherited() {
+    isInherited(): boolean {
       if (this.$attrs.isInherited) {
         return true;
       }
       return this.isInheritanceField && this.currentValue === null;
     },
 
-    hasError() {
+    hasError(): boolean {
       return this.error && this.error.code !== 0;
     },
 
-    swSwitchFieldClasses() {
+    swSwitchFieldClasses(): Array<Record<string, boolean>> {
       return [
         {
           'has--error': this.hasError,
           'sw-field--switch-bordered': this.bordered,
           'sw-field--switch-no-margin-top': this.removeTopMargin,
           'sw-field--switch-no-margin-bottom': this.hasError,
+          // @ts-expect-error - classes exist on checkbox field
           ...this.swCheckboxFieldClasses,
         },
       ];
     },
 
-    errorClasses() {
+    errorClasses(): Array<{
+      'sw-field__error--move-up': boolean;
+    }> {
       return [
         {
           'sw-field__error--move-up': !this.bordered,
@@ -187,7 +191,7 @@ export default {
       ];
     },
 
-    isDisabled() {
+    isDisabled(): boolean {
       return this.disabled || this.isInherited;
     },
   },
@@ -197,15 +201,16 @@ export default {
   },
 
   methods: {
-    onChange(changeEvent) {
+    onChange(changeEvent: Event) {
+      // @ts-expect-error - target exists on event
       this.$emit('change', changeEvent.target.checked);
     },
 
-    onInheritanceRestore(event) {
+    onInheritanceRestore(event: Event) {
       this.$emit('inheritance-restore', event);
     },
   },
-};
+});
 </script>
 
 <style lang="scss">
