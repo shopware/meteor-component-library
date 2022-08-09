@@ -1,4 +1,25 @@
 export default {
+  i18n: {
+    messages: {
+      en: {
+        'notification': {
+          success: 'Success',
+          info: 'Info',
+          warning: 'Warning',
+          error: 'Error',
+        }
+      },
+      de: {
+        'notification': {
+          success: 'Erfolg',
+          info: 'Info',
+          warning: 'Warnung',
+          error: 'Fehler',
+        }
+      }
+    },
+  },
+
   methods: {
     // eslint-disable-next-line no-unused-vars
     createNotification(notification) {

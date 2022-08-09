@@ -25,6 +25,34 @@ import { copyToClipboard as copyToClipboardUtil } from '../../../../utils/dom';
 export default Vue.extend({
   name: 'SwFieldCopyable',
 
+  // @ts-expect-error - i18n is a plugin. Will be added to global variables in NEXT-22728
+  i18n: {
+    messages: {
+      en: {
+        'sw-field-copyable': {
+          tooltip: {
+            wasCopied: 'Copied to clipboard.',
+            canCopy: 'Copy to clipboard.',
+            notificationCopySuccessMessage: 'Text has been copied to clipboard.',
+            notificationCopyFailureMessage: 'Text could not be copied to clipboard.',
+            errorTitle: 'Error copying to clipboard',
+          }
+        }
+      },
+      de: {
+        'sw-field-copyable': {
+          tooltip: {
+            wasCopied: 'In Zwischenablage kopiert.',
+            canCopy: 'In Zwischenablage kopieren.',
+            notificationCopySuccessMessage: 'Der Text wurde in die Zwischenablage kopiert.',
+            notificationCopyFailureMessage: 'Der Text konnte nicht in die Zwischenablage kopiert werden.',
+            errorTitle: 'Fehler beim kopieren in die Zwischenablage',
+          }
+        }
+      }
+    }
+  },
+
   directives: {
     tooltip: SwTooltipDirective,
   },
@@ -61,11 +89,11 @@ export default Vue.extend({
     tooltipText(): string {
       if (this.wasCopied) {
         // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
-        return this.$tc('global.sw-field-copyable.tooltip.wasCopied');
+        return this.$tc('sw-field-copyable.tooltip.wasCopied');
       }
 
       // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
-      return this.$tc('global.sw-field-copyable.tooltip.canCopy');
+      return this.$tc('sw-field-copyable.tooltip.canCopy');
     },
   },
 
@@ -86,9 +114,9 @@ export default Vue.extend({
         // @ts-expect-error - method is defined in mixin
         this.createNotificationError({
           // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
-          title: this.$tc('global.default.error'),
+          title: this.$tc('sw-field-copyable.errorTitle'),
           // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
-          message: this.$tc('global.sw-field.notification.notificationCopyFailureMessage'),
+          message: this.$tc('sw-field-copyable.notificationCopyFailureMessage'),
         });
       }
     },
@@ -101,7 +129,7 @@ export default Vue.extend({
       // @ts-expect-error - method is defined in mixin
       this.createNotificationInfo({
         // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
-        message: this.$tc('global.sw-field.notification.notificationCopySuccessMessage'),
+        message: this.$tc('sw-field-copyable.notificationCopySuccessMessage'),
       });
     },
 
