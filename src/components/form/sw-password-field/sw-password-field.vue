@@ -42,7 +42,7 @@
         >
         <span
           v-if="passwordToggleAble"
-          :title="showPassword ? $tc('global.sw-field.titleHidePassword') : $tc('global.sw-field.titleShowPassword')"
+          :title="showPassword ? $tc('sw-password-field.titleHidePassword') : $tc('sw-password-field.titleShowPassword')"
           class="sw-field__toggle-password-visibility"
           @click="onTogglePasswordVisibility(disabled)"
         >
@@ -86,6 +86,24 @@ import SwTextField from '../sw-text-field/sw-text-field.vue';
 
 export default Vue.extend({
   name: 'SwPasswordField',
+
+  // @ts-expect-error - i18n is a plugin. Will be added to global variables in NEXT-22728
+  i18n: {
+    messages: {
+      en: {
+        'sw-password-field': {
+          titleHidePassword: 'Hide password',
+          titleShowPassword: 'Show password',
+        }
+      },
+      de: {
+        'sw-password-field': {
+          titleHidePassword: 'Passwort verbergen',
+          titleShowPassword: 'Passwort anzeigen',
+        }
+      }
+    },
+  },
 
   components: {
     'sw-base-field': SwBaseField,

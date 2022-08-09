@@ -47,7 +47,7 @@
         ref="swSelectResultList"
         :options="visibleResults"
         :is-loading="isLoading"
-        :empty-message="$tc('global.sw-multi-select.messageNoResults', 0, { term: searchTerm })"
+        :empty-message="$tc('sw-select.messageNoResults', 0, { term: searchTerm })"
         :focus-el="$refs.selectionList.getFocusEl()"
         @paginate="$emit('paginate')"
         @item-select="addItem"
@@ -113,6 +113,23 @@ import SwHighlightText from '../../_internal/sw-highlight-text.vue';
 
 export default Vue.extend({
   name: 'SwSelect',
+
+  // @ts-expect-error - i18n is a plugin. Will be added to global variables in NEXT-22728
+  i18n: {
+    messages: {
+      en: {
+        'sw-select': {
+          foo: 'FOO',
+          messageNoResults: 'No results found for "{term}".',
+        }
+      },
+      de: {
+        'sw-select': {
+          messageNoResults: 'Es wurden keine Ergebnisse für "{term}" gefunden.',
+        }
+      }
+    },
+  },
 
   components: {
     'sw-select-base': SwSelectBase,
@@ -245,7 +262,7 @@ export default Vue.extend({
       type: Function,
       required: false,
       default({ options, labelProperty, searchTerm }
-             :{ options: any, labelProperty: string, searchTerm: string }) 
+             :{ options: any, labelProperty: string, searchTerm: string })
       {
         return options.filter((option: any) => {
           const label = this.getKey(option, labelProperty);
@@ -361,6 +378,10 @@ export default Vue.extend({
     valueLimit(value) {
       this.limit = value;
     },
+  },
+
+  created() {
+    console.log(this.$tc('sw-select.messageNoResults'))
   },
 
   methods: {

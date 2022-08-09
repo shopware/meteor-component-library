@@ -48,6 +48,22 @@ import SwIcon from '../../../../icons-media/sw-icon/sw-icon.vue';
 export default Vue.extend({
   name: 'SwSelectResultList',
 
+  // @ts-expect-error - i18n is a plugin. Will be added to global variables in NEXT-22728
+  i18n: {
+    messages: {
+      en: {
+        'sw-select-result-list': {
+          messageNoResults: 'No results found.',
+        }
+      },
+      de: {
+        'sw-select-result-list': {
+          messageNoResults: 'Es wurden keine Ergebnisse gefunden.',
+        }
+      }
+    },
+  },
+
   components: {
     'sw-popover': SwPopover,
     'sw-icon': SwIcon,
@@ -110,7 +126,7 @@ export default Vue.extend({
   computed: {
     emptyMessageText(): string {
       // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
-      return this.emptyMessage || this.$tc('global.sw-select-result-list.messageNoResults');
+      return this.emptyMessage || this.$tc('sw-select-result-list.messageNoResults');
     },
 
     popoverClass(): Array<string> {
