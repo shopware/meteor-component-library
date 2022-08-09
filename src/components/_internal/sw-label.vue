@@ -32,11 +32,12 @@
   </span>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import SwIcon from '../icons-media/sw-icon/sw-icon.vue';
 import SwColorBadge from '../feedback-indicator/sw-color-badge/sw-color-badge.vue';
 
-export default {
+export default Vue.extend({
   name: 'SwLabel',
 
   components: {
@@ -46,10 +47,9 @@ export default {
 
   props: {
     variant: {
-      type: String,
+      type: String as PropType<'info'|'danger'|'success'|'warning'|'neutral'|'primary'>,
       required: false,
       default: '',
-      validValues: ['info', 'danger', 'success', 'warning', 'neutral', 'primary'],
       validator(value) {
         if (!value.length) {
           return true;
@@ -58,19 +58,17 @@ export default {
       },
     },
     size: {
-      type: String,
+      type: String as PropType<'small'|'medium'|'default'>,
       required: false,
       default: 'default',
-      validValues: ['small', 'medium', 'default'],
       validator(value) {
         return ['small', 'medium', 'default'].includes(value);
       },
     },
     appearance: {
-      type: String,
+      type: String as PropType<'default'|'pill'|'circle'|'badged'>,
       required: false,
       default: 'default',
-      validValues: ['default', 'pill', 'circle', 'badged'],
       validator(value) {
         return ['default', 'pill', 'circle', 'badged'].includes(value);
       },
@@ -93,24 +91,28 @@ export default {
   },
 
   computed: {
-    labelClasses() {
+    labelClasses(): Array<string | {
+        [x: string]: boolean;
+        'sw-label--dismissable': boolean;
+        'sw-label--ghost': boolean;
+        'sw-label--caps': boolean;
+    }> {
       return [
         `sw-label--appearance-${this.appearance}`,
         `sw-label--size-${this.size}`,
         {
-          [`sw-label--${this.variant}`]: this.variant,
+          [`sw-label--${this.variant}`]: !!this.variant,
           'sw-label--dismissable': this.showDismissable,
           'sw-label--ghost': this.ghost,
           'sw-label--caps': this.caps,
-          'sw-label--light': this.light,
         },
       ];
     },
-    showDismissable() {
+    showDismissable(): boolean {
       return !!this.$listeners.dismiss && this.dismissable;
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

@@ -200,12 +200,13 @@
   </sw-base-field>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import { debounce } from 'lodash-es';
-import SwBaseField from "../_internal/sw-base-field/sw-base-field";
+import SwBaseField from "../_internal/sw-base-field/sw-base-field.vue";
 import SwPopover from '../../_internal/sw-popover/sw-popover.vue';
 
-export default {
+export default Vue.extend({
   name: 'SwColorpicker',
 
   components: {
@@ -246,15 +247,9 @@ export default {
    * @values auto, hex, hsl, rgb
    */
     colorOutput: {
-      type: String,
+      type: String as PropType<'auto'|'hex'|'hsl'|'rgb'>,
       required: false,
       default: 'auto',
-      validValues: [
-        'auto',
-        'hex',
-        'hsl',
-        'rgb',
-      ],
     },
 
     /**
@@ -330,12 +325,11 @@ export default {
     },
 
     zIndex: {
-      type: [Number, null],
+      type: [Number, null] as PropType<number|null>,
       required: false,
       default: null,
     },
 
-    // TODO: Add tests for error
     /**
      * An error in your business logic related to this field.
      *
@@ -357,7 +351,17 @@ export default {
     },
   },
 
-  data() {
+  data(): {
+    localValue: string|{ string: string; red: string; green: string; blue: string; alpha?: string; },
+    visible: boolean,
+    isDragging: boolean,
+    userInput: null,
+    luminanceValue: number,
+    saturationValue: number,
+    hueValue: number,
+    alphaValue: number,
+    hasFocus: boolean,
+  } {
     return {
       localValue: this.value,
       visible: false,
@@ -373,103 +377,132 @@ export default {
 
   computed: {
     colorValue: {
-      get() {
+      get(): string|{ string: string; red: string; green: string; blue: string; alpha?: string; } {
         return this.localValue;
       },
 
-      set(newColor) {
+      set(newColor: { string: string; red: string; green: string; blue: string; alpha?: string; }): void {
         this.localValue = newColor;
         this.debounceEmitColorValue();
       },
     },
 
     integerAlpha: {
-      get() {
+      get(): number {
         return Math.floor(this.alphaValue * 100);
       },
 
-      set(newAlphaValue) {
+      set(newAlphaValue: number): void {
         this.alphaValue = newAlphaValue / 100;
       },
     },
 
-    sliderBackground() {
+    sliderBackground(): string {
       // eslint-disable-next-line max-len
       return `linear-gradient(90deg, hsla(${this.hueValue}, ${this.saturationValue}%, ${this.luminanceValue}%, 0), hsl(${this.hueValue}, ${this.saturationValue}%, ${this.luminanceValue}%)), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' width='100%25' height='100%25'%3E%3Crect width='10' height='10' x='00' y='00' fill='%23cdd5db' /%3E%3Crect width='10' height='10' x='10' y='10' fill='%23cdd5db' /%3E%3C/svg%3E")`;
     },
 
-    isColorValid() {
-      return /^rgb/.test(this.colorValue) || /^hsl/.test(this.colorValue)
+    isColorValid(): boolean {
+      if (typeof this.colorValue === 'string') {
+        return /^rgb/.test(this.colorValue) || /^hsl/.test(this.colorValue)
         || /^#/.test(this.colorValue);
+      }
+
+      return /^rgb/.test(this.colorValue.string) || /^hsl/.test(this.colorValue.string)
+        || /^#/.test(this.colorValue.string);
     },
 
-    previewColorValue() {
+    previewColorValue(): string {
       if (!this.isColorValid) {
         return 'transparent';
       }
 
-      return this.colorValue;
+      return typeof this.colorValue === 'string' ? this.colorValue : this.colorValue.string;
     },
 
-    selectorBackground() {
+    selectorBackground(): string {
       return `hsl(${this.hueValue}, 100%, 50%)`;
     },
 
     redValue: {
-      get() {
-        return this.convertHSLtoRGB(
+      get(): number {
+        const value = this.convertHSLtoRGB(
           this.hueValue,
           this.saturationValue,
           this.luminanceValue,
           this.alphaValue,
-        ).red;
+        );
+
+        if (typeof value !== 'string') {
+          return Number(value.red);
+        }
+
+        return Number(value);
       },
 
-      set(newRedValue) {
+      set(newRedValue: number): void {
         this.setSingleRGBValue(newRedValue, 'red');
       },
     },
 
     greenValue: {
-      get() {
-        return this.convertHSLtoRGB(
+      get(): number {
+        const value = this.convertHSLtoRGB(
           this.hueValue,
           this.saturationValue,
           this.luminanceValue,
           this.alphaValue,
-        ).green;
+        );
+
+        if (typeof value !== 'string') {
+          return Number(value.green);
+        }
+
+        return Number(value);
       },
 
-      set(newGreenValue) {
+      set(newGreenValue: number): void {
         this.setSingleRGBValue(newGreenValue, 'green');
       },
     },
 
     blueValue: {
-      get() {
-        return this.convertHSLtoRGB(
+      get(): number {
+        const value = this.convertHSLtoRGB(
           this.hueValue,
           this.saturationValue,
           this.luminanceValue,
           this.alphaValue,
-        ).blue;
+        );
+
+        if (typeof value !== 'string') {
+          return Number(value.blue);
+        }
+
+        return Number(value);
       },
 
-      set(newBlueValue) {
+      set(newBlueValue: number): void {
         this.setSingleRGBValue(newBlueValue, 'blue');
       },
     },
 
-    rgbValue() {
-      return this.convertHSLtoRGB(
+    rgbValue(): string {
+      const value = this.convertHSLtoRGB(
         Math.abs(this.hueValue),
         Math.abs(this.saturationValue),
         Math.abs(this.luminanceValue),
         Math.abs(this.alphaValue),
-      ).string;
+      );
+
+      if (typeof value !== 'string') {
+        return value.string;
+      }
+
+      return value;
     },
 
-    hslValue() {
+    hslValue(): string {
       const hue = Math.abs(Math.floor(this.hueValue));
       const saturation = Math.abs(Math.floor(this.saturationValue));
       const luminance = Math.abs(Math.floor(this.luminanceValue));
@@ -483,7 +516,13 @@ export default {
     },
 
     hexValue: {
-      get() {
+      get(): string | {
+        string: string;
+        red: string;
+        green: string;
+        blue: string;
+        alpha?: string | undefined;
+    } {
         if (this.alphaValue < 1) {
           return this.convertHSLtoHEX(
             this.hueValue,
@@ -496,7 +535,7 @@ export default {
         return this.convertHSLtoHEX(this.hueValue, this.saturationValue, this.luminanceValue);
       },
 
-      set(newValue) {
+      set(newValue: string): void {
         // checking if the new value is an actual hex value
         const newHexValue = newValue;
         const validHexCharacters = /^#[0-9a-f]{3,8}/i;
@@ -519,7 +558,13 @@ export default {
       },
     },
 
-    convertedValue() {
+    convertedValue(): string|{
+      string: string;
+      red: string;
+      green: string;
+      blue: string;
+      alpha?: string;
+    } {
       switch (this.colorOutput) {
         case 'auto': {
           return this.alphaValue < 1 ? this.rgbValue : this.hexValue;
@@ -540,17 +585,21 @@ export default {
       }
     },
 
-    selectorPositionX() {
+    selectorPositionX(): string {
       const offsetX = 9;
       return `calc(${this.saturationValue}% - ${offsetX}px)`;
     },
 
-    selectorPositionY() {
+    selectorPositionY(): string {
       const offsetY = 9;
       return `calc(${Math.abs(this.luminanceValue - 100)}% - ${offsetY}px)`;
     },
 
-    selectorStyles() {
+    selectorStyles(): {
+      backgroundColor: string;
+      top: string;
+      left: string;
+    } {
       return {
         backgroundColor: this.hslValue,
         top: this.selectorPositionY,
@@ -575,9 +624,13 @@ export default {
 
       const color = this.colorValue;
 
-      if (/^#/.test(color)) {
+      if (/^#/.test(typeof color === 'string' ? color : color.string)) {
         // if color is a hex value
-        const convertedHSLValue = this.convertHEXtoHSL(this.colorValue);
+        const convertedHSLValue = this.convertHEXtoHSL(typeof this.colorValue === 'string' ? this.colorValue : this.colorValue.string);
+
+        if (!convertedHSLValue) {
+          return;
+        }
 
         this.setHslaValues(
           convertedHSLValue.hue,
@@ -585,9 +638,9 @@ export default {
           convertedHSLValue.luminance,
           convertedHSLValue.alpha,
         );
-      } else if (/^rgb/.test(color)) {
+      } else if (/^rgb/.test(typeof color === 'string' ? color : color.string)) {
         // if color is a rgb value
-        const rgbValues = this.splitRGBValues(this.colorValue);
+        const rgbValues = this.splitRGBValues(typeof this.colorValue === 'string' ? this.colorValue : this.colorValue.string);
         const convertedHSLValue = this.convertRGBtoHSL(rgbValues.red, rgbValues.green, rgbValues.blue);
 
         this.setHslaValues(
@@ -596,9 +649,9 @@ export default {
           convertedHSLValue.luminance,
           rgbValues.alpha,
         );
-      } else if (/^hsl/.test(color)) {
+      } else if (/^hsl/.test(typeof color === 'string' ? color : color.string)) {
         // if color is an hsl value
-        const hslValues = this.splitHSLValues(this.colorValue);
+        const hslValues = this.splitHSLValues(typeof this.colorValue === 'string' ? this.colorValue : this.colorValue.string);
 
         this.setHslaValues(
           hslValues.hue,
@@ -610,28 +663,27 @@ export default {
     },
   },
 
-  beforeDestroy() {
-    this.componentBeforeDestroy();
+  beforeDestroy(): void {
+    window.removeEventListener('mousedown', this.outsideClick);
   },
 
   methods: {
-    componentBeforeDestroy() {
-      window.removeEventListener('mousedown', this.outsideClick);
-    },
-
     debounceEmitColorValue: debounce(function emitValue() {
       /**
        * Emits the selected color value
        * @property {string} this.colorValue the new color value
        */
+      // @ts-expect-error - this context is wrong detected
       this.$emit('input', this.colorValue);
     }, 50),
 
-    outsideClick(e) {
+    outsideClick(e: Event) {
+      // @ts-expect-error - target exists
       if (/^sw-colorpicker__preview/.test(e.target.classList[0])) {
         return;
       }
 
+      // @ts-expect-error - target exists
       const isColorpicker = e.target.closest('.sw-colorpicker__colorpicker');
 
       if (isColorpicker !== null) {
@@ -666,11 +718,12 @@ export default {
       this.removeOutsideClickEvent();
     },
 
-    moveSelector(event) {
+    moveSelector(event: MouseEvent) {
       if (!this.isDragging) {
         return;
       }
 
+      // @ts-expect-error - colorPicker exists
       const colorpickerLocation = this.$refs.colorPicker.getBoundingClientRect();
       const cursorX = event.clientX - colorpickerLocation.left;
       const cursorY = event.clientY - colorpickerLocation.top;
@@ -701,7 +754,7 @@ export default {
       this.luminanceValue = Math.floor(correctedYValue);
     },
 
-    setDragging(event) {
+    setDragging(event: MouseEvent) {
       document.body.style.userSelect = 'none';
       this.isDragging = true;
       this.moveSelector(event);
@@ -711,6 +764,7 @@ export default {
     },
 
     removeDragging() {
+      // @ts-expect-error - userSelect exists
       document.body.style.userSelect = null;
       this.isDragging = false;
 
@@ -718,7 +772,7 @@ export default {
       window.removeEventListener('mouseup', this.removeDragging);
     },
 
-    setSingleRGBValue(newColorValue, type) {
+    setSingleRGBValue(newColorValue: number, type: 'red'|'green'|'blue') {
       const validTypes = ['red', 'green', 'blue'];
 
       if (validTypes.indexOf(type) === -1) {
@@ -744,21 +798,26 @@ export default {
       this.setHslaValues(hslValue.hue, hslValue.saturation, hslValue.luminance, this.alphaValue);
     },
 
-    setHslaValues(hue, saturation, luminance, alpha) {
+    setHslaValues(hue: number, saturation: number, luminance: number, alpha?: number) {
       this.hueValue = hue;
       this.luminanceValue = luminance;
       this.saturationValue = saturation;
       this.alphaValue = !alpha ? 1 : alpha;
     },
 
-    splitRGBValues(rgbString) {
+    splitRGBValues(rgbString: string) {
       const rgbValues = rgbString.slice(rgbString.indexOf('(') + 1, rgbString.length - 1).split(', ');
 
       const red = Number(rgbValues[0]);
       const green = Number(rgbValues[1]);
       const blue = Number(rgbValues[2]);
 
-      const returnValue = {
+      const returnValue: {
+        red: number,
+        green: number,
+        blue: number,
+        alpha?: number
+      } = {
         red,
         green,
         blue,
@@ -771,16 +830,21 @@ export default {
       return returnValue;
     },
 
-    splitHSLValues(hslString) {
+    splitHSLValues(hslString: string) {
       const hslValue = hslString.slice(hslString.indexOf('(') + 1, hslString.length - 1).split(', ');
 
       // Removing the '%' character in string
       const hue = Number(hslValue[0]);
       const saturation = Number(hslValue[1].slice(0, hslValue[1].length - 1));
       const luminance = Number(hslValue[2].slice(0, hslValue[2].length - 1));
-      const alpha = hslValue[3] || hslValue[3] === 0 ? Number(hslValue[3]) : undefined;
+      const alpha = hslValue[3] || Number(hslValue[3]) === 0 ? Number(hslValue[3]) : undefined;
 
-      const returnValue = {
+      const returnValue: {
+        hue: number,
+        saturation: number,
+        luminance: number,
+        alpha?: number
+      } = {
         hue,
         saturation,
         luminance,
@@ -793,7 +857,12 @@ export default {
       return returnValue;
     },
 
-    convertHSLtoRGB(previousHue, previousSaturation, previousLuminance, previousAlpha) {
+    convertHSLtoRGB(
+      previousHue: number,
+      previousSaturation: number,
+      previousLuminance: number,
+      previousAlpha: number
+    ) {
       const hsla = {
         hue: previousHue,
         saturation: previousSaturation,
@@ -804,7 +873,18 @@ export default {
       return this.convertHSL('rgb', hsla);
     },
 
-    convertHSLtoHEX(previousHue, previousSaturation, previousLuminance, previousAlpha) {
+    convertHSLtoHEX(
+      previousHue: number,
+      previousSaturation: number,
+      previousLuminance: number,
+      previousAlpha?: number
+    ): string | {
+        string: string;
+        red: string;
+        green: string;
+        blue: string;
+        alpha?: string | undefined;
+    } {
       const hsla = {
         hue: previousHue,
         saturation: previousSaturation,
@@ -815,10 +895,28 @@ export default {
       return this.convertHSL('hex', hsla);
     },
 
-    convertHSL(mode, color) {
+    convertHSL(
+      mode: 'hex'|'rgb',
+      color: {
+        hue: number,
+        saturation: number,
+        luminance: number,
+        alpha?: number|string
+    }): {
+      string: string;
+      red: string;
+      green: string;
+      blue: string;
+      alpha?: string;
+    }|string {
       const validModes = ['hex', 'rgb'];
       if (!validModes.includes(mode)) {
-        return {};
+        return {
+          string: '',
+          red: '',
+          green: '',
+          blue: '',
+        };
       }
 
       // eslint-disable-next-line prefer-const
@@ -832,9 +930,9 @@ export default {
       const chroma = (1 - Math.abs(2 * luminance - 1)) * saturation;
       const x = chroma * (1 - Math.abs(((hue / 60) % 2) - 1));
       const m = luminance - chroma / 2;
-      let red = 0;
-      let green = 0;
-      let blue = 0;
+      let red: number|string = 0;
+      let green: number|string = 0;
+      let blue: number|string = 0;
 
       if (hue >= 0 && hue < 60) {
         red = chroma; green = x; blue = 0;
@@ -875,6 +973,7 @@ export default {
           return `#${red}${green}${blue}`;
         }
 
+        // @ts-expect-error - alpha cant be converted to number beforehand
         // convert alpha into hex value
         alpha = Math.round(alpha * 255).toString(16);
 
@@ -885,35 +984,48 @@ export default {
         return `#${red}${green}${blue}${alpha}`;
       }
 
-      const rgbValue = {
+      const rgbValue: {
+        string: string,
+        red: string,
+        green: string,
+        blue: string,
+        alpha?: string,
+      } = {
         string: `rgb(${red}, ${green}, ${blue})`,
-        red,
-        green,
-        blue,
+        red: typeof red === 'string' ? red : red.toString(),
+        green: typeof green === 'string' ? green : green.toString(),
+        blue: typeof blue === 'string' ? blue : blue.toString(),
+        alpha: undefined,
       };
 
       if (alpha !== 1) {
         rgbValue.string = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
-        rgbValue.alpha = alpha;
+        if (typeof alpha === 'string' ) {
+          rgbValue.alpha = alpha;
+        } else if (alpha !== undefined) {
+          rgbValue.alpha = alpha.toString();
+        } else {
+          rgbValue.alpha = alpha;
+        }
       }
 
       return rgbValue;
     },
 
-    convertRGBtoHSL(previousRed, previousGreen, previousBlue) {
+    convertRGBtoHSL(previousRed: number, previousGreen: number, previousBlue: number) {
       let red = previousRed;
       let green = previousGreen;
       let blue = previousBlue;
 
-      if (/^-/.test(red)) {
+      if (/^-/.test(red.toString())) {
         red = Math.abs(red);
       }
 
-      if (/^-/.test(blue)) {
+      if (/^-/.test(blue.toString())) {
         blue = Math.abs(blue);
       }
 
-      if (/^-/.test(green)) {
+      if (/^-/.test(green.toString())) {
         green = Math.abs(green);
       }
 
@@ -966,13 +1078,13 @@ export default {
       };
     },
 
-    convertHEXtoHSL(previousHex) {
+    convertHEXtoHSL(previousHex: string) {
       const hex = previousHex;
 
       // Convert hex to RGB first
-      let red = 0;
-      let green = 0;
-      let blue = 0;
+      let red: number|string = 0;
+      let green: number|string = 0;
+      let blue: number|string = 0;
       let alpha;
 
       if (hex.length !== 5 && hex.length !== 9 && hex.length !== 4 && hex.length !== 7) {
@@ -1002,12 +1114,15 @@ export default {
       }
 
       // Then to HSL
+      // @ts-expect-error - can be calculated
       red /= 255;
+      // @ts-expect-error - can be calculated
       green /= 255;
+      // @ts-expect-error - can be calculated
       blue /= 255;
 
-      const cmin = Math.min(red, green, blue);
-      const cmax = Math.max(red, green, blue);
+      const cmin = Math.min(Number(red), Number(green), Number(blue));
+      const cmax = Math.max(Number(red), Number(green), Number(blue));
       const delta = cmax - cmin;
 
       let hue = 0;
@@ -1017,11 +1132,11 @@ export default {
       if (delta === 0) {
         hue = 0;
       } else if (cmax === red) {
-        hue = ((green - blue) / delta) % 6;
+        hue = ((Number(green) - Number(blue)) / delta) % 6;
       } else if (cmax === green) {
-        hue = (blue - red) / delta + 2;
+        hue = (Number(blue) - Number(red)) / delta + 2;
       } else {
-        hue = (red - green) / delta + 4;
+        hue = (Number(red) - Number(green)) / delta + 4;
       }
 
       hue = Math.round(hue * 60);
@@ -1035,19 +1150,24 @@ export default {
       saturation = +(saturation * 100).toFixed(1);
       luminance = +(luminance * 100).toFixed(1);
 
-      const hslValue = {
+      const hslValue: {
+        string: string,
+        hue: number,
+        saturation: number,
+        luminance: number,
+        alpha?: number
+      } = {
         string: `hsl(${hue}, ${saturation}%, ${luminance}%)`,
         hue,
         saturation,
         luminance,
+        alpha: undefined,
       };
 
-      if (alpha !== 1) {
-        hslValue.string = `hsla(${hue}, ${saturation}%, ${luminance}, ${alpha}%)`;
+      hslValue.string = `hsla(${hue}, ${saturation}%, ${luminance}, ${alpha}%)`;
 
-        alpha = Number((alpha / 255).toFixed(2));
-        hslValue.alpha = alpha;
-      }
+      alpha = Number((Number(alpha) / 255).toFixed(2));
+      hslValue.alpha = alpha;
 
       return hslValue;
     },
@@ -1068,7 +1188,7 @@ export default {
       this.hasFocus = false;
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

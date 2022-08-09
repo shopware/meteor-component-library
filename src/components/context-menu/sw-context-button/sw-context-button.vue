@@ -41,12 +41,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 import SwPopover from '../../_internal/sw-popover/sw-popover.vue';
 import SwContextMenu from '../sw-context-menu/sw-context-menu.vue';
 
-export default {
+export default Vue.extend({
   name: 'SwContextButtonVue',
 
   components: {
@@ -119,7 +120,7 @@ export default {
     },
 
     additionalContextMenuClasses: {
-      type: Object,
+      type: Object as PropType<Record<string, boolean>>,
       required: false,
       default() {
         return {};
@@ -146,13 +147,17 @@ export default {
   },
 
   computed: {
-    menuStyles() {
+    menuStyles(): { width: string } {
       return {
         width: `${this.menuWidth}px`,
       };
     },
 
-    contextClass() {
+    contextClass(): {
+      'is--disabled': boolean;
+      'is--active': boolean;
+      'has--error': boolean;
+    } {
       return {
         'is--disabled': this.disabled,
         'is--active': this.showMenu,
@@ -160,13 +165,19 @@ export default {
       };
     },
 
-    contextButtonClass() {
+    contextButtonClass(): {
+      'is--active': boolean;
+    } {
       return {
         'is--active': this.showMenu,
       };
     },
 
-    contextMenuClass() {
+    contextMenuClass(): {
+      'is--left-align': boolean;
+      'is--top-align': boolean;
+      [key: string]: boolean;
+    } {
       return {
         'is--left-align': this.menuHorizontalAlign === 'left',
         'is--top-align': this.menuVerticalAlign === 'top',
@@ -193,9 +204,9 @@ export default {
       document.addEventListener('click', this.handleClickEvent);
     },
 
-    handleClickEvent(event) {
+    handleClickEvent(event: MouseEvent) {
       // when target is disabled dont close the context menu item
-      const isTargetDisabled = event && event.target.classList.contains('is--disabled');
+      const isTargetDisabled = event && event.target && (event.target as Element).classList.contains('is--disabled');
       if (isTargetDisabled) {
         return false;
       }
@@ -207,8 +218,9 @@ export default {
       }
 
       // check if the user clicked inside the context menu
-      const clickedInside = contextButton ? contextButton.contains(event.target) : false;
+      const clickedInside = contextButton ? (contextButton as Element).contains((event.target as Element)) : false;
       if (this.autoCloseOutsideClick && this.showMenu && !clickedInside) {
+        // @ts-expect-error - swContextMenu exists
         const contextMenu = this.$refs.swContextMenu.$el;
         const clickedOutside = contextMenu?.contains(event.target) ?? false;
 
@@ -233,7 +245,7 @@ export default {
       document.removeEventListener('click', this.handleClickEvent);
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

@@ -81,11 +81,12 @@
   </sw-base-field>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import SwTextField from '../sw-text-field/sw-text-field.vue';
-import SwIcon from '../../icons-media/sw-icon/sw-icon';
+import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 
-export default {
+export default Vue.extend({
   name: 'SwNumberField',
 
   components: {
@@ -101,10 +102,9 @@ export default {
      * Defines if the number should be a floating point number or integer.
      */
     numberType: {
-      type: String,
+      type: String as PropType<'float'|'int'>,
       required: false,
       default: 'float',
-      validValues: ['float', 'int'],
       validator(value) {
         return ['float', 'int'].includes(value);
       },
@@ -191,7 +191,7 @@ export default {
   },
 
   computed: {
-    realStep() {
+    realStep(): number {
       if (this.step === null) {
         return this.numberType === 'int' ? 1 : 0.01;
       }
@@ -199,14 +199,14 @@ export default {
       return (this.numberType === 'int') ? Math.round(this.step) : this.step;
     },
 
-    realMinimum() {
+    realMinimum(): number|null {
       if (this.min === null) {
         return null;
       }
       return (this.numberType === 'int') ? Math.ceil(this.min) : this.min;
     },
 
-    realMaximum() {
+    realMaximum(): number|null {
       if (this.max === null) {
         return null;
       }
@@ -214,19 +214,27 @@ export default {
       return (this.numberType === 'int') ? Math.floor(this.max) : this.max;
     },
 
-    stringRepresentation() {
+    stringRepresentation(): string {
+      // @ts-expect-error - defined in parent
       if (this.currentValue === null) {
         return '';
       }
 
       return this.fillDigits && this.numberType !== 'int'
+      // @ts-expect-error - defined in parent
         ? this.currentValue.toFixed(this.digits)
+        // @ts-expect-error - defined in parent
         : this.currentValue.toString();
     },
 
-    controlClasses() {
+    controlClasses(): {
+      disabled: boolean;
+      error: boolean;
+    } {
       return {
+        // @ts-expect-error - defined in parent
         disabled: this.disabled,
+        // @ts-expect-error - defined in parent
         error: !!this.error
       }
     },
@@ -236,6 +244,7 @@ export default {
     value: {
       handler() {
         if (this.value === null || this.value === undefined) {
+          // @ts-expect-error - defined in parent
           this.currentValue = null;
           return;
         }
@@ -247,12 +256,15 @@ export default {
   },
 
   methods: {
-    onChange(event) {
+    onChange(event: Event) {
+      // @ts-expect-error - target exists
       this.computeValue(event.target.value);
+      // @ts-expect-error - defined in parent
       this.$emit('change', this.currentValue);
     },
 
-    onInput(event) {
+    onInput(event: Event) {
+      // @ts-expect-error - target exists
       let val = Number.parseFloat(event.target.value);
 
       if (val !== Number.NaN) {
@@ -268,10 +280,12 @@ export default {
     },
 
     increaseNumberByStep() {
+      // @ts-expect-error - defined in parent
       if (this.disabled) {
         return;
       }
 
+      // @ts-expect-error - defined in parent
       this.upControlClasses = {
         'sw-icon--toggled': true,
       };
@@ -280,20 +294,25 @@ export default {
         window.clearTimeout(this.upHandler);
       }
 
+      // @ts-expect-error - defined in parent
       this.upHandler = window.setTimeout(() => {
+        // @ts-expect-error - defined in parent
         this.upControlClasses = {};
       }, 100);
 
-
+      // @ts-expect-error - defined in parent
       this.computeValue((this.currentValue + this.realStep).toString());
+      // @ts-expect-error - defined in parent
       this.$emit('change', this.currentValue);
     },
 
     decreaseNumberByStep() {
+      // @ts-expect-error - defined in parent
       if (this.disabled) {
         return;
       }
 
+      // @ts-expect-error - defined in parent
       this.downControlClasses = {
         'sw-icon--toggled': true,
       };
@@ -302,20 +321,27 @@ export default {
         window.clearTimeout(this.downHandler);
       }
 
+      // @ts-expect-error - defined in parent
       this.downHandler = window.setTimeout(() => {
+        // @ts-expect-error - defined in parent
         this.downControlClasses = {};
       }, 100);
 
+      // @ts-expect-error - defined in parent
       this.computeValue((this.currentValue - this.realStep).toString());
+      // @ts-expect-error - defined in parent
       this.$emit('change', this.currentValue);
     },
 
-    computeValue(stringRepresentation) {
+    computeValue(stringRepresentation: string) {
       const value = this.getNumberFromString(stringRepresentation);
+      // @ts-expect-error - defined in parent
       this.currentValue = this.parseValue(value);
     },
 
-    parseValue(value) {
+    // @ts-expect-error - defined in parent
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    parseValue(value: any) {
       if (value === null || Number.isNaN(value) || !Number.isFinite(value)) {
         if (this.allowEmpty) {
           return null;
@@ -327,7 +353,7 @@ export default {
       return this.checkForInteger(this.checkBoundaries(value));
     },
 
-    checkBoundaries(value) {
+    checkBoundaries(value: number) {
       if (this.realMaximum !== null && value > this.realMaximum) {
         value = this.realMaximum;
       }
@@ -339,7 +365,8 @@ export default {
       return value;
     },
 
-    getNumberFromString(value) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getNumberFromString(value: any) {
       let splits = value.split('e').shift();
       splits = splits.replace(/,/g, '.').split('.');
 
@@ -353,11 +380,12 @@ export default {
       const decimals = splits[splits.length - 1].length;
       const float = parseFloat(splits.join('.')).toFixed(decimals);
       return decimals > this.digits
+        // @ts-expect-error - can be calculated
         ? Math.round(float * (10 ** this.digits)) / (10 ** this.digits)
         : Number(float);
     },
 
-    checkForInteger(value) {
+    checkForInteger(value: number) {
       if (this.numberType !== 'int') {
         return value;
       }
@@ -371,7 +399,7 @@ export default {
       return floor;
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

@@ -30,10 +30,11 @@
   </li>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import SwIcon from '../../../../icons-media/sw-icon/sw-icon.vue';
 
-export default {
+export default Vue.extend({
   inject: ['setActiveItemIndex'],
 
   components: {
@@ -63,7 +64,6 @@ export default {
       type: String,
       required: false,
       default: 'right',
-      validValues: ['bottom', 'right'],
       validator(value) {
         return ['bottom', 'right'].includes(value);
       },
@@ -77,7 +77,12 @@ export default {
   },
 
   computed: {
-     resultClasses() {
+     resultClasses(): Array<string | {
+        [className: string]: boolean;
+        'is--active': boolean;
+        'is--disabled': boolean;
+        'has--description': boolean;
+      }> {
       return [
         {
           'is--active': this.active,
@@ -89,7 +94,7 @@ export default {
       ];
     },
 
-    hasDescriptionSlot() {
+    hasDescriptionSlot(): boolean {
       return !!this.$slots.description || !!this.$scopedSlots.description;
     },
   },
@@ -105,11 +110,11 @@ export default {
   },
 
   methods: {
-    checkIfSelected(selectedItemIndex) {
-      if (selectedItemIndex === this.index) this.onClickResult({});
+    checkIfSelected(selectedItemIndex: number) {
+      if (selectedItemIndex === this.index) this.onClickResult();
     },
 
-    checkIfActive(activeItemIndex) {
+    checkIfActive(activeItemIndex: number) {
       this.active = this.index === activeItemIndex;
     },
 
@@ -122,10 +127,11 @@ export default {
     },
 
     onMouseEnter() {
+      // @ts-expect-error - method gets injected
       this.setActiveItemIndex(this.index);
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

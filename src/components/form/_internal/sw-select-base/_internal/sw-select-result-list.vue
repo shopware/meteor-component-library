@@ -40,11 +40,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import SwPopover from '../../../../_internal/sw-popover/sw-popover.vue';
 import SwIcon from '../../../../icons-media/sw-icon/sw-icon.vue';
 
-export default {
+export default Vue.extend({
   name: 'SwSelectResultList',
 
   components: {
@@ -52,7 +53,7 @@ export default {
     'sw-icon': SwIcon,
   },
 
-  provide() {
+  provide(): { setActiveItemIndex: (index: number) => void} {
     return {
       setActiveItemIndex: this.setActiveItemIndex,
     };
@@ -86,7 +87,7 @@ export default {
     },
 
     popoverClasses: {
-      type: Array,
+      type: Array as PropType<Array<string>>,
       required: false,
       default() {
         return [];
@@ -107,52 +108,43 @@ export default {
   },
 
   computed: {
-    emptyMessageText() {
+    emptyMessageText(): string {
+      // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
       return this.emptyMessage || this.$tc('global.sw-select-result-list.messageNoResults');
     },
 
-    popoverClass() {
+    popoverClass(): Array<string> {
       return [...this.popoverClasses, 'sw-select-result-list-popover-wrapper'];
     },
   },
 
-  created() {
-    this.createdComponent();
+  created(): void {
+    this.addEventListeners();
   },
 
-  mounted() {
-    this.mountedComponent();
+  mounted(): void {
+    // Set first item active
+      this.emitActiveItemIndex();
   },
 
-  beforeDestroy() {
-    this.beforeDestroyedComponent();
+  beforeDestroy(): void {
+    this.removeEventListeners();
   },
 
   methods: {
-    createdComponent() {
-      this.addEventListeners();
-    },
-
-    mountedComponent() {
-      // Set first item active
-      this.emitActiveItemIndex();
-    },
-
-    beforeDestroyedComponent() {
-      this.removeEventListeners();
-    },
-
-    setActiveItemIndex(index) {
+    setActiveItemIndex(index: number) {
       this.activeItemIndex = index;
       this.emitActiveItemIndex();
     },
 
     addEventListeners() {
+      // @ts-expect-error - property "key" exists on this event
       this.focusEl.addEventListener('keydown', this.navigate);
       document.addEventListener('click', this.checkOutsideClick);
     },
 
     removeEventListeners() {
+      // @ts-expect-error - property "key" exists on this event
       this.focusEl.removeEventListener('keydown', this.navigate);
       document.removeEventListener('click', this.checkOutsideClick);
     },
@@ -165,11 +157,14 @@ export default {
      *
      * @param event {Event}
      */
-    checkOutsideClick(event) {
+    checkOutsideClick(event: MouseEvent) {
       event.stopPropagation();
 
+      // @ts-expect-error - $refs is defined
       const popoverContentClicked = this.$refs.popoverContent.contains(event.target);
+      // @ts-expect-error - target exists
       const componentClicked = this.$el.contains(event.target);
+      // @ts-expect-error - target exists
       const parentClicked = this.$parent.$el.contains(event.target);
 
       if (popoverContentClicked || componentClicked || parentClicked) {
@@ -179,7 +174,7 @@ export default {
       this.$emit('outside-click');
     },
 
-    navigate({ key }) {
+    navigate({ key }: { key: string }) {
       key = key.toUpperCase();
       if (key === 'ARROWDOWN') {
         this.navigateNext();
@@ -221,22 +216,29 @@ export default {
       // wait until the new active item is rendered and has the active class
       this.$nextTick(() => {
         const resultContainer = document.querySelector('.sw-select-result-list__content');
+        // @ts-expect-error - resultContainer is defined
         const activeItem = resultContainer.querySelector('.is--active');
+        // @ts-expect-error - activeItem is defined
         const itemHeight = activeItem.offsetHeight;
+        // @ts-expect-error - activeItem is defined
         const activeItemPosition = activeItem.offsetTop;
+        // @ts-expect-error - resultContainer is defined
         const actualScrollTop = resultContainer.scrollTop;
 
         if (activeItemPosition === 0) {
           return;
         }
 
+        // @ts-expect-error - resultContainer is defined
         // Check if we need to scroll down
         if (resultContainer.offsetHeight + actualScrollTop < activeItemPosition + itemHeight) {
+          // @ts-expect-error - resultContainer is defined
           resultContainer.scrollTop += itemHeight;
         }
 
         // Check if we need to scroll up
         if (actualScrollTop !== 0 && activeItemPosition - actualScrollTop - itemHeight <= 0) {
+          // @ts-expect-error - resultContainer is defined
           resultContainer.scrollTop -= itemHeight;
         }
       });
@@ -248,7 +250,8 @@ export default {
       this.$emit('item-select-by-keyboard', this.activeItemIndex);
     },
 
-    onScroll(event) {
+    onScroll(event: MouseEvent) {
+      // @ts-expect-error - event target is defined
       if (this.getBottomDistance(event.target) !== 0) {
         return;
       }
@@ -256,11 +259,11 @@ export default {
       this.$emit('paginate');
     },
 
-    getBottomDistance(element) {
+    getBottomDistance(element: Element) {
       return element.scrollHeight - element.clientHeight - element.scrollTop;
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

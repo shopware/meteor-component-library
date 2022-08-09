@@ -78,12 +78,13 @@
     </template>
   </sw-base-field>
 </template>
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import SwBaseField from '../_internal/sw-base-field/sw-base-field.vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 import SwTextField from '../sw-text-field/sw-text-field.vue';
 
-export default {
+export default Vue.extend({
   name: 'SwPasswordField',
 
   components: {
@@ -120,20 +121,22 @@ export default {
   },
 
   computed: {
-    typeFieldClass() {
+    typeFieldClass(): string {
       return this.passwordToggleAble ? 'sw-field--password' : 'sw-field--password sw-field--password--untoggable';
     },
 
-    passwordPlaceholder() {
+    passwordPlaceholder(): string {
       return this.showPassword
       || !this.placeholderIsPassword
+        // @ts-expect-error - placeholder is defined in parent component
         ? this.placeholder
+        // @ts-expect-error - placeholder is defined in parent component
         : '*'.repeat(this.placeholder.length ? this.placeholder.length : 6);
     },
   },
 
   methods: {
-    onTogglePasswordVisibility(disabled) {
+    onTogglePasswordVisibility(disabled: boolean) {
       if (disabled) {
         return;
       }
@@ -141,7 +144,7 @@ export default {
       this.showPassword = !this.showPassword;
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

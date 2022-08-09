@@ -58,11 +58,12 @@
   </sw-base-field>
 </template>
 
-<script>
-import SwBaseField from "../_internal/sw-base-field/sw-base-field";
-import SwFieldError from "../_internal/sw-field-error/sw-field-error";
+<script lang="ts">
+import Vue from 'vue'
+import SwBaseField from "../_internal/sw-base-field/sw-base-field.vue";
+import SwFieldError from "../_internal/sw-field-error/sw-field-error.vue";
 
-export default {
+export default Vue.extend({
   name: 'SwTextField',
 
   components: {
@@ -224,7 +225,8 @@ export default {
   },
 
   computed: {
-    additionalListeners() {
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    additionalListeners(): Record<string, (Function | Function[])> {
 
       const additionalListeners = { ...this.$listeners };
 
@@ -234,7 +236,8 @@ export default {
       return additionalListeners;
     },
 
-    hasError() {
+    hasError(): boolean {
+      // @ts-expect-error - isValid gets called in the mixin
       return !this.isValid || !!this.error;
     },
   },
@@ -246,11 +249,13 @@ export default {
   },
 
   methods: {
-    onChange(event) {
+    onChange(event: Event) {
+      // @ts-expect-error - target is defined
       this.$emit('change', event.target.value || '');
     },
 
-    onInput(event) {
+    onInput(event: Event) {
+      // @ts-expect-error - target is defined
       this.$emit('input', event.target.value);
     },
 
@@ -258,7 +263,7 @@ export default {
       this.$emit('input', null);
     },
 
-    createInputId(identification) {
+    createInputId(identification: string) {
       if (!this.idSuffix || this.idSuffix.length <= 0) {
         return identification;
       }
@@ -274,5 +279,5 @@ export default {
       this.hasFocus = false;
     },
   },
-};
+});
 </script>

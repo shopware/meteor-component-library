@@ -23,10 +23,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 
-export default {
+export default Vue.extend({
   name: 'SwContextMenuItem',
 
   components: {
@@ -84,7 +85,7 @@ export default {
       return (this.disabled || this.variant === 'headline') ? {} : this.$listeners;
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

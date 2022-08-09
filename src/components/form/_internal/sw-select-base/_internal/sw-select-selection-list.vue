@@ -68,11 +68,12 @@
   </ul>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import SwLabel from '../../../../_internal/sw-label.vue';
 import SwButton from '../../../sw-button/sw-button.vue';
 
-export default {
+export default Vue.extend({
   name: 'SwSelectSelectionList',
 
   components: {
@@ -137,7 +138,7 @@ export default {
       default: false,
     },
     selectionDisablingMethod: {
-      type: Function,
+      type: Function as PropType<(selection: string) => boolean>,
       required: false,
       default: () => false,
     },
@@ -153,13 +154,13 @@ export default {
   },
 
   computed: {
-    classBindings() {
+    classBindings(): { 'sw-select-selection-list--single': boolean } {
       return {
         'sw-select-selection-list--single': !this.multiSelection,
       };
     },
 
-    showPlaceholder() {
+    showPlaceholder(): string {
       return (this.alwaysShowPlaceholder || (this.selections.length === 0 && this.hideLabels))
           ? this.placeholder
           : '';
@@ -167,13 +168,17 @@ export default {
   },
 
   methods: {
-    isSelectionDisabled(selection) {
+    isSelectionDisabled(selection: string) {
       if (!this.multiSelection) {
         return true;
       }
 
       if (this.disabled) {
         return true;
+      }
+
+      if (typeof this.selectionDisablingMethod !== 'function') {
+        return false;
       }
 
       return this.selectionDisablingMethod(selection);
@@ -183,7 +188,8 @@ export default {
       this.$emit('total-count-click');
     },
 
-    onSearchTermChange(event) {
+    onSearchTermChange(event: Event) {
+      // @ts-expect-error - target value is defined
       this.$emit('search-term-change', event.target.value, event);
     },
 
@@ -198,14 +204,17 @@ export default {
     },
 
     focus() {
+      // @ts-expect-error - ref swSelectInput is defined
       this.$refs.swSelectInput.focus();
     },
 
     blur() {
+      // @ts-expect-error - ref swSelectInput is defined
       this.$refs.swSelectInput.blur();
     },
 
     select() {
+      // @ts-expect-error - ref swSelectInput is defined
       this.$refs.swSelectInput.select();
     },
 
@@ -213,7 +222,7 @@ export default {
       return this.$refs.swSelectInput;
     },
   },
-};
+});
 </script>
 
 <style lang="scss">
