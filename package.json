@@ -1,7 +1,6 @@
 {
   "name": "@shopware-ag/meteor-component-library",
   "version": "0.0.1",
-  "private": true,
   "scripts": {
     "test:unit": "vue-cli-service test:unit",
     "lint": "eslint --ext .js,.ts,.vue src",
