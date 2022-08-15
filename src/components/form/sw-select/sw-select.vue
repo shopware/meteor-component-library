@@ -114,7 +114,6 @@ import SwHighlightText from '../../_internal/sw-highlight-text.vue';
 export default Vue.extend({
   name: 'SwSelect',
 
-  // @ts-expect-error - i18n is a plugin. Will be added to global variables in NEXT-22728
   i18n: {
     messages: {
       en: {
@@ -380,7 +379,7 @@ export default Vue.extend({
     },
   },
 
-  created() {
+  created(): void {
     console.log(this.$tc('sw-select.messageNoResults'))
   },
 

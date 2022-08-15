@@ -37,7 +37,6 @@ import SwIcon from '../../../icons-media/sw-icon/sw-icon.vue';
 export default Vue.extend({
   name: 'SwInheritanceSwitch',
 
-  // @ts-expect-error - i18n is a plugin. Will be added to global variables in NEXT-22728
   i18n: {
     messages : {
       en: {

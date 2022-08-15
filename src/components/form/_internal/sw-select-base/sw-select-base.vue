@@ -283,7 +283,7 @@ export default Vue.extend({
       this.$emit('clear');
     },
 
-    focusParentSelect(event: Event) {
+    focusParentSelect(event: KeyboardEvent) {
       if (event && event?.shiftKey) {
         // @ts-expect-error - ref selectWrapper is defined
         this.$refs.selectWrapper.click();

@@ -181,7 +181,12 @@ export default Vue.extend({
     },
   },
 
-  data() {
+  data(): {
+    upControlClasses: null,
+    downControlClasses: null,
+    upHandler: null|number,
+    downHandler: null|number,
+  } {
     return {
       upControlClasses: null,
       downControlClasses: null,
@@ -294,7 +299,6 @@ export default Vue.extend({
         window.clearTimeout(this.upHandler);
       }
 
-      // @ts-expect-error - defined in parent
       this.upHandler = window.setTimeout(() => {
         // @ts-expect-error - defined in parent
         this.upControlClasses = {};
@@ -321,7 +325,6 @@ export default Vue.extend({
         window.clearTimeout(this.downHandler);
       }
 
-      // @ts-expect-error - defined in parent
       this.downHandler = window.setTimeout(() => {
         // @ts-expect-error - defined in parent
         this.downControlClasses = {};

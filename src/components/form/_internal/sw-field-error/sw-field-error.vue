@@ -14,7 +14,6 @@ import Vue from 'vue';
 export default Vue.extend({
   name: 'SwFieldError',
 
-  // @ts-expect-error - i18n is a plugin. Will be added to global variables in NEXT-22728
   i18n: {
     messages: {
       en: {
@@ -65,7 +64,6 @@ export default Vue.extend({
       }
 
       const translationKey = `sw-field-error.${this.error.code}`;
-      // @ts-expect-error - $tc is defined in plugin. Will be added to global variables in NEXT-22728
       const translation = this.$tc(translationKey, 1, this.error.parameters || {});
 
       if (translation === translationKey) {

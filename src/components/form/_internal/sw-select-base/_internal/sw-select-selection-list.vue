@@ -199,7 +199,8 @@ export default Vue.extend({
       }
     },
 
-    onClickDismiss(item) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onClickDismiss(item: any) {
       this.$emit('item-remove', item);
     },
 

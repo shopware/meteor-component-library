@@ -40,7 +40,6 @@ import SwColorBadge from '../feedback-indicator/sw-color-badge/sw-color-badge.vu
 export default Vue.extend({
   name: 'SwLabel',
 
-  // @ts-expect-error - i18n is a plugin. Will be added to global variables in NEXT-22728
   i18n: {
     messages: {
       en: {
