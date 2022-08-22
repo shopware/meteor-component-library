@@ -24,6 +24,7 @@
       >
         <div
           class="sw-colorpicker__previewColor"
+          :class="{active:visible}"
           :style="{ background: previewColorValue }"
         />
         <div
@@ -679,7 +680,7 @@ export default Vue.extend({
 
     outsideClick(e: Event) {
       // @ts-expect-error - target exists
-      if (/^sw-colorpicker__preview/.test(e.target.classList[0])) {
+      if (/^sw-colorpicker__previewColor.active/.test(e.target._prevClass)) {
         return;
       }
 
