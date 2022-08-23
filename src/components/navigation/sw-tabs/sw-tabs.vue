@@ -379,8 +379,8 @@ export default Vue.extend({
     color: $color-darkgray-200;
 
     &__has-error {
-      color: $color-crimson-300;
-      border-bottom: 1px solid $color-crimson-300;
+      color: $color-crimson-500;
+      border-bottom: 1px solid $color-crimson-500;
     }
 
     &__is-active {

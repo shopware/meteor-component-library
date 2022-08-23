@@ -110,10 +110,6 @@ export default Vue.extend({
     vertical-align: middle;
     width: 100%;
     height: 100%;
-  }
-
-  &.sw-icon--fill > svg {
-    fill: currentColor;
 
     path,
     use {

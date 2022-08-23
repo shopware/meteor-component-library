@@ -350,6 +350,10 @@ $sw-field-color-inherited: $color-module-purple-900;
         border: 1px solid $sw-field-color-error;
       }
 
+      .sw-field__label {
+        color: $color-crimson-500;
+      }
+
       input[type="checkbox"] {
         &:disabled ~ .sw-field__checkbox-state {
           border: 1px solid $sw-field-color-error, 5%;
