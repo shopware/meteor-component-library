@@ -4,12 +4,14 @@
     class="sw-field__error"
     aria-label="Error message"
   >
+    <sw-icon name="solid-exclamation-circle" />
     {{ errorMessage }}
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import SwIcon from '../../../icons-media/sw-icon/sw-icon.vue';
 
 export default Vue.extend({
   name: 'SwFieldError',
@@ -49,6 +51,10 @@ export default Vue.extend({
     },
   },
 
+  components: {
+    'sw-icon': SwIcon,
+  },
+
   props: {
     error: {
       type: Object,
@@ -79,9 +85,17 @@ export default Vue.extend({
 @import "../../../assets/scss/variables.scss";
 
 .sw-field__error {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   margin-top: 4px;
   font-size: $font-size-extra-small;
   line-height: 1.25;
   color: $color-crimson-500;
+
+  #meteor-icon-kit__solid-exclamation-circle {
+    width: 12px;
+    height: 12px;
+  }
 }
 </style>

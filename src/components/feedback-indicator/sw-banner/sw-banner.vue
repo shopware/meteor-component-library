@@ -119,7 +119,7 @@ export default Vue.extend({
             neutral: 'regular-info-circle',
             info: 'regular-info-circle',
             attention: 'regular-exclamation-triangle',
-            critical: 'regular-times-hexagon',
+            critical: 'regular-exclamation-circle',
             positive: 'regular-check-circle',
             inherited: 'regular-link',
         };
