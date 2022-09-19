@@ -63,7 +63,7 @@ export default Vue.extend({
       type: String,
       required: false,
       default: '',
-      validator(value) {
+      validator(value: string) {
         if (!value.length) {
           return true;
         }

@@ -16,6 +16,7 @@
       {{ label }}
     </template>
 
+    <!-- eslint-disable-next-line vue/no-template-shadow,vue/no-unused-vars -->
     <template #element="{identification, helpText, error, disabled }">
       <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
       <textarea

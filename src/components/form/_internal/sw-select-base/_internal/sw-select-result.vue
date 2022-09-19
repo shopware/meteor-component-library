@@ -35,11 +35,12 @@ import Vue from 'vue';
 import SwIcon from '../../../../icons-media/sw-icon/sw-icon.vue';
 
 export default Vue.extend({
-  inject: ['setActiveItemIndex'],
 
   components: {
     'sw-icon': SwIcon,
   },
+
+  inject: ['setActiveItemIndex'],
 
   props: {
     index: {
@@ -64,7 +65,7 @@ export default Vue.extend({
       type: String,
       required: false,
       default: 'right',
-      validator(value) {
+      validator(value: string) {
         return ['bottom', 'right'].includes(value);
       },
     },
@@ -100,12 +101,16 @@ export default Vue.extend({
   },
 
   created() {
+    // @ts-expect-error - parent.parent should be defined
     this.$parent.$parent.$on('active-item-change', this.checkIfActive);
+    // @ts-expect-error - parent.parent should be defined
     this.$parent.$parent.$on('item-select-by-keyboard', this.checkIfSelected);
   },
 
   destroyed() {
+    // @ts-expect-error - parent.parent should be defined
     this.$parent.$parent.$off('active-item-change', this.checkIfActive);
+    // @ts-expect-error - parent.parent should be defined
     this.$parent.$parent.$off('item-select-by-keyboard', this.checkIfSelected);
   },
 
@@ -123,6 +128,7 @@ export default Vue.extend({
         return;
       }
 
+      // @ts-expect-error - parent.parent should be defined
       this.$parent.$parent.$emit('item-select', this.item);
     },
 

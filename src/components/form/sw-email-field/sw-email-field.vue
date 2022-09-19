@@ -91,13 +91,11 @@ export default Vue.extend({
         return this.validationError;
       }
 
-      // @ts-expect-error - is defined in the extended field
       return this.error;
     },
   },
 
   mounted() {
-    // @ts-expect-error - is defined in the extended field
     if (!this.value) {
       return;
     }

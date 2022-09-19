@@ -65,7 +65,7 @@ export default Vue.extend({
       type: String as PropType<'info'|'danger'|'success'|'warning'|'neutral'|'primary'>,
       required: false,
       default: '',
-      validator(value) {
+      validator(value: string) {
         if (!value.length) {
           return true;
         }
@@ -76,7 +76,7 @@ export default Vue.extend({
       type: String as PropType<'small'|'medium'|'default'>,
       required: false,
       default: 'default',
-      validator(value) {
+      validator(value: string) {
         return ['small', 'medium', 'default'].includes(value);
       },
     },
@@ -84,7 +84,7 @@ export default Vue.extend({
       type: String as PropType<'default'|'pill'|'circle'|'badged'>,
       required: false,
       default: 'default',
-      validator(value) {
+      validator(value: string) {
         return ['default', 'pill', 'circle', 'badged'].includes(value);
       },
     },

@@ -82,7 +82,7 @@ export default Vue.extend({
       type: String,
       required: false,
       default: 'circle',
-      validator: (value) => ['circle', 'square'].includes(value),
+      validator: (value: string) => ['circle', 'square'].includes(value),
     },
   },
 

@@ -145,7 +145,6 @@ export default Vue.extend({
     passwordPlaceholder(): string {
       return this.showPassword
       || !this.placeholderIsPassword
-        // @ts-expect-error - placeholder is defined in parent component
         ? this.placeholder
         // @ts-expect-error - placeholder is defined in parent component
         : '*'.repeat(this.placeholder.length ? this.placeholder.length : 6);

@@ -19,7 +19,7 @@ export default Vue.extend({
       type: String,
       required: false,
       default: 'default',
-      validator(value) {
+      validator(value: string) {
         return [
           'default',
           'warning',

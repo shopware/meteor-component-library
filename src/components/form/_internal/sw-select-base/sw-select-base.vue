@@ -18,6 +18,7 @@
       <slot name="sw-select-prefix" />
     </template>
 
+    <!-- eslint-disable-next-line vue/no-template-shadow -->
     <template #element="{ identification, error, size }">
       <div
         ref="selectWrapper"

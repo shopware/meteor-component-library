@@ -105,7 +105,7 @@ export default Vue.extend({
       type: String as PropType<'float'|'int'>,
       required: false,
       default: 'float',
-      validator(value) {
+      validator(value: string) {
         return ['float', 'int'].includes(value);
       },
     },
@@ -153,7 +153,7 @@ export default Vue.extend({
       type: Number,
       required: false,
       default: 2,
-      validator(value) {
+      validator(value: number) {
         const isInt = value === Math.floor(value);
         if (!isInt) {
           console.warn('sw-number-field', 'Provided prop digits must be of type integer');
@@ -220,7 +220,6 @@ export default Vue.extend({
     },
 
     stringRepresentation(): string {
-      // @ts-expect-error - defined in parent
       if (this.currentValue === null) {
         return '';
       }
@@ -237,9 +236,7 @@ export default Vue.extend({
       error: boolean;
     } {
       return {
-        // @ts-expect-error - defined in parent
         disabled: this.disabled,
-        // @ts-expect-error - defined in parent
         error: !!this.error
       }
     },
@@ -264,7 +261,6 @@ export default Vue.extend({
     onChange(event: Event) {
       // @ts-expect-error - target exists
       this.computeValue(event.target.value);
-      // @ts-expect-error - defined in parent
       this.$emit('change', this.currentValue);
     },
 
@@ -272,7 +268,7 @@ export default Vue.extend({
       // @ts-expect-error - target exists
       let val = Number.parseFloat(event.target.value);
 
-      if (val !== Number.NaN) {
+      if (!Number.isNaN(val)) {
         if (this.max && val > this.max) {
           val = this.max;
         }
@@ -285,7 +281,6 @@ export default Vue.extend({
     },
 
     increaseNumberByStep() {
-      // @ts-expect-error - defined in parent
       if (this.disabled) {
         return;
       }
@@ -304,14 +299,11 @@ export default Vue.extend({
         this.upControlClasses = {};
       }, 100);
 
-      // @ts-expect-error - defined in parent
       this.computeValue((this.currentValue + this.realStep).toString());
-      // @ts-expect-error - defined in parent
       this.$emit('change', this.currentValue);
     },
 
     decreaseNumberByStep() {
-      // @ts-expect-error - defined in parent
       if (this.disabled) {
         return;
       }
@@ -330,9 +322,7 @@ export default Vue.extend({
         this.downControlClasses = {};
       }, 100);
 
-      // @ts-expect-error - defined in parent
       this.computeValue((this.currentValue - this.realStep).toString());
-      // @ts-expect-error - defined in parent
       this.$emit('change', this.currentValue);
     },
 

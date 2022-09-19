@@ -108,7 +108,6 @@ export default Vue.extend({
           this.notificationSuccess();
         }
       } catch (err) {
-        // @ts-expect-error - method is defined in mixin
         this.createNotificationError({
           title: this.$tc('sw-field-copyable.errorTitle'),
           message: this.$tc('sw-field-copyable.notificationCopyFailureMessage'),
@@ -121,7 +120,6 @@ export default Vue.extend({
     },
 
     notificationSuccess() {
-      // @ts-expect-error - method is defined in mixin
       this.createNotificationInfo({
         message: this.$tc('sw-field-copyable.notificationCopySuccessMessage'),
       });
