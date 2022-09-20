@@ -157,14 +157,12 @@ export default Vue.extend({
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     combinedError(): any {
-      // @ts-expect-error - error is defined in swTextField
       return this.errorUrl || this.error;
     },
   },
 
   watch: {
     value() {
-      // @ts-expect-error - value is defined in swTextField
       this.checkInput(this.value || '');
     },
   },

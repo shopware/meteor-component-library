@@ -1,6 +1,7 @@
 import { within, userEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
 import SwSelect from './sw-select.vue';
+import { waitUntilRendered } from '../../../_internal/test-helper';
 import defaultStory, { Default as Template } from './sw-select.stories';
 
 export default {
@@ -198,8 +199,18 @@ VisualTestHighlightSearchTerm.play = async () => {
   const canvas = within(document.getElementById('root'));
   await userEvent.type(canvas.getByRole('textbox'), 'A');
 
+  // wait until only one result is rendered
+  await waitUntilRendered(() => document.getElementsByClassName('sw-select-result').length === 1)
+
   let popover = within(document.querySelector('.sw-popover__wrapper'));
-  expect(popover.getByText('Option A')).toBeDefined();
+  // Option A is separated in different elements. This methods get the combined instance.
+  expect(popover.getByText((content, element) => {
+    const hasText = element => element.textContent === 'Option A'
+    const elementHasText = hasText(element)
+    const childrenDontHaveText = Array.from(element?.children || []).every(child => !hasText(child))
+
+    return elementHasText && childrenDontHaveText
+  })).toBeDefined();
 };
 
 export const VisualTestInherited = Template.bind();

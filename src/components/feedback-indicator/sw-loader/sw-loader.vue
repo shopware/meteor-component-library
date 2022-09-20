@@ -28,7 +28,7 @@ export default Vue.extend({
       type: String,
       required: false,
       default: '50px',
-      validator(value) {
+      validator(value: string) {
         return value.endsWith('px');
       },
     },

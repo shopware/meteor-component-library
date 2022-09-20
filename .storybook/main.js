@@ -3,6 +3,9 @@ const custom = require('../node_modules/@vue/cli-service/webpack.config.js');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
+  core: {
+    builder: 'webpack5'
+  },
   "stories": [
     "../src/**/*.stories.mdx",
     "../src/**/*.stories.@(js|jsx|ts|tsx)",
@@ -20,40 +23,36 @@ module.exports = {
   "framework": "@storybook/vue",
   staticDirs: ['../public'],
   "webpackFinal": (config) => {
-    config.module.rules.push(custom.module.rules[9]);
+    // Add .scss rule to config from vue-cli-service
+    const scssRule = custom.module.rules.find(rule => rule.test.toString() === /\.scss$/.toString());
+    config.module.rules.push(scssRule);
 
-
-    const fileLoader = config.module.rules.find(l => l.hasOwnProperty('loader') && l.loader.includes('file-loader'));
-    if (!fileLoader.exclude) {
-      fileLoader.exclude = [];
+    // add exclusion rule for meteor icons for type asset/resource
+    const assetResourceLoader = config.module.rules.find(l => l.hasOwnProperty('type') && l.type === 'asset/resource');
+    if (!assetResourceLoader.exclude) {
+      assetResourceLoader.exclude = [];
     }
-    fileLoader.exclude.push(/@shopware-ag\/meteor-icon-kit\/icons/);
+    assetResourceLoader.exclude.push(/@shopware-ag\/meteor-icon-kit\/icons/);
 
-    return {
-      ...config,
-      module: {
-        ...config.module,
-        rules: [
-          {
-            test: /\.svg$/,
-            include: [
-              /@shopware-ag\/meteor-icon-kit\/icons/,
-            ],
-            loader: 'svg-inline-loader',
-            options: {
-              removeSVGTagAttrs: false,
-            },
-          },
-          ...config.module.rules,
-        ]
+    // add svg inline loader for meteor icons
+    config.module.rules.unshift({
+      test: /\.svg$/,
+      include: [
+        /@shopware-ag\/meteor-icon-kit\/icons/,
+      ],
+      loader: 'svg-inline-loader',
+      options: {
+        removeSVGTagAttrs: false,
       },
-      plugins: [
-        // ...custom.plugins,
-        new MiniCssExtractPlugin({
-          filename: "[name].[contenthash].css",
-        }),
-        ...config.plugins
-      ]
-    };
+    })
+
+    // add loader for css
+    config.plugins.unshift(
+      new MiniCssExtractPlugin({
+        filename: "[name].[contenthash].css",
+      })
+    )
+
+    return config;
   },
 };

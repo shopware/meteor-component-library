@@ -20,7 +20,7 @@
       <slot name="prefix" />
     </template>
 
-    <template #sw-select-selection="{ identification, size }">
+    <template #sw-select-selection="{ size }">
       <sw-select-selection-list
         ref="selectionList"
         :multi-selection="enableMultiSelection"

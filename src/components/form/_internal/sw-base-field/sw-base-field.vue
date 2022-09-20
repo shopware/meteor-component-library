@@ -190,8 +190,8 @@ export default Vue.extend({
       type: String,
       required: false,
       default: 'default',
-      validator(val) {
-        return ['small', 'default'].includes(val);
+      validator(value: string) {
+        return ['small', 'default'].includes(value);
       },
     },
 

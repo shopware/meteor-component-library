@@ -75,7 +75,7 @@ export default Vue.extend({
       type: String,
       required: false,
       default: 'right',
-      validator(value) {
+      validator(value: string) {
         if (!value.length) {
           return true;
         }
@@ -87,7 +87,7 @@ export default Vue.extend({
       type: String,
       required: false,
       default: 'bottom',
-      validator(value) {
+      validator(value: string) {
         if (!value.length) {
           return true;
         }

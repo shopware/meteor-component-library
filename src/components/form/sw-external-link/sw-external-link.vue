@@ -70,7 +70,7 @@ export default Vue.extend({
       type: String,
       required: false,
       default: 'noopener',
-      validator(value) {
+      validator(value: string) {
         return [
           'nofollow',
           'noopener',

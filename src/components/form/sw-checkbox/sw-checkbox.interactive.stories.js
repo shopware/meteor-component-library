@@ -1,5 +1,6 @@
 import { within, userEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
+import { waitUntilRendered } from '../../../_internal/test-helper';
 import SwCheckbox from './sw-checkbox.vue';
 import defaultCheckboxField, { Default as Template } from './sw-checkbox.stories';
 
@@ -146,6 +147,8 @@ VisualTestHelpText.play = async () => {
   await expect(canvas.getByTestId('sw-help-text__icon')).toBeDefined();
 
   await userEvent.click(canvas.getByTestId('sw-help-text__icon'));
+
+  await waitUntilRendered(() => document.querySelector('.sw-tooltip'))
 };
 
 export const VisualTestPartialChecked = Template.bind();
