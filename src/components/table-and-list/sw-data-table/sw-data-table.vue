@@ -1,5 +1,5 @@
 <template>
-  <div class="sw-data-grid">
+  <div class="sw-data-table">
     <table>
       <thead>
         <tr>
@@ -8,7 +8,7 @@
             :key="column.property"
             :style="renderColumnHeaderStyle(column)"
           >
-            <span>{{ renderHeaderLabel(column) }}</span>
+            <span>{{ column.label }}</span>
           </th>
         </tr>
       </thead>
@@ -22,11 +22,14 @@
             :key="column.property"
             :style="renderColumnDataCellStyle(column)"
           >
-            <div v-if="column.property === 'manufacturer.name'" style="
-                width: 150px;
-                height: 50px;
+            <div
+              v-if="column.property === 'manufacturer.name'"
+              style="
+                width: 10px;
+                height: 10px;
                 background-color: gray;
-            "></div>
+            "
+            />
 
             <!-- TODO: use renderer -->
             {{ data[column.property] }}
@@ -38,8 +41,7 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, defineComponent, computed } from 'vue';
-import { PropType } from 'vue/types/v3-component-props';
+import { defineComponent, computed, PropType } from 'vue';
 
 interface ColumnDefinition {
 	label: string; // the label for the column
@@ -47,18 +49,22 @@ interface ColumnDefinition {
 	renderer: 'text'|'number'|'price'|'checkmark'; // define how each column entry should be rendered
 	position: number; // the initial position of the column. Should be defined in 100 steps
 	sortable?: boolean; // enable or disable sortability for this column (default=true)
-	width?: number; // define the flex value for this column
+	width?: number; // define the width value for this column
 	allowResize?: boolean; // you can disable the possibility for the user to resize this column
   cellWrap?: 'nowrap'|'normal'
 }
 
-type ColumnProperty = ColumnDefinition[]
+type DataSourcePropType = Array<{
+  id: string;
+  [key: string]: unknown;
+}>
+
+type ColumnProperty = ColumnDefinition[];
 
 export default defineComponent({
   props: {
     dataSource: {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      type: Array as PropType<Record<string, unknown>[]>,
+      type: Array as PropType<DataSourcePropType>,
       required: true,
     },
     columns: {
@@ -92,10 +98,6 @@ export default defineComponent({
       return props.columns.slice().sort((a, b) => a.position - b.position);
     });
 
-    const renderHeaderLabel = (column: ColumnDefinition) => {
-      return column.label.toUpperCase();
-    }
-
     const renderColumnDefaultStyle = (column: ColumnDefinition) => {
       const defaultColumnWidth = 'auto';
       const minimumColumnWidth = '100px';
@@ -121,7 +123,7 @@ export default defineComponent({
       return {
         'width': width,
         'min-width': minWidth,
-        'max-width': maxWidth, // TODO: only when not whiteSpace "normal"
+        'max-width': maxWidth,
         'white-space': whiteSpace,
       }
     }
@@ -141,9 +143,8 @@ export default defineComponent({
 
     return {
       sortedColumns,
-      renderHeaderLabel,
-      renderColumnHeaderStyle,
-      renderColumnDataCellStyle
+      renderColumnDataCellStyle,
+      renderColumnHeaderStyle
     }
   }
 })
@@ -152,7 +153,7 @@ export default defineComponent({
 <style lang="scss">
 @import '../../assets/scss/variables.scss';
 
-.sw-data-grid {
+.sw-data-table {
   width: 100%;
   height: 100%;
   overflow: auto;
@@ -206,6 +207,7 @@ export default defineComponent({
     border-bottom-width: 1px;
     position: sticky;
     top: 0;
+    text-transform: uppercase;
   }
 
   tr {
