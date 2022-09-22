@@ -27,14 +27,16 @@ Default.args = {
       property: 'name',
       renderer: 'text',
       position: 0,
-      width: 200
+      width: 200,
+      cellWrap: 'normal',
     },
     {
       label: 'Manufacturer',
       property: 'manufacturer.name',
       renderer: 'text',
       position: 100,
-      // width: 200
+      // cellWrap: 'normal',
+      // width: 220
     },
     {
       label: 'Active',
@@ -48,6 +50,7 @@ Default.args = {
       property: 'price',
       renderer: 'price',
       position: 300,
+      cellWrap: 'nowrap',
       // width: 200
     },
     {

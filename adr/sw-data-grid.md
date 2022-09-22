@@ -135,11 +135,28 @@ Example:
 
 
 ## CSS implementation
-### TODO
-How column rendering works will be written down after testing flexbox against table.
 
-CSS grid was already tested by Tobias and is not performant enough. Flexbox wasn't tested by Tobias in the past because critical things like `gap` were not available at this time.
+In the following it will be explained why some things are implemented the way it is now.
+
+### General use of CSS table
+The main rendering of the data grid will be handled with CSS tables. The reason for this was that CSS Grid is not performant enough and Flexbox has the problem that it can't have a correlation between rows and columns. And the table is perfectly suited for this use case. Also, researches of other data grids showed, that all are using CSS tables for the rendering.
+
+### Cell height
+The height of the cell is flexible and will be calculated based on the content size. This has the big benefit that the developer don't need to know how big the content is. Another benefit is that the content can be dynamic and everything
+reacts to it dynamically. A future feature like toggling more information in cells could trigger this behavior.
+
+### Cell behavior
+The cell behavior depends on the `cellWrap` behavior of each column. By default, every column has the `nowrap` behavior. 
+
+It is possible that the behavior of cells can be adjusted depending on the renderer if this is needed. 
+
+#### `normal` cell wrap behavior:  
+The max-width of the cell is based on the width of its content. And the minimum size is the width defined in the column definition. If the content is only text then it wraps automatically based on words. If the content is not text then it does not get wrapped.
+
+#### `nowrap` cell wrap behavior:  
+The max-width of the cell is based on the width which is defined in the column definition. And the minimum size is also the width defined in the column definition. If the content is only text then it gets truncated automatically. If the content is not text then everything which extends the size of the cell just hides like a `overflow: hidden` behavior.
 
 
-
-
++ WRITE UNIT TESTS FOR ALL CASES
++ WRITE MORE UNIT TESTS FOR PROP VALIDATOR
+  
