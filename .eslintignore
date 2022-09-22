@@ -1,3 +1,5 @@
 vue.config.js
 jest.config.js
 rollup.config.js
+**/*.spec.js
+**/*.spec.ts
