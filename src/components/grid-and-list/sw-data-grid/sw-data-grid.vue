@@ -8,7 +8,7 @@
             :key="column.property"
             :style="renderColumnHeaderStyle(column)"
           >
-            {{ renderHeaderLabel(column) }}
+            <span>{{ renderHeaderLabel(column) }}</span>
           </th>
         </tr>
       </thead>
@@ -20,8 +20,14 @@
           <td
             v-for="column in sortedColumns"
             :key="column.property"
-            :style="renderColumnHeaderStyle(column)"
+            :style="renderColumnDataCellStyle(column)"
           >
+            <div v-if="column.property === 'manufacturer.name'" style="
+                width: 150px;
+                height: 50px;
+                background-color: gray;
+            "></div>
+
             <!-- TODO: use renderer -->
             {{ data[column.property] }}
           </td>
@@ -43,6 +49,7 @@ interface ColumnDefinition {
 	sortable?: boolean; // enable or disable sortability for this column (default=true)
 	width?: number; // define the flex value for this column
 	allowResize?: boolean; // you can disable the possibility for the user to resize this column
+  cellWrap?: 'nowrap'|'normal'
 }
 
 type ColumnProperty = ColumnDefinition[]
@@ -89,19 +96,46 @@ export default defineComponent({
       return column.label.toUpperCase();
     }
 
-    const renderColumnHeaderStyle = (column: ColumnDefinition) => {
+    const renderColumnDefaultStyle = (column: ColumnDefinition) => {
       const defaultColumnWidth = 'auto';
-      const minimumColumnWidth = '50px';
+      const minimumColumnWidth = '100px';
 
       const width = typeof column.width === 'number' ? `${column.width}px` : defaultColumnWidth;
       const minWidth = typeof column.width === 'number' ? `${column.width}px` : minimumColumnWidth;
-      // The maxWidth fallback is the minimum width. In table this behaves differently so it can be larger than the minWidth
-      const maxWidth = typeof column.width === 'number' ? `${column.width}px` : minimumColumnWidth;
+
+      const maxWidth = (() => {
+        if (column.cellWrap === 'normal') {
+          return 'auto';
+        }
+
+        if (typeof column.width === 'number') {
+          return `${column.width}px`;
+        }
+
+        // The maxWidth fallback is the minimum width. In table this behaves differently so it can be larger than the minWidth
+        return minimumColumnWidth;
+      })();
+
+      const whiteSpace = typeof column.cellWrap === 'string' ? column.cellWrap : 'nowrap';
 
       return {
         'width': width,
         'min-width': minWidth,
-        'max-width': maxWidth,
+        'max-width': maxWidth, // TODO: only when not whiteSpace "normal"
+        'white-space': whiteSpace,
+      }
+    }
+
+    const renderColumnHeaderStyle = (column: ColumnDefinition) => {
+      return {
+        ...renderColumnDefaultStyle(column),
+        'max-width': 'fit-content'
+      }
+    }
+
+    const renderColumnDataCellStyle = (column: ColumnDefinition) => {
+      return {
+        ...renderColumnDefaultStyle(column),
       }
     }
 
@@ -109,6 +143,7 @@ export default defineComponent({
       sortedColumns,
       renderHeaderLabel,
       renderColumnHeaderStyle,
+      renderColumnDataCellStyle
     }
   }
 })
@@ -150,6 +185,7 @@ export default defineComponent({
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    vertical-align: top;
   }
 
   tr:nth-child(even) {

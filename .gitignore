@@ -29,3 +29,4 @@ test-results/
 playwright-report/
 __snapshots__/__diff_output__/
 __snapshots__/__received__/
+coverage
