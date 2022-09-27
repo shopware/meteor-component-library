@@ -46,8 +46,15 @@ VisualTestRenderTableStickyHeader.play = async () => {
   const canvas = within(document.getElementById('root'));
 
   // scroll to bottom
-  const swDataTable = document.querySelector('.sw-data-table');
+  const swDataTable = document.querySelector('.sw-data-table__table');
   swDataTable.scrollTop = swDataTable.scrollHeight;
 
   expect(canvas.getByText('Last product name')).toBeInTheDocument();
+};
+
+export const VisualTestRenderTableWithoutCardHeader = Template.bind();
+VisualTestRenderTableWithoutCardHeader.storyName = 'Should render the Table without card header';
+VisualTestRenderTableWithoutCardHeader.args = {
+  title: undefined,
+  subtitle: undefined
 };
