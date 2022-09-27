@@ -26,6 +26,7 @@
     "date-fns": "2.23.0",
     "date-fns-tz": "1.1.6",
     "flatpickr": "4.6.3",
+    "inter-ui": "^3.19.3",
     "lodash-es": "^4.17.21",
     "punycode": "^2.1.1",
     "uuid": "^8.3.2"

@@ -159,11 +159,50 @@ export default defineComponent({
   overflow: auto;
   border: 0.5px solid $color-gray-200;
 
+  /**
+   * Use inter-font instead of normal font for data-table. Also add the new variables to this file.
+   */
+  $font-family-default: 'Inter', -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  $font-family-variables: 'Inter var', -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  $font-family-default-feature-settings: 'ss01' on, 'ss02' on, 'case' on, 'cpsp' on, 'zero' on, 'cv09' on, 'cv07' on, 'cv06' on, 'cv10' on, 'cv11' on;
+
+  $font-size-xxs: 12px;
+  $font-size-xs: 14px;
+  $font-size-s: 16px;
+  $font-size-m: 18px;
+  $font-size-l: 20px;
+  $font-size-xl: 24px;
+  $font-size-3xl: 28px;
+
+  $font-weight-medium: 500;
+
+  $line-height-auto: auto;
+  $line-height-xs: 18px;
+  $line-height-sm: 20px;
+  $line-height-md: 24px;
+  $line-height-lg: 28px;
+
+  *  {
+      font-family: $font-family-default;
+  }
+
+  @supports (font-variation-settings: normal) {
+      * {
+          font-family: $font-family-variables;
+          font-feature-settings: $font-family-default-feature-settings;
+      }
+  }
+
+  // adjust font styling
+  font-size: $font-size-xs;
+  font-weight: $font-weight-regular;
+  color: $color-darkgray-300;
+  line-height: $line-height-sm;
+
   // normalize the table styles across browsers
   table {
     border-collapse: collapse;
     width: 100%;
-    font-size: $font-size-small;
   }
 
   th, td {
@@ -180,7 +219,7 @@ export default defineComponent({
   }
 
   td, th {
-    padding: 20px 16px 16px 16px;
+    padding: 18px 16px 14px 16px;
     // border needs to be half the size because they are getting combined with other cells
     border: 0.5px solid $color-gray-200;
     white-space: nowrap;
@@ -199,9 +238,10 @@ export default defineComponent({
   }
 
   thead th {
+    font-weight: $font-weight-medium;
+    line-height: $line-height-xs;
     background-color: $color-gray-50;
-    font-weight: $font-weight-semi-bold;
-    color: $color-darkgray-100;
+    color: #6B7280; // TODO: this needs to be a variable in the future
     min-width: 50px;
     // header is sticky so it needs to have the full border
     border-bottom-width: 1px;
