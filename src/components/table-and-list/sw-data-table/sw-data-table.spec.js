@@ -52,6 +52,8 @@ function createWrapper() {
     propsData: {
       dataSource: SwDataTableFixtures,
       columns: columnsFixture,
+      title: 'Data table',
+      subtitle: 'This is the subline'
     },
   });
 }
@@ -327,7 +329,7 @@ describe("sw-data-table", () => {
     });
   });
 
-  describe("TODO: Should render the table data cells correctly", () => {
+  describe("Should render the table data cells correctly", () => {
     it("should render table data cells with 'max-width' to 'auto' when 'cellWrap' is 'normal'", async () => {
       const wrapper = createWrapper();
 
@@ -451,6 +453,48 @@ describe("sw-data-table", () => {
 
       const firstColumnData = wrapper.findAll('td').at(0);
       expect(firstColumnData.attributes().style).toContain('min-width: 789px');
+    });
+  });
+
+  describe("Should render the card props correctly", () => {
+    it('should render the title', () => {
+      const wrapper = createWrapper();
+
+      const title = wrapper.find('.sw-card__title');
+      
+      expect(title.exists()).toBe(true);
+      expect(title.text()).toBe('Data table');
+    });
+
+    it('should render the subtitle', () => {
+      const wrapper = createWrapper();
+
+      const subtitle = wrapper.find('.sw-card__subtitle');
+
+      expect(subtitle.exists()).toBe(true);
+      expect(subtitle.text()).toBe('This is the subline');
+    });
+
+    it('should not render the title', async () => {
+      const wrapper = createWrapper();
+      await wrapper.setProps({
+        title: undefined
+      })
+
+      const title = wrapper.find('.sw-card__title');
+      
+      expect(title.exists()).toBe(false);
+    });
+
+    it('should not render the subtitle', async () => {
+      const wrapper = createWrapper();
+      await wrapper.setProps({
+        subtitle: undefined
+      })
+
+      const subtitle = wrapper.find('.sw-card__subtitle');
+
+      expect(subtitle.exists()).toBe(false);
     });
   });
 });

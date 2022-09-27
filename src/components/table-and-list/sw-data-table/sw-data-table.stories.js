@@ -49,7 +49,9 @@ export default {
         renderer: 'number',
         position: 500,
       },
-    ]
+    ],
+    title: 'Data table',
+    subtitle: 'Meta information is helpful for giving the user quick insides'
   }
 };
 
