@@ -11,10 +11,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import SwPopoverDirective from '../../../directives/popover.directive';
 
-export default {
+export default Vue.extend({
   name: 'SwPopover',
 
   directives: {
@@ -23,7 +24,7 @@ export default {
 
   props: {
     zIndex: {
-      type: [Number, null],
+      type: [Number, null] as PropType<number|null>,
       required: false,
       default: null,
     },
@@ -33,29 +34,26 @@ export default {
       default: false,
     },
     popoverClass: {
-      type: [String, Array, Object],
+      type: [String, Array, Object] as PropType<string|Array<unknown>|Record<string,unknown>>,
       required: false,
       default: '',
     },
   },
 
   computed: {
-    componentStyle() {
+    componentStyle(): { 'z-Index': number|null } {
       return {
         'z-Index': this.zIndex,
       };
     },
-    popoverConfig() {
-      const popoverConfigBase = this.popoverConfigExtension || {};
-
+    popoverConfig(): { active: boolean, resizeWidth: boolean } {
       return {
-        ...popoverConfigBase,
         active: true,
         resizeWidth: this.resizeWidth,
       };
     },
   },
-};
+});
 </script>
 
 <style lang="scss">
