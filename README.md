@@ -1,9 +1,3 @@
-# Warning:
-### This repository is still under development and should not be used yet.
- 
---------
-
-
 # Meteor component library
 
 The meteor component library is a Vue component library developed by Shopware. It is based on the [Meteor Design System](https://shopware.design/).
