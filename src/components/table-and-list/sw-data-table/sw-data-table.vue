@@ -4,45 +4,50 @@
     :title="title"
     :subtitle="subtitle"
   >
-    <div class="sw-data-table__table">
-      <table>
-        <thead>
-          <tr>
-            <th
-              v-for="column in sortedColumns"
-              :key="column.property"
-              :style="renderColumnHeaderStyle(column)"
+    <template #toolbar>
+      <p>TODO: add toolbar content</p>
+    </template>
+    <template #default>
+      <div class="sw-data-table__table">
+        <table>
+          <thead>
+            <tr>
+              <th
+                v-for="column in sortedColumns"
+                :key="column.property"
+                :style="renderColumnHeaderStyle(column)"
+              >
+                <span>{{ column.label }}</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="data in dataSource"
+              :key="data.id"
             >
-              <span>{{ column.label }}</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="data in dataSource"
-            :key="data.id"
-          >
-            <td
-              v-for="column in sortedColumns"
-              :key="column.property"
-              :style="renderColumnDataCellStyle(column)"
-            >
-              <div
-                v-if="column.property === 'manufacturer.name'"
-                style="
+              <td
+                v-for="column in sortedColumns"
+                :key="column.property"
+                :style="renderColumnDataCellStyle(column)"
+              >
+                <div
+                  v-if="column.property === 'manufacturer.name'"
+                  style="
                 width: 10px;
                 height: 10px;
                 background-color: gray;
             "
-              />
+                />
 
-              <!-- TODO: use renderer -->
-              {{ data[column.property] }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+                <!-- TODO: use renderer -->
+                {{ data[column.property] }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </template>
   </sw-card>
 </template>
 
