@@ -11,7 +11,15 @@ module.exports = {
   ],
   transform: {
     // process `*.vue` files with `vue-jest`
-    ".*\\.(vue)$": "@vue/vue2-jest"
+    ".*\\.(vue)$": "@vue/vue2-jest",
+  },
+  transformIgnorePatterns: [
+    "node_modules/(?!lodash|other)"
+  ],
+  globals: {
+    'ts-jest': {
+      isolatedModules: true
+    }
   },
   roots: ['src'],
   testMatch: ['<rootDir>/src/**/*.spec.js', '<rootDir>/src/**/*.spec.ts'],

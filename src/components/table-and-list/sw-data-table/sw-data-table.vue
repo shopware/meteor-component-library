@@ -1,14 +1,20 @@
 <template>
+  <!-- Height needs to be set inline because the card has an sw-ignore-class component as a wrapper -->
   <sw-card
     class="sw-data-table"
+    style="height: 100%"
     :title="title"
     :subtitle="subtitle"
   >
     <template #toolbar>
       <p>TODO: add toolbar content</p>
     </template>
+
     <template #default>
-      <div class="sw-data-table__table">
+      <div
+        ref="tableWrapper"
+        class="sw-data-table__table-wrapper"
+      >
         <table>
           <thead>
             <tr>
@@ -47,12 +53,22 @@
           </tbody>
         </table>
       </div>
+
+      <div class="sw-data-table__scroll-shadow sw-data-table__scroll-shadow-top" />
+      <div class="sw-data-table__scroll-shadow sw-data-table__scroll-shadow-right" />
+      <div class="sw-data-table__scroll-shadow sw-data-table__scroll-shadow-bottom" />
+      <div class="sw-data-table__scroll-shadow sw-data-table__scroll-shadow-left" />
+    </template>
+
+    <template #footer>
+      <p>TODO: add footer content</p>
     </template>
   </sw-card>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from 'vue';
+  import useScrollPossibilitiesClasses from './composables/useScrollPossibilitiesClasses';
+import { defineComponent, computed, PropType, onMounted, onBeforeUnmount, ref, onUpdated, onActivated, nextTick } from 'vue';
 import SwCard from '../../layout/sw-card/sw-card.vue';
 
 interface ColumnDefinition {
@@ -120,6 +136,7 @@ export default defineComponent({
         const sortedColumns = computed(() => {
             return props.columns.slice().sort((a, b) => a.position - b.position);
         });
+       
         const renderColumnDefaultStyle = (column: ColumnDefinition) => {
             const defaultColumnWidth = "auto";
             const minimumColumnWidth = "100px";
@@ -143,21 +160,31 @@ export default defineComponent({
                 "white-space": whiteSpace,
             };
         };
+
         const renderColumnHeaderStyle = (column: ColumnDefinition) => {
             return {
                 ...renderColumnDefaultStyle(column),
                 "max-width": "fit-content"
             };
         };
+
         const renderColumnDataCellStyle = (column: ColumnDefinition) => {
             return {
                 ...renderColumnDefaultStyle(column),
             };
         };
+
+        /**
+         * Add scroll possibilities to tableWrapper
+         */
+        const tableWrapper = ref();
+        useScrollPossibilitiesClasses(tableWrapper);
+
         return {
             sortedColumns,
             renderColumnDataCellStyle,
-            renderColumnHeaderStyle
+            renderColumnHeaderStyle,
+            tableWrapper
         };
     }
 })
@@ -192,6 +219,16 @@ $line-height-lg: 28px;
 $color-card-headline: #1C1C1C;
 
 .sw-data-table {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  // normalize the table styles across browsers
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
   /**
   * Adjust card styling so that it looks good with Inter font and the grid
   */
@@ -213,17 +250,11 @@ $color-card-headline: #1C1C1C;
   }
 
   .sw-card__content {
-    padding: 0;
-    height: 500px;
-  }
-
-  .sw-data-table__table {
-    width: 100%;
     height: 100%;
-    overflow: auto;
-    border: 0.5px solid $color-gray-200;
+    padding: 0;
   }
 
+  // add new Inter font to data table
   *  {
       font-family: $font-family-default;
   }
@@ -241,20 +272,82 @@ $color-card-headline: #1C1C1C;
   color: $color-darkgray-300;
   line-height: $line-height-sm;
 
-  // normalize the table styles across browsers
-  table {
-    border-collapse: collapse;
+  .sw-data-table__table-wrapper {
+    position: relative;
     width: 100%;
+    height: 100%;
+    overflow: auto;
   }
 
+  // add scroll shadows
+  --scrollbar-height: 0px;
+  --scrollbar-width: 0px;
+  $scrollShadowSize: 16px;
+  $scrollShadowColor: rgba(120,120,120,0.2);
+  $tableHeaderSize: 51px;
+  $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
+
+  .sw-data-table__scroll-shadow {
+      pointer-events: none;
+      position: absolute;
+      opacity: 0;
+      transition: 0.1s ease opacity;
+    }
+
+    .sw-data-table__scroll-shadow-top {
+      background: linear-gradient($scrollShadowColor, transparent);
+      top: $tableHeaderSize; // more pixel because of the table header
+      width: calc(100% - var(--scrollbar-width));
+      height: $scrollShadowSize;
+    }
+
+    .sw-data-table__scroll-shadow-right {
+      background: linear-gradient(-90deg, $scrollShadowColor, transparent);
+      top: $tableHeaderSize;
+      right: var(--scrollbar-width);
+      height: $scrollShadowHeight;
+      width: $scrollShadowSize;
+    }
+
+    .sw-data-table__scroll-shadow-bottom {
+      background: linear-gradient(0deg, $scrollShadowColor, transparent);
+      bottom: var(--scrollbar-height);
+      width: calc(100% - var(--scrollbar-width));
+      height: $scrollShadowSize;
+    }
+
+    .sw-data-table__scroll-shadow-left {
+      background: linear-gradient(90deg, $scrollShadowColor, transparent);
+      top: $tableHeaderSize;
+      left: 0;
+      height: $scrollShadowHeight;
+      width: $scrollShadowSize;
+    }
+
+    .sw-data-table__table-wrapper[data-scroll-top] ~ .sw-data-table__scroll-shadow-top {
+      opacity: 1;
+    }
+    .sw-data-table__table-wrapper[data-scroll-right] ~ .sw-data-table__scroll-shadow-right {
+      opacity: 1;
+    }
+    .sw-data-table__table-wrapper[data-scroll-bottom] ~ .sw-data-table__scroll-shadow-bottom {
+      opacity: 1;
+    }
+    .sw-data-table__table-wrapper[data-scroll-left] ~ .sw-data-table__scroll-shadow-left {
+      opacity: 1;
+    }
+    
+
+  // custom table styling
   th, td {
     padding: 0.25rem;
     text-align: left;
     border: 1px solid #ccc;
   }
 
-  // custom table styling
   table {
+    margin: -0.5px;
+    width: calc(100% + 0.5px);
     border-collapse: separate;
     border-spacing: 0;
     table-layout: auto;
@@ -287,6 +380,7 @@ $color-card-headline: #1C1C1C;
     min-width: 50px;
     // header is sticky so it needs to have the full border
     border-bottom-width: 1px;
+    border-top: 0;
     position: sticky;
     top: 0;
     text-transform: uppercase;

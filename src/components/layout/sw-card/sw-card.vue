@@ -81,11 +81,12 @@
           :title="title"
         />
 
+        <sw-loader v-if="isLoading" />
+      </div>
+
+      <div class="sw-card__footer">
         <!-- @slot The footer slot which allows rendering addintional things after the content -->
         <slot name="footer" />
-
-
-        <sw-loader v-if="isLoading" />
       </div>
     </div>
 
@@ -172,6 +173,7 @@ export default Vue.extend({
                 'has--title': !!this.title || !!this.$slots.title || !!this.$scopedSlots.title,
                 'has--subtitle': !!this.subtitle || !!this.$slots.subtitle || !!this.$scopedSlots.subtitle,
                 'has--toolbar': !!this.$slots.toolbar || !!this.$scopedSlots.toolbar,
+                'has--footer': !!this.$slots.footer || !!this.$scopedSlots.footer,
             };
 
             if (!this.$refs.swIgnoreClass) {
@@ -407,6 +409,24 @@ export default Vue.extend({
             &:hover {
                 color: $color-shopware-brand-600;
             }
+        }
+    }
+
+    .sw-card__footer {
+        background-color: $color-white;
+        padding: 16px 24px;
+        border-top: none;
+        border-radius: 0 0 $border-radius-lg $border-radius-lg;
+    }
+
+    .sw-card__footer:empty {
+        display: none;
+    }
+
+    &.has--footer {
+        .sw-card__content {
+            border: none;
+            border-radius: 0;
         }
     }
 }
