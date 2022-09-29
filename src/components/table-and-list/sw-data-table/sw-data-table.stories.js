@@ -59,7 +59,7 @@ const Template = (args, { argTypes }) => ({
   components: { SwDataTable },
   props: Object.keys(argTypes),
   template: `
-  <div style="max-width: 1000px; max-height: 500px; height: 500px; margin: 0 auto;">
+  <div style="max-width: 1000px; max-height: 400px; height: 500px; margin: 0 auto;">
     <sw-data-table  v-bind="$props">{{ $props.default}}</sw-data-table>
   </div>
   `,

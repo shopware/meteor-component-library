@@ -47,6 +47,19 @@ const columnsFixture = [
 
 const DEFAULT_MIN_WIDTH = '100px';
 
+// mock resizeOvserver
+global.ResizeObserver = class ResizeObserver {
+  observe() {
+      // do nothing
+  }
+  unobserve() {
+      // do nothing
+  }
+  disconnect() {
+      // do nothing
+  }
+};
+
 function createWrapper() {
   return mount(SwDataTable, {
     propsData: {
