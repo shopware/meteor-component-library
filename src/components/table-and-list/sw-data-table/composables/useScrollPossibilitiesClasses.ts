@@ -1,8 +1,6 @@
 import { Ref, onUpdated, nextTick, onBeforeUnmount, onMounted } from 'vue';
 import { throttle } from 'lodash-es';
 
-// TODO: write Unit tests for this
-
 /**
  * This composable expect a Vue reference to an HTML element. It sets
  * automatically the data attributes "data-scroll-(top|right|bottom|left)"
@@ -74,6 +72,7 @@ export default function useScrollPossibilitiesClasses(refElement: Ref<any>) {
     setScrollPossibilitiesClasses(refElement.value)
   }, 15);
 
+  // @ts-expect-error - ResizeObserver is not defined in this older TS version
   const refElementResizeObserver = new ResizeObserver(() => {
     nextTick().then(updateSetScrollPossibiltiesClasses)
   })
