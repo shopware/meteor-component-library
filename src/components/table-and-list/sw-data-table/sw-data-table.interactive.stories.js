@@ -62,7 +62,6 @@ VisualTestRenderTableWithoutCardHeader.args = {
   subtitle: undefined
 };
 
-// TODO: add tests for scroll shadows (horizontal and vertical)
 export const VisualTestRenderTableWithScrollShadows = Template.bind();
 VisualTestRenderTableWithScrollShadows.storyName = 'Should render the Table with scroll shadows';
 VisualTestRenderTableWithScrollShadows.args = {

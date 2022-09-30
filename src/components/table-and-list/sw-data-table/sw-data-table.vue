@@ -68,7 +68,7 @@
 
 <script lang="ts">
   import useScrollPossibilitiesClasses from './composables/useScrollPossibilitiesClasses';
-import { defineComponent, computed, PropType, onMounted, onBeforeUnmount, ref, onUpdated, onActivated, nextTick } from 'vue';
+import { defineComponent, computed, PropType, ref } from 'vue';
 import SwCard from '../../layout/sw-card/sw-card.vue';
 
 interface ColumnDefinition {
