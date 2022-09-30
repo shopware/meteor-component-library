@@ -2,7 +2,9 @@
   "name": "@shopware-ag/meteor-component-library",
   "version": "2.0.1",
   "scripts": {
-    "lint": "vue-tsc --noEmit --declaration false && eslint --ext .js,.ts,.vue src",
+    "lint": "npm run lint:tsc && npm run lint:eslint",
+    "lint:tsc": "vue-tsc --noEmit --declaration false",
+    "lint:eslint": "eslint --ext .js,.ts,.vue src",
     "storybook": "SHOW_INTERACTIONS=true start-storybook -p 6006",
     "build-vue": "rollup -c",
     "build-storybook": "build-storybook",
