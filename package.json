@@ -2,7 +2,9 @@
   "name": "@shopware-ag/meteor-component-library",
   "version": "1.0.1",
   "scripts": {
-    "lint": "vue-tsc --noEmit --declaration false && eslint --ext .js,.ts,.vue src",
+    "lint": "npm run lint:tsc && npm run lint:eslint",
+    "lint:tsc": "vue-tsc --noEmit --declaration false",
+    "lint:eslint": "eslint --ext .js,.ts,.vue src",
     "storybook": "SHOW_INTERACTIONS=true start-storybook -p 6006",
     "build-vue": "rollup -c",
     "build-storybook": "build-storybook",
@@ -70,6 +72,7 @@
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-storybook": "^0.5.12",
     "eslint-plugin-vue": "^9.5.1",
+    "flush-promises": "^1.0.2",
     "jest": "^27.5.1",
     "jest-image-snapshot": "5.1.0",
     "mini-css-extract-plugin": "^2.6.1",
