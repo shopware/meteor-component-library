@@ -12,9 +12,11 @@ module.exports = {
   transform: {
     // process `*.vue` files with `vue-jest`
     ".*\\.(vue)$": "@vue/vue2-jest",
+    // stringify svg imports
+    ".*\\.(svg)$": "<rootDir>/utils/svgStringifyTransformer.js"
   },
   transformIgnorePatterns: [
-    "node_modules/(?!lodash|other)"
+    "node_modules/(?!lodash|@shopware-ag/meteor-icon-kit|other)"
   ],
   globals: {
     'ts-jest': {
