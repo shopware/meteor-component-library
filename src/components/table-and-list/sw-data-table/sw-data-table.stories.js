@@ -4,7 +4,15 @@ import SwDataTableFixtures from './sw-data-table.fixtures.json';
 export default {
   title: 'Components/Table and list/sw-data-table',
   component: SwDataTable,
-  argTypes: {},
+  argTypes: {
+    // events
+    reload: {
+      action: 'reload',
+      table: {
+        category: 'Events'
+      }
+    },
+  },
   args: {
     dataSource: SwDataTableFixtures,
     columns: [
@@ -51,7 +59,8 @@ export default {
       },
     ],
     title: 'Data table',
-    subtitle: 'Meta information is helpful for giving the user quick insides'
+    subtitle: 'Meta information is helpful for giving the user quick insides',
+    enableReload: false,
   }
 };
 
@@ -60,7 +69,7 @@ const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   template: `
   <div style="max-width: 1000px; max-height: 400px; height: 500px; margin: 0 auto;">
-    <sw-data-table  v-bind="$props">{{ $props.default}}</sw-data-table>
+    <sw-data-table v-bind="$props" @reload="reload">{{ $props.default}}</sw-data-table>
   </div>
   `,
 });

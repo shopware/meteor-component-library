@@ -413,6 +413,7 @@ export default Vue.extend({
     }
 
     .sw-card__footer {
+        display: flex;
         background-color: $color-white;
         padding: 16px 24px;
         border-top: none;
