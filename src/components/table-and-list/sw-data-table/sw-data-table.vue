@@ -62,10 +62,20 @@
 
     <template #footer>
       <div class="sw-data-table__footer-left">
-        <!-- TODO: this content will be filled later -->
+        <sw-select
+          small
+          hideClearableButton
+          :options="paginationOptionsConverted"
+          :value="paginationLimit"
+          @change="emitPaginationLimitChange"
+        />
+        <span class="sw-data-table__pagination-info-text">
+          {{ $t('sw-data-table.itemsPerPage') }}
+        </span>
       </div>
 
       <div class="sw-data-table__footer-right">
+        <sw-pagination />
         <sw-button
           v-if="enableReload"
           square
@@ -80,11 +90,13 @@
 </template>
 
 <script lang="ts">
-  import useScrollPossibilitiesClasses from './composables/useScrollPossibilitiesClasses';
+import useScrollPossibilitiesClasses from './composables/useScrollPossibilitiesClasses';
 import { defineComponent, computed, PropType, ref } from 'vue';
 import SwCard from '../../layout/sw-card/sw-card.vue';
 import SwButton from '../../form/sw-button/sw-button.vue';
+import SwSelect from '../../form/sw-select/sw-select.vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
+import SwPagination from '../sw-pagination/sw-pagination.vue';
 
 interface ColumnDefinition {
 	label: string; // the label for the column
@@ -108,7 +120,9 @@ export default defineComponent({
     components: {
       'sw-card': SwCard,
       'sw-button': SwButton,
+      'sw-select': SwSelect,
       'sw-icon': SwIcon,
+      'sw-pagination': SwPagination,
     },
     props: {
         dataSource: {
@@ -152,9 +166,31 @@ export default defineComponent({
           type: Boolean,
           required: false,
           default: false,
+        },
+        paginationLimit: {
+          type: Number,
+          required: true
+        },
+        paginationOptions: {
+          type: Array as PropType<Array<number>>,
+          required: true
         }
     },
-    emits: ['reload'],
+    emits: ['reload', 'pagination-limit-change'],
+    i18n: {
+      messages: {
+        en: {
+          'sw-data-table': {
+            itemsPerPage: 'Items per page'
+          }
+        },
+        de: {
+          'sw-data-table': {
+            itemsPerPage: 'Einträge pro Seite'
+          }
+        }
+      }
+    },
     setup(props, { emit }) {
         const sortedColumns = computed(() => {
             return props.columns.slice().sort((a, b) => a.position - b.position);
@@ -199,18 +235,36 @@ export default defineComponent({
 
         const emitReload = () => emit('reload');
 
-        /**
+        /***
          * Add scroll possibilities to tableWrapper
          */
         const tableWrapper = ref();
         useScrollPossibilitiesClasses(tableWrapper);
+
+        /***
+         * Pagination
+         */
+        const emitPaginationLimitChange = (limitValue: number) => {
+          emit('pagination-limit-change', limitValue)
+        }
+
+        const paginationOptionsConverted = computed(() => {
+          return props.paginationOptions.map((paginationNumber) => ({
+            id: paginationNumber,
+            label: paginationNumber.toString(),
+            value: paginationNumber
+          }))
+        })
 
         return {
             sortedColumns,
             renderColumnDataCellStyle,
             renderColumnHeaderStyle,
             tableWrapper,
-            emitReload
+            emitReload,
+            emitPaginationLimitChange,
+            paginationOptionsConverted,
+            // t
         };
     }
 })
@@ -419,6 +473,16 @@ $color-card-headline: #1C1C1C;
   /**
   * Footer styling
   */
+  &__footer-left {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    .sw-select {
+      margin-bottom: 0;
+    }
+  }
+
   &__footer-right {
     margin-left: auto;
 
@@ -426,6 +490,14 @@ $color-card-headline: #1C1C1C;
       width: 12px;
       height: 12px;
     }
+  }
+
+  &__pagination-info-text {
+    color: $color-gray-800;
+    margin-top: 4px;
+    white-space: nowrap;
+    font-size: $font-size-xxs;
+    margin-left: 12px;
   }
 }
 </style>

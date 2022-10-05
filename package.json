@@ -30,7 +30,8 @@
     "flatpickr": "4.6.3",
     "inter-ui": "^3.19.3",
     "lodash-es": "^4.17.21",
-    "punycode": "^2.1.1"
+    "punycode": "^2.1.1",
+    "vue-demi": "^0.13.11"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
@@ -93,6 +94,7 @@
     "vue-apexcharts": "^1.6.2",
     "vue-class-component": "^7.2.3",
     "vue-i18n": "^8.26.8",
+    "vue-i18n-bridge": "^9.2.2",
     "vue-loader": "^15.10.0",
     "vue-property-decorator": "^9.1.2",
     "vue-template-compiler": "^2.7.10",
