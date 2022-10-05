@@ -152,7 +152,7 @@ $sw-select-result-disabled-color-background: $color-gray-100;
 $sw-select-result-disabled-color-text: darken($color-gray-300, 15%);
 
 .sw-select-result {
-  padding: 12px 15px;
+  padding: 12px 4px;
   cursor: pointer;
   display: grid;
   grid-template-columns: auto auto 1fr auto;
@@ -193,7 +193,7 @@ $sw-select-result-disabled-color-text: darken($color-gray-300, 15%);
 
   > .sw-icon {
     color: $sw-select-result-color-icon;
-    margin-left: 10px;
+    margin-left: 4px;
     order: 4;
     justify-self: end;
   }

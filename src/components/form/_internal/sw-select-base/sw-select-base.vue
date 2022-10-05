@@ -56,7 +56,7 @@
 
           <sw-icon
             class="sw-select__select-indicator"
-            name="regular-chevron-down-s"
+            name="solid-chevron-down-xs"
           />
         </div>
       </div>
@@ -302,6 +302,7 @@ $sw-select-focus-transition: all ease-in-out 0.2s;
 
 .sw-select {
   position: relative;
+  min-width: 100px;
 
   .sw-block-field__block {
     transition: $sw-select-focus-transition;
@@ -405,6 +406,16 @@ $sw-select-focus-transition: all ease-in-out 0.2s;
 
     input {
       background-color: $color-gray-100;
+    }
+  }
+
+  &--small {
+    cursor: pointer;
+
+    .sw-select-selection-list--single .sw-label {
+      cursor: pointer;
+      height: 18px;
+      padding-top: 1px;
     }
   }
 }
