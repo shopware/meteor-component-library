@@ -5,6 +5,7 @@ export default {
   component: SwSelect,
   args: {
     label: 'Select',
+    value: 'b',
     options: [
       {
         id: 1,

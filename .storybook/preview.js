@@ -4,17 +4,23 @@ import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import DeviceHelperPlugin from '../src/plugin/device-helper.plugin';
 import { darkTheme, lightTheme } from './shopwareTheme';
+import { createI18n } from 'vue-i18n-bridge';
 
-Vue.use(VueI18n);
+Vue.use(VueI18n, { bridge: true });
 Vue.use(DeviceHelperPlugin);
 
-export const i18n = new VueI18n({
+const i18n = createI18n({
+  legacy: true,
+  allowComposition: true,
   locale: 'en',
   fallbackLocale: 'en',
   messages: {
-    en: {}
+    en: {},
+    de: {},
   }
-});
+}, VueI18n);
+
+Vue.use(i18n);
 
 export const decorators = [
   (story, context) => {
