@@ -510,4 +510,42 @@ describe("sw-data-table", () => {
       expect(subtitle.exists()).toBe(false);
     });
   });
+
+  describe("Should render the general props correctly", () => {
+    it('should not render the reload button', async () => {
+      const wrapper = createWrapper();
+
+      const reloadButton = wrapper.find('.sw-button[aria-label="reload-data"]');
+
+      expect(reloadButton.exists()).toBe(false);
+    });
+
+    it('should render the reload button', async () => {
+      const wrapper = createWrapper();
+      await wrapper.setProps({
+        enableReload: true
+      })
+
+      const reloadButton = wrapper.find('.sw-button[aria-label="reload-data"]');
+
+      expect(reloadButton.exists()).toBe(true);
+    });
+  });
+
+  describe("Should execute the functionalities correctly", () => {
+    it('should emit the reload on event on clicking the reload button', async () => {
+      const wrapper = createWrapper();
+      await wrapper.setProps({
+        enableReload: true
+      })
+
+      const reloadButton = wrapper.find('.sw-button[aria-label="reload-data"]');
+
+      expect(wrapper.emitted().reload).toBeFalsy()
+
+      await reloadButton.trigger('click');
+
+      expect(wrapper.emitted().reload).toBeTruthy()
+    });
+  });
 });

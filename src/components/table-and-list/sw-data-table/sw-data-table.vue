@@ -61,7 +61,20 @@
     </template>
 
     <template #footer>
-      <p>TODO: add footer content</p>
+      <div class="sw-data-table__footer-left">
+        <!-- TODO: this content will be filled later -->
+      </div>
+
+      <div class="sw-data-table__footer-right">
+        <sw-button
+          v-if="enableReload"
+          square
+          aria-label="reload-data"
+          @click="emitReload"
+        >
+          <sw-icon name="solid-undo-s" />
+        </sw-button>
+      </div>
     </template>
   </sw-card>
 </template>
@@ -70,6 +83,8 @@
   import useScrollPossibilitiesClasses from './composables/useScrollPossibilitiesClasses';
 import { defineComponent, computed, PropType, ref } from 'vue';
 import SwCard from '../../layout/sw-card/sw-card.vue';
+import SwButton from '../../form/sw-button/sw-button.vue';
+import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 
 interface ColumnDefinition {
 	label: string; // the label for the column
@@ -91,7 +106,9 @@ type ColumnProperty = ColumnDefinition[];
 
 export default defineComponent({
     components: {
-      'sw-card': SwCard
+      'sw-card': SwCard,
+      'sw-button': SwButton,
+      'sw-icon': SwIcon,
     },
     props: {
         dataSource: {
@@ -131,8 +148,14 @@ export default defineComponent({
             required: false,
             default: '',
         },
+        enableReload: {
+          type: Boolean,
+          required: false,
+          default: false,
+        }
     },
-    setup(props) {
+    emits: ['reload'],
+    setup(props, { emit }) {
         const sortedColumns = computed(() => {
             return props.columns.slice().sort((a, b) => a.position - b.position);
         });
@@ -174,6 +197,8 @@ export default defineComponent({
             };
         };
 
+        const emitReload = () => emit('reload');
+
         /**
          * Add scroll possibilities to tableWrapper
          */
@@ -184,7 +209,8 @@ export default defineComponent({
             sortedColumns,
             renderColumnDataCellStyle,
             renderColumnHeaderStyle,
-            tableWrapper
+            tableWrapper,
+            emitReload
         };
     }
 })
@@ -388,6 +414,18 @@ $color-card-headline: #1C1C1C;
 
   tr {
     background-color: $color-white;
+  }
+
+  /**
+  * Footer styling
+  */
+  &__footer-right {
+    margin-left: auto;
+
+    .sw-button #meteor-icon-kit__solid-undo-s {
+      width: 12px;
+      height: 12px;
+    }
   }
 }
 </style>
