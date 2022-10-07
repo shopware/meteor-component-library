@@ -97,6 +97,8 @@ VisualTestInherited.play = async ({ args }) => {
 
   await userEvent.click(canvas.getByTestId('sw-inheritance-switch-icon'));
 
+  await waitUntilRendered(() => document.querySelector('.sw-tooltip'))
+
   await expect(args.inheritanceRemove).toHaveBeenCalledWith(undefined);
 };
 

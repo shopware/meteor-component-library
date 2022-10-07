@@ -23,6 +23,17 @@ export default {
         category: 'Events'
       }
     },
+    'pagination-current-page-change': {
+      table: {
+        disable: true,
+      }
+    },
+    paginationCurrentPageChange: {
+      action: 'pagination-current-page-change',
+      table: {
+        category: 'Events'
+      }
+    }
   },
   args: {
     dataSource: SwDataTableFixtures,
@@ -71,7 +82,8 @@ export default {
     ],
     title: 'Data table',
     subtitle: 'Meta information is helpful for giving the user quick insides',
-    enableReload: false,
+    enableReload: true,
+    currentPage: 1,
     paginationLimit: 25,
     paginationOptions: [5,10,25,50,250,5000]
   }
@@ -83,6 +95,7 @@ const Template = (args, { argTypes }) => ({
   data() {
     return {
       paginationLimitValue: 0,
+      currentPageValue: 0,
     }
   },
   watch: {
@@ -95,12 +108,26 @@ const Template = (args, { argTypes }) => ({
         this.paginationLimitValue = v;
       },
       immediate: true
+    },
+    currentPage: {
+      handler(v) {
+        if (this.currentPageValue === v) {
+          return;
+        }
+
+        this.currentPageValue = v;
+      },
+      immediate: true
     }
   },
   methods: {
     paginationLimitChangeHandler(event) {
       this.paginationLimitChange(event)
       this.paginationLimitValue = event;
+    },
+    paginationCurrentPageChangeHandler(event) {
+      this.paginationCurrentPageChange(event)
+      this.currentPageValue = event;
     }
   },
   template: `
@@ -110,6 +137,9 @@ const Template = (args, { argTypes }) => ({
       @reload="reload"
       :paginationLimit="paginationLimitValue"
       @pagination-limit-change="paginationLimitChangeHandler"
+      :currentPage="currentPageValue"
+      @pagination-current-page-change="paginationCurrentPageChangeHandler"
+      :paginationTotalItems="90"
     >
       {{ $props.default}}
     </sw-data-table>
