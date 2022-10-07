@@ -66,8 +66,14 @@ function createWrapper() {
       dataSource: SwDataTableFixtures,
       columns: columnsFixture,
       title: 'Data table',
-      subtitle: 'This is the subline'
+      subtitle: 'This is the subline',
+      currentPage: 1,
+      paginationTotalItems: 182,
+      paginationLimit: 25
     },
+    mocks: {
+      $t: (v) => v,
+    }
   });
 }
 

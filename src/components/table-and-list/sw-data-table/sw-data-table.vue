@@ -64,7 +64,7 @@
       <div class="sw-data-table__footer-left">
         <sw-select
           small
-          hideClearableButton
+          hide-clearable-button
           :options="paginationOptionsConverted"
           :value="paginationLimit"
           @change="emitPaginationLimitChange"
@@ -75,7 +75,13 @@
       </div>
 
       <div class="sw-data-table__footer-right">
-        <sw-pagination />
+        <sw-pagination
+          :limit="paginationLimit"
+          :current-page="currentPage"
+          :total-items="paginationTotalItems"
+          @change-current-page="emitPaginationCurrentPageChange"
+        />
+
         <sw-button
           v-if="enableReload"
           square
@@ -167,16 +173,25 @@ export default defineComponent({
           required: false,
           default: false,
         },
+        currentPage: {
+          type: Number,
+          required: true,
+        },
         paginationLimit: {
+          type: Number,
+          required: true
+        },
+        paginationTotalItems: {
           type: Number,
           required: true
         },
         paginationOptions: {
           type: Array as PropType<Array<number>>,
-          required: true
+          required: false,
+          default: () => [5,10,25,50]
         }
     },
-    emits: ['reload', 'pagination-limit-change'],
+    emits: ['reload', 'pagination-limit-change', 'pagination-current-page-change'],
     i18n: {
       messages: {
         en: {
@@ -248,6 +263,10 @@ export default defineComponent({
           emit('pagination-limit-change', limitValue)
         }
 
+        const emitPaginationCurrentPageChange = (currentPage: number) => {
+          emit('pagination-current-page-change', currentPage)
+        }
+
         const paginationOptionsConverted = computed(() => {
           return props.paginationOptions.map((paginationNumber) => ({
             id: paginationNumber,
@@ -263,6 +282,7 @@ export default defineComponent({
             tableWrapper,
             emitReload,
             emitPaginationLimitChange,
+            emitPaginationCurrentPageChange,
             paginationOptionsConverted,
             // t
         };
@@ -279,14 +299,6 @@ export default defineComponent({
 $font-family-default: 'Inter', -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
 $font-family-variables: 'Inter var', -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
 $font-family-default-feature-settings: 'ss01' on, 'ss02' on, 'case' on, 'cpsp' on, 'zero' on, 'cv09' on, 'cv07' on, 'cv06' on, 'cv10' on, 'cv11' on;
-
-$font-size-xxs: 12px;
-$font-size-xs: 14px;
-$font-size-s: 16px;
-$font-size-m: 18px;
-$font-size-l: 20px;
-$font-size-xl: 24px;
-$font-size-3xl: 28px;
 
 $font-weight-medium: 500;
 
@@ -478,13 +490,31 @@ $color-card-headline: #1C1C1C;
     flex-wrap: nowrap;
     align-items: center;
 
+    .sw-field__label {
+      display: none;
+    }
+
     .sw-select {
       margin-bottom: 0;
     }
   }
 
   &__footer-right {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 16px;
     margin-left: auto;
+
+    .sw-button[aria-label="reload-data"] {
+      height: 34px;
+      width: 34px;
+      background-color: $color-white;
+
+      &:hover {
+        background-color: $color-gray-100;
+      }
+    }
 
     .sw-button #meteor-icon-kit__solid-undo-s {
       width: 12px;
@@ -494,7 +524,6 @@ $color-card-headline: #1C1C1C;
 
   &__pagination-info-text {
     color: $color-gray-800;
-    margin-top: 4px;
     white-space: nowrap;
     font-size: $font-size-xxs;
     margin-left: 12px;
