@@ -80,7 +80,8 @@ export default Vue.extend({
      */
     label: {
       type: String,
-      required: true,
+      required: false,
+      default: undefined
     },
 
     /**

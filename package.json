@@ -12,7 +12,7 @@
     "test-storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npm run build-storybook -- --quiet && npx http-server storybook-static --port 6006 --silent\" \"wait-on tcp:6006 && npm run test-storybook\"",
     "test:unit": "jest",
     "test:unit:watch": "jest --watch",
-    "docker": "docker run -v $PWD:/tests:delegated -v $PWD/playwright-cache:/ms-playwright:delegated -w /tests -it --rm --ipc=host mcr.microsoft.com/playwright:v1.20.0-focal /bin/bash"
+    "docker": "docker run -v $PWD:/tests:delegated -w /tests -it --rm --ipc=host mcr.microsoft.com/playwright:v1.20.0-focal /bin/bash"
   },
   "main": "dist/common/index.js",
   "module": "dist/esm/index.js",
@@ -31,7 +31,8 @@
     "inter-ui": "^3.19.3",
     "lodash-es": "^4.17.21",
     "punycode": "^2.1.1",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "vue-demi": "^0.13.11"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
@@ -93,6 +94,7 @@
     "vue-apexcharts": "^1.6.2",
     "vue-class-component": "^7.2.3",
     "vue-i18n": "^8.26.8",
+    "vue-i18n-bridge": "^9.2.2",
     "vue-loader": "^15.10.0",
     "vue-property-decorator": "^9.1.2",
     "vue-template-compiler": "^2.7.10",

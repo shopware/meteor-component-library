@@ -128,6 +128,10 @@ VisualTestRenderTableWithScrollShadows.play = async () =>{
   swDataTable.scrollTop = (swDataTable.scrollHeight / 2) - (swDataTable.clientHeight / 2);
   swDataTable.scrollLeft = (swDataTable.scrollWidth / 2) - (swDataTable.clientWidth / 2);
 
+  // wait until everything is correctly rendered
+  const dataTable = document.querySelector('.sw-data-table');
+  await dataTable.parentElement.__vue__.$nextTick();
+
   expect(canvas.getByText('Render scroll shadows')).toBeInTheDocument();
 };
 
@@ -145,6 +149,10 @@ VisualTestEmitReloadEventOnClickingReload.play = async ({ args }) => {
   const reloadButton = canvas.getByLabelText('reload-data');
 
   await userEvent.click(reloadButton);
+
+  // wait until everything is correctly rendered
+  const dataTable = document.querySelector('.sw-data-table');
+  await dataTable.parentElement.__vue__.$nextTick();
 
   await expect(args.reload).toHaveBeenCalled();
 };
