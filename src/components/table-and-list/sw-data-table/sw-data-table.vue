@@ -15,35 +15,45 @@
         ref="tableWrapper"
         class="sw-data-table__table-wrapper"
       >
-        <table>
+        <table ref="dataTable">
           <thead>
             <tr>
               <th
                 v-for="column in sortedColumns"
                 :key="column.property"
+                :ref="(el) => {if (el) { columnHeaderRefs[column.property] = el }}"
+                :data-header-column-property="column.property"
                 :style="renderColumnHeaderStyle(column)"
               >
                 <span>{{ column.label }}</span>
+
+                <div
+                  v-if="column.allowResize !== false"
+                  class="sw-data-table__table-head-resizable"
+                  @mousedown="() => startColumnResizing(column)"
+                />
               </th>
             </tr>
           </thead>
           <tbody>
             <tr
-              v-for="data in dataSource"
+              v-for="(data, rowIndex) in dataSource"
               :key="data.id"
             >
               <td
-                v-for="column in sortedColumns"
-                :key="column.property"
+                v-for="(column) in sortedColumns"
+                :key="column.property + JSON.stringify(columnChanges[column.property])"
+                :ref="(el) => {setColumnDataCellRefs({el, column, index: rowIndex })}"
+                :data-cell-column-property="column.property"
                 :style="renderColumnDataCellStyle(column)"
               >
                 <div
                   v-if="column.property === 'manufacturer.name'"
                   style="
-                width: 10px;
-                height: 10px;
-                background-color: gray;
-            "
+                    width: 10px;
+                    height: 10px;
+                    background-color: gray;
+                  "
                 />
 
                 <!-- TODO: use renderer -->
@@ -97,7 +107,7 @@
 
 <script lang="ts">
 import useScrollPossibilitiesClasses from './composables/useScrollPossibilitiesClasses';
-import { defineComponent, computed, PropType, ref } from 'vue';
+import { defineComponent, computed, onBeforeUpdate, PropType, ref, set } from 'vue';
 import SwCard from '../../layout/sw-card/sw-card.vue';
 import SwButton from '../../form/sw-button/sw-button.vue';
 import SwSelect from '../../form/sw-select/sw-select.vue';
@@ -113,6 +123,12 @@ interface ColumnDefinition {
 	width?: number; // define the width value for this column
 	allowResize?: boolean; // you can disable the possibility for the user to resize this column
   cellWrap?: 'nowrap'|'normal'
+}
+
+interface ColumnChanges {
+  property: ColumnDefinition['property']
+  position: ColumnDefinition['position']
+  width: ColumnDefinition['width']
 }
 
 type DataSourcePropType = Array<{
@@ -157,6 +173,11 @@ export default defineComponent({
                 });
                 return validValues.every(value => value);
             }
+        },
+        columnChanges: {
+            type: Object as PropType<Record<string, ColumnChanges>>,
+            required: false,
+            default: () => ({}),
         },
         title: {
             type: String,
@@ -210,23 +231,191 @@ export default defineComponent({
         const sortedColumns = computed(() => {
             return props.columns.slice().sort((a, b) => a.position - b.position);
         });
+
+        /***
+         * Handle column resizing
+         */
+
+        // save all column and table refs
+        const dataTable = ref<HTMLElement|null>(null);
+        const columnHeaderRefs = ref<Record<string, HTMLElement>>({});
+        const columnDataCellRefs = ref<Record<string, Array<HTMLElement>>>({});
+        const setColumnDataCellRefs = ({el, column, index}: { el?: HTMLElement, column: ColumnDefinition, index: number}) => {
+          if (el) {
+            if (!Array.isArray(columnDataCellRefs.value[column.property])) {
+              columnDataCellRefs.value[column.property] = []
+            }
+
+            columnDataCellRefs.value[column.property][index] = el;
+          }
+        }
+
+        // reset all column refs before each update
+        onBeforeUpdate(() => {
+          columnHeaderRefs.value = {};
+          columnDataCellRefs.value = {};
+        })
+
+        /***
+         * This method will be executed when the user press the mouse down on the hidden resize bar of the column
+         */
+        const startColumnResizing = (column: ColumnDefinition) => {
+          makeAllColumnsFixedWidth();
+
+          // get the refs for the column header and all column data cells
+          const currentColumnHeaderCell = columnHeaderRefs.value[column.property];
+          const currentColumnDataCells = columnDataCellRefs.value[column.property];
+
+          // stop resizing when resizing for the column is not allowed
+          if (!currentColumnHeaderCell || (typeof column.allowResize === 'boolean' && !column.allowResize)) {
+            return;
+          }
+
+          // save the iniital position and width of the column header for later use
+          const columnHeaderBoundingClientRect = currentColumnHeaderCell.getBoundingClientRect();
+          const startColumnHeaderWidth = columnHeaderBoundingClientRect.width;
+
+          // remove transition on table
+          if (dataTable.value) {
+            dataTable.value.classList.add('--no-transition');
+          }
+
+          // set cursor globally to resize
+          document.body.style.cursor = 'col-resize';
+
+          // this method gets executed when the mouse will be moved
+          const mouseMoveHandler = (e: MouseEvent) => {
+            // disable selection, etc. with mouse while dragging
+            e.stopPropagation();
+            e.preventDefault();
+
+            // calculate the new width based on mouse position and position of the table header
+            const newWidth = Math.ceil(e.pageX - columnHeaderBoundingClientRect.left);
+
+            // set width for column header and column cells
+            setColumnHeaderWidthInline(currentColumnHeaderCell, newWidth);
+            setColumnDataCellsWidthInline(currentColumnDataCells, newWidth);
+            
+
+            // add additional padding to right so that the horizontal width don't change by reducing column size
+            if (dataTable.value) {
+              const paddingRight = startColumnHeaderWidth - newWidth;
+              dataTable.value.style.paddingRight = paddingRight > 0 ? `${paddingRight}px` : '';
+            }
+          };
+
+          // this method will be executed when the user stops pressing the mouse
+          const mouseUpHandler = () => {
+            // reset global cursor
+            document.body.style.cursor = '';
+
+            if (!props.columnChanges[column.property]) {
+              set(props.columnChanges, column.property, {});
+            }
+
+            // save new width to columnChanges to make changes permanent
+            set(props.columnChanges, column.property, {
+              ...props.columnChanges[column.property],
+              width: parseInt(currentColumnHeaderCell.style.width, 10),
+            });
+
+            // reset additional paddingRight after finished the resizing
+            if (dataTable.value) {
+              dataTable.value.classList.remove('--no-transition');
+              dataTable.value.style.removeProperty('padding-right');
+            }
+
+            // Remove all handlers
+            window.removeEventListener('mousemove', mouseMoveHandler);
+            window.removeEventListener('mouseup', mouseUpHandler);
+          }
+
+          // Watcher for mouse position to calculate width of the column
+          window.addEventListener('mousemove', mouseMoveHandler)
+          window.addEventListener('mouseup', mouseUpHandler)
+        }
+
+        const makeAllColumnsFixedWidth = () => {
+          const currentWidths: Record<string, number> = {};
+
+          Object.entries(columnHeaderRefs.value).forEach(([columnProperty, columnHeaderElement]) => {
+            const currentColumnDefinition = props.columns.find(column => column.property === columnProperty);
+
+            // skip the columns which shouldn't be resized and have fixed with
+            if (
+              currentColumnDefinition &&
+              currentColumnDefinition.allowResize === false &&
+              typeof currentColumnDefinition.width === 'number'
+            ) {
+              return;
+            }
+
+            // save the current width
+            const columnHeaderBoundingClientRect = columnHeaderElement.getBoundingClientRect();
+            currentWidths[columnProperty] = columnHeaderBoundingClientRect.width;
+
+            // set the current width
+            setColumnHeaderWidthInline(columnHeaderElement, currentWidths[columnProperty]);
+          })
+
+          Object.entries(columnDataCellRefs.value).forEach(([columnProperty, columnDataCells]) => {
+            if (currentWidths[columnProperty]) {
+              setColumnDataCellsWidthInline(columnDataCells, currentWidths[columnProperty]);
+            }
+          })
+        }
+
+        const setColumnHeaderWidthInline = (columnHeader: HTMLElement, width: number) => {
+          columnHeader.style.width = `${width}px`;
+          columnHeader.style.minWidth = `${width}px`;
+        }
+
+        const setColumnDataCellsWidthInline = (columnDataCells: Array<HTMLElement>, width: number) => {
+          columnDataCells.forEach(columnDataCell => {
+            columnDataCell.style.width = `${width}px`;
+            columnDataCell.style.minWidth = `${width}px`;
+            columnDataCell.style.maxWidth = `${width}px`;
+          })
+        }
        
         const renderColumnDefaultStyle = (column: ColumnDefinition) => {
+            const customColumnWidth = props.columnChanges[column.property] && props.columnChanges[column.property].width;
             const defaultColumnWidth = "auto";
             const minimumColumnWidth = "100px";
-            const width = typeof column.width === "number" ? `${column.width}px` : defaultColumnWidth;
-            const minWidth = typeof column.width === "number" ? `${column.width}px` : minimumColumnWidth;
+
+            // TODO: make this easier to read
+            let width: string;
+            if (customColumnWidth && column.allowResize !== false) {
+              width = `${customColumnWidth}px`;
+            } else {
+              width = typeof column.width === "number" ? `${column.width}px` : defaultColumnWidth
+            }
+
+            // TODO: make this easier to read
+            let minWidth: string;
+            if (customColumnWidth && column.allowResize !== false) {
+              minWidth = `${customColumnWidth}px`;
+            } else {
+              minWidth = typeof column.width === "number" ? `${column.width}px` : minimumColumnWidth
+            }
+
             const maxWidth = (() => {
-                if (column.cellWrap === "normal") {
-                    return "auto";
-                }
-                if (typeof column.width === "number") {
-                    return `${column.width}px`;
-                }
-                // The maxWidth fallback is the minimum width. In table this behaves differently so it can be larger than the minWidth
-                return minimumColumnWidth;
+              if (customColumnWidth && column.allowResize !== false) {
+                return `${customColumnWidth}px`;
+              }
+
+              if (column.cellWrap === "normal") {
+                  return "auto";
+              }
+
+              if (typeof column.width === "number") {
+                  return `${column.width}px`;
+              }
+              // The maxWidth fallback is the minimum width. In table this behaves differently so it can be larger than the minWidth
+              return minimumColumnWidth;
             })();
             const whiteSpace = typeof column.cellWrap === "string" ? column.cellWrap : "nowrap";
+
             return {
                 "width": width,
                 "min-width": minWidth,
@@ -284,7 +473,11 @@ export default defineComponent({
             emitPaginationLimitChange,
             emitPaginationCurrentPageChange,
             paginationOptionsConverted,
-            // t
+            startColumnResizing,
+            columnHeaderRefs,
+            columnDataCellRefs,
+            setColumnDataCellRefs,
+            dataTable
         };
     }
 })
@@ -443,6 +636,11 @@ $color-card-headline: #1C1C1C;
     border-collapse: separate;
     border-spacing: 0;
     table-layout: auto;
+    transition: 0.3s all ease;
+  }
+
+  table.--no-transition {
+    transition: none;
   }
 
   td, th {
@@ -480,6 +678,18 @@ $color-card-headline: #1C1C1C;
 
   tr {
     background-color: $color-white;
+  }
+
+  /***
+  * Resizable
+  */
+  &__table-head-resizable {
+    cursor: col-resize;
+    height: 100%;
+    width: 3px;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 
   /**

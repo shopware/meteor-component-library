@@ -21,7 +21,8 @@ const columnsFixture = [
     property: "active",
     renderer: "checkmark",
     position: 200,
-    width: 100,
+    width: 123,
+    allowResize: false,
   },
   {
     label: "Price",
@@ -83,6 +84,13 @@ describe("sw-data-table", () => {
     if (console.error.mockRestore) {
       // @ts-expect-error - mock was set via jest
       console.error.mockRestore();
+    }
+
+    // reset global styling
+    document.body.style.cursor = '';
+
+    if (window.removeEventListener.mockReset) {
+      window.removeEventListener.mockReset();
     }
   });
 
@@ -552,6 +560,354 @@ describe("sw-data-table", () => {
       await reloadButton.trigger('click');
 
       expect(wrapper.emitted().reload).toBeTruthy()
+    });
+  });
+
+  describe('Should have a correct column resizing behaviour', () => {
+    it('should render the resizable div', async () => {
+      const wrapper = createWrapper();
+
+      const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
+      const tableHeadCellManufacturer = wrapper.find('[data-header-column-property="manufacturer.name"]');
+      const tableHeadCellPrice = wrapper.find('[data-header-column-property="price"]');
+
+      expect(tableHeadCellName.find('.sw-data-table__table-head-resizable').exists()).toBe(true);
+      expect(tableHeadCellManufacturer.find('.sw-data-table__table-head-resizable').exists()).toBe(true);
+      expect(tableHeadCellPrice.find('.sw-data-table__table-head-resizable').exists()).toBe(true);
+    })
+
+    it('should not render the resizable div when allowedResize is set to false', async () => {
+      const wrapper = createWrapper();
+
+      const tableHeadCellActive = wrapper.find('[data-header-column-property="active"]');
+
+      expect(tableHeadCellActive.find('.sw-data-table__table-head-resizable').exists()).toBe(false);
+    })
+
+    it('should make all columns fixed width when start resizing', async () => {
+      const wrapper = createWrapper();
+
+      // these columns should have fixed width later
+      const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
+      const tableHeadCellManufacturer = wrapper.find('[data-header-column-property="manufacturer.name"]');
+
+      // this column should not change their width
+      const tableHeadCellActive = wrapper.find('[data-header-column-property="active"]');
+
+      // check header columns before resizing
+      expect(tableHeadCellName.attributes().style).toContain('width: 200px; min-width: 200px; max-width: fit-content;');
+      expect(tableHeadCellManufacturer.attributes().style).toContain(`width: auto; min-width: ${DEFAULT_MIN_WIDTH}; max-width: fit-content;`);
+      expect(tableHeadCellActive.attributes().style).toContain('width: 123px; min-width: 123px; max-width: fit-content;');
+
+      // check data cell columns before resizing
+      const dataCellName = wrapper.findAll('[data-cell-column-property="name"]');
+      const dataCellManufacturer = wrapper.findAll('[data-cell-column-property="manufacturer.name"]');
+      const dataCellActive = wrapper.findAll('[data-cell-column-property="active"]');
+
+      dataCellName.wrappers.forEach((dataCell) => {
+        expect(dataCell.attributes().style).toContain('width: 200px; min-width: 200px; max-width: 200px;');
+      });
+
+      dataCellManufacturer.wrappers.forEach((dataCell) => {
+        expect(dataCell.attributes().style).toContain('width: auto; min-width: 100px; max-width: 100px;');
+      });
+
+      dataCellActive.wrappers.forEach((dataCell) => {
+        expect(dataCell.attributes().style).toContain('width: 123px; min-width: 123px; max-width: 123px;');
+      });
+
+      // TRIGGER RESIZING
+      tableHeadCellName.element.getBoundingClientRect = () => ({ width: 200 });
+      tableHeadCellManufacturer.element.getBoundingClientRect = () => ({ width: 100 });
+      tableHeadCellActive.element.getBoundingClientRect = () => ({ width: 123 });
+
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+      await resizableDiv.trigger('mousedown');
+
+      // check header columns after resizing
+
+      expect(tableHeadCellName.attributes().style).toContain('width: 200px; min-width: 200px; max-width: fit-content;');
+      // should now be fixed width and not auto
+      expect(tableHeadCellManufacturer.attributes().style).toContain('width: 100px; min-width: 100px; max-width: fit-content;');
+      expect(tableHeadCellActive.attributes().style).toContain('width: 123px; min-width: 123px; max-width: fit-content;');
+    });
+
+    it('should set the cursor globally to col-resize when start resizing', async () => {
+      const wrapper = createWrapper();
+
+      // check cursor before resizing
+      expect(document.body.style.cursor).toBe('');
+
+
+      // get the resizable div
+      const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+
+      // TRIGGER RESIZING
+      await resizableDiv.trigger('mousedown');
+
+      // check cursor after resizing
+      expect(document.body.style.cursor).toBe('col-resize');
+    });
+
+    it('should remove the global col-resize cursor when stopping resizing', async () => {
+      const wrapper = createWrapper();
+
+      // get the resizable div
+      const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+
+      // TRIGGER RESIZING
+      await resizableDiv.trigger('mousedown');
+
+      // check cursor after resizing
+      expect(document.body.style.cursor).toBe('col-resize');
+
+      // TRIGGER STOP RESIZING
+      await window.dispatchEvent(new Event('mouseup'));
+
+      // check cursor after resizing
+      expect(document.body.style.cursor).toBe('');
+    });
+
+    it('should add class "--no-transition" to table when resizing', async () => {
+      const wrapper = createWrapper();
+
+      // check if class not exists before resizing
+      expect(wrapper.find('table').classes()).not.toContain('--no-transition');
+
+      // get the resizable div
+      const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+
+      // TRIGGER RESIZING
+      await resizableDiv.trigger('mousedown');
+
+      // check class after resizing
+      expect(wrapper.find('table').classes()).toContain('--no-transition');
+    });
+
+    it('should remove class "--no-transition" to table when finishing resizing', async () => {
+      const wrapper = createWrapper();
+
+      // get the resizable div
+      const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+
+      // check if class not exists before resizing
+      expect(wrapper.find('table').classes()).not.toContain('--no-transition');
+
+      // TRIGGER RESIZING
+      await resizableDiv.trigger('mousedown');
+
+      // check class after resizing
+      expect(wrapper.find('table').classes()).toContain('--no-transition');
+
+      // TRIGGER STOP RESIZING
+      await window.dispatchEvent(new Event('mouseup'));
+
+      // check class after resizing
+      expect(wrapper.find('table').classes()).not.toContain('--no-transition');
+    });
+
+    it('should stop and prevent default event behaviour like propagation and preventDefault in mouseMove handler', async () => {
+      const wrapper = createWrapper();
+
+      // get the resizable div
+      const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+
+      // TRIGGER RESIZING
+      await resizableDiv.trigger('mousedown');
+
+      // TRIGGER MOUSE MOVE EVENT
+      const mouseMoveEvent = new Event('mousemove');
+      mouseMoveEvent.preventDefault = jest.fn();
+      mouseMoveEvent.stopPropagation = jest.fn();
+      await window.dispatchEvent(mouseMoveEvent);
+
+      // check if preventDefault and stopPropagation was called
+      expect(mouseMoveEvent.preventDefault).toHaveBeenCalled();
+      expect(mouseMoveEvent.stopPropagation).toHaveBeenCalled();
+    });
+
+    it('should set the correct widths for the current column cells when the mouse is moving', async () => {
+      const wrapper = createWrapper();
+
+      // get the resizable div
+      const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+
+      tableHeadCellName.element.getBoundingClientRect = () => ({ left: 75 });
+
+      // check if width and height are set before resizing
+      expect(tableHeadCellName.attributes().style).toContain('width: 200px; min-width: 200px; max-width: fit-content;');
+
+      // TRIGGER RESIZING
+      await resizableDiv.trigger('mousedown');
+
+      // TRIGGER MOUSE MOVE EVENT
+      const mouseMoveEvent = new Event('mousemove');
+      mouseMoveEvent.pageX = 230;
+      await window.dispatchEvent(mouseMoveEvent);
+
+      // check if width and height are set correctly
+      expect(tableHeadCellName.attributes().style).toContain('width: 155px; min-width: 155px; max-width: fit-content;');
+      const dataCellName = wrapper.findAll('[data-cell-column-property="name"]');
+      dataCellName.wrappers.forEach((dataCell) => {
+        expect(dataCell.attributes().style).toContain('width: 155px; min-width: 155px; max-width: 155px;');
+      });
+    });
+
+    it('should add the correct padding for the current column cells when shrinking the column more than at the beginning', async () => {
+      const wrapper = createWrapper();
+
+      // get the resizable div
+      const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+
+      tableHeadCellName.element.getBoundingClientRect = () => ({ width: 200, left: 75 });
+
+      // check if width and height are set before resizing
+      expect(tableHeadCellName.attributes().style).toContain('width: 200px; min-width: 200px; max-width: fit-content;');
+
+      // TRIGGER RESIZING
+      await resizableDiv.trigger('mousedown');
+
+      // TRIGGER MOUSE MOVE EVENT
+      const mouseMoveEvent = new Event('mousemove');
+      mouseMoveEvent.pageX = 230;
+      await window.dispatchEvent(mouseMoveEvent);
+
+      // check if padding is set correctly to dataTable
+      expect(wrapper.find('table').attributes().style).toContain('padding-right: 45px;');
+    });
+
+    it('should add no padding for the current column cells when enlarging the column more than at the beginning', async () => {
+      const wrapper = createWrapper();
+
+      // get the resizable div
+      const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+
+      tableHeadCellName.element.getBoundingClientRect = () => ({ width: 200, left: 75 });
+
+      // check if width and height are set before resizing
+      expect(tableHeadCellName.attributes().style).toContain('width: 200px; min-width: 200px; max-width: fit-content;');
+
+      // TRIGGER RESIZING
+      await resizableDiv.trigger('mousedown');
+
+      // TRIGGER MOUSE MOVE EVENT
+      const mouseMoveEvent = new Event('mousemove');
+      mouseMoveEvent.pageX = 630;
+      await window.dispatchEvent(mouseMoveEvent);
+
+      // check if no padding was set because the column gets enlarged
+      expect(wrapper.find('table').attributes().style).toBe(undefined);
+    });
+
+    it('should remove the padding when stopping resizing', async () => {
+      const wrapper = createWrapper();
+
+      // get the resizable div
+      const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+
+      tableHeadCellName.element.getBoundingClientRect = () => ({ width: 200, left: 75 });
+
+      // check if width and height are set before resizing
+      expect(tableHeadCellName.attributes().style).toContain('width: 200px; min-width: 200px; max-width: fit-content;');
+
+      // TRIGGER RESIZING
+      await resizableDiv.trigger('mousedown');
+
+      // TRIGGER MOUSE MOVE EVENT
+      const mouseMoveEvent = new Event('mousemove');
+      mouseMoveEvent.pageX = 230;
+      await window.dispatchEvent(mouseMoveEvent);
+
+      // check if padding is set correctly to dataTable
+      expect(wrapper.find('table').attributes().style).toContain('padding-right: 45px;');
+
+      // TRIGGER STOP RESIZING
+      await window.dispatchEvent(new Event('mouseup'));
+
+      // check if padding was removed correctly
+      expect(wrapper.find('table').attributes().style).toBe('');
+    });
+
+    it('should save the new width to the property columnChanges', async () => {
+      const wrapper = createWrapper();
+
+      // get the resizable div
+      const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+
+      tableHeadCellName.element.getBoundingClientRect = () => ({ left: 75 });
+
+      // check if width and height are set before resizing
+      expect(tableHeadCellName.attributes().style).toContain('width: 200px; min-width: 200px; max-width: fit-content;');
+
+      // TRIGGER RESIZING
+      await resizableDiv.trigger('mousedown');
+
+      // TRIGGER MOUSE MOVE EVENT
+      const mouseMoveEvent = new Event('mousemove');
+      mouseMoveEvent.pageX = 230;
+      await window.dispatchEvent(mouseMoveEvent);
+
+      // TRIGGER STOP RESIZING
+      await window.dispatchEvent(new Event('mouseup'));
+
+      // check if columnChanges prop was updated correctly
+      expect(wrapper.props().columnChanges).toEqual({ name: { width: 155 } });
+    });
+
+    it('should load the new widths from the property columnChanges when they were defined beforehand', async () => {
+      const wrapper = createWrapper();
+
+      await wrapper.setProps({
+        columnChanges: {
+          name: { width: 179 },
+        },
+      });
+
+      // get the resizable div
+      const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
+
+      // check if width and height are set before resizing
+      expect(tableHeadCellName.attributes().style).toContain('width: 179px; min-width: 179px; max-width: fit-content;');
+    });
+
+    it('should remove all handlers when stopping resizing', async () => {
+      const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
+      const wrapper = createWrapper();
+
+      // get the resizable div
+      const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+
+      tableHeadCellName.element.getBoundingClientRect = () => ({ left: 75 });
+
+      // check if width and height are set before resizing
+      expect(tableHeadCellName.attributes().style).toContain('width: 200px; min-width: 200px; max-width: fit-content;');
+
+      // TRIGGER RESIZING
+      await resizableDiv.trigger('mousedown');
+
+      // TRIGGER MOUSE MOVE EVENT
+      const mouseMoveEvent = new Event('mousemove');
+      mouseMoveEvent.pageX = 230;
+      await window.dispatchEvent(mouseMoveEvent);
+
+      // TRIGGER STOP RESIZING
+      await window.dispatchEvent(new Event('mouseup'));
+
+      // check if all handlers were removed
+      expect(removeEventListenerSpy).toHaveBeenCalledTimes(2);
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('mousemove', expect.any(Function));
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('mouseup', expect.any(Function));
     });
   });
 });
