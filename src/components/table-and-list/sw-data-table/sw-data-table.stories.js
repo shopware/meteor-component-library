@@ -58,6 +58,8 @@ export default {
         property: 'active',
         renderer: 'checkmark',
         position: 200,
+        width: 175,
+        allowResize: false
       },
       {
         label: 'Price',
