@@ -45,7 +45,7 @@
         @click="onClickInput"
       >
 
-      <sw-popover
+      <sw-popover-deprecated
         v-if="visible"
         class="sw-colorpicker__colorpicker-position"
         :z-index="zIndex"
@@ -189,7 +189,7 @@
             </div>
           </div>
         </div>
-      </sw-popover>
+      </sw-popover-deprecated>
     </template>
 
     <template #error>
@@ -205,13 +205,13 @@
 import Vue, { PropType } from 'vue';
 import { debounce } from 'lodash-es';
 import SwBaseField from "../_internal/sw-base-field/sw-base-field.vue";
-import SwPopover from '../../_internal/sw-popover/sw-popover.vue';
+import SwPopoverDeprecated from '../../_internal/sw-popover-deprecated/sw-popover-deprecated.vue';
 
 export default Vue.extend({
   name: 'SwColorpicker',
 
   components: {
-    'sw-popover': SwPopover,
+    'sw-popover-deprecated': SwPopoverDeprecated,
     'sw-base-field': SwBaseField,
   },
 
@@ -1520,7 +1520,7 @@ export default Vue.extend({
   line-height: 16px;
 }
 
-.sw-popover__wrapper {
+.sw-popover-deprecated__wrapper {
   &.--placement-bottom-outside {
     .sw-colorpicker__colorpicker::before {
       top: calc(100% - 7px);

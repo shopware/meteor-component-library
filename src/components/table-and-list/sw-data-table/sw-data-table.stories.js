@@ -54,7 +54,6 @@ export default {
         property: 'name',
         renderer: 'text',
         position: 0,
-        width: 200,
         cellWrap: 'normal',
       },
       {
@@ -69,7 +68,7 @@ export default {
         property: 'active',
         renderer: 'checkmark',
         position: 200,
-        width: 175,
+        width: 120,
         allowResize: false
       },
       {
@@ -85,6 +84,7 @@ export default {
         property: 'stock',
         renderer: 'number',
         position: 400,
+        visible: false,
       },
       {
         label: 'Available',
@@ -112,6 +112,17 @@ const Template = (args, { argTypes }) => ({
       paginationLimitValue: 0,
       currentPageValue: 0,
       searchValueValue: '',
+    }
+  },
+  computed: {
+    dataSourceValue() {
+      return this.dataSource.slice(
+        (this.currentPageValue - 1) * this.paginationLimitValue,
+        (this.currentPageValue) * this.paginationLimitValue
+      );
+    },
+    paginationTotalItemsValue() {
+      return this.dataSource.length;
     }
   },
   watch: {
@@ -161,15 +172,16 @@ const Template = (args, { argTypes }) => ({
     }
   },
   template: `
-  <div style="max-width: 1000px; max-height: 400px; height: 500px; margin: 0 auto;">
+  <div style="max-width: 1000px; max-height: 650px; height: 650px; margin: 0 auto;">
     <sw-data-table
       v-bind="$props"
+      :dataSource="dataSourceValue"
+      :paginationTotalItems="paginationTotalItemsValue"
       @reload="reload"
       :paginationLimit="paginationLimitValue"
       @pagination-limit-change="paginationLimitChangeHandler"
       :currentPage="currentPageValue"
       @pagination-current-page-change="paginationCurrentPageChangeHandler"
-      :paginationTotalItems="90"
       :searchValue="searchValueValue"
       @search-value-change="searchValueChangeHandler"
     >

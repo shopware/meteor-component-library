@@ -1,8 +1,8 @@
 <template>
-  <div class="sw-popover">
+  <div class="sw-popover-deprecated">
     <div
       v-popover="popoverConfig"
-      class="sw-popover__wrapper"
+      class="sw-popover-deprecated__wrapper"
       :class="popoverClass"
       :style="componentStyle"
     >
@@ -15,6 +15,9 @@
 import Vue, { PropType } from 'vue';
 import SwPopoverDirective from '../../../directives/popover.directive';
 
+/**
+ * @deprecated - Use `sw-floating-ui` instead
+ */
 export default Vue.extend({
   name: 'SwPopover',
 
@@ -57,13 +60,13 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-.sw-popover {
-  .sw-popover__wrapper {
+.sw-popover-deprecated {
+  .sw-popover-deprecated__wrapper {
     position: inherit;
   }
 }
 
-.sw-popover__wrapper {
+.sw-popover-deprecated__wrapper {
   &.--placement-bottom-outside {
     transform: translate(0, calc(-100% - 57px));
   }

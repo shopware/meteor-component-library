@@ -23,25 +23,47 @@
         <table ref="dataTable">
           <thead>
             <tr>
-              <th
-                v-for="column in sortedColumns"
-                :key="column.property"
-                :ref="
-                  (el) => {
+              <template v-for="column in sortedColumns">
+                <th
+                  v-if="isColumnVisible(column)"
+                  :key="column.property"
+                  :ref="(el) => {
                     if (el) {
                       columnHeaderRefs[column.property] = el;
                     }
-                  }
-                "
-                :data-header-column-property="column.property"
-                :style="renderColumnHeaderStyle(column)"
-              >
-                <span>{{ column.label }}</span>
+                  }"
+                  v-draggable="{ ...dragConfig, data: column }"
+                  class="sw-data-table__table-wrapper-table-head"
+                  :data-header-column-property="column.property"
+                  :style="renderColumnHeaderStyle(column)"
+                >
+                  <span>{{ column.label }}</span>
 
-                <div
-                  v-if="column.allowResize !== false"
-                  class="sw-data-table__table-head-resizable"
-                  @mousedown="() => startColumnResizing(column)"
+                  <div
+                    v-droppable="{ ...dropConfig, data: { ...column, dropZone: 'before' } }"
+                    class="sw-data-table__table-head-dropzone-before"
+                  />
+                  <div
+                    v-droppable="{ ...dropConfig, data: { ...column, dropZone: 'after' } }"
+                    class="sw-data-table__table-head-dropzone-after"
+                  />
+
+                  <div
+                    v-if="column.allowResize !== false"
+                    class="sw-data-table__table-head-resizable"
+                    @mousedown.prevent.stop="() => startColumnResizing(column)"
+                  />
+                </th>
+              </template>
+
+              <th
+                class="sw-data-table__table-settings-button"
+              >
+                <sw-data-table-settings
+                  :columns="sortedColumns"
+                  @reset-all-changes="resetAllChanges"
+                  @change-column-order="({ itemId, dropId, dropZone }) => changeColumnPosition(itemId, dropId, dropZone)"
+                  @change-column-visibility="(columnProperty, visibility) => changeColumnVisibility(columnProperty, visibility)"
                 />
               </th>
             </tr>
@@ -51,24 +73,30 @@
               v-for="(data, rowIndex) in dataSource"
               :key="data.id"
             >
-              <td
-                v-for="column in sortedColumns"
-                :key="column.property + JSON.stringify(columnChanges[column.property])"
-                :ref="
-                  (el) => {
-                    setColumnDataCellRefs({ el, column, index: rowIndex });
-                  }
-                "
-                :data-cell-column-property="column.property"
-                :style="renderColumnDataCellStyle(column)"
-              >
-                <div
-                  v-if="column.property === 'manufacturer.name'"
-                  style="width: 10px; height: 10px; background-color: gray"
-                />
+              <template v-for="column in sortedColumns">
+                <td
+                  v-if="isColumnVisible(column)"
+                  :key="column.property + JSON.stringify(columnChanges[column.property])"
+                  :ref="
+                    (el) => {
+                      setColumnDataCellRefs({ el, column, index: rowIndex });
+                    }
+                  "
+                  :data-cell-column-property="column.property"
+                  :style="renderColumnDataCellStyle(column)"
+                >
+                  <div
+                    v-if="column.property === 'manufacturer.name'"
+                    style="width: 10px; height: 10px; background-color: gray"
+                  />
 
-                <!-- TODO: use renderer -->
-                {{ data[column.property] }}
+                  {{ data[column.property] }}
+                </td>
+              </template>
+
+              <td>
+                <!-- TODO: implement context button functionality -->
+                <sw-context-button />
               </td>
             </tr>
           </tbody>
@@ -125,8 +153,11 @@ import SwSelect from "../../form/sw-select/sw-select.vue";
 import SwIcon from "../../icons-media/sw-icon/sw-icon.vue";
 import SwPagination from "../sw-pagination/sw-pagination.vue";
 import SwSearch from '../../navigation/sw-search/sw-search.vue';
+import SwContextButton from '../../context-menu/sw-context-button/sw-context-button.vue';
+import SwDataTableSettings from './sub-components/sw-data-table-settings/sw-data-table-settings.vue';
+import { draggable, DropConfig, DragConfig, droppable } from '../../../directives/dragdrop.directive';
 
-interface ColumnDefinition {
+export interface ColumnDefinition {
   label: string; // the label for the column
   property: string; // the value for each entry
   renderer: "text" | "number" | "price" | "checkmark"; // define how each column entry should be rendered
@@ -135,12 +166,14 @@ interface ColumnDefinition {
   width?: number; // define the width value for this column
   allowResize?: boolean; // you can disable the possibility for the user to resize this column
   cellWrap?: "nowrap" | "normal";
+  visible?: boolean; // you can hide a column by default
 }
 
 interface ColumnChanges {
-  property: ColumnDefinition["property"];
-  position: ColumnDefinition["position"];
-  width: ColumnDefinition["width"];
+  property?: ColumnDefinition["property"];
+  position?: ColumnDefinition["position"];
+  width?: ColumnDefinition["width"];
+  visible?: ColumnDefinition["visible"];
 }
 
 type DataSourcePropType = Array<{
@@ -151,6 +184,10 @@ type DataSourcePropType = Array<{
 type ColumnProperty = ColumnDefinition[];
 
 export default defineComponent({
+  directives: {
+    draggable: draggable,
+    droppable: droppable,
+  },
   components: {
     "sw-card": SwCard,
     "sw-button": SwButton,
@@ -158,6 +195,8 @@ export default defineComponent({
     "sw-icon": SwIcon,
     "sw-pagination": SwPagination,
     "sw-search": SwSearch,
+    'sw-context-button': SwContextButton,
+    'sw-data-table-settings': SwDataTableSettings,
   },
   props: {
     // TODO: add comments for props
@@ -250,7 +289,42 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const sortedColumns = computed(() => {
-      return props.columns.slice().sort((a, b) => a.position - b.position);
+      return columnsWithChanges.value.slice().sort((a, b) => a.position - b.position);
+    });
+
+    /***
+    * Colum changes helper
+    */
+    const resetAllChanges = () => {
+      Object.keys(props.columnChanges).forEach((key) => {
+        set(props.columnChanges, key, {});
+      });
+    };
+
+    const addToColumnChanges = (columnProperty: string, columnChanges: ColumnChanges) => {
+      if (!props.columnChanges[columnProperty]) {
+          set(props.columnChanges, columnProperty, {});
+        }
+
+        // save new width to columnChanges to make changes permanent
+        set(props.columnChanges, columnProperty, {
+          ...props.columnChanges[columnProperty],
+          ...columnChanges,
+        });
+    }
+
+    const columnsWithChanges = computed(() => {
+      return props.columns.map((column) => {
+        const columnChanges = props.columnChanges[column.property];
+        if (!columnChanges) {
+          return column;
+        }
+
+        return {
+          ...column,
+          ...columnChanges,
+        };
+      });
     });
 
     /***
@@ -340,13 +414,7 @@ export default defineComponent({
         // reset global cursor
         document.body.style.cursor = "";
 
-        if (!props.columnChanges[column.property]) {
-          set(props.columnChanges, column.property, {});
-        }
-
-        // save new width to columnChanges to make changes permanent
-        set(props.columnChanges, column.property, {
-          ...props.columnChanges[column.property],
+        addToColumnChanges(column.property, {
           width: parseInt(currentColumnHeaderCell.style.width, 10),
         });
 
@@ -417,21 +485,21 @@ export default defineComponent({
       const defaultColumnWidth = "auto";
       const minimumColumnWidth = "100px";
 
-      // TODO: make this easier to read
-      let width: string;
-      if (customColumnWidth && column.allowResize !== false) {
-        width = `${customColumnWidth}px`;
-      } else {
-        width = typeof column.width === "number" ? `${column.width}px` : defaultColumnWidth;
-      }
+      const width = (() => {
+        if (customColumnWidth && column.allowResize !== false) {
+          return `${customColumnWidth}px`;
+        }
 
-      // TODO: make this easier to read
-      let minWidth: string;
-      if (customColumnWidth && column.allowResize !== false) {
-        minWidth = `${customColumnWidth}px`;
-      } else {
-        minWidth = typeof column.width === "number" ? `${column.width}px` : minimumColumnWidth;
-      }
+        return typeof column.width === "number" ? `${column.width}px` : defaultColumnWidth;
+      })();
+
+      const minWidth = (() => {
+        if (customColumnWidth && column.allowResize !== false) {
+          return `${customColumnWidth}px`;
+        }
+
+        return typeof column.width === "number" ? `${column.width}px` : minimumColumnWidth;
+      })();
 
       const maxWidth = (() => {
         if (customColumnWidth && column.allowResize !== false) {
@@ -471,17 +539,15 @@ export default defineComponent({
       };
     };
 
-    const emitReload = () => emit("reload");
-
-    /***
-     * Add scroll possibilities to tableWrapper
-     */
-    const tableWrapper = ref();
-    useScrollPossibilitiesClasses(tableWrapper);
+    const isColumnVisible = (column: ColumnDefinition) => {
+      return column.visible ?? true;
+    }
 
     /***
      * Pagination
      */
+    const emitReload = () => emit("reload");
+
     const emitPaginationLimitChange = (limitValue: number) => {
       emit("pagination-limit-change", limitValue);
     };
@@ -505,6 +571,76 @@ export default defineComponent({
       }));
     });
 
+    /***
+     * Column Reordering
+    */
+    const changeColumnPosition = (columnId: string, targetColumnId: string, insertPosition: 'before'|'after' = 'before') => {
+      const column = columnsWithChanges.value.find((column) => column.property === columnId);
+      const targetColumn = columnsWithChanges.value.find((column) => column.property === targetColumnId);
+
+      if (!column || !targetColumn) {
+        return;
+      }
+
+      [...columnsWithChanges.value].sort((columnA, columnB) => {
+        return columnA.position - columnB.position;
+      }).sort((columnA, columnB) => {
+        // The logic for inserting the column before or after the target column
+        if (columnB.property === column.property) {
+          if (insertPosition === 'after') {
+            return columnA.position <= targetColumn.position ? -1 : 1;
+          } else {
+            return columnA.position < targetColumn.position ? -1 : 1;
+          }
+        }
+
+        if (columnA.property === column.property) {
+          if (insertPosition === 'after') {
+            return columnB.position > targetColumn.position ? -1 : 1;
+          } else {
+            return columnB.position >= targetColumn.position ? -1 : 1;
+          }
+        }
+
+        return 0;
+      }).forEach((column, index) => {
+        addToColumnChanges(column.property, { position: index * 100 });
+      });
+    };
+
+    const DRAG_GROUP_COLUMN = 'drag-group-column';
+
+    const dragConfig: Partial<DragConfig<ColumnDefinition & {dropZone?: 'before'|'after'}>> = {
+      dragGroup: DRAG_GROUP_COLUMN,
+      onDrop: (dragConfigData, dropConfigData) => {
+        if (dragConfigData && dropConfigData) {
+          changeColumnPosition(dragConfigData.property, dropConfigData.property, dropConfigData.dropZone);
+        }
+      }
+    }
+
+    const dropConfig: Partial<DropConfig & {dropZone?: 'before'|'after'}> = {
+      dragGroup: DRAG_GROUP_COLUMN,
+    }
+
+    const changeColumnVisibility = (columnProperty: string, visibility: boolean) => {
+      const column = columnsWithChanges.value.find((column) => column.property === columnProperty);
+
+      if (!column) {
+        return;
+      }
+
+      addToColumnChanges(columnProperty, {
+        visible: visibility
+      });
+    }
+
+    /***
+     * Add scroll possibilities to tableWrapper
+     */
+    const tableWrapper = ref();
+    useScrollPossibilitiesClasses(tableWrapper);
+
     return {
       sortedColumns,
       renderColumnDataCellStyle,
@@ -520,6 +656,12 @@ export default defineComponent({
       columnDataCellRefs,
       setColumnDataCellRefs,
       dataTable,
+      dragConfig,
+      dropConfig,
+      resetAllChanges,
+      changeColumnPosition,
+      isColumnVisible,
+      changeColumnVisibility
     };
   },
 });
@@ -547,6 +689,11 @@ $line-height-md: 24px;
 $line-height-lg: 28px;
 
 $color-card-headline: #1c1c1c;
+
+$scrollShadowSize: 16px;
+$scrollShadowColor: rgba(120, 120, 120, 0.2);
+$tableHeaderSize: 51px;
+$scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
 
 .sw-data-table {
   display: flex;
@@ -576,8 +723,9 @@ $color-card-headline: #1c1c1c;
   }
 
   .sw-card__content {
-    height: 100%;
+    height: auto;
     padding: 0;
+    overflow: scroll;
   }
 
   // add new Inter font to data table
@@ -608,10 +756,6 @@ $color-card-headline: #1c1c1c;
   // add scroll shadows
   --scrollbar-height: 0px;
   --scrollbar-width: 0px;
-  $scrollShadowSize: 16px;
-  $scrollShadowColor: rgba(120, 120, 120, 0.2);
-  $tableHeaderSize: 51px;
-  $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
 
   .sw-data-table__scroll-shadow {
     pointer-events: none;
@@ -714,8 +858,10 @@ $color-card-headline: #1c1c1c;
     border-bottom-width: 1px;
     border-top: 0;
     position: sticky;
-    top: 0;
+    top: -0.5px;
     text-transform: uppercase;
+    cursor: grab;
+    z-index: 1;
   }
 
   tr {
@@ -726,12 +872,56 @@ $color-card-headline: #1c1c1c;
   * Resizable
   */
   &__table-head-resizable {
+    z-index: 1;
     cursor: col-resize;
     height: 100%;
     width: 3px;
     position: absolute;
     top: 0;
     right: 0;
+  }
+
+  /**
+  * Column ordering
+  */
+  div[class^="sw-data-table__table-head-dropzone-"] {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    opacity: 0;
+    transition: 0.3s all ease;
+
+    &.is--valid-drop {
+      opacity: 1;
+    }
+  }
+
+  $dropzone-highlight-width: 8px;
+  $dropzone-highlight-negative-width: -8px;
+
+  .sw-data-table__table-head-dropzone-before {
+    left: 0;
+    box-shadow: inset $dropzone-highlight-width 0px $dropzone-highlight-width $dropzone-highlight-negative-width $color-shopware-brand-900;    
+  }
+  .sw-data-table__table-head-dropzone-after {
+    right: 0;
+    box-shadow: inset $dropzone-highlight-negative-width 0px $dropzone-highlight-width $dropzone-highlight-negative-width $color-shopware-brand-900;
+  }
+
+  /**
+  * Table Settings
+  */
+  .sw-data-table__table-settings-button {
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+
+    #meteor-icon-kit__solid-cog-s {
+      color: $color-gray-800;
+      width: 10px;
+      height: 10px;
+    }
   }
 
   /**
@@ -780,5 +970,37 @@ $color-card-headline: #1c1c1c;
     font-size: $font-size-xxs;
     margin-left: 12px;
   }
+}
+
+/**
+* Drag & Drop styling
+*/
+.sw-data-table__table-wrapper-table-head.is--drag-element {
+  max-width: none !important;
+  box-shadow: 0px 0px 4px 0px $scrollShadowColor;
+  opacity: 0.8;
+
+  // set the normal table header cell styling
+  font-family: $font-family-default;
+  @supports (font-variation-settings: normal) {
+    font-family: $font-family-variables;
+    font-feature-settings: $font-family-default-feature-settings;
+  }
+  text-align: left;
+  font-size: $font-size-xs;
+  padding: 18px 16px 14px 16px;
+  border: 0.5px solid $color-gray-200;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-xs;
+  background-color: $color-gray-50;
+  color: #6b7280; // TODO: this needs to be a variable in the future
+  min-width: 50px;
+  border-bottom-width: 1px;
+  border-top: 0;
+  text-transform: uppercase;
 }
 </style>
