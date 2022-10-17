@@ -1,6 +1,7 @@
-import { mount } from "@vue/test-utils";
+import { mount, shallowMount } from "@vue/test-utils";
 import SwDataTable from "./sw-data-table.vue";
 import SwDataTableFixtures from "./sw-data-table.fixtures.json";
+import flushPromises from "flush-promises";
 
 const columnsFixture = [
   {
@@ -93,6 +94,10 @@ describe("sw-data-table", () => {
       window.removeEventListener.mockReset();
     }
   });
+
+  afterEach(async () => {
+    await flushPromises();
+  })
 
   it("should render the component", () => {
     const wrapper = createWrapper();
@@ -950,6 +955,74 @@ describe("sw-data-table", () => {
 
       expect(wrapper.emitted()['search-value-change']).toBeTruthy();
       expect(wrapper.emitted()['search-value-change'][0][0]).toBe('My new search value');
+    });
+  })
+
+  describe('Should handle the sw-data-table-settings events correctly', () => {
+    it('should reset all changes', async () => {
+      const wrapper = createWrapper();
+
+      // simulate some column changes
+      await wrapper.setProps({
+        columnChanges: {
+          active: { visible: false },
+          available: { width: 987 },
+        },
+      });
+
+      expect(wrapper.props().columnChanges).toEqual({
+        active: { visible: false },
+        available: { width: 987 },
+      });
+
+      const SwDataTableSettings = wrapper.findComponent({ name: 'SwDataTableSettings' });
+      await SwDataTableSettings.vm.$emit('reset-all-changes');
+      await wrapper.vm.$nextTick();
+
+      // check if all changes were resetted
+      expect(wrapper.props().columnChanges).toEqual({
+        active: {},
+        available: {},
+      });
+    });
+
+    it('should change the column order', async () => {
+      const wrapper = createWrapper();
+
+      expect(wrapper.props().columnChanges).toEqual({});
+
+      const SwDataTableSettings = wrapper.findComponent({ name: 'SwDataTableSettings' });
+      await SwDataTableSettings.vm.$emit('change-column-order', {
+        itemId: 'price',
+        dropId: 'name',
+        dropZone: 'after'
+      });
+      await wrapper.vm.$nextTick();
+
+      // check if order was updated correctly
+      expect(wrapper.props().columnChanges).toEqual({
+          name: { position: 0 },
+          price: { position: 100 },
+          'manufacturer.name': { position: 200 },
+          active: { position: 300 },
+          stock: { position: 400 },
+          available: { position: 500 }
+      });
+    });
+
+    it('should change the column visibility', async () => {
+      const wrapper = createWrapper();
+
+      expect(wrapper.props().columnChanges).toEqual({});
+
+      const SwDataTableSettings = wrapper.findComponent({ name: 'SwDataTableSettings' });
+      await SwDataTableSettings.vm.$emit('change-column-visibility', 'active', false);
+      await wrapper.vm.$nextTick();
+
+      // check if order was updated correctly
+      expect(wrapper.props().columnChanges).toEqual({
+          active: { visible: false }
+      });
     });
   })
 });

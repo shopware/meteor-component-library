@@ -35,7 +35,7 @@ VisualTestOpenColorpicker.play = async () => {
   await userEvent.click(pickerToggle);
 
   // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover__wrapper')[0]);
+  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
   const colorRange = await popover.getByLabelText('colorpicker-color-range');
   const alphaRange = await popover.getByLabelText('colorpicker-alpha-range');
@@ -76,7 +76,7 @@ VisualTestChangeColorpickerColor.play = async () => {
   await userEvent.click(pickerToggle);
 
   // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover__wrapper')[0]);
+  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
   const colorRange = await popover.getByLabelText('colorpicker-color-range');
   const alphaRange = await popover.getByLabelText('colorpicker-alpha-range');
@@ -147,7 +147,7 @@ VisualTestChangeColorpickerOutputHex.play = async () => {
   await userEvent.click(pickerToggle);
 
   // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover__wrapper')[0]);
+  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
   const hexInput = await popover.getByLabelText('hex-value');
   expect(hexInput).toBeDefined();
@@ -173,7 +173,7 @@ VisualTestChangeColorpickerOutputHsl.play = async () => {
   await userEvent.click(pickerToggle);
 
   // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover__wrapper')[0]);
+  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
   const hexInput = await popover.getByLabelText('hex-value');
   expect(hexInput).toBeDefined();
@@ -199,7 +199,7 @@ VisualTestChangeColorpickerOutputRgb.play = async () => {
   await userEvent.click(pickerToggle);
 
   // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover__wrapper')[0]);
+  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
   const hexInput = await popover.getByLabelText('hex-value');
   expect(hexInput).toBeDefined();
@@ -226,7 +226,7 @@ VisualTestChangeColorpickerOutputHexAlpha.play = async () => {
   await userEvent.click(pickerToggle);
 
   // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover__wrapper')[0]);
+  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
   const hexInput = await popover.getByLabelText('hex-value');
   expect(hexInput).toBeDefined();
@@ -253,7 +253,7 @@ VisualTestChangeColorpickerOutputHslAlpha.play = async () => {
   await userEvent.click(pickerToggle);
 
   // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover__wrapper')[0]);
+  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
   const hexInput = await popover.getByLabelText('hex-value');
   expect(hexInput).toBeDefined();
@@ -280,7 +280,7 @@ VisualTestChangeColorpickerOutputRgbAlpha.play = async () => {
   await userEvent.click(pickerToggle);
 
   // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover__wrapper')[0]);
+  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
   const hexInput = await popover.getByLabelText('hex-value');
   expect(hexInput).toBeDefined();
@@ -306,7 +306,7 @@ VisualTestColorpickerWithoutAlpha.play = async () => {
   await userEvent.click(pickerToggle);
 
   // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover__wrapper')[0]);
+  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
   const hexInput = await popover.getByLabelText('hex-value');
   expect(hexInput).toBeDefined();
@@ -331,7 +331,7 @@ VisualTestColorpickerDisabled.play = async () => {
   await userEvent.click(pickerToggle);
 
   // Expect no popover
-  expect(document.getElementsByClassName('sw-popover__wrapper').length).toEqual(0);
+  expect(document.getElementsByClassName('sw-popover-deprecated__wrapper').length).toEqual(0);
 };
 
 export const VisualTestColorpickerClearValue = Template.bind({});
@@ -380,7 +380,7 @@ VisualTestColorpickerDisabledColorLabels.play = async () => {
   await userEvent.click(pickerToggle);
 
   // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover__wrapper')[0]);
+  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
   const hexInput = await popover.getByLabelText('hex-value');
   expect(hexInput).toBeDefined();

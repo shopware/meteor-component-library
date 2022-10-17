@@ -79,7 +79,7 @@ VisualTestExtendedPageWithOpenedContextActions.play = async () => {
   await userEvent.click(button);
 
   // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover__wrapper')[0]);
+  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
   const menuItem = await popover.getAllByRole('menuitem');
 

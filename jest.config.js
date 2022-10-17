@@ -23,6 +23,7 @@ module.exports = {
       isolatedModules: true
     }
   },
+  setupFiles: ["<rootDir>/jest.setup.js"],
   roots: ['src'],
   testMatch: ['<rootDir>/src/**/*.spec.js', '<rootDir>/src/**/*.spec.ts'],
   collectCoverage: false,

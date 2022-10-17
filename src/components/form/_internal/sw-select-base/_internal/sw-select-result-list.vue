@@ -1,6 +1,6 @@
 <template>
   <div class="sw-select-result-list">
-    <sw-popover
+    <sw-popover-deprecated
       class="sw-select-result-list-popover"
       :popover-class="popoverClass"
       :z-index="1100"
@@ -36,13 +36,13 @@
           {{ emptyMessageText }}
         </div>
       </div>
-    </sw-popover>
+    </sw-popover-deprecated>
   </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import SwPopover from '../../../../_internal/sw-popover/sw-popover.vue';
+import SwPopoverDeprecated from '../../../../_internal/sw-popover-deprecated/sw-popover-deprecated.vue';
 import SwIcon from '../../../../icons-media/sw-icon/sw-icon.vue';
 
 export default Vue.extend({
@@ -64,7 +64,7 @@ export default Vue.extend({
   },
 
   components: {
-    'sw-popover': SwPopover,
+    'sw-popover-deprecated': SwPopoverDeprecated,
     'sw-icon': SwIcon,
   },
 
@@ -296,7 +296,7 @@ $sw-select-result-list-transition: all ease-in-out 0.2s;
   overflow: hidden;
 }
 
-.sw-select-result-list-popover .sw-popover__wrapper {
+.sw-select-result-list-popover .sw-popover-deprecated__wrapper {
   width: 100%;
 }
 
@@ -328,7 +328,7 @@ $sw-select-result-list-transition: all ease-in-out 0.2s;
   height: 293px;
 }
 
-.sw-popover__wrapper.--placement-bottom-outside.sw-select-result-list-popover-wrapper {
+.sw-popover-deprecated__wrapper.--placement-bottom-outside.sw-select-result-list-popover-wrapper {
   transform: translate(0, calc(-100% - 48px));
 }
 </style>

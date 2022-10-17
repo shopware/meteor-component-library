@@ -67,7 +67,8 @@ export default Vue.extend({
   props: {
     label: {
       type: String,
-      required: true,
+      required: false,
+      default: ''
     },
     required: {
       type: Boolean,

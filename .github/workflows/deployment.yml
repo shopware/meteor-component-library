@@ -1,7 +1,6 @@
 name: Deployment
 
 on:  
-  push:
   pull_request:
     branches:
       - main
@@ -11,15 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 'lts/gallium'
+          node-version: '18'
 
       - name: Retrieve the cached main "node_modules" directory (if present)
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: node-cache-main
         with:
           path: node_modules

@@ -3,3 +3,4 @@ jest.config.js
 rollup.config.js
 **/*.spec.js
 **/*.spec.ts
+node_modules/
