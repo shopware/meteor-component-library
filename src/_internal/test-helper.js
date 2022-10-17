@@ -4,6 +4,7 @@ export function waitUntilRendered(check) {
       // do not wait longer than 2.5 seconds
       if (retryTime > 100) {
         reject();
+        return;
       }
 
       const result = check();

@@ -24,7 +24,7 @@
       </button>
     </slot>
 
-    <sw-popover
+    <sw-popover-deprecated
       v-if="showMenu"
       class="sw-context-button__menu-position"
       popover-class="sw-context-button__menu-popover"
@@ -37,14 +37,14 @@
       >
         <slot />
       </sw-context-menu>
-    </sw-popover>
+    </sw-popover-deprecated>
   </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
-import SwPopover from '../../_internal/sw-popover/sw-popover.vue';
+import SwPopoverDeprecated from '../../_internal/sw-popover-deprecated/sw-popover-deprecated.vue';
 import SwContextMenu from '../sw-context-menu/sw-context-menu.vue';
 
 export default Vue.extend({
@@ -52,7 +52,7 @@ export default Vue.extend({
 
   components: {
     'sw-icon': SwIcon,
-    'sw-popover': SwPopover,
+    'sw-popover-deprecated': SwPopoverDeprecated,
     'sw-context-menu': SwContextMenu,
   },
 
@@ -309,7 +309,7 @@ $sw-context-button-color-disabled:  $color-gray-100;
   }
 }
 
-.sw-popover__wrapper.sw-context-button__menu-popover {
+.sw-popover-deprecated__wrapper.sw-context-button__menu-popover {
   &.--placement-bottom-outside {
     .sw-context-menu {
       transform: translate(0, 13px);

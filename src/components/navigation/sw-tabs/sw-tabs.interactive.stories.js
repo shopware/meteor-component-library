@@ -182,7 +182,7 @@ VisualTestRenderContextTabWithActiveItem.play = async () => {
   await userEvent.click(button);
 
   // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover__wrapper')[0]);
+  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
   const menuItem = await popover.getAllByRole('tab');
 
@@ -190,7 +190,7 @@ VisualTestRenderContextTabWithActiveItem.play = async () => {
 
   await userEvent.click(menuItem[3]);
 
-  expect(document.getElementsByClassName('sw-popover__wrapper').length).toEqual(0);
+  expect(document.getElementsByClassName('sw-popover-deprecated__wrapper').length).toEqual(0);
 };
 
 export const VisualTestRenderTabsWithPositiveBadge = Template.bind({});
@@ -259,7 +259,7 @@ VisualTestRenderTabsWithContextMenuBadge.play = async () => {
   await userEvent.click(button);
 
   // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover__wrapper')[0]);
+  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
   const menuItem = await popover.getAllByRole('tab');
 

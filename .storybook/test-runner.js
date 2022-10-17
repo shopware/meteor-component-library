@@ -25,6 +25,9 @@ module.exports = {
       return;
     }
 
+    // wait 300ms before screenshot to make sure any pending animation is finished
+    await (() => new Promise(resolve => setTimeout(resolve, 300)))();
+
     const image = await page.screenshot({
       animations: 'disabled',
     });

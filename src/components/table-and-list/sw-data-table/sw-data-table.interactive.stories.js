@@ -84,7 +84,6 @@ export const VisualTestRenderTableWithScrollShadows = Template.bind();
 VisualTestRenderTableWithScrollShadows.storyName = 'Should render the Table with scroll shadows';
 VisualTestRenderTableWithScrollShadows.args = {
   dataSource: [
-    ...SwDataTableFixtures,
     {
       id: "bbf41666-d40f-44d1-8d31-49daab4fdc87",
       active: false,
@@ -108,7 +107,8 @@ VisualTestRenderTableWithScrollShadows.args = {
       ],
       stock: 409278,
       available: 202164
-    }
+    },
+    ...SwDataTableFixtures,
   ],
   columns: [
     ...defaultSwDataTableStory.args.columns.map(column => {
@@ -156,4 +156,67 @@ VisualTestEmitReloadEventOnClickingReload.play = async ({ args }) => {
   await dataTable.parentElement.__vue__.$nextTick();
 
   await expect(args.reload).toHaveBeenCalled();
+};
+
+export const VisualTestOpenSettingsMenu = Template.bind();
+VisualTestOpenSettingsMenu.storyName = 'Open settings menu with correct popover items inside';
+VisualTestOpenSettingsMenu.play = async () => {
+  const canvas = within(document.getElementById('root'));
+
+  await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+
+  const toggleTableSettingsButton = canvas.getByLabelText('Toggle table settings');
+
+  await userEvent.click(toggleTableSettingsButton);
+
+  await waitUntilRendered(() => document.querySelector('.sw-floating-ui__content'));
+
+  const popover = within(document.querySelector('.sw-floating-ui__content'));
+  expect(popover.getByText('Settings')).toBeInTheDocument();
+  expect(popover.getByText('Columns')).toBeInTheDocument();
+
+  await waitUntilRendered(() => !document.querySelector('[class*="popoverTransition"]'));
+  
+  expect(popover.getByText('Reset all changes')).toBeInTheDocument();
+};
+
+export const VisualTestOpenColumnSettingsMenu = Template.bind();
+VisualTestOpenColumnSettingsMenu.storyName = 'Open column settings menu';
+VisualTestOpenColumnSettingsMenu.play = async () => {
+  const canvas = within(document.getElementById('root'));
+
+  await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+
+  const toggleTableSettingsButton = canvas.getByLabelText('Toggle table settings');
+
+  await userEvent.click(toggleTableSettingsButton);
+
+  await waitUntilRendered(() => document.querySelector('.sw-floating-ui__content'));
+
+  let popover = within(document.querySelector('.sw-floating-ui__content'));
+  expect(popover.getByText('Settings')).toBeInTheDocument();
+  
+  const columnSettingsPopoverItem = popover.getByText('Columns');
+
+  await userEvent.click(columnSettingsPopoverItem);
+
+  popover = within(document.querySelector('.sw-floating-ui__content'));
+
+  await waitUntilRendered(() => document.querySelector('.sw-popover-item-result__group-label'));
+
+  // check if correct items are visible
+  expect(popover.getByText('Shown in table')).toBeInTheDocument();
+  expect(popover.getByText('Hidden in table')).toBeInTheDocument();
+
+  expect(popover.getAllByText('Columns')[0]).toBeInTheDocument();
+
+  expect(popover.getByText('Hide all')).toBeInTheDocument();
+  expect(popover.getByText('Show all')).toBeInTheDocument();
+
+  expect(popover.getByText('Name')).toBeInTheDocument();
+  expect(popover.getByText('Manufacturer')).toBeInTheDocument();
+  expect(popover.getByText('Active')).toBeInTheDocument();
+  expect(popover.getByText('Price')).toBeInTheDocument();
+  expect(popover.getByText('Available')).toBeInTheDocument();
+  expect(popover.getByText('Stock')).toBeInTheDocument();
 };

@@ -8,13 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 'lts/gallium'
       - name: Retrieve the cached "node_modules" directory (if present)
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: node-cache
         with:
           path: node_modules
@@ -29,13 +29,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 'lts/gallium'
       - name: Retrieve the cached "node_modules" directory (if present)
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: node-cache
         with:
           path: node_modules
@@ -51,11 +51,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Setup Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
     - name: Retrieve the cached "node_modules" directory (if present)
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       id: node-cache
       with:
         path: node_modules
@@ -65,9 +65,14 @@ jobs:
       run: npm ci
     - name: Install Playwright
       run: npx playwright install
+    - name: Create the static pages directory locally in CI
+      run: npm run build-storybook
     - name: Run Tests
       id: storybookTests
-      run: npm run test-storybook:ci
+      run: |
+        npx concurrently --kill-others --success first --names "SB,TEST" --prefix-colors "magenta,blue" \
+        "http-server storybook-static -a 127.0.0.1 --port 6006" \
+        "wait-on http://127.0.0.1:6006 && npm run test-storybook"
     - name: Archive visual test diffs
       uses: actions/upload-artifact@v3
       if: always() && (steps.storybookTests.outcome == 'failure')

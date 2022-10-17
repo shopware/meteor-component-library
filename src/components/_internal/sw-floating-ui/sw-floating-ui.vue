@@ -1,0 +1,208 @@
+<template>
+  <div
+    ref="floatingUi"
+    class="sw-floating-ui"
+  >
+    <div
+      ref="floatingUiTrigger"
+      class="sw-floating-ui__trigger"
+    >
+      <slot name="trigger" />
+    </div>
+    <div
+      ref="floatingUiContent"
+      v-click-outside="onClickOutside"
+      class="sw-floating-ui__content"
+      :data-show="isOpened"
+      tabindex="0"
+    >
+      <div
+        v-if="showArrow"
+        ref="floatingUiArrow"
+        class="sw-floating-ui__arrow"
+        data-popper-arrow
+      />
+
+      <transition name="popoverTransition">
+        <template v-if="isOpened">
+          <slot />
+        </template>
+      </transition>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { PropType } from 'vue';
+import { defineComponent, onMounted, ref, onBeforeUnmount } from 'vue';
+import {computePosition, autoUpdate, ComputePositionConfig, offset, arrow, flip} from '@floating-ui/dom';
+import vClickOutside from 'v-click-outside';
+
+export default defineComponent({
+  name: 'SwFloatingUi',
+
+  directives: {
+    clickOutside: vClickOutside.directive,
+  },
+
+  props: {
+    isOpened: {
+      type: Boolean,
+      required: true,
+    },
+    floatingUiOptions: {
+      type: Object as PropType<Partial<ComputePositionConfig>>,
+      default: () => ({}),
+      required: false,
+    },
+    showArrow: {
+      type: Boolean,
+      required: false,
+      default: false,
+    }
+  },
+
+  emits: ['close'],
+
+  setup: (props, { emit }) => {
+    const floatingUiContent = ref<HTMLElement|null>(null);
+    const floatingUiTrigger = ref<HTMLElement|null>(null);
+    const floatingUiArrow = ref<HTMLElement|null>(null);
+    const floatingUi = ref<HTMLElement|null>(null);
+    let cleanup: () => void;
+
+    const bodyContainer = window.document.querySelector('body') as HTMLBodyElement;
+
+    onMounted(() => {
+      if (!floatingUiTrigger.value || !floatingUiContent.value) {
+        return;
+      }
+
+      // move the popover to the body
+      bodyContainer.appendChild(floatingUiContent.value);
+
+      // @ts-expect-error - classList is readonly when value exists
+      // add given classes also to popover element
+      const givenClasses = [...floatingUi.value?.classList.values()].filter(c => c !== 'sw-floating-ui') as string[];
+      floatingUiContent.value.classList.add(...givenClasses);
+
+      cleanup = autoUpdate(floatingUiTrigger.value, floatingUiContent.value, () => {
+        if (!floatingUiTrigger.value || !floatingUiContent.value) {
+          return;
+        }
+
+        computePosition(floatingUiTrigger.value, floatingUiContent.value, {
+          placement: 'bottom-start',
+          strategy: 'fixed',
+          middleware: [
+            offset(6),
+            ...(() => {
+              if (props.showArrow && floatingUiArrow.value) {
+                return [arrow({ element: floatingUiArrow.value })];
+              }
+              return [];
+            })(),
+            flip(),
+            ...(props.floatingUiOptions.middleware || []),
+          ],
+          ...props.floatingUiOptions,
+        }).then(({ x, y, middlewareData, placement }) => {
+          if (!floatingUiContent.value) {
+            return;
+          }
+
+          // @ts-expect-error - placement is one of these values
+          const staticSide = {
+            top: 'bottom',
+            right: 'left',
+            bottom: 'top',
+            left: 'right',
+          }[placement.split('-')[0]] as 'top' | 'right' | 'bottom' | 'left';
+
+          if (props.showArrow && floatingUiArrow.value && middlewareData.arrow) {
+            Object.assign(floatingUiArrow.value.style, {
+              left: middlewareData.arrow.x != null ? `${middlewareData.arrow.x}px` : '',
+              top: middlewareData.arrow.y != null ? `${middlewareData.arrow.y}px` : '',
+              right: '',
+              bottom: '',
+              [staticSide]: '-2px',
+            })
+          }
+  
+          Object.assign(floatingUiContent.value.style, {
+            left: `${x}px`,
+            top: `${y}px`,
+          });
+        });
+      })
+    });
+
+    onBeforeUnmount(() => {
+      // cleanup the floating ui listener
+      if (cleanup) {
+        cleanup();
+      }
+
+      // remove the popover from the body
+      if (floatingUiContent.value && bodyContainer.contains(floatingUiContent.value)) {
+        bodyContainer.removeChild(floatingUiContent.value);
+      }
+    });
+
+    const onClickOutside = () => {
+      emit('close');
+    };
+
+    return {
+      floatingUiContent,
+      floatingUiTrigger,
+      floatingUiArrow,
+      floatingUi,
+      onClickOutside
+    };
+  },
+});
+</script>
+
+<style lang="scss">
+@import "../../assets/scss/variables.scss";
+
+.sw-floating-ui {
+  display: inline-block;
+  position: relative;
+
+  .sw-floating-ui__trigger {
+    display: inline-block;
+  }
+}
+
+.sw-floating-ui__content {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  &[data-show] {
+    display: block;
+  }
+
+  /***
+  * Arrow indicator
+  */
+  .sw-floating-ui__arrow {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: inherit;
+    transform: rotate(45deg);
+  }
+}
+
+.popoverTransition-enter-active, .popoverTransition-leave-active {
+  transform-origin: top;
+  transition: transform .2s, opacity .2s;
+}
+.popoverTransition-enter, .popoverTransition-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  transform: scale3d(1, 0, 1);
+  opacity: 0;
+}
+</style>
