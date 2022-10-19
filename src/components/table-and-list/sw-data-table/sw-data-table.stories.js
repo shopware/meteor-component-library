@@ -33,6 +33,17 @@ export default {
       table: {
         category: 'Events'
       }
+    },
+    'search-value-change': {
+      table: {
+        disable: true,
+      }
+    },
+    searchValueChange: {
+      action: 'search-value-change',
+      table: {
+        category: 'Events'
+      }
     }
   },
   args: {
@@ -87,7 +98,9 @@ export default {
     enableReload: true,
     currentPage: 1,
     paginationLimit: 25,
-    paginationOptions: [5,10,25,50,250,5000]
+    paginationOptions: [5,10,25,50,250,5000],
+    searchValue: '',
+    disableSearch: false,
   }
 };
 
@@ -98,6 +111,7 @@ const Template = (args, { argTypes }) => ({
     return {
       paginationLimitValue: 0,
       currentPageValue: 0,
+      searchValueValue: '',
     }
   },
   watch: {
@@ -120,6 +134,16 @@ const Template = (args, { argTypes }) => ({
         this.currentPageValue = v;
       },
       immediate: true
+    },
+    searchValue: {
+      handler(v) {
+        if (this.searchValueValue === v) {
+          return;
+        }
+
+        this.searchValueValue = v;
+      },
+      immediate: true
     }
   },
   methods: {
@@ -130,6 +154,10 @@ const Template = (args, { argTypes }) => ({
     paginationCurrentPageChangeHandler(event) {
       this.paginationCurrentPageChange(event)
       this.currentPageValue = event;
+    },
+    searchValueChangeHandler(event) {
+      this.searchValueChange(event)
+      this.searchValueValue = event;
     }
   },
   template: `
@@ -142,6 +170,8 @@ const Template = (args, { argTypes }) => ({
       :currentPage="currentPageValue"
       @pagination-current-page-change="paginationCurrentPageChangeHandler"
       :paginationTotalItems="90"
+      :searchValue="searchValueValue"
+      @search-value-change="searchValueChangeHandler"
     >
       {{ $props.default}}
     </sw-data-table>
