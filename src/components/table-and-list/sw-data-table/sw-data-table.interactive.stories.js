@@ -64,7 +64,8 @@ export const VisualTestRenderTableWithoutCardHeader = Template.bind();
 VisualTestRenderTableWithoutCardHeader.storyName = 'Should render the Table without card header';
 VisualTestRenderTableWithoutCardHeader.args = {
   title: undefined,
-  subtitle: undefined
+  subtitle: undefined,
+  disableSearch: true,
 };
 VisualTestRenderTableWithoutCardHeader.play = async () => {
   const canvas = within(document.getElementById('root'));
