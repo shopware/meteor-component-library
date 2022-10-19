@@ -910,4 +910,46 @@ describe("sw-data-table", () => {
       expect(removeEventListenerSpy).toHaveBeenCalledWith('mouseup', expect.any(Function));
     });
   });
+
+  describe('Should have correct search funcitonalitities', () => {
+    it('should have a search input field', () => {
+      const wrapper = createWrapper();
+
+      expect(wrapper.find('.sw-search').exists()).toBe(true);
+    });
+
+    it('should not render the search input field', async () => {
+      const wrapper = createWrapper();
+
+      await wrapper.setProps({
+        disableSearch: true,
+      })
+
+      expect(wrapper.find('.sw-search').exists()).toBe(false);
+    });
+
+    it('should use the search value from prop', async () => {
+      const wrapper = createWrapper();
+
+      await wrapper.setProps({
+        searchValue: 'My initital search value',
+      })
+
+      const searchInput = wrapper.find('.sw-search input');
+
+      expect(searchInput.element.value).toBe('My initital search value');
+    });
+
+    it('should emit the search value', async () => {
+      const wrapper = createWrapper();
+
+      const searchInput = wrapper.find('.sw-search input');
+
+      await searchInput.setValue('My new search value');
+      await searchInput.trigger('change');
+
+      expect(wrapper.emitted()['search-value-change']).toBeTruthy();
+      expect(wrapper.emitted()['search-value-change'][0][0]).toBe('My new search value');
+    });
+  })
 });
