@@ -53,10 +53,12 @@
    body.light * {
       color-scheme: light;
    }</style><script>setTimeout(() => {
+    console.log('window.CONFIG_TYPE', window.CONFIG_TYPE);
+
     if (window.CONFIG_TYPE === 'DEVELOPMENT') {
       document.body.classList.add('show-interaction-tests');
     }
-  }, 0)</script><style>#root[hidden],
+  }, 500)</script><style>#root[hidden],
       #docs-root[hidden] {
         display: none !important;
       }</style></head><body><div id="root"></div><div id="docs-root"></div><script>window['CONFIG_TYPE'] = "PRODUCTION";
