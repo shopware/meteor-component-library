@@ -228,6 +228,7 @@ export default Vue.extend({
 
     &:not(&--hero) {
         @include drop-shadow-default;
+        border-radius: $border-radius-lg;
     }
 
     &.sw-card--grid {
