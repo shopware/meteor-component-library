@@ -84,6 +84,18 @@ VisualTestSingleSelection.play = async ({ args }) => {
   });
   expect(args.change).toHaveBeenCalledWith('f')
   expect(canvas.getByRole('textbox').value).toBe('');
+
+  // Only 'FF' is selected
+  await userEvent.type(canvas.getByRole('textbox'), 'FF');
+  popover = within(document.querySelector('.sw-popover__wrapper'));
+  await userEvent.click(popover.getByTestId('sw-select-option--ff'));
+  expect(args.itemAdd).toHaveBeenCalledWith({
+    id: 7,
+    value: 'ff',
+    label: 'Option FF',
+  });
+  expect(args.change).toHaveBeenCalledWith('ff');
+  expect(canvas.getByRole('textbox').value).toBe('');
 };
 
 export const VisualTestMultiSelect = Template.bind();

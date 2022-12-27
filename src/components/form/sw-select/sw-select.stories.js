@@ -35,6 +35,11 @@ export default {
         id: 6,
         label: 'Option F',
         value: 'f',
+      },
+      {
+        id: 7,
+        label: 'Option FF',
+        value: 'ff',
       }
     ],
   },
