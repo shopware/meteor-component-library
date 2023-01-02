@@ -2,7 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## [1.0.2] - 30.12.2022
+### Changed
+
+- Changed `visibleValues` computed property in `sw-select` to correctly display selected value for single select component.
 
 ### BREAKING CHANGES
 

@@ -325,7 +325,7 @@ export default Vue.extend({
         return [];
       }
 
-      return this.options.filter((item) => this.currentValue.includes(this.getKey(item, this.valueProperty))).slice(0, this.limit);
+      return this.options.filter((item) => this.isSelected(item)).slice(0, this.limit);
     },
 
     totalValuesCount(): number {
@@ -385,7 +385,11 @@ export default Vue.extend({
 
   methods: {
     isSelected(item: any) {
-      return this.currentValue.includes(this.getKey(item, this.valueProperty));
+      if (this.enableMultiSelection) {
+        return this.currentValue.includes(this.getKey(item, this.valueProperty));
+      }
+
+      return this.currentValue === this.getKey(item, this.valueProperty);
     },
 
     addItem(item: any) {
