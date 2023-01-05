@@ -52,7 +52,7 @@ nav:
   style="border: 0; min-height: 50vh; width: 100%;"
 ></iframe>
 EOT
-  cat $DIR/docs/component/$component.md
+  # cat $DIR/docs/component/$component.md
 
   # ./src/directives/tooltip.stories.js
   elif [[ $file == *"/directives/"* ]]; then
@@ -91,7 +91,7 @@ nav:
   style="border: 0; min-height: 50vh; width: 100%;"
 ></iframe>
 EOT
-  cat $DIR/docs/directive/$component.md
+  # cat $DIR/docs/directive/$component.md
 
   else
     echo "$file is unknown"
