@@ -15,6 +15,13 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+@supports (font-variation-settings: normal) {
+    body {
+        font-family: $font-family-variables;
+        font-feature-settings: $font-family-default-feature-settings;
+    }
+}
+
 .sw-drag-select-box {
     position: absolute;
     background: $color-drag-select-box;
