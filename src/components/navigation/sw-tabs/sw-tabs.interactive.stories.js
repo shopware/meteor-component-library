@@ -175,7 +175,7 @@ VisualTestRenderContextTabWithActiveItem.play = async () => {
 
   // wait until tab bar is loaded and context button gets rendered
   await waitUntilRendered(() => document.body.textContent.includes('Context tab test'));
-  await waitUntilRendered(() => document.querySelector('button'));
+  await waitUntilRendered(() => document.querySelector('.sw-context-button__button'));
 
   const button = await canvas.getByRole('button');
 
@@ -186,9 +186,9 @@ VisualTestRenderContextTabWithActiveItem.play = async () => {
 
   const menuItem = await popover.getAllByRole('tab');
 
-  await expect(menuItem[3]).toHaveTextContent('Item 9');
+  await expect(menuItem[4]).toHaveTextContent('Item 9');
 
-  await userEvent.click(menuItem[3]);
+  await userEvent.click(menuItem[4]);
 
   expect(document.getElementsByClassName('sw-popover__wrapper').length).toEqual(0);
 };
@@ -263,5 +263,5 @@ VisualTestRenderTabsWithContextMenuBadge.play = async () => {
 
   const menuItem = await popover.getAllByRole('tab');
 
-  await expect(menuItem[3]).toHaveTextContent('Item with critical badge');
+  await expect(menuItem[4]).toHaveTextContent('Item with critical badge');
 };

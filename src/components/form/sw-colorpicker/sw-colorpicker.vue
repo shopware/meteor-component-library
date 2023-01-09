@@ -1253,7 +1253,7 @@ export default Vue.extend({
       &-label {
         text-align: center;
         color: $color-darkgray-200;
-        font-size: 14px;
+        font-size: $font-size-xxs;
         margin-top: 2px;
         user-select: none;
         -moz-user-select: none;
@@ -1430,7 +1430,7 @@ export default Vue.extend({
       padding: 0 5px;
       border: 1px solid $color-gray-300;
       border-radius: $border-radius-default;
-      font-size: 14px;
+      font-size: $font-size-xxs;
       font-family: $font-family-default;
       color: $color-darkgray-200;
       outline: none;
