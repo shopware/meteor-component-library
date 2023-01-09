@@ -5,6 +5,7 @@ import vue from "rollup-plugin-vue";
 import scss from 'rollup-plugin-scss';
 import svg from 'rollup-plugin-svg-import';
 import dynamicImportVars from '@rollup/plugin-dynamic-import-vars';
+import path from 'path';
 
 export default {
   input: "src/index.ts",
@@ -37,6 +38,16 @@ export default {
     scss({
       output: 'dist/style.css',
       failOnError: true,
+      importer: (url, _prev, done) => {
+        if (url[0] !== '~') {
+          return null
+        }
+        const info = { file: path.resolve(`node_modules/${url.substr(1)}`) }
+        if (done) {
+          done(info)
+        }
+        return info
+      }
     }),
     dynamicImportVars({
       // options
