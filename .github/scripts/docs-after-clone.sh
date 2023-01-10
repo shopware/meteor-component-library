@@ -1,7 +1,9 @@
 #! /usr/bin/env bash
 set -e
 
-DIR=/tmp/mount-all
+[[ -z "$1" ]] && echo "Missing working directory argument" && exit 1
+
+DIR=$1
 URL=https://shopware.github.io/meteor-component-library
 PARAMS="&viewMode=docs&shortcuts=false&singleStory=true"
 
