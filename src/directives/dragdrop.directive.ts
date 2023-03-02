@@ -13,6 +13,7 @@ export interface DragConfig<DATA = unknown> {
   preventEvent: boolean,
   validateDrop: null|((dragConfigData: DragConfig<DATA>['data'],dropConfigData: DropConfig<DATA>['data']) => boolean),
   validateDrag: null|((dragConfigData: DragConfig<DATA>['data'],dropConfigData: DropConfig<DATA>['data']) => boolean),
+  validateDragStart: null|((dragConfigData: DragConfig<DATA>['data'],el: HTMLElement, event: MouseEvent|TouchEvent) => boolean),
   onDragStart: null|((dragConfig: DragConfig<DATA>, el: HTMLElement, dragElement: HTMLElement) => void),
   onDragEnter: null|((dragConfigData: DragConfig<DATA>['data'],dropConfigData: DropConfig<DATA>['data'], valid: boolean) => void),
   onDragLeave: null|((dragConfigData: DragConfig<DATA>['data'],dropConfigData: DropConfig<DATA>['data']) => void),
@@ -85,6 +86,7 @@ const defaultDragConfig: DragConfig = {
   preventEvent: true,
   validateDrop: null,
   validateDrag: null,
+  validateDragStart: null,
   onDragStart: null,
   onDragEnter: null,
   onDragLeave: null,
@@ -118,6 +120,7 @@ function onDrag(el: HTMLElement, dragConfig: DragConfig, event: MouseEvent|Touch
     event.preventDefault();
     event.stopPropagation();
   }
+  
   if (dragConfig.delay === null || dragConfig.delay <= 0) {
     startDrag(el, dragConfig, event);
   } else {
@@ -135,6 +138,15 @@ function onDrag(el: HTMLElement, dragConfig: DragConfig, event: MouseEvent|Touch
  * Initializes the drag state for the current drag action.
  */
 function startDrag(el: HTMLElement, dragConfig: DragConfig, event: MouseEvent|TouchEvent) {
+  // check if starting drag is valid
+  if (
+    dragConfig.validateDragStart !== null
+    &&
+    !dragConfig.validateDragStart(dragConfig.data, el, event)
+    ) {
+    return;
+  }
+ 
   delayTimeout = null;
 
   if (currentDrag !== null) {
@@ -160,7 +172,7 @@ function startDrag(el: HTMLElement, dragConfig: DragConfig, event: MouseEvent|To
   dragElement = el.cloneNode(true) as HTMLElement;
   dragElement.classList.add(dragConfig.dragElementCls);
   dragElement.style.width = `${elBoundingBox.width}px`;
-  dragElement.style.transform = `translate3d(${pageX - dragMouseOffsetX}px, ${pageY - dragMouseOffsetY}px, 0)`;
+  dragElement.style.translate = `${pageX - dragMouseOffsetX}px ${pageY - dragMouseOffsetY}px`;
   dragElement.style.left = '0';
   dragElement.style.top = '0';
   document.body.appendChild(dragElement);
@@ -173,6 +185,21 @@ function startDrag(el: HTMLElement, dragConfig: DragConfig, event: MouseEvent|To
 
   document.addEventListener('mousemove', moveDrag);
   document.addEventListener('touchmove', moveDrag);
+}
+
+let rotationTimeout = 0;
+
+/**
+ * Calculate the rotation based on movement direction.
+ */
+function calculateRotation(oldX: number, newX: number):string {
+  if (oldX && Math.abs(newX - oldX) > 2) {
+    const moveRight = (newX - oldX) > 0;
+
+    return `${moveRight ? 5 : -5}deg`;
+  }
+
+  return '';
 }
 
 /**
@@ -194,7 +221,26 @@ function moveDrag(event: MouseEvent|TouchEvent) {
   ) as number;
 
   if (dragElement) {
-    dragElement.style.transform = `translate3d(${pageX - dragMouseOffsetX}px, ${pageY - dragMouseOffsetY}px, 0)`;
+    // get the old value from dataset
+    const oldX = Number(dragElement.dataset.translateX);
+
+    const newX = pageX - dragMouseOffsetX;
+    const newY = pageY - dragMouseOffsetY;
+
+    // calculate rotation
+    dragElement.style.rotate = calculateRotation(oldX, newX);
+
+    // use timeout for resetting the rotation after movement stops
+    clearTimeout(rotationTimeout);
+    rotationTimeout = window.setTimeout(() => {
+      if (dragElement) dragElement.style.rotate = '0deg';
+    }, 100);
+
+    // set translate value
+    dragElement.style.translate = `${newX}px ${newY}px`;
+
+    // save new x value to dataset
+    dragElement.dataset.translateX = newX.toString();
   }
 
   if (event.type === 'touchmove') {
@@ -375,6 +421,7 @@ function validateDrop(): boolean {
   if (currentDrop !== null && isFunction(currentDrop.dropConfig.validateDrop)) {
     customDropValidation = currentDrop.dropConfig.validateDrop(currentDrag && currentDrag.dragConfig.data, currentDrop.dropConfig.data);
   }
+
 
   return valid && customDragValidation && customDropValidation;
 }

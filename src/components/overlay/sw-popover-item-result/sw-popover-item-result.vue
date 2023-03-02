@@ -284,7 +284,6 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
     padding-bottom: 4px;
 
     &.is--dragging {
-      // TODO: adjust styling
       opacity: 0.25;
       border: none;
       background-color: inherit;
@@ -313,7 +312,6 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
     transition: transform 0.3s ease;
   }
 
-  // TODO: adjust transition time
   .option-fade-enter-active, .option-fade-leave-active {
     transition: opacity .3s;
   }
@@ -329,8 +327,8 @@ body.is-popover-item-result-dragging {
 
   .sw-popover-item {
     &.is--drag-element {
-      // box-shadow: 0 0 8px 0 $scrollShadowColor;
       box-shadow: none;
+      transition: 0.3s rotate ease-in-out;
     }
   }
 }

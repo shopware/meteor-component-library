@@ -148,7 +148,7 @@ describe("sw-popover-item", () => {
     const swFloatingUi = wrapper.findComponent({ name: 'SwFloatingUi' });
 
     // @ts-expect-error - onClickOutside exists on SwFloatingUi
-    swFloatingUi.vm.onClickOutside();
+    swFloatingUi.vm.onClickOutside(new MouseEvent('click'));
     await wrapper.vm.$nextTick();
 
     expect(wrapper.find('.sw-popover__content').exists()).toBeFalsy();
