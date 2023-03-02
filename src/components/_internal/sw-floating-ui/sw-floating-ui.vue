@@ -11,7 +11,10 @@
     </div>
     <div
       ref="floatingUiContent"
-      v-click-outside="onClickOutside"
+      v-click-outside="{
+        handler: onClickOutside,
+        events: ['click', 'mousedown', 'touchstart']
+      }"
       class="sw-floating-ui__content"
       :data-show="isOpened"
       tabindex="0"
@@ -149,7 +152,12 @@ export default defineComponent({
       }
     });
 
-    const onClickOutside = () => {
+    const onClickOutside = (event: Event) => {
+      // emit close when click is not inside trigger or content
+      if (floatingUi.value?.contains(event.target as Node)) {
+        return;
+      }
+
       emit('close');
     };
 
@@ -180,6 +188,7 @@ export default defineComponent({
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 1;
 
   &[data-show] {
     display: block;

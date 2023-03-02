@@ -48,6 +48,7 @@
             <slot
               :name="'popover-items__' + currentView.name"
               :change-view="changeView"
+              :toggle-floating-ui="toggleFloatingUi"
             />
           </div>
         </transition>
@@ -173,8 +174,7 @@ export default defineComponent({
       isOpened.value = false;
     };
 
-    const toggleFloatingUi = (event: Event) => {
-      event.stopImmediatePropagation();
+    const toggleFloatingUi = () => {
       isOpened.value = !isOpened.value;
     };
 
