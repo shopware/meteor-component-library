@@ -36,17 +36,80 @@
                   class="sw-data-table__table-wrapper-table-head"
                   :data-header-column-property="column.property"
                   :style="renderColumnHeaderStyle(column)"
+                  :data-testid="'column-table-head__' + column.property"
                 >
-                  <span>{{ column.label }}</span>
+                  <div
+                    class="sw-data-table__table-head-dragzone"
+                    :data-testid="'column-dragzone__' + column.property"
+                  >
+                    <div
+                      class="sw-data-table__table-head-dragzone-bar"
+                      :data-testid="'column-dragzone-bar__' + column.property"
+                    >
+                      <div
+                        class="sw-data-table__table-head-dragzone-indicator"
+                      >
+                        <sw-icon name="regular-grip-horizontal-s" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="sw-data-table__table-head-inner-wrapper">
+                    <span>{{ column.label }}</span>
+
+                    <div
+                      v-if="sortBy === column.property"
+                      class="sw-data-table__table-head-sorting-icons"
+                    >
+                      <sw-icon
+                        :name="sortDirection === 'ASC' ? 'solid-long-arrow-up' : 'solid-long-arrow-down'"
+                        class="sw-data-table__table-head-sort"
+                      />
+                    </div>
+                  </div>
 
                   <div
                     v-droppable="{ ...dropConfig, data: { ...column, dropZone: 'before' } }"
                     class="sw-data-table__table-head-dropzone-before"
+                    :data-testid="'column-dropzone-before__' + column.property"
                   />
                   <div
                     v-droppable="{ ...dropConfig, data: { ...column, dropZone: 'after' } }"
                     class="sw-data-table__table-head-dropzone-after"
+                    :data-testid="'column-dropzone-after__' + column.property"
                   />
+
+                  <sw-popover
+                    :title="column.label"
+                    class="sw-data-table__table-head-column-settings"
+                  >
+                    <template #trigger="{ toggleFloatingUi }">
+                      <div
+                        class="sw-data-table__table-head-column-settings-trigger"
+                        :data-testid="'column-settings-trigger__' + column.property"
+                        @click="toggleFloatingUi"
+                      >
+                        <!-- DIV Placeholder for clicking to open the column settings popover -->
+                      </div>
+                    </template>
+
+                    <template #popover-items__base="{ toggleFloatingUi }">
+                      <sw-popover-item
+                        v-if="column.sortable"
+                        :label="$t('sw-data-table.columnSettings.sortAscending')"
+                        icon="regular-long-arrow-up"
+                        contextual-detail="A -> Z"
+                        :on-label-click="() => onColumnSettingsSortChange(column.property, 'ASC', toggleFloatingUi)"
+                      />
+                      <sw-popover-item
+                        v-if="column.sortable"
+                        :label="$t('sw-data-table.columnSettings.sortDescending')"
+                        icon="regular-long-arrow-down"
+                        contextual-detail="Z -> A"
+                        :on-label-click="() => onColumnSettingsSortChange(column.property, 'DESC', toggleFloatingUi)"
+                      />
+                    </template>
+                  </sw-popover>
 
                   <div
                     v-if="column.allowResize !== false"
@@ -94,7 +157,7 @@
                 </td>
               </template>
 
-              <td>
+              <td class="sw-data-table__table-context-button">
                 <!-- TODO: implement context button functionality -->
                 <sw-context-button />
               </td>
@@ -155,6 +218,8 @@ import SwPagination from "../sw-pagination/sw-pagination.vue";
 import SwSearch from '../../navigation/sw-search/sw-search.vue';
 import SwContextButton from '../../context-menu/sw-context-button/sw-context-button.vue';
 import SwDataTableSettings from './sub-components/sw-data-table-settings/sw-data-table-settings.vue';
+import SwPopover from '../../overlay/sw-popover/sw-popover.vue';
+import SwPopoverItem from '../../overlay/sw-popover-item/sw-popover-item.vue';
 import { draggable, DropConfig, DragConfig, droppable } from '../../../directives/dragdrop.directive';
 
 export interface ColumnDefinition {
@@ -197,6 +262,8 @@ export default defineComponent({
     "sw-search": SwSearch,
     'sw-context-button': SwContextButton,
     'sw-data-table-settings': SwDataTableSettings,
+    'sw-popover': SwPopover,
+    'sw-popover-item': SwPopoverItem,
   },
   props: {
     // TODO: add comments for props
@@ -261,6 +328,16 @@ export default defineComponent({
       required: false,
       default: () => [5, 10, 25, 50],
     },
+    sortBy: {
+      type: String,
+      required: false,
+      default: '',
+    },
+    sortDirection: {
+      type: String as PropType<'ASC' | 'DESC'>,
+      required: false,
+      default: 'ASC',
+    },
     disableSearch: {
       type: Boolean,
       required: false,
@@ -272,17 +349,25 @@ export default defineComponent({
       default: '',
     },
   },
-  emits: ["reload", "pagination-limit-change", "pagination-current-page-change", 'search-value-change'],
+  emits: ["reload", "pagination-limit-change", "pagination-current-page-change", 'search-value-change', 'sort-change'],
   i18n: {
     messages: {
       en: {
         "sw-data-table": {
           itemsPerPage: "Items per page",
+          columnSettings: {
+            sortAscending: "Sort ascending",
+            sortDescending: "Sort descending",
+          }
         },
       },
       de: {
         "sw-data-table": {
           itemsPerPage: "Einträge pro Seite",
+          columnSettings: {
+            sortAscending: "Aufsteigend sortieren",
+            sortDescending: "Absteigend sortieren",
+          }
         },
       },
     },
@@ -384,6 +469,7 @@ export default defineComponent({
       // remove transition on table
       if (dataTable.value) {
         dataTable.value.classList.add("--no-transition");
+        dataTable.value.classList.add("--resizing");
       }
 
       // set cursor globally to resize
@@ -421,6 +507,7 @@ export default defineComponent({
         // reset additional paddingRight after finished the resizing
         if (dataTable.value) {
           dataTable.value.classList.remove("--no-transition");
+          dataTable.value.classList.remove("--resizing");
           dataTable.value.style.removeProperty("padding-right");
         }
 
@@ -612,7 +699,32 @@ export default defineComponent({
 
     const dragConfig: Partial<DragConfig<ColumnDefinition & {dropZone?: 'before'|'after'}>> = {
       dragGroup: DRAG_GROUP_COLUMN,
+      preventEvent: false,
+      validateDragStart: (dragConfigData, el, event) => {
+        const allDragZones = document.querySelectorAll('.sw-data-table__table-head-dragzone');
+        // @ts-expect-error - TS doesn't know that target is a valid element
+        const isChild = [...allDragZones].some((dragZone) => dragZone.contains(event.target));
+
+        return isChild;
+      },
+      onDragStart: () => {
+        // add drag information to the table
+        if (dataTable.value) {
+          dataTable.value.classList.add("is--dragging-inside");
+        }
+
+        // set cursor globally to grabbing
+        document.body.style.cursor = "grabbing";
+      },
       onDrop: (dragConfigData, dropConfigData) => {
+        // remove drag information to the table
+        if (dataTable.value) {
+          dataTable.value.classList.remove("is--dragging-inside");
+        }
+
+        // reset global cursor
+        document.body.style.cursor = "";
+
         if (dragConfigData && dropConfigData) {
           changeColumnPosition(dragConfigData.property, dropConfigData.property, dropConfigData.dropZone);
         }
@@ -633,6 +745,21 @@ export default defineComponent({
       addToColumnChanges(columnProperty, {
         visible: visibility
       });
+    }
+
+    /**
+     * Methods for sorting and filtering the data
+     */
+    const emitSortChange = (property: string, direction: 'ASC'|'DESC') => {
+      emit('sort-change', property, direction);
+    }
+
+    const onColumnSettingsSortChange = (property: string, direction: 'ASC'|'DESC', chainMethod?: () => void) => {
+      emitSortChange(property, direction);
+
+      if (chainMethod) {
+        chainMethod();
+      }
     }
 
     /***
@@ -661,7 +788,9 @@ export default defineComponent({
       resetAllChanges,
       changeColumnPosition,
       isColumnVisible,
-      changeColumnVisibility
+      changeColumnVisibility,
+      emitSortChange,
+      onColumnSettingsSortChange
     };
   },
 });
@@ -860,12 +989,23 @@ $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
     position: sticky;
     top: -0.5px;
     text-transform: uppercase;
-    cursor: grab;
+    cursor: default;
     z-index: 1;
+  }
+
+  // override default cursor when user is resizing the columns
+  table.--resizing thead th {
+    cursor: col-resize;
   }
 
   tr {
     background-color: $color-white;
+  }
+
+  .sw-data-table__table-head-inner-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   /***
@@ -910,18 +1050,71 @@ $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
   }
 
   /**
+  * Column Settings
+  */
+  .sw-data-table__table-head-column-settings {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 16px);
+
+    .sw-floating-ui__trigger,
+    .sw-data-table__table-head-column-settings-trigger {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+  }
+
+  table.is--dragging-inside {
+    .sw-data-table__table-head-column-settings {
+      display: none;
+      pointer-events: none;
+    }
+  }
+
+  /**
+  * Sorting in columns
+  */
+  .sw-data-table__table-head-sorting-icons {
+    display: flex;
+    flex-direction: column;
+
+    .sw-data-table__table-head-sort {
+      transition: 0.3s color ease;
+      color: $color-gray-800;
+
+      #meteor-icon-kit__solid-long-arrow-up,
+      #meteor-icon-kit__solid-long-arrow-down {
+        height: 12px;
+      }
+    }
+  }
+
+  /**
   * Table Settings
   */
+  $settingsColumnWidth: 65px;
+
   .sw-data-table__table-settings-button {
     padding: 0;
     text-align: center;
     vertical-align: middle;
+    width: $settingsColumnWidth;
 
     #meteor-icon-kit__solid-cog-s {
       color: $color-gray-800;
       width: 10px;
       height: 10px;
     }
+  }
+
+  .sw-data-table__table-context-button {
+    text-align: center;
   }
 
   /**
@@ -989,18 +1182,96 @@ $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
   text-align: left;
   font-size: $font-size-xs;
   padding: 18px 16px 14px 16px;
-  border: 0.5px solid $color-gray-200;
+  border: 1px solid $color-shopware-brand-900;
+  border-radius: $border-radius-default $border-radius-default 0 0;
+  border-top: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   vertical-align: top;
   font-weight: $font-weight-medium;
   line-height: $line-height-xs;
-  background-color: $color-gray-50;
+  background-color: $color-shopware-brand-50;
   color: #6b7280; // TODO: this needs to be a variable in the future
   min-width: 50px;
-  border-bottom-width: 1px;
-  border-top: 0;
   text-transform: uppercase;
+
+  transition: 0.3s rotate ease-in-out;
+}
+
+thead th.is--dragging {
+  cursor: grabbing;
+}
+
+.sw-data-table__table-head-dragzone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 16px;
+  z-index: 1;
+  cursor: grab;
+
+  .sw-data-table__table-head-dragzone-bar {
+    pointer-events: none;
+    transform: scale(1, 0);
+  }
+
+  /* simHover (simulate hover) is needed for interaction testing
+  /* because the testing library has no support for css hover
+  */ 
+  &.simHover .sw-data-table__table-head-dragzone-bar,
+  &:hover .sw-data-table__table-head-dragzone-bar {
+    transform: scale(1, 1);
+  }
+}
+
+.sw-data-table__table-wrapper-table-head.is--drag-element {
+  .sw-data-table__table-head-dragzone-bar {
+    transform: scale(1, 1);
+  }
+
+  .sw-data-table__table-head-column-settings {
+    display: none;
+    pointer-events: none;
+  }
+}
+
+table.is--dragging-inside {
+  -webkit-user-select: none; /* Safari */
+  user-select: none;
+
+  .sw-data-table__table-head-dragzone {
+    display: none;
+  }
+}
+
+.sw-data-table__table-head-dragzone-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background-color: $color-shopware-brand-900;
+  border-radius: $border-radius-default $border-radius-default 0 0;
+  transition: transform 0.2s ease;
+  transform-origin: top center;
+}
+
+.sw-data-table__table-head-dragzone-indicator {
+  position: absolute;
+  width: 28px;
+  height: 16px;
+  left: calc(50% - 14px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $color-shopware-brand-900;
+  border-radius: 0 0 $border-radius-default $border-radius-default;
+
+  #meteor-icon-kit__regular-grip-horizontal-s {
+    color: $color-white;
+    width: 9px;
+  }
 }
 </style>
