@@ -29,6 +29,7 @@
         @input="onInput"
         @focus="setFocus"
         @blur="removeFocus"
+        @keydown="onKeyDown"
       />
     </template>
 
@@ -41,6 +42,13 @@
 
     <template #field-hint>
       <slot name="hint" />
+
+      <span
+        v-if="!!limit"
+        class="sw-field--textarea__limit"
+      >
+        {{ currentValue?.length || 0 }} / {{ limit }}
+      </span>
     </template>
   </sw-base-field>
 </template>
@@ -114,7 +122,13 @@ export default Vue.extend({
       type: Object,
       required: false,
       default: null,
-    }
+    },
+
+    limit: {
+      type: Number,
+      required: false,
+      default: null,
+    },
   },
 
   data() {
@@ -157,8 +171,12 @@ export default Vue.extend({
 
   methods: {
     onInput(event: Event) {
-      // @ts-expect-error - target is defined
-      this.$emit('input', event.target.value);
+      const shouldLimit = !!this.limit;
+      const { value } = event.target as HTMLInputElement;
+
+      const emittedValue = shouldLimit ? value.slice(0, this.limit) : value;
+
+      this.$emit('input', emittedValue);
     },
 
     onChange(event: Event) {
@@ -166,9 +184,27 @@ export default Vue.extend({
       this.$emit('change', event.target.value);
     },
 
+    onKeyDown(event: Event) {
+      const shouldLimit = !!this.limit;
+      if (!shouldLimit) {
+        return;
+      }
+
+      const exceededLimit = this.currentValue.length >= this.limit;
+      // @ts-expect-error - key is defined
+      const pressedBackspace = event.key === 'Backspace';
+
+      if (exceededLimit && !pressedBackspace) {
+        // stopping the event from bubbling up will stop the user
+        // from exceeding the maximum amount of characters
+        event.preventDefault();
+      }
+    },
+
     setFocus() {
       this.hasFocus = true;
     },
+
     removeFocus() {
       this.hasFocus = false;
     },
@@ -191,6 +227,10 @@ export default Vue.extend({
     textarea {
       background: $color-crimson-50;
     }
+  }
+
+  &__limit {
+    margin-left: auto;
   }
 }
 </style>
