@@ -91,6 +91,7 @@
     "vue-template-compiler": "^2.7.10",
     "vue-tsc": "^0.39.5",
     "wait-on": "^6.0.1",
-    "webpack": "^5.74.0"
+    "webpack": "^5.74.0",
+    "@vue/vue2-jest": "^27.0.0"
   }
 }
