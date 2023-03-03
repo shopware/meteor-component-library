@@ -79,3 +79,15 @@ VisualTestError.play = async ({ args }) => {
 
   await expect(canvas.getByText(args.error.detail)).toBeDefined();
 };
+
+export const VisualTestLimit = Template.bind();
+VisualTestLimit.storyName = 'Should display limit';
+VisualTestLimit.args = {
+  limit: 45,
+  value: 'Enter some more text to reach the limit... '
+};
+VisualTestLimit.play = async () => {
+  const canvas = within(document.getElementById('root'));
+
+  await expect(canvas.getByText('43 / 45')).toBeDefined();
+};

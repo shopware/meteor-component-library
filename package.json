@@ -7,8 +7,8 @@
     "storybook": "SHOW_INTERACTIONS=true start-storybook -p 6006",
     "build-vue": "rollup -c",
     "build-storybook": "build-storybook",
-    "test-storybook": "test-storybook",
-    "test-storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npm run build-storybook -- --quiet && npx http-server storybook-static --port 6006 --silent\" \"wait-on tcp:6006 && npm run test-storybook\"",
+    "test-storybook": "test-storybook --url http://127.0.0.1:6006",
+    "test-storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"http-server storybook-static -a 127.0.0.1 --port 6006 --silent\" \"wait-on tcp:6006 && npm run test-storybook\"",
     "docker": "docker run -v $PWD:/tests:delegated -w /tests -it --rm --ipc=host mcr.microsoft.com/playwright:v1.20.0-focal /bin/bash"
   },
   "main": "dist/common/index.js",
@@ -91,6 +91,7 @@
     "vue-template-compiler": "^2.7.10",
     "vue-tsc": "^0.39.5",
     "wait-on": "^6.0.1",
-    "webpack": "^5.74.0"
+    "webpack": "^5.74.0",
+    "@vue/vue2-jest": "^27.0.0"
   }
 }
