@@ -1,7 +1,7 @@
 import defaultSwDataTableStory, { Default as Template } from './sw-data-table.stories';
 import SwDataTableFixtures from './sw-data-table.fixtures.json';
 import { waitUntilRendered } from '../../../_internal/test-helper'
-import { within, userEvent } from '@storybook/testing-library';
+import { within, userEvent, waitFor, fireEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
 
 export default {
@@ -14,35 +14,6 @@ VisualTestRenderTable.storyName = 'Should render the Table';
 
 export const VisualTestRenderTableStickyHeader = Template.bind();
 VisualTestRenderTableStickyHeader.storyName = 'Should render the Table with sticky header';
-VisualTestRenderTableStickyHeader.args = {
-  dataSource: [
-    ...SwDataTableFixtures,
-    {
-      id: "bbf41666-d40f-44d1-8d31-49daab4fdc87",
-      active: false,
-      name: "Last product name",
-      manufacturer: {
-        name: "Last manufacturer",
-        translated: {
-          name: "Last manufacturer"
-        }
-      },
-      translated: {
-        name: "Last product name"
-      },
-      price: [
-        {
-          "currencyId": "\"b7d2554b0ce847cd82f3ac9bd1c0dfca\"",
-          "gross": 774261,
-          "net": 609992,
-          "linked": true
-        }
-      ],
-      stock: 409278,
-      available: 202164
-    }
-  ]
-};
 VisualTestRenderTableStickyHeader.play = async () => {
   const canvas = within(document.getElementById('root'));
 
@@ -70,14 +41,14 @@ VisualTestRenderTableWithoutCardHeader.args = {
 VisualTestRenderTableWithoutCardHeader.play = async () => {
   const canvas = within(document.getElementById('root'));
 
-  await waitUntilRendered(() => document.body.textContent.includes('Sleek Wooden Bacon'));
+  await waitUntilRendered(() => document.body.textContent.includes('Awesome Wooden Hat'));
   await waitUntilRendered(() => document.body.textContent.includes('Available'));
 
   // wait until everything is correctly rendered
   const dataTable = document.querySelector('.sw-data-table');
   await dataTable.parentElement.__vue__.$nextTick();
 
-  expect(canvas.getByText('Sleek Wooden Bacon')).toBeInTheDocument();
+  expect(canvas.getAllByText('Awesome Wooden Hat')[0]).toBeInTheDocument();
 };
 
 export const VisualTestRenderTableWithScrollShadows = Template.bind();
@@ -87,7 +58,7 @@ VisualTestRenderTableWithScrollShadows.args = {
     {
       id: "bbf41666-d40f-44d1-8d31-49daab4fdc87",
       active: false,
-      name: "Render scroll shadows",
+      name: "Aa Render scroll shadows",
       manufacturer: {
         name: "Last manufacturer",
         translated: {
@@ -95,7 +66,7 @@ VisualTestRenderTableWithScrollShadows.args = {
         }
       },
       translated: {
-        name: "Render scroll shadows"
+        name: "Aa Render scroll shadows"
       },
       price: [
         {
@@ -122,7 +93,7 @@ VisualTestRenderTableWithScrollShadows.args = {
 VisualTestRenderTableWithScrollShadows.play = async () =>{
   const canvas = within(document.getElementById('root'));
 
-  await waitUntilRendered(() => document.body.textContent.includes('Render scroll shadows'));
+  await waitUntilRendered(() => document.body.textContent.includes('Aa Render scroll shadows'));
 
   // scroll to middle horizontally and vertically
   const swDataTable = document.querySelector('.sw-data-table__table-wrapper');
@@ -133,7 +104,7 @@ VisualTestRenderTableWithScrollShadows.play = async () =>{
   const dataTable = document.querySelector('.sw-data-table');
   await dataTable.parentElement.__vue__.$nextTick();
 
-  expect(canvas.getByText('Render scroll shadows')).toBeInTheDocument();
+  expect(canvas.getByText('Aa Render scroll shadows')).toBeInTheDocument();
 };
 
 
@@ -171,7 +142,7 @@ VisualTestOpenSettingsMenu.play = async () => {
 
   await waitUntilRendered(() => document.querySelector('.sw-floating-ui__content'));
 
-  const popover = within(document.querySelector('.sw-floating-ui__content'));
+  const popover = within(document.querySelector('.sw-floating-ui__content[data-show="true"]'));
   expect(popover.getByText('Settings')).toBeInTheDocument();
   expect(popover.getByText('Columns')).toBeInTheDocument();
 
@@ -191,16 +162,16 @@ VisualTestOpenColumnSettingsMenu.play = async () => {
 
   await userEvent.click(toggleTableSettingsButton);
 
-  await waitUntilRendered(() => document.querySelector('.sw-floating-ui__content'));
+  await waitUntilRendered(() => document.querySelector('.sw-floating-ui__content[data-show="true"]'));
 
-  let popover = within(document.querySelector('.sw-floating-ui__content'));
+  let popover = within(document.querySelector('.sw-floating-ui__content[data-show="true"]'));
   expect(popover.getByText('Settings')).toBeInTheDocument();
   
   const columnSettingsPopoverItem = popover.getByText('Columns');
 
   await userEvent.click(columnSettingsPopoverItem);
 
-  popover = within(document.querySelector('.sw-floating-ui__content'));
+  popover = within(document.querySelector('.sw-floating-ui__content[data-show="true"]'));
 
   await waitUntilRendered(() => document.querySelector('.sw-popover-item-result__group-label'));
 
@@ -219,4 +190,113 @@ VisualTestOpenColumnSettingsMenu.play = async () => {
   expect(popover.getByText('Price')).toBeInTheDocument();
   expect(popover.getByText('Available')).toBeInTheDocument();
   expect(popover.getByText('Stock')).toBeInTheDocument();
+};
+
+export const VisualTestColumnDragBar = Template.bind();
+VisualTestColumnDragBar.storyName = 'Show the column drag bar on hover';
+VisualTestColumnDragBar.play = async () => {
+  const canvas = within(document.getElementById('root'));
+
+  await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+  await waitUntilRendered(() => document.querySelector('.sw-data-table__table-head-dragzone'));
+
+  const manufacturerColumnDragBar = await canvas.getByTestId('column-dragzone__manufacturer.name');
+  // simulate hover because real css hover is not possible in interaction tests
+  await manufacturerColumnDragBar.classList.add('simHover');
+
+  const manufacturerDragzoneBar = await canvas.getByTestId('column-dragzone-bar__manufacturer.name');
+  // check if scale was set back to 1:1
+  await waitFor(async () => {
+    await expect(getComputedStyle(manufacturerDragzoneBar)).toHaveProperty('transform', 'matrix(1, 0, 0, 1, 0, 0)');
+  });
+};
+
+export const VisualTestColumnDragDropOrdering = Template.bind();
+VisualTestColumnDragDropOrdering.storyName = 'Order the columns by drag and drop';
+VisualTestColumnDragDropOrdering.play = async () => {
+  const canvas = within(document.getElementById('root'));
+
+  await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+  await waitUntilRendered(() => document.querySelector('.sw-data-table__table-head-dragzone'));
+
+  const manufacturerColumnDragzone = await canvas.getByTestId('column-dragzone__manufacturer.name');
+  const priceColumnDropzoneAfter = await canvas.getByTestId('column-dropzone-after__price');
+
+  // drag the "manufacturer" column right to the "price" column
+  fireEvent.mouseDown(manufacturerColumnDragzone, {
+    buttons: 1,
+  });
+
+  // wait 100ms to simulate a real drag
+  await new Promise((resolve) => setTimeout(resolve, 100));
+
+  // enter the right dropzone
+  fireEvent.mouseEnter(priceColumnDropzoneAfter, {});
+  // and drop the column
+  fireEvent.mouseUp(priceColumnDropzoneAfter, {});
+  
+  // wait until everything is correctly rendered
+  const dataTable = document.querySelector('.sw-data-table');
+  await dataTable.parentElement.__vue__.$nextTick();
+};
+
+export const VisualTestColumnSettingsPopover = Template.bind();
+VisualTestColumnSettingsPopover.storyName = 'Show the column settings on click';
+VisualTestColumnSettingsPopover.play = async () => {
+  const canvas = within(document.getElementById('root'));
+
+  await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+  await waitUntilRendered(() => document.querySelector('.sw-data-table__table-head-dragzone'));
+
+  const nameColumnSettingsTrigger = await canvas.getByTestId('column-settings-trigger__name');
+  await userEvent.click(nameColumnSettingsTrigger);
+
+  await waitUntilRendered(() => document.querySelector('.sw-data-table__table-head-column-settings[data-show="true"]'));
+  
+  const columnSettingsPopover = within(document.querySelector('.sw-data-table__table-head-column-settings[data-show="true"]'));
+  expect(columnSettingsPopover.getByText('Name')).toBeInTheDocument();
+  expect(columnSettingsPopover.getByText('Sort ascending')).toBeInTheDocument();
+  expect(columnSettingsPopover.getByText('Sort descending')).toBeInTheDocument();
+};
+
+export const VisualTestColumnSettingsPopoverWithoutSort = Template.bind();
+VisualTestColumnSettingsPopoverWithoutSort.storyName = 'Show the column settings without sort on click';
+VisualTestColumnSettingsPopoverWithoutSort.play = async () => {
+  const canvas = within(document.getElementById('root'));
+
+  await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+  await waitUntilRendered(() => document.querySelector('.sw-data-table__table-head-dragzone'));
+
+  const activeColumnSettingsTrigger = await canvas.getByTestId('column-settings-trigger__active');
+  await userEvent.click(activeColumnSettingsTrigger);
+
+  await waitUntilRendered(() => document.querySelector('.sw-data-table__table-head-column-settings[data-show="true"]'));
+  
+  const columnSettingsPopover = within(document.querySelector('.sw-data-table__table-head-column-settings[data-show="true"]'));
+  expect(columnSettingsPopover.getByText('Active')).toBeInTheDocument();
+};
+
+export const VisualTestDataSortingInColumnSettings = Template.bind();
+VisualTestDataSortingInColumnSettings.storyName = 'Sort the data by clicking on the column settings';
+VisualTestDataSortingInColumnSettings.play = async () => {
+  const canvas = within(document.getElementById('root'));
+
+  await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+  await waitUntilRendered(() => document.querySelector('.sw-data-table__table-head-dragzone'));
+
+  const nameColumnSettingsTrigger = await canvas.getByTestId('column-settings-trigger__name');
+  await userEvent.click(nameColumnSettingsTrigger);
+
+  await waitUntilRendered(() => document.querySelector('.sw-data-table__table-head-column-settings[data-show="true"]'));
+  
+  const columnSettingsPopover = within(document.querySelector('.sw-data-table__table-head-column-settings[data-show="true"]'));
+  expect(columnSettingsPopover.getByText('Name')).toBeInTheDocument();
+  expect(columnSettingsPopover.getByText('Sort ascending')).toBeInTheDocument();
+  expect(columnSettingsPopover.getByText('Sort descending')).toBeInTheDocument();
+
+  const sortDescendingButton = await columnSettingsPopover.getByText('Sort descending');
+  await userEvent.click(sortDescendingButton);
+
+  const rowContentName = await canvas.getAllByText('Unbranded Granite Chicken');
+  expect(rowContentName.length).toBeGreaterThan(0);
 };

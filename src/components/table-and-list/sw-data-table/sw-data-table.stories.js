@@ -55,6 +55,7 @@ export default {
         renderer: 'text',
         position: 0,
         cellWrap: 'normal',
+        sortable: true,
       },
       {
         label: 'Manufacturer',
@@ -85,12 +86,14 @@ export default {
         renderer: 'number',
         position: 400,
         visible: false,
+        sortable: true,
       },
       {
         label: 'Available',
         property: 'available',
         renderer: 'number',
         position: 500,
+        sortable: true,
       },
     ],
     title: 'Data table',
@@ -101,6 +104,8 @@ export default {
     paginationOptions: [5,10,25,50,250,5000],
     searchValue: '',
     disableSearch: false,
+    sortBy: 'name',
+    sortDirection: 'ASC',
   }
 };
 
@@ -112,11 +117,32 @@ const Template = (args, { argTypes }) => ({
       paginationLimitValue: 0,
       currentPageValue: 0,
       searchValueValue: '',
+      sortByValue: '',
+      sortDirectionValue: '',
     }
   },
   computed: {
     dataSourceValue() {
-      return this.dataSource.slice(
+      /**
+       * Mock server data handling
+       */
+      return this.dataSource.sort((aData, bData) => {
+        const a = aData[this.sortByValue];
+        const b = bData[this.sortByValue];
+        let result = 0;
+
+        if (a < b) {
+          result = -1;
+        } else if (a > b) {
+          result = 1;
+        }
+
+        if (this.sortDirectionValue === 'DESC') {
+          result *= -1;
+        }
+
+        return result;
+      }).slice(
         (this.currentPageValue - 1) * this.paginationLimitValue,
         (this.currentPageValue) * this.paginationLimitValue
       );
@@ -146,6 +172,26 @@ const Template = (args, { argTypes }) => ({
       },
       immediate: true
     },
+    sortBy: {
+      handler(v) {
+        if (this.sortByValue === v) {
+          return;
+        }
+
+        this.sortByValue = v;
+      },
+      immediate: true
+    },
+    sortDirection: {
+      handler(v) {
+        if (this.sortDirectionValue === v) {
+          return;
+        }
+
+        this.sortDirectionValue = v;
+      },
+      immediate: true
+    },
     searchValue: {
       handler(v) {
         if (this.searchValueValue === v) {
@@ -169,6 +215,10 @@ const Template = (args, { argTypes }) => ({
     searchValueChangeHandler(event) {
       this.searchValueChange(event)
       this.searchValueValue = event;
+    },
+    sortChangeValueHandler(property, direction) {
+      this.sortByValue = property;
+      this.sortDirectionValue = direction;
     }
   },
   template: `
@@ -184,6 +234,9 @@ const Template = (args, { argTypes }) => ({
       @pagination-current-page-change="paginationCurrentPageChangeHandler"
       :searchValue="searchValueValue"
       @search-value-change="searchValueChangeHandler"
+      :sortBy="sortByValue"
+      :sortDirection="sortDirectionValue"
+      @sort-change="sortChangeValueHandler"
     >
       {{ $props.default}}
     </sw-data-table>

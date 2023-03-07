@@ -2,8 +2,12 @@ name: Tests
 
 on:  
   pull_request:
-    branches:
-      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+  workflow_dispatch:
 
 jobs:
   lint:
@@ -78,7 +82,7 @@ jobs:
         "wait-on http://127.0.0.1:6006 && npm run test-storybook"
     - name: Archive visual test diffs
       uses: actions/upload-artifact@v3
-      if: always() && (steps.storybookTests.outcome == 'failure')
+      if: always()
       with:
         name: visual-test-diffs
         path: __snapshots__
