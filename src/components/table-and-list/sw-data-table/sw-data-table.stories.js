@@ -106,6 +106,7 @@ export default {
     disableSearch: false,
     sortBy: 'name',
     sortDirection: 'ASC',
+    isLoading: false,
   }
 };
 
@@ -119,6 +120,7 @@ const Template = (args, { argTypes }) => ({
       searchValueValue: '',
       sortByValue: '',
       sortDirectionValue: '',
+      isLoadingValue: true,
     }
   },
   computed: {
@@ -201,24 +203,62 @@ const Template = (args, { argTypes }) => ({
         this.searchValueValue = v;
       },
       immediate: true
+    },
+    isLoading: {
+      handler(v) {
+        if (this.isLoadingValue === v) {
+          return;
+        }
+
+        this.isLoadingValue = v;
+      },
+      immediate: false
+    },
+  },
+  created() {
+    if (!this.isLoading) {
+      this.simulateLoading();
     }
   },
   methods: {
+    simulateLoading() {
+      // random loading time between 300 and 600ms
+      const loadingTime = Math.floor(Math.random() * 300) + 300;
+      this.isLoadingValue = true;
+
+      window.setTimeout(() => {
+        this.isLoadingValue = false;
+      }, loadingTime);
+    },
     paginationLimitChangeHandler(event) {
       this.paginationLimitChange(event)
       this.paginationLimitValue = event;
+
+      this.simulateLoading();
     },
     paginationCurrentPageChangeHandler(event) {
       this.paginationCurrentPageChange(event)
       this.currentPageValue = event;
+
+      this.simulateLoading();
     },
     searchValueChangeHandler(event) {
       this.searchValueChange(event)
       this.searchValueValue = event;
+
+      this.simulateLoading();
     },
     sortChangeValueHandler(property, direction) {
       this.sortByValue = property;
       this.sortDirectionValue = direction;
+
+      this.simulateLoading();
+    },
+
+    reloadHandler(event) {
+      this.reload(event);
+
+      this.simulateLoading();
     }
   },
   template: `
@@ -227,7 +267,7 @@ const Template = (args, { argTypes }) => ({
       v-bind="$props"
       :dataSource="dataSourceValue"
       :paginationTotalItems="paginationTotalItemsValue"
-      @reload="reload"
+      @reload="reloadHandler"
       :paginationLimit="paginationLimitValue"
       @pagination-limit-change="paginationLimitChangeHandler"
       :currentPage="currentPageValue"
@@ -237,6 +277,7 @@ const Template = (args, { argTypes }) => ({
       :sortBy="sortByValue"
       :sortDirection="sortDirectionValue"
       @sort-change="sortChangeValueHandler"
+      :isLoading="isLoadingValue"
     >
       {{ $props.default}}
     </sw-data-table>
