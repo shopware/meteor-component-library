@@ -86,7 +86,8 @@ export default defineComponent({
   props: {
     title: {
       type: String,
-      required: true
+      required: false,
+      default: '',
     },
     childViews: {
       type: Array as PropType<View[]>,
@@ -205,6 +206,7 @@ export default defineComponent({
 <style lang="scss">
 @import "../../assets/scss/variables.scss";
 @import "../../assets/scss/mixins.scss";
+import { default } from '../../../../.yalc/@shopware-ag/meteor-component-library/src/components/form/sw-datepicker/sw-datepicker.vue';
 
 /**
 * Use inter-font instead of normal font for popover. Also add the new variables to this file.
