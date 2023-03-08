@@ -165,8 +165,32 @@
               </template>
 
               <td class="sw-data-table__table-context-button">
-                <!-- TODO: implement context button functionality -->
-                <sw-context-button />
+                <sw-popover>
+                  <template #trigger>
+                    <sw-button variant="secondary" ghost>
+                      <sw-icon
+                        name="solid-ellipsis-h-s"
+                        small
+                        decorative
+                      />
+                    </sw-button>
+                  </template>
+                </sw-popover>
+
+                <br />
+
+                <sw-context-button>
+                  <!-- TODO: refactor context button to sw-popover -->
+                  <!-- TODO: add translation -->
+                  <!-- TODO: add conditions -->
+                  <sw-context-menu-item>
+                    Edit
+                  </sw-context-menu-item>
+
+                  <sw-context-menu-item variant="danger">
+                    Delete
+                  </sw-context-menu-item>
+                </sw-context-button>
               </td>
             </tr>
           </tbody>
@@ -224,6 +248,7 @@ import SwIcon from "../../icons-media/sw-icon/sw-icon.vue";
 import SwPagination from "../sw-pagination/sw-pagination.vue";
 import SwSearch from '../../navigation/sw-search/sw-search.vue';
 import SwContextButton from '../../context-menu/sw-context-button/sw-context-button.vue';
+import SwContextMenu from '../../context-menu/sw-context-menu-item/sw-context-menu-item.vue';
 import SwDataTableSettings from './sub-components/sw-data-table-settings/sw-data-table-settings.vue';
 import SwPopover from '../../overlay/sw-popover/sw-popover.vue';
 import SwPopoverItem from '../../overlay/sw-popover-item/sw-popover-item.vue';
@@ -273,6 +298,7 @@ export default defineComponent({
     'sw-popover': SwPopover,
     'sw-popover-item': SwPopoverItem,
     'sw-skeleton-bar': SwSkeletonBar,
+    'sw-context-menu-item': SwContextMenu,
   },
   props: {
     /**
