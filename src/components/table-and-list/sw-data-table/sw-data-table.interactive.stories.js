@@ -92,6 +92,7 @@ VisualTestRenderTableWithScrollShadows.args = {
 };
 VisualTestRenderTableWithScrollShadows.play = async () =>{
   const canvas = within(document.getElementById('root'));
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
 
   await waitUntilRendered(() => document.body.textContent.includes('Aa Render scroll shadows'));
 
@@ -115,6 +116,7 @@ VisualTestEmitReloadEventOnClickingReload.args = {
 };
 VisualTestEmitReloadEventOnClickingReload.play = async ({ args }) => {
   const canvas = within(document.getElementById('root'));
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
 
   await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
 
@@ -125,6 +127,7 @@ VisualTestEmitReloadEventOnClickingReload.play = async ({ args }) => {
   // wait until everything is correctly rendered
   const dataTable = document.querySelector('.sw-data-table');
   await dataTable.parentElement.__vue__.$nextTick();
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
 
   await expect(args.reload).toHaveBeenCalled();
 };
@@ -133,6 +136,7 @@ export const VisualTestOpenSettingsMenu = Template.bind();
 VisualTestOpenSettingsMenu.storyName = 'Open settings menu with correct popover items inside';
 VisualTestOpenSettingsMenu.play = async () => {
   const canvas = within(document.getElementById('root'));
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
 
   await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
 
@@ -155,6 +159,7 @@ export const VisualTestOpenColumnSettingsMenu = Template.bind();
 VisualTestOpenColumnSettingsMenu.storyName = 'Open column settings menu';
 VisualTestOpenColumnSettingsMenu.play = async () => {
   const canvas = within(document.getElementById('root'));
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
 
   await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
 
@@ -196,6 +201,7 @@ export const VisualTestColumnDragBar = Template.bind();
 VisualTestColumnDragBar.storyName = 'Show the column drag bar on hover';
 VisualTestColumnDragBar.play = async () => {
   const canvas = within(document.getElementById('root'));
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
 
   await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
   await waitUntilRendered(() => document.querySelector('.sw-data-table__table-head-dragzone'));
@@ -215,6 +221,7 @@ export const VisualTestColumnDragDropOrdering = Template.bind();
 VisualTestColumnDragDropOrdering.storyName = 'Order the columns by drag and drop';
 VisualTestColumnDragDropOrdering.play = async () => {
   const canvas = within(document.getElementById('root'));
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
 
   await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
   await waitUntilRendered(() => document.querySelector('.sw-data-table__table-head-dragzone'));
@@ -244,6 +251,7 @@ export const VisualTestColumnSettingsPopover = Template.bind();
 VisualTestColumnSettingsPopover.storyName = 'Show the column settings on click';
 VisualTestColumnSettingsPopover.play = async () => {
   const canvas = within(document.getElementById('root'));
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
 
   await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
   await waitUntilRendered(() => document.querySelector('.sw-data-table__table-head-dragzone'));
@@ -263,6 +271,7 @@ export const VisualTestColumnSettingsPopoverWithoutSort = Template.bind();
 VisualTestColumnSettingsPopoverWithoutSort.storyName = 'Show the column settings without sort on click';
 VisualTestColumnSettingsPopoverWithoutSort.play = async () => {
   const canvas = within(document.getElementById('root'));
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
 
   await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
   await waitUntilRendered(() => document.querySelector('.sw-data-table__table-head-dragzone'));
@@ -280,6 +289,7 @@ export const VisualTestDataSortingInColumnSettings = Template.bind();
 VisualTestDataSortingInColumnSettings.storyName = 'Sort the data by clicking on the column settings';
 VisualTestDataSortingInColumnSettings.play = async () => {
   const canvas = within(document.getElementById('root'));
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
 
   await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
   await waitUntilRendered(() => document.querySelector('.sw-data-table__table-head-dragzone'));
@@ -297,6 +307,18 @@ VisualTestDataSortingInColumnSettings.play = async () => {
   const sortDescendingButton = await columnSettingsPopover.getByText('Sort descending');
   await userEvent.click(sortDescendingButton);
 
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
+
   const rowContentName = await canvas.getAllByText('Unbranded Granite Chicken');
   expect(rowContentName.length).toBeGreaterThan(0);
+};
+
+// TODO: add visual testing for loading state with skeleton bars
+export const VisualTestRenderSkeleton = Template.bind();
+VisualTestRenderSkeleton.storyName = 'Should render the Table with skeleton bars';
+VisualTestRenderSkeleton.args = {
+  isLoading: true,
+};
+VisualTestRenderSkeleton.play = async () =>{
+  await waitUntilRendered(() => document.querySelector('.sw-skeleton-bar'));
 };

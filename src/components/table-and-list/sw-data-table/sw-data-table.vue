@@ -148,12 +148,19 @@
                   :data-cell-column-property="column.property"
                   :style="renderColumnDataCellStyle(column)"
                 >
-                  <div
-                    v-if="column.property === 'manufacturer.name'"
-                    style="width: 10px; height: 10px; background-color: gray"
-                  />
+                  <template v-if="isLoading">
+                    <sw-skeleton-bar />
+                  </template>
 
-                  {{ data[column.property] }}
+                  <template v-else>
+                    <!-- Here we need to add the different renderer -->
+                    <div
+                      v-if="column.property === 'manufacturer.name'"
+                      style="width: 10px; height: 10px; background-color: gray"
+                    />
+
+                    {{ data[column.property] }}
+                  </template>
                 </td>
               </template>
 
@@ -220,6 +227,7 @@ import SwContextButton from '../../context-menu/sw-context-button/sw-context-but
 import SwDataTableSettings from './sub-components/sw-data-table-settings/sw-data-table-settings.vue';
 import SwPopover from '../../overlay/sw-popover/sw-popover.vue';
 import SwPopoverItem from '../../overlay/sw-popover-item/sw-popover-item.vue';
+import SwSkeletonBar from '../../feedback-indicator/sw-skeleton-bar/sw-skeleton-bar.vue';
 import { draggable, DropConfig, DragConfig, droppable } from '../../../directives/dragdrop.directive';
 
 export interface ColumnDefinition {
@@ -264,13 +272,20 @@ export default defineComponent({
     'sw-data-table-settings': SwDataTableSettings,
     'sw-popover': SwPopover,
     'sw-popover-item': SwPopoverItem,
+    'sw-skeleton-bar': SwSkeletonBar,
   },
   props: {
-    // TODO: add comments for props
+    /**
+     * The data source which contains the data for the current
+     * state of the table.
+     */
     dataSource: {
       type: Array as PropType<DataSourcePropType>,
       required: true,
     },
+    /**
+     * The defintions for the columns which should be displayed in the table.
+     */
     columns: {
       type: Array as PropType<ColumnProperty>,
       required: true,
@@ -291,63 +306,111 @@ export default defineComponent({
         return validValues.every((value) => value);
       },
     },
+    /**
+     * Optional property. When you want to override the current column
+     * information with the given changes, you can pass them here.
+     * The changes will be applied to the current column information.
+     * This is useful for saving and loading the current column configuration
+     * when the user customizes the table.
+     */
     columnChanges: {
       type: Object as PropType<Record<string, ColumnChanges>>,
       required: false,
       default: () => ({}),
     },
+    /**
+     * Define the title of the table.
+     */
     title: {
       type: String,
       required: false,
       default: "",
     },
+    /**
+     * Define the subtitle of the table.
+     */
     subtitle: {
       type: String,
       required: false,
       default: "",
     },
+    /**
+     * Activate the reload button at the top right corner of the table.
+     */
     enableReload: {
       type: Boolean,
       required: false,
       default: false,
     },
+    /**
+     * Define the current page of the table.
+     */
     currentPage: {
       type: Number,
       required: true,
     },
+    /**
+     * Define the limit of items per page.
+     */
     paginationLimit: {
       type: Number,
       required: true,
     },
+    /**
+     * Define the total amount of items.
+     */
     paginationTotalItems: {
       type: Number,
       required: true,
     },
+    /**
+     * Define the available pagination limits.
+     */
     paginationOptions: {
       type: Array as PropType<Array<number>>,
       required: false,
       default: () => [5, 10, 25, 50],
     },
+    /**
+     * Define the current sort by property.
+     */
     sortBy: {
       type: String,
       required: false,
       default: '',
     },
+    /**
+     * Define the current sort direction.
+     */
     sortDirection: {
       type: String as PropType<'ASC' | 'DESC'>,
       required: false,
       default: 'ASC',
     },
+    /**
+     * If active then the search input will be disabled.
+     */
     disableSearch: {
       type: Boolean,
       required: false,
       default: false,
     },
+    /**
+     * Define the current search value.
+     */
     searchValue: {
       type: String,
       required: false,
       default: '',
     },
+    /**
+     * If active then the table will be in loading state.
+     */
+    isLoading: {
+      type: Boolean,
+      required: false,
+      default: false,
+    }
   },
   emits: ["reload", "pagination-limit-change", "pagination-current-page-change", 'search-value-change', 'sort-change'],
   i18n: {
@@ -991,6 +1054,11 @@ $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
     text-transform: uppercase;
     cursor: default;
     z-index: 1;
+  }
+
+  // custom skeleton styling
+  tbody td .sw-skeleton-bar {
+    height: 24px;
   }
 
   // override default cursor when user is resizing the columns
