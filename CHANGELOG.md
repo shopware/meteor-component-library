@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] - 21.03.2023
+- Fixed wrong timezone handling in datepicker
 ## [2.0.1] - 25.01.2022
 - Fixed wrong bundling of UUID utils which don't work in browser
 ## [2.0.0] - 09.01.2022
