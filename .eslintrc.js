@@ -9,6 +9,7 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
+    jest: true
   },
   parser: 'vue-eslint-parser',
   parserOptions: {

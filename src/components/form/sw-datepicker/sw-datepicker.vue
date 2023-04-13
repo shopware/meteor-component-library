@@ -171,6 +171,15 @@ export default {
       default: false,
       required: false,
     },
+
+    /**
+     * Determines if the datepicker should show the timezone hint
+     */
+    hideHint: {
+      type: Boolean,
+      default: false,
+      required: false,
+    }
   },
 
   data() {
@@ -237,7 +246,7 @@ export default {
           return null;
         }
 
-        if (this.dateType === 'time') {
+        if (['time', 'date'].includes(this.dateType)) {
           return this.value;
         }
 
@@ -253,7 +262,7 @@ export default {
           return;
         }
 
-        if (this.dateType === 'time') {
+        if (['time', 'date'].includes(this.dateType)) {
           this.$emit('input', newValue);
           return;
         }
@@ -267,7 +276,7 @@ export default {
     },
 
     showTimeZoneHint() {
-      return this.dateType === 'datetime';
+      return this.dateType === 'datetime' && !this.hideHint;
     },
   },
 
