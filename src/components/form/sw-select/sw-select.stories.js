@@ -40,6 +40,11 @@ export default {
         id: 7,
         label: 'Option FF',
         value: 'ff',
+      },
+      {
+        id: 8,
+        label: 'Option long text',
+        value: 'Longer value text'
       }
     ],
   },
