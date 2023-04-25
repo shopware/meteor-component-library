@@ -19,6 +19,8 @@ const Template = (args, { argTypes }) => ({
       <sw-text-field
         v-bind="$props"
         v-model="currentValue"
+        @inheritance-restore="inheritanceRestoreWrapper"
+        @inheritance-remove="inheritanceRemoveWrapper"
         @change="change">
           <template
             v-if="$props.prefix"
@@ -55,6 +57,17 @@ const Template = (args, { argTypes }) => ({
   },
   created() {
     this.currentValue = this.value;
+  },
+  methods: {
+    inheritanceRemoveWrapper() {
+      this.inheritanceRemove(...arguments);
+      this.isInherited = false;
+    },
+
+    inheritanceRestoreWrapper() {
+      this.inheritanceRestore(...arguments);
+      this.isInherited = true;
+    }
   }
 });
 
