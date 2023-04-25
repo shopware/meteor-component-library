@@ -240,3 +240,22 @@ VisualTestInherited.play = async ({ args }) => {
 
   await expect(args.inheritanceRemove).toHaveBeenCalledWith();
 };
+
+export const VisualTestEnsureSingleSelectionWithoutLoadMore = Template.bind();
+VisualTestEnsureSingleSelectionWithoutLoadMore.storyName = 'Should not show load more';
+VisualTestEnsureSingleSelectionWithoutLoadMore.play = async ({ args }) => {
+  const canvas = within(document.getElementById('root'));
+  await userEvent.type(canvas.getByRole('textbox'), 'Option long text');
+
+  let popover = within(document.querySelector('.sw-popover__wrapper'));
+  await userEvent.click(popover.getByTestId('sw-select-option--Longer value text'));
+
+  expect(args.itemAdd).toHaveBeenCalledWith({
+    id: 8,
+    label: 'Option long text',
+    value: 'Longer value text',
+  });
+  expect(args.change).toHaveBeenCalledWith('Longer value text')
+  expect(canvas.getByRole('textbox').value).toBe('');
+  expect(canvas.queryByText('+12')).toBeNull();
+};
