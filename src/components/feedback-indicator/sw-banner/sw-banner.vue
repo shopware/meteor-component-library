@@ -94,7 +94,7 @@ export default Vue.extend({
      * This index will get emitted when a user closes the banner.
      * It is needed for removing the correct banner
      */
-    banner: {
+    bannerIndex: {
         type: String,
         required: false,
         default: null,
