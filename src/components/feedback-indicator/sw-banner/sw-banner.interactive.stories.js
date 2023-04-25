@@ -68,5 +68,5 @@ VisualTestCloseBannerBox.play = async ({ args }) => {
 
   await userEvent.click(canvas.getByRole('button'));
 
-  await expect(args.close).toHaveBeenCalled();
+  await expect(args.close).toHaveBeenCalledWith(null);
 };
