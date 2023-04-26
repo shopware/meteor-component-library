@@ -1,6 +1,6 @@
 {
   "name": "@shopware-ag/meteor-component-library",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "scripts": {
     "test:unit": "jest",
     "test:unit:watch": "jest --watch",
