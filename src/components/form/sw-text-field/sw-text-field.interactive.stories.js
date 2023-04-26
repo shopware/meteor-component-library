@@ -111,3 +111,25 @@ TestCopyable.play = async () => {
   // TODO: Currently it is not possible to test Clipboard copying
   //  @see https://github.com/microsoft/playwright/issues/8114
 };
+
+export const VisualTestInheritance = Template.bind();
+VisualTestInheritance.storyName = 'Should remove and restore inheritance';
+VisualTestInheritance.args = {
+  isInheritanceField: true,
+  isInherited: false
+};
+VisualTestInheritance.play = async ({ args }) => {
+  const canvas = within(document.getElementById('root'));
+
+  await userEvent.click(canvas.getByTestId('sw-icon__regular-lock-open-s'));
+
+  await expect(args.inheritanceRestore).toBeCalled();
+
+  expect(canvas.getByTestId('sw-inheritance-switch-icon')).toBeDefined();
+
+  await userEvent.click(canvas.getByTestId('sw-inheritance-switch-icon'));
+
+  await expect(args.inheritanceRemove).toBeCalled();
+
+  expect(canvas.getByTestId('sw-icon__regular-lock-open-s')).toBeDefined();
+};
