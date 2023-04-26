@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.1] - 26.04.2023
+- Fixed broken `sw-text-field` inheritance option
+- Fixed missing bannerIndex property in `sw-banner`
+- Fixed `sw-select` single select behaviour
 ## [2.1.0] - 21.03.2023
 - Fixed wrong timezone handling in datepicker
 ## [2.0.1] - 25.01.2022
