@@ -21,6 +21,7 @@
         :tabindex="onLabelClickTabIndex"
         :name="icon"
         @click="handleLableClick"
+        @keyup.enter="handleLableClick"
       />
 
       <div
@@ -28,6 +29,7 @@
         :class="labelClasses"
         :tabindex="onLabelClickTabIndex"
         @click="handleLableClick"
+        @keyup.enter="handleLableClick"
       >
         {{ label }}
         
@@ -106,9 +108,10 @@ export default defineComponent({
       required: true,
     },
     type: {
-      type: String,
+      type: String as PropType<'default'|'danger'>,
       required: false,
       default: 'default',
+      // TODO: missing "active" type needed for tabs
       validator: (value: string) => {
         return [
           'default',
@@ -172,6 +175,12 @@ export default defineComponent({
       default: false,
     },
     visible: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    // TODO: implement styling for disabled
+    disabled: {
       type: Boolean,
       required: false,
       default: false,

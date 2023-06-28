@@ -1,40 +1,31 @@
 <template>
-  <div
+  <sw-popover-item
     class="sw-context-menu-item"
-    role="menuitem"
-    :class="contextMenuItemStyles"
-    tabindex="0"
-    v-on="contextListeners"
-  >
-    <slot name="icon">
-      <sw-icon
-        v-if="icon"
-        :name="icon"
-        small
-      />
-    </slot>
-
-    <span
-      class="sw-context-menu-item__text"
-      :class="{ 'is--disabled': disabled }"
-    >
-      <slot />
-    </span>
-  </div>
+    :label="label"
+    :icon="icon"
+    :disabled="disabled"
+    :on-label-click="handleLableClick"
+    :type="type"
+  />
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
+import SwPopoverItem from '../../overlay/sw-popover-item/sw-popover-item.vue';
+import { defineComponent, PropType } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SwContextMenuItem',
 
   components: {
-    'sw-icon': SwIcon,
+    'sw-popover-item': SwPopoverItem,
   },
 
   props: {
+    label: {
+      type: String,
+      required: true,
+    },
+
     icon: {
       type: String,
       required: false,
@@ -47,170 +38,153 @@ export default Vue.extend({
       default: false,
     },
 
-    routerLink: {
-      type: Object,
+    type: {
+      // evaluate if other types are needed
+      type: String as PropType<'success' | 'critical' | 'warning' | 'active' | 'headline'>,
       required: false,
-      default: null,
-    },
-
-    target: {
-      type: String,
-      required: false,
-      default: null,
-    },
-
-    variant: {
-      type: String,
-      required: false,
-      default: '',
-      validator(value: string) {
-        if (!value.length) {
-          return true;
-        }
-        return ['success', 'danger', 'warning', 'active', 'headline'].includes(value);
-      },
+      default: undefined,
     },
   },
+  emits: ['click'],
+  setup(props, { emit }) {
+    const handleLableClick = () => {
+      if (props.disabled) {
+        return;
+      }
 
-  computed: {
-    contextMenuItemStyles() {
-      return {
-        [`sw-context-menu-item--${this.variant}`]: this.variant,
-        'is--disabled': this.disabled && this.variant !== 'headline',
-        'sw-context-menu-item--icon': this.icon,
-      };
-    },
+      emit('click');
+    };
 
-    contextListeners() {
-      return (this.disabled || this.variant === 'headline') ? {} : this.$listeners;
-    },
-  },
+    return {
+      handleLableClick
+    };
+  }
 });
 </script>
 
 <style lang="scss">
 @import '../../assets/scss/variables.scss';
 
-$sw-context-menu-color-background-hover: lighten($color-shopware-brand-500, 40%);
-$sw-context-menu-color-text:             $color-darkgray-200;
-$sw-context-menu-color-active:           $color-shopware-brand-500;
-$sw-context-menu-color-danger:           $color-crimson-500;
-$sw-context-menu-color-success:          $color-emerald-500;
-$sw-context-menu-color-warning:          $color-pumpkin-spice-500;
+// $sw-context-menu-color-background-hover: lighten($color-shopware-brand-500, 40%);
+// $sw-context-menu-color-text:             $color-darkgray-200;
+// $sw-context-menu-color-active:           $color-shopware-brand-500;
+// $sw-context-menu-color-danger:           $color-crimson-500;
+// $sw-context-menu-color-success:          $color-emerald-500;
+// $sw-context-menu-color-warning:          $color-pumpkin-spice-500;
 
 .sw-context-menu-item {
-  display: block;
-  position: relative;
-  border-radius: $border-radius-default;
-  margin: 0;
-  line-height: 18px;
-  padding: 4px 14px;
-  text-decoration: none;
-  color: $sw-context-menu-color-text;
-  outline: none;
-  cursor: pointer;
+//   display: block;
+//   position: relative;
+//   border-radius: $border-radius-default;
+//   margin: 0;
+//   line-height: 18px;
+//   padding: 4px 14px;
+//   text-decoration: none;
+//   color: $sw-context-menu-color-text;
+//   outline: none;
+//   cursor: pointer;
 
-  &.sw-context-menu-item--icon {
-    display: grid;
-    grid-template-columns: 16px auto;
-    align-items: center;
-    justify-items: stretch;
-    justify-content: stretch;
-    grid-gap: 12px;
-  }
+//   &.sw-context-menu-item--icon {
+//     display: grid;
+//     grid-template-columns: 16px auto;
+//     align-items: center;
+//     justify-items: stretch;
+//     justify-content: stretch;
+//     grid-gap: 12px;
+//   }
 
-  &:hover {
-    background: $sw-context-menu-color-background-hover;
-    color: $sw-context-menu-color-active;
+//   &:hover {
+//     background: $sw-context-menu-color-background-hover;
+//     color: $sw-context-menu-color-active;
 
-    .sw-icon {
-      color: $sw-context-menu-color-active;
-    }
-  }
+//     .sw-icon {
+//       color: $sw-context-menu-color-active;
+//     }
+//   }
 
-  &:focus {
-    outline: $sw-context-menu-color-background-hover solid 1px;
-  }
+//   &:focus {
+//     outline: $sw-context-menu-color-background-hover solid 1px;
+//   }
 
-  &.sw-context-menu-item--active {
-    font-weight: $font-weight-semi-bold;
-  }
+//   &.sw-context-menu-item--active {
+//     font-weight: $font-weight-semi-bold;
+//   }
 
-  &.sw-context-menu-item--danger {
-    color: $sw-context-menu-color-danger;
+//   &.sw-context-menu-item--danger {
+//     color: $sw-context-menu-color-danger;
 
-    .sw-icon {
-      color: $sw-context-menu-color-danger;
-    }
+//     .sw-icon {
+//       color: $sw-context-menu-color-danger;
+//     }
 
-    &:hover {
-      background: lighten($sw-context-menu-color-danger, 42%);
+//     &:hover {
+//       background: lighten($sw-context-menu-color-danger, 42%);
 
-      &.is--disabled {
-        color: $sw-context-menu-color-danger;
-      }
-    }
-  }
+//       &.is--disabled {
+//         color: $sw-context-menu-color-danger;
+//       }
+//     }
+//   }
 
-  &.sw-context-menu-item--success {
-    color: $sw-context-menu-color-success;
+//   &.sw-context-menu-item--success {
+//     color: $sw-context-menu-color-success;
 
-    .sw-icon {
-      color: $sw-context-menu-color-success;
-    }
+//     .sw-icon {
+//       color: $sw-context-menu-color-success;
+//     }
 
-    &:hover {
-      background: lighten($sw-context-menu-color-success, 42%);
+//     &:hover {
+//       background: lighten($sw-context-menu-color-success, 42%);
 
-      &.is--disabled {
-        color: $sw-context-menu-color-success;
-      }
-    }
-  }
+//       &.is--disabled {
+//         color: $sw-context-menu-color-success;
+//       }
+//     }
+//   }
 
-  &.sw-context-menu-item--warning {
-    color: $sw-context-menu-color-warning;
+//   &.sw-context-menu-item--warning {
+//     color: $sw-context-menu-color-warning;
 
-    .sw-icon {
-      color: $sw-context-menu-color-warning;
-    }
+//     .sw-icon {
+//       color: $sw-context-menu-color-warning;
+//     }
 
-    &:hover {
-      background: lighten($sw-context-menu-color-warning, 25%);
+//     &:hover {
+//       background: lighten($sw-context-menu-color-warning, 25%);
 
-      &.is--disabled {
-        color: $sw-context-menu-color-warning;
-      }
-    }
-  }
+//       &.is--disabled {
+//         color: $sw-context-menu-color-warning;
+//       }
+//     }
+//   }
 
-  &.sw-context-menu-item--headline {
-    text-align: center;
-    cursor: default;
+//   &.sw-context-menu-item--headline {
+//     text-align: center;
+//     cursor: default;
 
-    &:hover {
-      color: $sw-context-menu-color-text;
-      background: 0 none;
-    }
-  }
+//     &:hover {
+//       color: $sw-context-menu-color-text;
+//       background: 0 none;
+//     }
+//   }
 
-  &.is--disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    user-select: none;
+//   &.is--disabled {
+//     opacity: 0.5;
+//     cursor: not-allowed;
+//     user-select: none;
 
-    &:hover {
-      color: $sw-context-menu-color-text;
-      background: 0 none;
-    }
+//     &:hover {
+//       color: $sw-context-menu-color-text;
+//       background: 0 none;
+//     }
 
-    .sw-icon {
-      color: $sw-context-menu-color-text;
-    }
-  }
+//     .sw-icon {
+//       color: $sw-context-menu-color-text;
+//     }
+//   }
 
-  & > .sw-icon {
-    color: $sw-context-menu-color-text;
-  }
+//   & > .sw-icon {
+//     color: $sw-context-menu-color-text;
+//   }
 }
 </style>

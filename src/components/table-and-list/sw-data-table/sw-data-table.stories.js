@@ -107,6 +107,8 @@ export default {
     sortBy: 'name',
     sortDirection: 'ASC',
     isLoading: false,
+    // TODO: just for debugging
+    layout: 'full',
   }
 };
 
@@ -262,7 +264,16 @@ const Template = (args, { argTypes }) => ({
     }
   },
   template: `
-  <div style="max-width: 1000px; max-height: 650px; height: 650px; margin: 0 auto;">
+  <div
+    style="
+      margin: 0 auto;
+      height: 100vh;
+      width: 100vw;
+      margin: -1rem;
+      padding: 1rem;
+      overflow: auto;
+    "
+  >
     <sw-data-table
       v-bind="$props"
       :dataSource="dataSourceValue"

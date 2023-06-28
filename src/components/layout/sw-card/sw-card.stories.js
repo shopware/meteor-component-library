@@ -81,9 +81,9 @@ const ExtendedTemplate = (args, { argTypes }) => ({
     </div>
     <div slot="headerRight" v-html="$props.headerRight"></div>
     <div v-if="$props.contextActions" slot="context-actions">
-      <sw-context-menu-item>Menu Item A</sw-context-menu-item>
-      <sw-context-menu-item>Menu Item B</sw-context-menu-item>
-      <sw-context-menu-item>Menu Item C</sw-context-menu-item>
+      <sw-context-menu-item label="Menu Item A"></sw-context-menu-item>
+      <sw-context-menu-item label="Menu Item B"></sw-context-menu-item>
+      <sw-context-menu-item label="Menu Item C"></sw-context-menu-item>
     </div>
   </sw-card>`,
   data() {
