@@ -58,11 +58,10 @@
             :variant="getContextMenuItemVariant(moreItem)"
             role="tab"
             :aria-selected="moreItem.name === activeItemName"
+            :label="moreItem.label"
             @click="setActiveItem(moreItem.name)"
             @keyup.enter="setActiveItem(moreItem.name)"
-          >
-            {{ moreItem.label }}
-          </sw-context-menu-item>
+          />
         </sw-context-button>
       </template>
 

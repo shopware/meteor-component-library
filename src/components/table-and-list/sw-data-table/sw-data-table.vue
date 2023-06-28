@@ -2,6 +2,7 @@
   <!-- Height needs to be set inline because the card has an sw-ignore-class component as a wrapper -->
   <sw-card
     class="sw-data-table"
+    :class="swDataTableClasses"
     style="height: 100%"
     :title="title"
     :subtitle="subtitle"
@@ -165,7 +166,7 @@
               </template>
 
               <td class="sw-data-table__table-context-button">
-                <sw-popover>
+                <!-- <sw-popover>
                   <template #trigger>
                     <sw-button variant="secondary" ghost>
                       <sw-icon
@@ -177,18 +178,22 @@
                   </template>
                 </sw-popover>
 
-                <br />
+                <br /> -->
 
                 <sw-context-button>
                   <!-- TODO: refactor context button to sw-popover -->
                   <!-- TODO: add translation -->
                   <!-- TODO: add conditions -->
-                  <sw-context-menu-item>
-                    Edit
+                  <sw-context-menu-item label="Edit">
                   </sw-context-menu-item>
 
-                  <sw-context-menu-item variant="danger">
-                    Delete
+                  <sw-context-menu-item disabled label="Disabled">
+                  </sw-context-menu-item>
+
+                  <sw-context-menu-item type="active" label="Active">
+                  </sw-context-menu-item>
+
+                  <sw-context-menu-item type="critical" label="Delete">
                   </sw-context-menu-item>
                 </sw-context-button>
               </td>
@@ -359,6 +364,15 @@ export default defineComponent({
       type: String,
       required: false,
       default: "",
+    },
+    /**
+     * The layout of the data table.
+     * @values default, full
+     */
+    layout: {
+      type: String as PropType<"default" | "full">,
+      required: false,
+      default: "default",
     },
     /**
      * Activate the reload button at the top right corner of the table.
@@ -857,6 +871,16 @@ export default defineComponent({
     const tableWrapper = ref();
     useScrollPossibilitiesClasses(tableWrapper);
 
+    /**
+     * General classes for whole data table
+     */
+    const swDataTableClasses = computed(() => {
+      return {
+        'sw-data-table__layout-default': props.layout === 'default',
+        'sw-data-table__layout-full': props.layout === 'full',
+      };
+    });
+
     return {
       sortedColumns,
       renderColumnDataCellStyle,
@@ -879,7 +903,8 @@ export default defineComponent({
       isColumnVisible,
       changeColumnVisibility,
       emitSortChange,
-      onColumnSettingsSortChange
+      onColumnSettingsSortChange,
+      swDataTableClasses
     };
   },
 });
@@ -918,6 +943,16 @@ $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
   flex-direction: column;
   height: 100%;
 
+  &.sw-data-table__layout-default {
+    height: 650px;
+  }
+
+  &.sw-data-table__layout-full {
+    height: 100%;
+    width: 100%;
+    max-width: none;
+  }
+
   // normalize the table styles across browsers
   table {
     border-collapse: collapse;
@@ -943,7 +978,7 @@ $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
   .sw-card__content {
     height: auto;
     padding: 0;
-    overflow: scroll;
+    overflow: hidden;
   }
 
   // add new Inter font to data table

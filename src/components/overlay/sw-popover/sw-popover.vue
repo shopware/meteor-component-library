@@ -20,7 +20,10 @@
       ref="SwPopover"
       class="sw-popover__content"
     >
-      <div class="sw-popover__header">
+      <div
+        v-if="showHeader"
+        class="sw-popover__header"
+      >
         <sw-button
           v-if="currentView.name !== 'base'"
           class="sw-popover__back-button"
@@ -67,7 +70,7 @@ import SwButton from '../../form/sw-button/sw-button.vue';
 import SwSmoothReflow from '../../_internal/sw-smooth-reflow.vue';
 import SwFloatingUi from '../../_internal/sw-floating-ui/sw-floating-ui.vue';
 
-interface View {
+export interface View {
   name: string;
   title: string;
   childViews?: View[];
@@ -179,9 +182,15 @@ export default defineComponent({
       isOpened.value = !isOpened.value;
     };
 
+    const showHeader = computed(() => {
+      return currentView.value.title || currentView.value.name !== 'base';
+    });
+
     const componentClasses = computed(() => {
       return {
         'is--float': !props.disableFloat,
+        'is--open': isOpened.value,
+        'has--header': showHeader.value
       };
     });
 
@@ -197,7 +206,8 @@ export default defineComponent({
       toggleFloatingUi,
       isOpened,
       mainComponentTag,
-      componentClasses
+      componentClasses,
+      showHeader,
     };
   },
 });
@@ -206,7 +216,6 @@ export default defineComponent({
 <style lang="scss">
 @import "../../assets/scss/variables.scss";
 @import "../../assets/scss/mixins.scss";
-import { default } from '../../../../.yalc/@shopware-ag/meteor-component-library/src/components/form/sw-datepicker/sw-datepicker.vue';
 
 /**
 * Use inter-font instead of normal font for popover. Also add the new variables to this file.
@@ -241,6 +250,7 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
 
   .sw-popover__content {
     padding: 16px;
+    padding-top: 4px;
     padding-bottom: 4px;
     background-color: $color-white;
     min-width: 220px;
@@ -251,6 +261,10 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
     @include drop-shadow-default;
     overflow-x: hidden;
     scroll-behavior: smooth;
+
+    &:has(.sw-popover__header) {
+      padding-top: 16px;
+    }
   
     // add new Inter font to popover
     * {

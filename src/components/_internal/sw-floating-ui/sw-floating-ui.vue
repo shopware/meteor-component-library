@@ -136,6 +136,15 @@ export default defineComponent({
             left: `${x}px`,
             top: `${y}px`,
           });
+
+          // remove all staticSide classes
+          ['top', 'right', 'bottom', 'left'].forEach(side => {
+            floatingUiContent.value?.classList.remove(`sw-floating-ui--${side}`);
+          });
+
+
+          // add staticSide class
+          floatingUiContent.value.classList.add(`sw-floating-ui--${staticSide}`);
         });
       })
     });
@@ -204,12 +213,28 @@ export default defineComponent({
     background: inherit;
     transform: rotate(45deg);
   }
+
+  &.sw-floating-ui--top .sw-popover__content {
+    transform-origin: top;
+  }
+
+  &.sw-floating-ui--right .sw-popover__content {
+    transform-origin: right;
+  }
+
+  &.sw-floating-ui--bottom .sw-popover__content {
+    transform-origin: bottom;
+  }
+
+  &.sw-floating-ui--left .sw-popover__content {
+    transform-origin: left;
+  }
 }
 
 .popoverTransition-enter-active, .popoverTransition-leave-active {
-  transform-origin: top;
-  transition: transform .2s, opacity .2s;
+  transition: transform .15s, opacity .15s;
 }
+
 .popoverTransition-enter, .popoverTransition-leave-to /* .fade-leave-active below version 2.1.8 */ {
   transform: scale3d(1, 0, 1);
   opacity: 0;
