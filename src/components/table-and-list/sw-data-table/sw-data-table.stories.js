@@ -1,5 +1,6 @@
 import SwDataTable from './sw-data-table.vue';
 import SwDataTableFixtures from './sw-data-table.fixtures.json';
+import { get } from 'lodash-es';
 
 export default {
   title: 'Components/Table and list/sw-data-table',
@@ -56,6 +57,7 @@ export default {
         position: 0,
         cellWrap: 'normal',
         sortable: true,
+        clickable: true,
       },
       {
         label: 'Manufacturer',
@@ -67,10 +69,22 @@ export default {
       {
         label: 'Active',
         property: 'active',
-        renderer: 'checkmark',
+        renderer: 'badge',
+        cellWrap: 'normal',
         position: 200,
-        width: 120,
-        allowResize: false
+        rendererOptions: {
+          renderItemBadge: (data, columnDefinition) => {
+            const value = get(data, columnDefinition.property);
+
+            return value ? {
+              variant: 'positive',
+              label: 'Active',
+            } : {
+              variant: 'critical',
+              label: 'Inactive',
+            };
+          }
+        },
       },
       {
         label: 'Price',
@@ -107,8 +121,7 @@ export default {
     sortBy: 'name',
     sortDirection: 'ASC',
     isLoading: false,
-    // TODO: just for debugging
-    layout: 'full',
+    layout: 'default',
   }
 };
 
@@ -297,4 +310,11 @@ const Template = (args, { argTypes }) => ({
 });
 
 export const Default = Template.bind();
-Default.storyName = 'sw-data-table';
+Default.storyName = 'Default';
+
+export const Full = Template.bind();
+Full.storyName = 'Full';
+Full.args = {
+  ...Default.args,
+  layout: 'full'
+};

@@ -40,9 +40,9 @@ export default defineComponent({
 
     type: {
       // evaluate if other types are needed
-      type: String as PropType<'success' | 'critical' | 'warning' | 'active' | 'headline'>,
+      type: String as PropType<'default' | 'active' | 'critical'>,
       required: false,
-      default: undefined,
+      default: 'default',
     },
   },
   emits: ['click'],

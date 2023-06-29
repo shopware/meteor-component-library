@@ -12,6 +12,8 @@
 <script lang="ts">
 import Vue from 'vue';
 
+export type SwColorBadgeVariant = 'default' | 'warning' | 'critical' | 'positive' | 'info';
+
 export default Vue.extend({
   name: 'SwColorBadge',
   props: {
@@ -19,7 +21,7 @@ export default Vue.extend({
       type: String,
       required: false,
       default: 'default',
-      validator(value: string) {
+      validator(value: SwColorBadgeVariant) {
         return [
           'default',
           'warning',
@@ -39,6 +41,11 @@ export default Vue.extend({
       required: false,
       default: false,
     },
+    hasText: {
+      type: Boolean,
+      required: false,
+      default: false,
+    }
   },
 
   computed: {
@@ -52,6 +59,7 @@ export default Vue.extend({
       return {
         [`is--${this.variant}`]: true,
         'is--rounded': this.rounded,
+        'has--text': this.hasText,
       };
     },
   },
@@ -94,6 +102,34 @@ $sw-color-badge-color-info: $color-shopware-brand-500;
 
   &.is--info {
     background-color: $sw-color-badge-color-info;
+  }
+  
+  &.has--text {
+    height: auto;
+    width: auto;
+    padding: 4px 8px;
+    border-radius: 8px;
+
+    &.is--warning {
+      background-color: $color-pumpkin-spice-50;
+      color: $color-pumpkin-spice-900;
+    }
+
+    &.is--critical,
+    &.is--danger {
+      background-color: $color-crimson-50;
+      color: $color-crimson-900;
+    }
+
+    &.is--positive {
+      background-color: $color-emerald-50;
+      color: $color-emerald-900;
+    }
+
+    &.is--info {
+      background-color: $color-shopware-brand-50;
+      color: $color-shopware-brand-900;
+    }
   }
 }
 

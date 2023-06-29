@@ -12,6 +12,12 @@ export default {
 export const VisualTestRenderTable = Template.bind();
 VisualTestRenderTable.storyName = 'Should render the Table';
 
+export const VisualTestRenderFullTable = Template.bind();
+VisualTestRenderFullTable.storyName = 'Should render the full Table';
+VisualTestRenderFullTable.args = {
+  layout: 'full',
+};
+
 export const VisualTestRenderTableStickyHeader = Template.bind();
 VisualTestRenderTableStickyHeader.storyName = 'Should render the Table with sticky header';
 VisualTestRenderTableStickyHeader.play = async () => {
@@ -313,7 +319,9 @@ VisualTestDataSortingInColumnSettings.play = async () => {
   expect(rowContentName.length).toBeGreaterThan(0);
 };
 
-// TODO: add visual testing for loading state with skeleton bars
+// TODO: add story for default and full layout
+
+// visual testing for loading state with skeleton bars
 export const VisualTestRenderSkeleton = Template.bind();
 VisualTestRenderSkeleton.storyName = 'Should render the Table with skeleton bars';
 VisualTestRenderSkeleton.args = {

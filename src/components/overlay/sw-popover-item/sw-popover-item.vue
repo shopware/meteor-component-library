@@ -377,6 +377,13 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
     }
   }
 
+  &__label {
+    &--clickable {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 
   &__contextual-detail,
   &__shortcut {
