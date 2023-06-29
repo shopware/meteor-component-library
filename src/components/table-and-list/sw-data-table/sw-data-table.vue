@@ -154,47 +154,53 @@
                   </template>
 
                   <template v-else>
-                    <!-- Here we need to add the different renderer -->
-                    <div
-                      v-if="column.property === 'manufacturer.name'"
-                      style="width: 10px; height: 10px; background-color: gray"
+                    <!-- Here we add the different renderer -->
+
+                    <!-- TODO: add all renderer -->
+                    <sw-data-table-number-renderer
+                      v-if="column.renderer === 'number'"
+                      :data="data"
+                      :column-definition="column"
+                      @click="$emit('open-details', data)"
                     />
 
-                    {{ data[column.property] }}
+                    <sw-data-table-text-renderer
+                      v-else-if="column.renderer === 'text'"
+                      :data="data"
+                      :column-definition="column"
+                      @click="$emit('open-details', data)"
+                    />
+
+                    <sw-data-table-badge-renderer
+                      v-else-if="column.renderer === 'badge'"
+                      :data="data"
+                      :column-definition="column"
+                      @click="$emit('open-details', data)"
+                    />
                   </template>
                 </td>
               </template>
 
               <td class="sw-data-table__table-context-button">
-                <!-- <sw-popover>
-                  <template #trigger>
-                    <sw-button variant="secondary" ghost>
-                      <sw-icon
-                        name="solid-ellipsis-h-s"
-                        small
-                        decorative
-                      />
-                    </sw-button>
-                  </template>
-                </sw-popover>
-
-                <br /> -->
-
                 <sw-context-button>
-                  <!-- TODO: refactor context button to sw-popover -->
                   <!-- TODO: add translation -->
                   <!-- TODO: add conditions -->
-                  <sw-context-menu-item label="Edit">
-                  </sw-context-menu-item>
+                  <sw-context-menu-item label="Edit" />
 
-                  <sw-context-menu-item disabled label="Disabled">
-                  </sw-context-menu-item>
+                  <sw-context-menu-item
+                    disabled
+                    label="Disabled"
+                  />
 
-                  <sw-context-menu-item type="active" label="Active">
-                  </sw-context-menu-item>
+                  <sw-context-menu-item
+                    type="active"
+                    label="Active"
+                  />
 
-                  <sw-context-menu-item type="critical" label="Delete">
-                  </sw-context-menu-item>
+                  <sw-context-menu-item
+                    type="critical"
+                    label="Delete"
+                  />
                 </sw-context-button>
               </td>
             </tr>
@@ -259,20 +265,46 @@ import SwPopover from '../../overlay/sw-popover/sw-popover.vue';
 import SwPopoverItem from '../../overlay/sw-popover-item/sw-popover-item.vue';
 import SwSkeletonBar from '../../feedback-indicator/sw-skeleton-bar/sw-skeleton-bar.vue';
 import { draggable, DropConfig, DragConfig, droppable } from '../../../directives/dragdrop.directive';
+import SwDataTableTextRenderer from './renderer/sw-data-table-text-renderer.vue';
+import SwDataTableNumberRenderer from './renderer/sw-data-table-number-renderer.vue';
+import SwDataTableBadgeRenderer from './renderer/sw-data-table-badge-renderer.vue';
+import type { SwColorBadgeVariant } from '../../feedback-indicator/sw-color-badge/sw-color-badge.vue';
 
-export interface ColumnDefinition {
+export interface BaseColumnDefinition {
   label: string; // the label for the column
   property: string; // the value for each entry
-  renderer: "text" | "number" | "price" | "checkmark"; // define how each column entry should be rendered
+  // renderer: "text" | "number" | 'badge' | "price"; // define how each column entry should be rendered
+  // renderOptions: unknown; // define options for the renderer
   position: number; // the initial position of the column. Should be defined in 100 steps
   sortable?: boolean; // enable or disable sortability for this column (default=true)
   width?: number; // define the width value for this column
   allowResize?: boolean; // you can disable the possibility for the user to resize this column
   cellWrap?: "nowrap" | "normal";
   visible?: boolean; // you can hide a column by default
+  clickable?: boolean; // you can enable the possibility to click on a column for opening details
 }
 
-interface ColumnChanges {
+export interface BadgeColumnDefinition extends BaseColumnDefinition {
+  renderer: "badge";
+  rendererOptions: {
+    renderItemBadge(data: unknown, columnDefinition: BadgeColumnDefinition): {
+      label: string;
+      variant: SwColorBadgeVariant;
+    };
+  };
+}
+export interface TextColumnDefinition extends BaseColumnDefinition {
+  renderer: "text";
+}
+export interface NumberColumnDefinition extends BaseColumnDefinition {
+  renderer: "number";
+}
+
+export type ColumnDefinition = BadgeColumnDefinition |
+                               TextColumnDefinition |
+                               NumberColumnDefinition;
+
+export interface ColumnChanges {
   property?: ColumnDefinition["property"];
   position?: ColumnDefinition["position"];
   width?: ColumnDefinition["width"];
@@ -304,6 +336,9 @@ export default defineComponent({
     'sw-popover-item': SwPopoverItem,
     'sw-skeleton-bar': SwSkeletonBar,
     'sw-context-menu-item': SwContextMenu,
+    'sw-data-table-text-renderer': SwDataTableTextRenderer,
+    'sw-data-table-number-renderer': SwDataTableNumberRenderer,
+    'sw-data-table-badge-renderer': SwDataTableBadgeRenderer,
   },
   props: {
     /**
@@ -329,7 +364,7 @@ export default defineComponent({
           const hasProperty = typeof value.property === "string" && value.property;
           const hasRenderer =
             typeof value.renderer === "string" &&
-            ["text", "number", "price", "checkmark"].includes(value.renderer);
+            ["text", "number", "price", "badge"].includes(value.renderer);
           const hasPosition = typeof value.position === "number";
           const isInvalid = !hasLabel || !hasProperty || !hasRenderer || !hasPosition;
           return isInvalid ? false : true;
@@ -452,7 +487,15 @@ export default defineComponent({
       default: false,
     }
   },
-  emits: ["reload", "pagination-limit-change", "pagination-current-page-change", 'search-value-change', 'sort-change'],
+  emits: [
+    "reload",
+    "pagination-limit-change",
+    "pagination-current-page-change",
+    'search-value-change',
+    'sort-change',
+    // TODO: implement event with payload (id + column property)
+    'open-details',
+  ],
   i18n: {
     messages: {
       en: {

@@ -21,7 +21,7 @@
       }
     ],
     "stock": 68741,
-    "available": 741377
+    "available": 747
   },
   {
     "id": "f64e504b-961e-489e-99f5-c8ddd44cf008",
@@ -45,7 +45,7 @@
       }
     ],
     "stock": 580295,
-    "available": 973081
+    "available": 5123
   },
   {
     "id": "2667bccd-9d50-4ac2-80e2-0323a8bd104b",
@@ -93,7 +93,7 @@
       }
     ],
     "stock": 873283,
-    "available": 13141
+    "available": 0
   },
   {
     "id": "1d4b5815-ce0d-4125-a020-3db0b4094ac7",
@@ -361,7 +361,7 @@
   },
   {
     "id": "5fc04f41-5b34-49a3-8975-cf7eb6a5bd86",
-    "active": false,
+    "active": true,
     "name": "Awesome Concrete Hat",
     "manufacturer": {
       "name": "Dickens - Lang",
@@ -381,7 +381,7 @@
       }
     ],
     "stock": 657398,
-    "available": 238706
+    "available": 1765
   },
   {
     "id": "3e87baec-fba0-4a56-90c5-f5489d8882f8",
@@ -765,7 +765,7 @@
       }
     ],
     "stock": 143748,
-    "available": 615176
+    "available": 454
   },
   {
     "id": "wadfnsfr-4ab1-4d58-b4f6-77da1f2b7d5b",
@@ -841,7 +841,7 @@
   },
   {
     "id": "43sfgdht5-5b34-49a3-8975-cf7eb6a5bd86",
-    "active": false,
+    "active": true,
     "name": "Awesome Concrete Hat",
     "manufacturer": {
       "name": "Dickens - Lang",
@@ -1341,7 +1341,7 @@
       }
     ],
     "stock": 657398,
-    "available": 238706
+    "available": 326
   },
   {
     "id": "kj67idfs-fba0-4a56-90c5-f5489d8882f8",
@@ -1801,7 +1801,7 @@
   },
   {
     "id": "34dfghfg-5b34-49a3-8975-cf7eb6a5bd86",
-    "active": false,
+    "active": true,
     "name": "Awesome Concrete Hat",
     "manufacturer": {
       "name": "Dickens - Lang",
@@ -1821,7 +1821,7 @@
       }
     ],
     "stock": 657398,
-    "available": 238706
+    "available": 0
   },
   {
     "id": "gfsdf23-fba0-4a56-90c5-f5489d8882f8",
