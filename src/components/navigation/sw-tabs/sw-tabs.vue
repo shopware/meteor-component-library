@@ -52,16 +52,18 @@
             More
           </template>
 
-          <sw-context-menu-item
-            v-for="moreItem in moreItems"
-            :key="moreItem.name"
-            :variant="getContextMenuItemVariant(moreItem)"
-            role="tab"
-            :aria-selected="moreItem.name === activeItemName"
-            :label="moreItem.label"
-            @click="setActiveItem(moreItem.name)"
-            @keyup.enter="setActiveItem(moreItem.name)"
-          />
+          <template #default="{ toggleFloatingUi }">
+            <sw-context-menu-item
+              v-for="moreItem in moreItems"
+              :key="moreItem.name"
+              :variant="getContextMenuItemVariant(moreItem)"
+              role="tab"
+              :aria-selected="moreItem.name === activeItemName"
+              :label="moreItem.label"
+              @click="setActiveItem(moreItem.name); toggleFloatingUi();"
+              @keyup.enter="setActiveItem(moreItem.name)"
+            />
+          </template>
         </sw-context-button>
       </template>
 
@@ -83,7 +85,8 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import type { PropType } from 'vue';
+import Vue from 'vue';
 import SwContextButton from '../../context-menu/sw-context-button/sw-context-button.vue';
 import SwContextMenuItem from '../../context-menu/sw-context-menu-item/sw-context-menu-item.vue';
 import SwColorBadge from '../../feedback-indicator/sw-color-badge/sw-color-badge.vue';
@@ -184,15 +187,14 @@ export default Vue.extend({
       }
 
       if (
-        this.activeItem &&
-        this.activeItem.hidden &&
+        this.activeItem?.hidden &&
         this.$refs['more-items-button']
       ) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return (this.$refs['more-items-button'] as any).$el.offsetLeft
+        return (this.$refs['more-items-button'] as any).$el?.offsetLeft
       }
 
-      return this.vertical ? this.activeDomItem.offsetTop : this.activeDomItem.offsetLeft;
+      return this.vertical ? this.activeDomItem?.offsetTop : this.activeDomItem?.offsetLeft;
     },
 
     sliderLength(): number {
@@ -203,17 +205,16 @@ export default Vue.extend({
       }
 
       if (
-        this.activeItem &&
-        this.activeItem.hidden &&
+        this.activeItem?.hidden &&
         this.$refs['more-items-button']
       ) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return (this.$refs['more-items-button'] as any).$el.offsetWidth
+        return (this.$refs['more-items-button'] as any).$el?.offsetWidth
       }
 
       return this.vertical
-        ? this.activeDomItem.offsetHeight
-        : this.activeDomItem.offsetWidth;
+        ? this.activeDomItem?.offsetHeight
+        : this.activeDomItem?.offsetWidth;
     },
 
     activeItem(): TabItem|undefined {
@@ -228,7 +229,7 @@ export default Vue.extend({
       this.refreshKey;
 
       return {
-        'sw-tabs--slider__has-error': (this.activeItem && this.activeItem.hasError) || false,
+        'sw-tabs--slider__has-error': (this.activeItem?.hasError) ?? false,
       }
     },
 
@@ -280,7 +281,7 @@ export default Vue.extend({
 
       const matchingItem = this.items.find(item => item.name === itemName);
 
-      if (!matchingItem || !matchingItem.onClick) {
+      if (!matchingItem?.onClick) {
         return;
       }
 
@@ -312,7 +313,7 @@ export default Vue.extend({
       }
 
       if (item.badge === 'critical') {
-        return 'danger'
+        return 'critical'
       }
 
       return undefined;

@@ -105,7 +105,8 @@
 
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Vue, { PropType } from 'vue';
+import type { PropType } from 'vue';
+import Vue from 'vue';
 import { debounce, get } from 'lodash-es';
 import SwSelectBase from '../_internal/sw-select-base/sw-select-base.vue';
 import SwSelectResultList from '../_internal/sw-select-base/_internal/sw-select-result-list.vue';
@@ -169,7 +170,7 @@ export default Vue.extend({
      * Dependent on multiSelection, either a single value or an array of values.
      */
     value: {
-      type: [String, Number, Boolean, Array, null, undefined] as PropType<string|number|boolean|Array<unknown>|null|undefined>,
+      type: [String, Number, Boolean, Array, null, undefined] as PropType<string|number|boolean|unknown[]|null|undefined>,
       required: false,
       default: null,
     },
@@ -380,14 +381,14 @@ export default Vue.extend({
     },
 
     currentValue: {
-      get(): string|number|boolean|Array<unknown>|null|undefined {
+      get(): string|number|boolean|unknown[]|null|undefined {
         if (!this.value) {
           return [];
         }
 
         return this.value;
       },
-      set(newValue: string|number|boolean|Array<unknown>|null|undefined) {
+      set(newValue: string|number|boolean|unknown[]|null|undefined) {
         this.$emit('change', newValue);
       },
     },

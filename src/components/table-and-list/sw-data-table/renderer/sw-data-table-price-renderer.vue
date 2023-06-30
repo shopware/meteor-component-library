@@ -17,10 +17,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue';
+import type { PropType} from 'vue';
+import { defineComponent, computed } from 'vue';
 import type { ColumnDefinition } from '../sw-data-table.vue';
 import { get } from 'lodash-es';
 import { currency } from '../../../../utils/format';
+import type { BaseColumnDefinition } from '../sw-data-table.vue';
+
+export interface PriceColumnDefinition extends BaseColumnDefinition {
+  renderer: "price";
+  rendererOptions: {
+    currencyId: string;
+    currencyISOCode: string;
+    source: 'gross' | 'net';
+  };
+  clickable?: boolean; // you can enable the possibility to click on a column for opening details
+}
 
 export default defineComponent({
   name: 'SwDataTablePriceRenderer',
@@ -55,7 +67,9 @@ export default defineComponent({
         return 'No prices found';
       }
 
-      const price = prices.find((price: any) => price.currencyId === currencyId);
+      const price = prices.find((price: {
+        currencyId: string;
+      }) => price.currencyId === currencyId);
 
       if (!price) {
         return 'No price found';

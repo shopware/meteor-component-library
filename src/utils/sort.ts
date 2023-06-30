@@ -1,8 +1,6 @@
 interface SortElements {
   id: string,
-  data: {
-    [key: string]: unknown
-  }
+  data: Record<string, unknown>
 }
 
 /**
@@ -38,11 +36,11 @@ export function afterSort(elements: SortElements[], property = 'afterId'): SortE
   const firstItem = elements.shift();
   const sortedElements = [firstItem];
 
-  let lastId = firstItem && firstItem.id;
+  let lastId = firstItem?.id;
 
   while (elements.length > 0) {
     let loop = true;
-    /* eslint-disable no-loop-func */
+
     elements.forEach((leaf, key) => {
       if (leaf.data[property] !== lastId) {
         return;
@@ -55,7 +53,6 @@ export function afterSort(elements: SortElements[], property = 'afterId'): SortE
       elements.splice(key, 1);
       loop = false;
     });
-    /* eslint-enable no-loop-func */
 
     // chain is broken, continue with next element as parent
     if (loop) {

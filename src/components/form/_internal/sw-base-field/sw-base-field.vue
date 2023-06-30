@@ -222,7 +222,7 @@ export default Vue.extend({
 
     showLabel(): boolean {
       // @ts-expect-error - label exists on scopedSlots and if not we use optional chaining
-      return !!this.$slots.label || !!this.$scopedSlots?.label?.();
+      return !!this.$slots.label || !!this.$scopedSlots.label?.();
     },
 
     swFieldLabelClasses(): { 'is--required': boolean } {
@@ -232,7 +232,7 @@ export default Vue.extend({
     },
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    classes(): Array<any> {
+    classes(): any[] {
       return [
         {
           'has--error': this.hasError,
@@ -250,7 +250,8 @@ export default Vue.extend({
 
     hasError(): boolean {
       // @ts-expect-error - error method exists on scopedSlots
-      return this.$slots.error || !!(this.$scopedSlots.error && this.$scopedSlots.error());
+      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+      return this.$slots.error ?? !!(this.$scopedSlots.error && this.$scopedSlots.error());
     }
   }
 });

@@ -128,7 +128,7 @@ export default Vue.extend({
         return { 'background-image': `url('${this.imageUrl}')` };
       }
 
-      if (!this.sourceContext || !this.sourceContext.avatarMedia || !this.sourceContext.avatarMedia.url) {
+      if (!this.sourceContext?.avatarMedia?.url) {
         return null;
       }
 

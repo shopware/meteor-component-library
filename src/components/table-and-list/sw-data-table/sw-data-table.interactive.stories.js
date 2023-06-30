@@ -319,8 +319,6 @@ VisualTestDataSortingInColumnSettings.play = async () => {
   expect(rowContentName.length).toBeGreaterThan(0);
 };
 
-// TODO: add story for default and full layout
-
 // visual testing for loading state with skeleton bars
 export const VisualTestRenderSkeleton = Template.bind();
 VisualTestRenderSkeleton.storyName = 'Should render the Table with skeleton bars';

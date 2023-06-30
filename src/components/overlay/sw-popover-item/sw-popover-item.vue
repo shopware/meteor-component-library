@@ -28,6 +28,7 @@
         class="sw-popover-item__label"
         :class="labelClasses"
         :tabindex="onLabelClickTabIndex"
+        :role="role"
         @click="handleLableClick"
         @keyup.enter="handleLableClick"
       >
@@ -90,7 +91,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from "vue";
+import type { PropType } from "vue";
+import { defineComponent, computed } from "vue";
 import SwCheckbox from '../../form/sw-checkbox/sw-checkbox.vue';
 import SwSwitch from '../../form/sw-switch/sw-switch.vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
@@ -108,7 +110,7 @@ export default defineComponent({
       required: true,
     },
     type: {
-      type: String as PropType<'default'|'danger'>,
+      type: String as PropType<'default'|'critical'|'active'>,
       required: false,
       default: 'default',
       // TODO: missing "active" type needed for tabs
@@ -116,6 +118,7 @@ export default defineComponent({
         return [
           'default',
           'critical',
+          'active',
         ].includes(value);
       },
     },
@@ -205,6 +208,11 @@ export default defineComponent({
       required: false,
       default: false
     },
+    role: {
+      type: String,
+      required: false,
+      default: 'menuitem',
+    }
   },
   emits: ['change-checkbox', 'change-switch', 'change-visibility', 'click-options'],
   setup(props, { emit }) {

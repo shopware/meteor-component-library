@@ -182,15 +182,18 @@ VisualTestRenderContextTabWithActiveItem.play = async () => {
   await userEvent.click(button);
 
   // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
+  const popover = within(document.getElementsByClassName('sw-popover__content')[0]);
 
   const menuItem = await popover.getAllByRole('tab');
 
-  await expect(menuItem[4]).toHaveTextContent('Item 9');
+  const lastItem = menuItem[menuItem.length - 1];
+  await expect(lastItem).toHaveTextContent('Item 10');
 
-  await userEvent.click(menuItem[4]);
+  await userEvent.click(lastItem);
 
-  expect(document.getElementsByClassName('sw-popover-deprecated__wrapper').length).toEqual(0);
+  await waitUntilRendered(() => document.getElementsByClassName('sw-popover__content').length === 0);
+
+  expect(document.getElementsByClassName('sw-popover__content').length).toEqual(0);
 };
 
 export const VisualTestRenderTabsWithPositiveBadge = Template.bind({});
@@ -259,9 +262,9 @@ VisualTestRenderTabsWithContextMenuBadge.play = async () => {
   await userEvent.click(button);
 
   // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
+  const popover = within(document.getElementsByClassName('sw-popover__content')[0]);
 
   const menuItem = await popover.getAllByRole('tab');
 
-  await expect(menuItem[4]).toHaveTextContent('Item with critical badge');
+  await expect(menuItem[menuItem.length - 9]).toHaveTextContent('Item with critical badge');
 };

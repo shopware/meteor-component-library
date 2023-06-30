@@ -185,7 +185,7 @@ export default Vue.extend({
             }
 
             // @ts-expect-error - $el exists
-            const staticClasses = (this.$refs.swIgnoreClass?.$el?._prevClass ?? '').split(' ');
+            const staticClasses = (this.$refs.swIgnoreClass.$el?._prevClass ?? '').split(' ');
 
             // add attrs classes to main card
             staticClasses.forEach((className: string) => {

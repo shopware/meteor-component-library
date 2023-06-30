@@ -12,7 +12,8 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import type { PropType } from 'vue';
+import Vue from 'vue';
 import SwPopoverDirective from '../../../directives/popover.directive';
 
 /**
@@ -37,7 +38,7 @@ export default Vue.extend({
       default: false,
     },
     popoverClass: {
-      type: [String, Array, Object] as PropType<string|Array<unknown>|Record<string,unknown>>,
+      type: [String, Array, Object] as PropType<string|unknown[]|Record<string,unknown>>,
       required: false,
       default: '',
     },

@@ -1,7 +1,8 @@
-import { mount, shallowMount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import SwDataTable from "./sw-data-table.vue";
 import SwDataTableFixtures from "./sw-data-table.fixtures.json";
 import flushPromises from "flush-promises";
+import { get } from 'lodash-es';
 
 const columnsFixture = [
   {
@@ -20,7 +21,20 @@ const columnsFixture = [
   {
     label: "Active",
     property: "active",
-    renderer: "checkmark",
+    renderer: "badge",
+    rendererOptions: {
+      renderItemBadge: (data, columnDefinition) => {
+        const value = get(data, columnDefinition.property);
+
+        return value ? {
+          variant: 'positive',
+          label: 'Active',
+        } : {
+          variant: 'critical',
+          label: 'Inactive',
+        };
+      }
+    },
     position: 200,
     width: 123,
     allowResize: false,

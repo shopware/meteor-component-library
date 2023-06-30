@@ -1,6 +1,6 @@
 import isFunction from 'lodash-es/isFunction';
 import isObject from 'lodash-es/isObject';
-import { DirectiveOptions } from 'vue';
+import type { DirectiveOptions } from 'vue';
 
 export interface DragConfig<DATA = unknown> {
   delay: number,
@@ -116,7 +116,7 @@ function onDrag(el: HTMLElement, dragConfig: DragConfig, event: MouseEvent|Touch
     return false;
   }
 
-  if (dragConfig.preventEvent === true) {
+  if (dragConfig.preventEvent) {
     event.preventDefault();
     event.stopPropagation();
   }
@@ -289,18 +289,18 @@ function stopDrag() {
   const validDrag = validateDrag();
   const validDrop = validateDrop();
 
-  if (validDrag === true && currentDrag) {
+  if (validDrag && currentDrag) {
     if (isFunction(currentDrag.dragConfig.onDrop)) {
       currentDrag.dragConfig.onDrop(
         currentDrag.dragConfig.data,
-        validDrop ? currentDrop && currentDrop.dropConfig.data : null,
+        validDrop ? currentDrop?.dropConfig?.data : null,
       );
     }
   }
 
-  if (validDrop === true && currentDrop) {
+  if (validDrop && currentDrop) {
     if (isFunction(currentDrop.dropConfig.onDrop)) {
-      currentDrop.dropConfig.onDrop(currentDrag && currentDrag.dragConfig.data, currentDrop.dropConfig.data);
+      currentDrop.dropConfig.onDrop(currentDrag?.dragConfig.data, currentDrop.dropConfig.data);
     }
   }
 
@@ -343,7 +343,7 @@ function enterDropZone(el: HTMLElement, dropConfig: DropConfig) {
 
   const valid = validateDrop();
 
-  if (valid === true) {
+  if (valid) {
     el.classList.add(dropConfig.validDropCls);
     el.classList.remove(dropConfig.invalidDropCls);
     
@@ -414,12 +414,12 @@ function validateDrop(): boolean {
 
   // Check the custom drag validate function.
   if (currentDrag !== null && isFunction(currentDrag.dragConfig.validateDrop)) {
-    customDragValidation = currentDrag.dragConfig.validateDrop(currentDrag.dragConfig.data, currentDrop && currentDrop.dropConfig.data);
+    customDragValidation = currentDrag.dragConfig.validateDrop(currentDrag.dragConfig.data, currentDrop?.dropConfig.data);
   }
 
   // Check the custom drop validate function.
   if (currentDrop !== null && isFunction(currentDrop.dropConfig.validateDrop)) {
-    customDropValidation = currentDrop.dropConfig.validateDrop(currentDrag && currentDrag.dragConfig.data, currentDrop.dropConfig.data);
+    customDropValidation = currentDrop.dropConfig.validateDrop(currentDrag?.dragConfig.data, currentDrop.dropConfig.data);
   }
 
 
@@ -440,7 +440,7 @@ function validateDrag(): boolean {
 
   // Check the custom drag validate function.
   if (currentDrag !== null && isFunction(currentDrag.dragConfig.validateDrag)) {
-    customDragValidation = currentDrag.dragConfig.validateDrag(currentDrag.dragConfig.data, currentDrop && currentDrop.dropConfig.data);
+    customDragValidation = currentDrag.dragConfig.validateDrag(currentDrag.dragConfig.data, currentDrop?.dropConfig.data);
   }
 
   return valid && customDragValidation;
@@ -488,7 +488,7 @@ export const draggable: DirectiveOptions = {
     const dragConfig = mergeConfigs(defaultDragConfig, binding as { value: unknown }) as DragConfig;
 
     if (el.dragConfig && el.dragConfig.disabled !== dragConfig.disabled) {
-      if (dragConfig.disabled !== true) {
+      if (!dragConfig.disabled) {
         el.classList.remove(el.dragConfig.draggableCls);
         el.classList.add(dragConfig.draggableCls);
         if (el.boundDragListener) {
@@ -552,9 +552,9 @@ export const droppable: DirectiveOptions = {
     const dropZone = dropZones.find((zone) => zone.el === el);
 
     if (isObject(binding.value)) {
-      Object.assign(dropZone && dropZone.dropConfig, binding.value);
+      Object.assign(dropZone?.dropConfig, binding.value);
     } else {
-      Object.assign(dropZone && dropZone.dropConfig, { data: binding.value });
+      Object.assign(dropZone?.dropConfig, { data: binding.value });
     }
   },
 };

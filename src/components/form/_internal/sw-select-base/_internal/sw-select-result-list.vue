@@ -41,7 +41,8 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import type { PropType } from 'vue';
+import Vue from 'vue';
 import SwPopoverDeprecated from '../../../../_internal/sw-popover-deprecated/sw-popover-deprecated.vue';
 import SwIcon from '../../../../icons-media/sw-icon/sw-icon.vue';
 
@@ -102,7 +103,7 @@ export default Vue.extend({
     },
 
     popoverClasses: {
-      type: Array as PropType<Array<string>>,
+      type: Array as PropType<string[]>,
       required: false,
       default() {
         return [];
@@ -128,7 +129,7 @@ export default Vue.extend({
 return this.emptyMessage || this.$tc('sw-select-result-list.messageNoResults');
     },
 
-    popoverClass(): Array<string> {
+    popoverClass(): string[] {
       return [...this.popoverClasses, 'sw-select-result-list-popover-wrapper'];
     },
   },
