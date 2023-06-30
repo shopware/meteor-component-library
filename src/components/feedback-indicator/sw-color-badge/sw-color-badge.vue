@@ -4,6 +4,7 @@
     :class="variantClass"
     v-bind="$attrs"
     :style="colorStyle"
+    @click="$emit('click')"
   >
     <slot />
   </span>

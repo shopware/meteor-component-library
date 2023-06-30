@@ -177,6 +177,13 @@
                       :column-definition="column"
                       @click="$emit('open-details', data)"
                     />
+
+                    <sw-data-table-price-renderer
+                      v-else-if="column.renderer === 'price'"
+                      :data="data"
+                      :column-definition="column"
+                      @click="$emit('open-details', data)"
+                    />
                   </template>
                 </td>
               </template>
@@ -268,6 +275,7 @@ import { draggable, DropConfig, DragConfig, droppable } from '../../../directive
 import SwDataTableTextRenderer from './renderer/sw-data-table-text-renderer.vue';
 import SwDataTableNumberRenderer from './renderer/sw-data-table-number-renderer.vue';
 import SwDataTableBadgeRenderer from './renderer/sw-data-table-badge-renderer.vue';
+import SwDataTablePriceRenderer from './renderer/sw-data-table-price-renderer.vue';
 import type { SwColorBadgeVariant } from '../../feedback-indicator/sw-color-badge/sw-color-badge.vue';
 
 export interface BaseColumnDefinition {
@@ -299,10 +307,19 @@ export interface TextColumnDefinition extends BaseColumnDefinition {
 export interface NumberColumnDefinition extends BaseColumnDefinition {
   renderer: "number";
 }
+export interface PriceColumnDefinition extends BaseColumnDefinition {
+  renderer: "price";
+  rendererOptions: {
+    currencyId: string;
+    currencyISOCode: string;
+    source: 'gross' | 'net';
+  };
+}
 
 export type ColumnDefinition = BadgeColumnDefinition |
                                TextColumnDefinition |
-                               NumberColumnDefinition;
+                               NumberColumnDefinition |
+                               PriceColumnDefinition;
 
 export interface ColumnChanges {
   property?: ColumnDefinition["property"];
@@ -339,6 +356,7 @@ export default defineComponent({
     'sw-data-table-text-renderer': SwDataTableTextRenderer,
     'sw-data-table-number-renderer': SwDataTableNumberRenderer,
     'sw-data-table-badge-renderer': SwDataTableBadgeRenderer,
+    'sw-data-table-price-renderer': SwDataTablePriceRenderer,
   },
   props: {
     /**
