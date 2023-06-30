@@ -39,7 +39,6 @@ export default defineComponent({
     },
 
     type: {
-      // evaluate if other types are needed
       type: String as PropType<'default' | 'active' | 'critical'>,
       required: false,
       default: 'default',

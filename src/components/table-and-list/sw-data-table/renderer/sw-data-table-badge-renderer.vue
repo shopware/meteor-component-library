@@ -1,8 +1,10 @@
 <template>
   <sw-color-badge
     class="sw-data-table-badge-renderer"
+    :class="componentClasses"
     has-text
     :variant="badgeProps.variant"
+    @click="onClick"
   >
     {{ badgeProps.label }}
   </sw-color-badge>
@@ -32,7 +34,7 @@ export default defineComponent({
     },
   },
 
-  setup(props) {
+  setup(props, { emit }) {
     const badgeProps = computed(() => {
       if (props.columnDefinition?.renderer !== 'badge') {
         return {
@@ -56,8 +58,23 @@ export default defineComponent({
       return result;
     })
 
+    const componentClasses = computed(() => {
+      return {
+        'is--clickable': props.columnDefinition?.clickable
+      }
+    })
+
+    // TODO: check if clickable should be allowed on a badge renderer
+    function onClick() {
+      if (props.columnDefinition?.clickable) {
+        emit('click', props.data);
+      }
+    }
+
     return {
-      badgeProps
+      badgeProps,
+      componentClasses,
+      onClick
     }
   },
 });
@@ -65,6 +82,8 @@ export default defineComponent({
 
 <style scoped>
 .sw-data-table-badge-renderer {
-  
+  &.is--clickable {
+    cursor: pointer;
+  }
 }
 </style>

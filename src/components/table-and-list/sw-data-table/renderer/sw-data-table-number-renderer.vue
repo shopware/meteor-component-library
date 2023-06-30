@@ -1,5 +1,17 @@
 <template>
-  <p class="sw-data-table-number-renderer">
+  <a
+    v-if="columnDefinition.clickable"
+    class="sw-data-table-number-renderer"
+    href="#"
+    @click.prevent="$emit('click', data)"
+  >
+    {{ renderString }}
+  </a>
+
+  <p
+    v-else
+    class="sw-data-table-number-renderer"
+  >
     {{ renderString }}
   </p>
 </template>
