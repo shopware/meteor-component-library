@@ -1,19 +1,32 @@
 <template>
   <sw-color-badge
     class="sw-data-table-badge-renderer"
-    :class="componentClasses"
     has-text
     :variant="badgeProps.variant"
-    @click="onClick"
   >
     {{ badgeProps.label }}
   </sw-color-badge>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue';
-import type { ColumnDefinition } from '../sw-data-table.vue';
+import type { PropType} from 'vue';
+import { defineComponent, computed } from 'vue';
+import type { BaseColumnDefinition, ColumnDefinition } from '../sw-data-table.vue';
+import type { SwColorBadgeVariant } from '../../../feedback-indicator/sw-color-badge/sw-color-badge.vue';
 import SwColorBadge from '../../../feedback-indicator/sw-color-badge/sw-color-badge.vue';
+
+export interface BadgeColumnDefinition extends BaseColumnDefinition {
+  renderer: "badge";
+  rendererOptions: {
+    renderItemBadge(
+      data: unknown,
+      columnDefinition: BadgeColumnDefinition
+    ): {
+      label: string;
+      variant: SwColorBadgeVariant;
+    };
+  };
+}
 
 export default defineComponent({
   name: 'SwDataTablBadgeRenderer',
@@ -34,7 +47,7 @@ export default defineComponent({
     },
   },
 
-  setup(props, { emit }) {
+  setup(props) {
     const badgeProps = computed(() => {
       if (props.columnDefinition?.renderer !== 'badge') {
         return {
@@ -58,32 +71,9 @@ export default defineComponent({
       return result;
     })
 
-    const componentClasses = computed(() => {
-      return {
-        'is--clickable': props.columnDefinition?.clickable
-      }
-    })
-
-    // TODO: check if clickable should be allowed on a badge renderer
-    function onClick() {
-      if (props.columnDefinition?.clickable) {
-        emit('click', props.data);
-      }
-    }
-
     return {
       badgeProps,
-      componentClasses,
-      onClick
     }
   },
 });
 </script>
-
-<style scoped>
-.sw-data-table-badge-renderer {
-  &.is--clickable {
-    cursor: pointer;
-  }
-}
-</style>

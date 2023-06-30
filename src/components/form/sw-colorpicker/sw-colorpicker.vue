@@ -202,7 +202,8 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import type { PropType } from 'vue';
+import Vue from 'vue';
 import { debounce } from 'lodash-es';
 import SwBaseField from "../_internal/sw-base-field/sw-base-field.vue";
 import SwPopoverDeprecated from '../../_internal/sw-popover-deprecated/sw-popover-deprecated.vue';
@@ -405,12 +406,12 @@ export default Vue.extend({
 
     isColorValid(): boolean {
       if (typeof this.colorValue === 'string') {
-        return /^rgb/.test(this.colorValue) || /^hsl/.test(this.colorValue)
-        || /^#/.test(this.colorValue);
+        return this.colorValue.startsWith("rgb") || this.colorValue.startsWith("hsl")
+        || this.colorValue.startsWith("#");
       }
 
-      return /^rgb/.test(this.colorValue.string) || /^hsl/.test(this.colorValue.string)
-        || /^#/.test(this.colorValue.string);
+      return this.colorValue.string.startsWith("rgb") || this.colorValue.string.startsWith("hsl")
+        || this.colorValue.string.startsWith("#");
     },
 
     previewColorValue(): string {
@@ -554,7 +555,7 @@ export default Vue.extend({
           hslValue.hue,
           hslValue.saturation,
           hslValue.luminance,
-          hslValue.alpha || this.alphaValue,
+          hslValue.alpha ?? this.alphaValue,
         );
       },
     },
@@ -625,7 +626,7 @@ export default Vue.extend({
 
       const color = this.colorValue;
 
-      if (/^#/.test(typeof color === 'string' ? color : color.string)) {
+      if ((typeof color === 'string' ? color : color.string).startsWith("#")) {
         // if color is a hex value
         const convertedHSLValue = this.convertHEXtoHSL(typeof this.colorValue === 'string' ? this.colorValue : this.colorValue.string);
 
@@ -639,7 +640,7 @@ export default Vue.extend({
           convertedHSLValue.luminance,
           convertedHSLValue.alpha,
         );
-      } else if (/^rgb/.test(typeof color === 'string' ? color : color.string)) {
+      } else if ((typeof color === 'string' ? color : color.string).startsWith("rgb")) {
         // if color is a rgb value
         const rgbValues = this.splitRGBValues(typeof this.colorValue === 'string' ? this.colorValue : this.colorValue.string);
         const convertedHSLValue = this.convertRGBtoHSL(rgbValues.red, rgbValues.green, rgbValues.blue);
@@ -650,7 +651,7 @@ export default Vue.extend({
           convertedHSLValue.luminance,
           rgbValues.alpha,
         );
-      } else if (/^hsl/.test(typeof color === 'string' ? color : color.string)) {
+      } else if ((typeof color === 'string' ? color : color.string).startsWith("hsl")) {
         // if color is an hsl value
         const hslValues = this.splitHSLValues(typeof this.colorValue === 'string' ? this.colorValue : this.colorValue.string);
 
@@ -776,7 +777,7 @@ export default Vue.extend({
     setSingleRGBValue(newColorValue: number, type: 'red'|'green'|'blue') {
       const validTypes = ['red', 'green', 'blue'];
 
-      if (validTypes.indexOf(type) === -1) {
+      if (!validTypes.includes(type)) {
         return;
       }
 
@@ -824,7 +825,7 @@ export default Vue.extend({
         blue,
       };
 
-      if (/a/.test(rgbString)) {
+      if (rgbString.includes('a')) {
         returnValue.alpha = Number(rgbValues[3]);
       }
 
@@ -1018,15 +1019,15 @@ export default Vue.extend({
       let green = previousGreen;
       let blue = previousBlue;
 
-      if (/^-/.test(red.toString())) {
+      if (red.toString().startsWith("-")) {
         red = Math.abs(red);
       }
 
-      if (/^-/.test(blue.toString())) {
+      if (blue.toString().startsWith("-")) {
         blue = Math.abs(blue);
       }
 
-      if (/^-/.test(green.toString())) {
+      if (green.toString().startsWith("-")) {
         green = Math.abs(green);
       }
 

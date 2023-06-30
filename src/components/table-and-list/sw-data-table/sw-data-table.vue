@@ -154,9 +154,7 @@
                   </template>
 
                   <template v-else>
-                    <!-- Here we add the different renderer -->
-
-                    <!-- TODO: add all renderer -->
+                    <!-- Use the correct renderer for the column -->
                     <sw-data-table-number-renderer
                       v-if="column.renderer === 'number'"
                       :data="data"
@@ -192,6 +190,7 @@
                 <sw-context-button>
                   <!-- TODO: add translation -->
                   <!-- TODO: add conditions -->
+                  <!-- TODO: add styling for types and disabled state -->
                   <sw-context-menu-item label="Edit" />
 
                   <sw-context-menu-item
@@ -258,7 +257,8 @@
 
 <script lang="ts">
 import useScrollPossibilitiesClasses from "./composables/useScrollPossibilitiesClasses";
-import { defineComponent, computed, onBeforeUpdate, PropType, ref, set } from "vue";
+import type { PropType} from "vue";
+import { defineComponent, computed, onBeforeUpdate, ref, set } from "vue";
 import SwCard from "../../layout/sw-card/sw-card.vue";
 import SwButton from "../../form/sw-button/sw-button.vue";
 import SwSelect from "../../form/sw-select/sw-select.vue";
@@ -271,49 +271,26 @@ import SwDataTableSettings from './sub-components/sw-data-table-settings/sw-data
 import SwPopover from '../../overlay/sw-popover/sw-popover.vue';
 import SwPopoverItem from '../../overlay/sw-popover-item/sw-popover-item.vue';
 import SwSkeletonBar from '../../feedback-indicator/sw-skeleton-bar/sw-skeleton-bar.vue';
-import { draggable, DropConfig, DragConfig, droppable } from '../../../directives/dragdrop.directive';
+import type { DropConfig, DragConfig} from '../../../directives/dragdrop.directive';
+import { draggable, droppable } from '../../../directives/dragdrop.directive';
+import type { TextColumnDefinition } from './renderer/sw-data-table-text-renderer.vue';
 import SwDataTableTextRenderer from './renderer/sw-data-table-text-renderer.vue';
+import type { NumberColumnDefinition } from './renderer/sw-data-table-number-renderer.vue';
 import SwDataTableNumberRenderer from './renderer/sw-data-table-number-renderer.vue';
+import type { BadgeColumnDefinition } from './renderer/sw-data-table-badge-renderer.vue';
 import SwDataTableBadgeRenderer from './renderer/sw-data-table-badge-renderer.vue';
 import SwDataTablePriceRenderer from './renderer/sw-data-table-price-renderer.vue';
-import type { SwColorBadgeVariant } from '../../feedback-indicator/sw-color-badge/sw-color-badge.vue';
+import type { PriceColumnDefinition } from './renderer/sw-data-table-price-renderer.vue';
 
 export interface BaseColumnDefinition {
   label: string; // the label for the column
   property: string; // the value for each entry
-  // renderer: "text" | "number" | 'badge' | "price"; // define how each column entry should be rendered
-  // renderOptions: unknown; // define options for the renderer
   position: number; // the initial position of the column. Should be defined in 100 steps
   sortable?: boolean; // enable or disable sortability for this column (default=true)
   width?: number; // define the width value for this column
   allowResize?: boolean; // you can disable the possibility for the user to resize this column
   cellWrap?: "nowrap" | "normal";
   visible?: boolean; // you can hide a column by default
-  clickable?: boolean; // you can enable the possibility to click on a column for opening details
-}
-
-export interface BadgeColumnDefinition extends BaseColumnDefinition {
-  renderer: "badge";
-  rendererOptions: {
-    renderItemBadge(data: unknown, columnDefinition: BadgeColumnDefinition): {
-      label: string;
-      variant: SwColorBadgeVariant;
-    };
-  };
-}
-export interface TextColumnDefinition extends BaseColumnDefinition {
-  renderer: "text";
-}
-export interface NumberColumnDefinition extends BaseColumnDefinition {
-  renderer: "number";
-}
-export interface PriceColumnDefinition extends BaseColumnDefinition {
-  renderer: "price";
-  rendererOptions: {
-    currencyId: string;
-    currencyISOCode: string;
-    source: 'gross' | 'net';
-  };
 }
 
 export type ColumnDefinition = BadgeColumnDefinition |
@@ -328,10 +305,10 @@ export interface ColumnChanges {
   visible?: ColumnDefinition["visible"];
 }
 
-type DataSourcePropType = Array<{
+type DataSourcePropType = {
   id: string;
   [key: string]: unknown;
-}>;
+}[];
 
 type ColumnProperty = ColumnDefinition[];
 
@@ -460,7 +437,7 @@ export default defineComponent({
      * Define the available pagination limits.
      */
     paginationOptions: {
-      type: Array as PropType<Array<number>>,
+      type: Array as PropType<number[]>,
       required: false,
       default: () => [5, 10, 25, 50],
     },
@@ -583,7 +560,7 @@ export default defineComponent({
     // save all column and table refs
     const dataTable = ref<HTMLElement | null>(null);
     const columnHeaderRefs = ref<Record<string, HTMLElement>>({});
-    const columnDataCellRefs = ref<Record<string, Array<HTMLElement>>>({});
+    const columnDataCellRefs = ref<Record<string, HTMLElement[]>>({});
     const setColumnDataCellRefs = ({
       el,
       column,
@@ -722,7 +699,7 @@ export default defineComponent({
       columnHeader.style.minWidth = `${width}px`;
     };
 
-    const setColumnDataCellsWidthInline = (columnDataCells: Array<HTMLElement>, width: number) => {
+    const setColumnDataCellsWidthInline = (columnDataCells: HTMLElement[], width: number) => {
       columnDataCells.forEach((columnDataCell) => {
         columnDataCell.style.width = `${width}px`;
         columnDataCell.style.minWidth = `${width}px`;
@@ -731,8 +708,7 @@ export default defineComponent({
     };
 
     const renderColumnDefaultStyle = (column: ColumnDefinition) => {
-      const customColumnWidth =
-        props.columnChanges[column.property] && props.columnChanges[column.property].width;
+      const customColumnWidth = props.columnChanges[column.property]?.width;
       const defaultColumnWidth = "auto";
       const minimumColumnWidth = "100px";
 

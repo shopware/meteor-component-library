@@ -6,12 +6,14 @@
     :disabled="disabled"
     :on-label-click="handleLableClick"
     :type="type"
+    :role="role"
   />
 </template>
 
 <script lang="ts">
 import SwPopoverItem from '../../overlay/sw-popover-item/sw-popover-item.vue';
-import { defineComponent, PropType } from 'vue';
+import type { PropType } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'SwContextMenuItem',
@@ -43,6 +45,12 @@ export default defineComponent({
       required: false,
       default: 'default',
     },
+
+    role: {
+      type: String,
+      required: false,
+      default: 'menuitem',
+    },
   },
   emits: ['click'],
   setup(props, { emit }) {
@@ -61,129 +69,3 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
-@import '../../assets/scss/variables.scss';
-
-// $sw-context-menu-color-background-hover: lighten($color-shopware-brand-500, 40%);
-// $sw-context-menu-color-text:             $color-darkgray-200;
-// $sw-context-menu-color-active:           $color-shopware-brand-500;
-// $sw-context-menu-color-danger:           $color-crimson-500;
-// $sw-context-menu-color-success:          $color-emerald-500;
-// $sw-context-menu-color-warning:          $color-pumpkin-spice-500;
-
-.sw-context-menu-item {
-//   display: block;
-//   position: relative;
-//   border-radius: $border-radius-default;
-//   margin: 0;
-//   line-height: 18px;
-//   padding: 4px 14px;
-//   text-decoration: none;
-//   color: $sw-context-menu-color-text;
-//   outline: none;
-//   cursor: pointer;
-
-//   &.sw-context-menu-item--icon {
-//     display: grid;
-//     grid-template-columns: 16px auto;
-//     align-items: center;
-//     justify-items: stretch;
-//     justify-content: stretch;
-//     grid-gap: 12px;
-//   }
-
-//   &:hover {
-//     background: $sw-context-menu-color-background-hover;
-//     color: $sw-context-menu-color-active;
-
-//     .sw-icon {
-//       color: $sw-context-menu-color-active;
-//     }
-//   }
-
-//   &:focus {
-//     outline: $sw-context-menu-color-background-hover solid 1px;
-//   }
-
-//   &.sw-context-menu-item--active {
-//     font-weight: $font-weight-semi-bold;
-//   }
-
-//   &.sw-context-menu-item--danger {
-//     color: $sw-context-menu-color-danger;
-
-//     .sw-icon {
-//       color: $sw-context-menu-color-danger;
-//     }
-
-//     &:hover {
-//       background: lighten($sw-context-menu-color-danger, 42%);
-
-//       &.is--disabled {
-//         color: $sw-context-menu-color-danger;
-//       }
-//     }
-//   }
-
-//   &.sw-context-menu-item--success {
-//     color: $sw-context-menu-color-success;
-
-//     .sw-icon {
-//       color: $sw-context-menu-color-success;
-//     }
-
-//     &:hover {
-//       background: lighten($sw-context-menu-color-success, 42%);
-
-//       &.is--disabled {
-//         color: $sw-context-menu-color-success;
-//       }
-//     }
-//   }
-
-//   &.sw-context-menu-item--warning {
-//     color: $sw-context-menu-color-warning;
-
-//     .sw-icon {
-//       color: $sw-context-menu-color-warning;
-//     }
-
-//     &:hover {
-//       background: lighten($sw-context-menu-color-warning, 25%);
-
-//       &.is--disabled {
-//         color: $sw-context-menu-color-warning;
-//       }
-//     }
-//   }
-
-//   &.sw-context-menu-item--headline {
-//     text-align: center;
-//     cursor: default;
-
-//     &:hover {
-//       color: $sw-context-menu-color-text;
-//       background: 0 none;
-//     }
-//   }
-
-//   &.is--disabled {
-//     opacity: 0.5;
-//     cursor: not-allowed;
-//     user-select: none;
-
-//     &:hover {
-//       color: $sw-context-menu-color-text;
-//       background: 0 none;
-//     }
-
-//     .sw-icon {
-//       color: $sw-context-menu-color-text;
-//     }
-//   }
-
-//   & > .sw-icon {
-//     color: $sw-context-menu-color-text;
-//   }
-}
-</style>

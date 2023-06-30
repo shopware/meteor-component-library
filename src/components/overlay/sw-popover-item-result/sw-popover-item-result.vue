@@ -78,11 +78,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import type { PropType } from "vue";
+import { defineComponent } from "vue";
 import SwSearch from '../../navigation/sw-search/sw-search.vue';
 import SwPopoverItem from '../sw-popover-item/sw-popover-item.vue';
 import SwSmoothReflow from '../../_internal/sw-smooth-reflow.vue'
-import { draggable, DropConfig, DragConfig, droppable } from '../../../directives/dragdrop.directive';
+import type { DropConfig, DragConfig} from '../../../directives/dragdrop.directive';
+import { draggable, droppable } from '../../../directives/dragdrop.directive';
 
 export interface Option {
   id: string;
@@ -95,13 +97,12 @@ export interface Option {
   isSelected?: boolean;
 }
 
-interface Group {
+export interface Group {
   id: string;
   label: string;
   actionLabel?: string;
 }
 
-// TODO: write tests for this component
 export default defineComponent({
   name: 'SwPopoverItemResult',
   directives: {

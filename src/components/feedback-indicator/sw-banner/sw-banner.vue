@@ -43,7 +43,7 @@ import Vue from 'vue';
 import type { PropType } from 'vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue'
 
-type CssClasses = Array<string | Record<string, boolean>> | Record<string, boolean>;
+type CssClasses = (string | Record<string, boolean>)[] | Record<string, boolean>;
 type BannerType = 'neutral' | 'info' | 'attention' | 'critical' | 'positive' | 'inherited';
 
 export default Vue.extend({
@@ -115,7 +115,7 @@ export default Vue.extend({
             return this.icon;
         }
 
-        const iconConfig: { [type: string]: string } = {
+        const iconConfig: Record<string, string> = {
             neutral: 'regular-info-circle',
             info: 'regular-info-circle',
             attention: 'regular-exclamation-triangle',

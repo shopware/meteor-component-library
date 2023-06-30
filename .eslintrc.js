@@ -29,7 +29,8 @@ module.exports = {
         'eslint:recommended',
         'plugin:vue/recommended',
         'plugin:@typescript-eslint/recommended',
-        'plugin:@typescript-eslint/recommended-requiring-type-checking'
+        'plugin:@typescript-eslint/recommended-requiring-type-checking',
+        'plugin:@typescript-eslint/strict',
       ],
       rules: {
         /** 
@@ -46,6 +47,9 @@ module.exports = {
         '@typescript-eslint/restrict-template-expressions': 'off',
         '@typescript-eslint/restrict-plus-operands': 'off',
         '@typescript-eslint/unbound-method': 'off',
+        '@typescript-eslint/no-unnecessary-condition': 'off',
+        '@typescript-eslint/no-unsafe-argument': 'off',
+        '@typescript-eslint/no-dynamic-delete': 'off',
         'no-prototype-builtins': 'off',
         'vue/v-slot-style': ['error', {
           'atComponent': 'shorthand',

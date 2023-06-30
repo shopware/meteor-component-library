@@ -229,7 +229,7 @@ export default Vue.extend({
 
       // @ts-expect-error - event is a click event
       // allow to step back through form via SHIFT+TAB
-      if (event && event?.shiftKey) {
+      if (event?.shiftKey) {
         event.preventDefault();
         this.focusPreviousFormElement();
       }
@@ -285,7 +285,7 @@ export default Vue.extend({
     },
 
     focusParentSelect(event: KeyboardEvent) {
-      if (event && event?.shiftKey) {
+      if (event?.shiftKey) {
         // @ts-expect-error - ref selectWrapper is defined
         this.$refs.selectWrapper.click();
         event.preventDefault();

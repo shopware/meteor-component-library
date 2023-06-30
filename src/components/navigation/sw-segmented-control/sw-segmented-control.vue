@@ -55,7 +55,8 @@
 <script lang="ts">
 import SwCheckbox from '../../form/sw-checkbox/sw-checkbox.vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
-import { defineComponent, computed, PropType } from 'vue';
+import type { PropType } from 'vue';
+import { defineComponent, computed } from 'vue';
 
 interface Action {
   id: string,
@@ -70,7 +71,7 @@ interface Action {
   disabled?: boolean,
 }
 
-export type ActionsProp = Array<Action | 'divider'>
+export type ActionsProp = (Action | 'divider')[]
 
 export default defineComponent({
   components: {
@@ -120,7 +121,7 @@ export default defineComponent({
       }
 
       if (action.onClick) {
-        void action.onClick({});
+        action.onClick({});
       }
     }
 

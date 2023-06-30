@@ -35,10 +35,11 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import type { PropType } from 'vue';
+import Vue from 'vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
-import SwPopover, { View } from '../../overlay/sw-popover/sw-popover.vue';
-import SwPopoverItem from '../../overlay/sw-popover-item/sw-popover-item.vue'
+import type { View } from '../../overlay/sw-popover/sw-popover.vue';
+import SwPopover from '../../overlay/sw-popover/sw-popover.vue';
 
 export default Vue.extend({
   name: 'SwContextButtonVue',
@@ -46,7 +47,6 @@ export default Vue.extend({
   components: {
     'sw-icon': SwIcon,
     'sw-popover': SwPopover,
-    'sw-popover-item': SwPopoverItem,
   },
 
   props: {
@@ -99,18 +99,6 @@ export default Vue.extend({
       return {
         'is--disabled': this.disabled,
         'has--error': this.hasError,
-      };
-    },
-
-    contextMenuClass(): {
-      'is--left-align': boolean;
-      'is--top-align': boolean;
-      [key: string]: boolean;
-    } {
-      return {
-        'is--left-align': this.menuHorizontalAlign === 'left',
-        'is--top-align': this.menuVerticalAlign === 'top',
-        ...this.additionalContextMenuClasses,
       };
     },
   },

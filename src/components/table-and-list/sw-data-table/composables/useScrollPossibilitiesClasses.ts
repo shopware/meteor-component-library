@@ -1,4 +1,5 @@
-import { Ref, onUpdated, nextTick, onBeforeUnmount, onMounted } from 'vue';
+import type { Ref} from 'vue';
+import { onUpdated, nextTick, onBeforeUnmount, onMounted } from 'vue';
 import { throttle } from 'lodash-es';
 
 /**
@@ -7,10 +8,10 @@ import { throttle } from 'lodash-es';
  * when the element is scrollable into this direction.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function useScrollPossibilitiesClasses(refElement: Ref<any>) {
+export default function useScrollPossibilitiesClasses(refElement: Ref) {
   const setScrollPossibilitiesClasses = (elementOrEvent: Event|HTMLElement|undefined) => {
     // @ts-expect-error - check if event or not
-    const element = (elementOrEvent && elementOrEvent.target ? elementOrEvent.target : elementOrEvent) as HTMLElement|undefined;
+    const element = (elementOrEvent?.target ? elementOrEvent.target : elementOrEvent) as HTMLElement|undefined;
 
     if (!element) return;
 

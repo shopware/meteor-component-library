@@ -61,7 +61,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType, ref } from 'vue';
+import type { PropType} from 'vue';
+import { defineComponent, computed, ref } from 'vue';
 import SwCheckbox from '../../form/sw-checkbox/sw-checkbox.vue';
 import SwSwitch from '../../form/sw-switch/sw-switch.vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
@@ -117,7 +118,7 @@ export default defineComponent({
     const goViewBack = () => {
       viewTransition.value = 'slideOut';
 
-      const previousView = allViews.value.find((view) => view.childViews && view.childViews.some(v => v.name === activeView.value));
+      const previousView = allViews.value.find((view) => view.childViews?.some(v => v.name === activeView.value));
 
       if (previousView) {
         activeView.value = previousView.name;

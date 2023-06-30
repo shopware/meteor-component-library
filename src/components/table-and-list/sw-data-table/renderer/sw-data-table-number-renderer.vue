@@ -17,9 +17,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue';
-import type { ColumnDefinition } from '../sw-data-table.vue';
+import type { PropType} from 'vue';
+import { defineComponent, computed } from 'vue';
+import type { BaseColumnDefinition, ColumnDefinition } from '../sw-data-table.vue';
 import { get } from 'lodash-es';
+
+export interface NumberColumnDefinition extends BaseColumnDefinition {
+  renderer: "number";
+  clickable?: boolean; // you can enable the possibility to click on a column for opening details
+}
 
 export default defineComponent({
   name: 'SwDataTableNumberRenderer',

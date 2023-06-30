@@ -54,7 +54,8 @@
 </template>
 
 <script lang="ts">
-import { getCurrentInstance, defineComponent, computed, PropType } from "vue";
+import type { PropType } from "vue";
+import { getCurrentInstance, defineComponent, computed } from "vue";
 import SwButton from "../../../../form/sw-button/sw-button.vue";
 import SwIcon from "../../../../icons-media/sw-icon/sw-icon.vue";
 import SwPopover from '../../../../overlay/sw-popover/sw-popover.vue';

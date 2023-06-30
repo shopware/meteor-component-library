@@ -36,9 +36,10 @@
 </template>
 
 <script lang="ts">
-import { PropType } from 'vue';
+import type { PropType } from 'vue';
 import { defineComponent, onMounted, ref, onBeforeUnmount } from 'vue';
-import {computePosition, autoUpdate, ComputePositionConfig, offset, arrow, flip} from '@floating-ui/dom';
+import type { ComputePositionConfig} from '@floating-ui/dom';
+import {computePosition, autoUpdate, offset, arrow, flip} from '@floating-ui/dom';
 import vClickOutside from 'v-click-outside';
 
 export default defineComponent({
@@ -74,7 +75,8 @@ export default defineComponent({
     const floatingUi = ref<HTMLElement|null>(null);
     let cleanup: () => void;
 
-    const bodyContainer = window.document.querySelector('body') as HTMLBodyElement;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const bodyContainer = window.document.querySelector('body')!;
 
     onMounted(() => {
       if (!floatingUiTrigger.value || !floatingUiContent.value) {
@@ -106,7 +108,7 @@ export default defineComponent({
               return [];
             })(),
             flip(),
-            ...(props.floatingUiOptions.middleware || []),
+            ...(props.floatingUiOptions.middleware ?? []),
           ],
           ...props.floatingUiOptions,
         }).then(({ x, y, middlewareData, placement }) => {

@@ -78,12 +78,12 @@ export default Vue.extend({
   },
 
   computed: {
-     resultClasses(): Array<string | {
+     resultClasses(): (string | {
         [className: string]: boolean;
         'is--active': boolean;
         'is--disabled': boolean;
         'has--description': boolean;
-      }> {
+      })[] {
       return [
         {
           'is--active': this.active,

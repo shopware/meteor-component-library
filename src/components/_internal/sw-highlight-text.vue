@@ -1,5 +1,6 @@
 <script lang="ts">
-import Vue, { VNode } from 'vue';
+import type { VNode } from 'vue';
+import Vue from 'vue';
 
 export default Vue.extend({
   name: 'SwHighlightText',

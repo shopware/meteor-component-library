@@ -128,7 +128,7 @@ export default Vue.extend({
   },
 
   computed: {
-    buttonClasses(): {[key: string]: unknown} {
+    buttonClasses(): Record<string, unknown> {
       return {
         [`sw-button--${this.variant}`]: !!this.variant,
         [`sw-button--${this.variant}-ghost`]: !!this.ghost,
@@ -139,7 +139,7 @@ export default Vue.extend({
       };
     },
 
-    contentVisibilityClass() {
+    contentVisibilityClass(): { 'is--hidden': boolean } {
       return {
         'is--hidden': this.isLoading,
       };
