@@ -127,6 +127,38 @@ export default {
     sortDirection: 'ASC',
     isLoading: false,
     layout: 'default',
+    allowRowSelection: true,
+    selectedRows: [],
+    allowBulkEdit: true,
+    allowBulkDelete: true,
+    bulkEditMoreActions: [
+      {
+        id: 'send-to-warehouse',
+        label: 'Send to warehouse',
+        onClick: () => {
+          alert('Send selected rows to warehouse');
+        },
+        icon: 'regular-warehouse',
+      },
+      {
+        id: 'download-as-csv',
+        label: 'Download as CSV',
+        onClick: () => {
+          alert('Download selected rows as CSV');
+        },
+        icon: 'regular-download',
+      },
+      {
+        id: 'delete-in-erp',
+        label: 'Delete in ERP',
+        onClick: () => {
+          alert('Delete selected rows in ERP');
+        },
+        type: 'critical',
+        metaCopy: 'This action will delete the selected rows in the ERP system. This action cannot be undone.',
+        contextualDetail: 'MagicERP',
+      },
+    ]
   }
 };
 
@@ -141,6 +173,7 @@ const Template = (args, { argTypes }) => ({
       sortByValue: '',
       sortDirectionValue: '',
       isLoadingValue: true,
+      selectedRowsValue: [],
     }
   },
   computed: {
@@ -171,7 +204,7 @@ const Template = (args, { argTypes }) => ({
     },
     paginationTotalItemsValue() {
       return this.dataSource.length;
-    }
+    },
   },
   watch: {
     paginationLimit: {
@@ -234,6 +267,16 @@ const Template = (args, { argTypes }) => ({
       },
       immediate: false
     },
+    selectedRows: {
+      handler(v) {
+        if (this.selectedRowsValue === v) {
+          return;
+        }
+
+        this.selectedRowsValue = v;
+      },
+      immediate: true
+    },
   },
   created() {
     if (!this.isLoading) {
@@ -279,6 +322,34 @@ const Template = (args, { argTypes }) => ({
       this.reload(event);
 
       this.simulateLoading();
+    },
+
+    selectionChangeHandler(event) {
+      const id = event.id;
+      const value = event.value;
+      
+      if (value) {
+        this.selectedRowsValue.push(id);
+      } else {
+        this.selectedRowsValue.splice(this.selectedRowsValue.indexOf(id), 1);
+      }
+    },
+
+    multipleSelectionChangeHandler(event) {
+      const selections = event.selections;
+      const value = event.value;
+
+      if (value) {
+        selections.forEach((selection) => {
+          if (this.selectedRowsValue.indexOf(selection) === -1) {
+            this.selectedRowsValue.push(selection);
+          }
+        });
+      } else {
+        selections.forEach((selection) => {
+          this.selectedRowsValue.splice(this.selectedRowsValue.indexOf(selection), 1);
+        });
+      }
     }
   },
   template: `
@@ -307,6 +378,9 @@ const Template = (args, { argTypes }) => ({
       :sortDirection="sortDirectionValue"
       @sort-change="sortChangeValueHandler"
       :isLoading="isLoadingValue"
+      :selectedRows="selectedRowsValue"
+      @selection-change="selectionChangeHandler"
+      @multiple-selection-change="multipleSelectionChangeHandler"
     >
       {{ $props.default}}
     </sw-data-table>

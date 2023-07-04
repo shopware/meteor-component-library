@@ -1,4 +1,5 @@
 import SwSegmentedControl from './sw-segmented-control.vue';
+import SwPopoverItem from '../../overlay/sw-popover-item/sw-popover-item.vue'
 
 export default {
   title: 'Components/Navigation/sw-segmented-control',
@@ -46,16 +47,30 @@ export default {
       {
         id: 'labelF',
         label: 'Label F',
-        onClick: () => alert('Add the popover to the "options__${action.id}" slot and toggle them'),
         iconName: 'regular-calendar',
-        options: true
+        options: true,
+        popover: {
+          title: 'First level',
+          childViews: [
+            {
+              name: 'secondLevel',
+              title: 'Second level',
+              childViews: [
+                {
+                  name: 'thirdLevel',
+                  title: 'Third level',
+                }
+              ]
+            }
+          ]
+        }
       },
     ]
   }
 };
 
 const Template = (args, { argTypes }) => ({
-  components: { SwSegmentedControl },
+  components: { SwSegmentedControl, SwPopoverItem },
   props: Object.keys(argTypes),
   template: `
   <div style="max-width: 1000px; max-height: 400px; height: 500px; margin: 0 auto;">
@@ -63,6 +78,27 @@ const Template = (args, { argTypes }) => ({
       v-bind="$props"
     >
       {{ $props.default}}
+
+      <template #labelF--popover-items__base="{ toggleFloatingUi, changeView }">
+        <sw-popover-item
+          label="Go to second level"
+          :on-label-click="() => changeView('secondLevel')"
+        />
+      </template>
+
+      <template #labelF--popover-items__secondLevel="{ toggleFloatingUi, changeView }">
+        <sw-popover-item
+          label="Go to third level"
+          :on-label-click="() => changeView('thirdLevel')"
+        />
+      </template>
+
+      <template #labelF--popover-items__thirdLevel="{ toggleFloatingUi, changeView }">
+        <sw-popover-item
+          label="Go back to first level"
+          :on-label-click="() => changeView('base')"
+        />
+      </template>
     </sw-segmented-control>
   </div>
   `,

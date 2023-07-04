@@ -148,6 +148,9 @@ export default defineComponent({
           // add staticSide class
           floatingUiContent.value.classList.add(`sw-floating-ui--${staticSide}`);
         });
+      }, {
+        // fixes endless compute loop in rare situations (e.g. data-table)
+        layoutShift: false
       })
     });
 

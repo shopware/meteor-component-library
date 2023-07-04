@@ -45,7 +45,7 @@
 import { defineComponent, computed, watch } from 'vue';
 import SwSegmentedControl from '../../navigation/sw-segmented-control/sw-segmented-control.vue'
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
-import type { ActionsProp } from '../../navigation/sw-segmented-control/sw-segmented-control.vue'
+import type { SegmentedControlActionsProp } from '../../navigation/sw-segmented-control/sw-segmented-control.vue'
 import SwNumberField from '../../form/sw-number-field/sw-number-field.vue';
 
 export default defineComponent({
@@ -104,7 +104,7 @@ export default defineComponent({
     const previousPageIsPossible = computed(() => props.currentPage > 1);
     const nextPageIsPossible = computed(() => props.currentPage < totalPages.value);
 
-    const segmentedControlActions = computed<ActionsProp>(() => ([
+    const segmentedControlActions = computed<SegmentedControlActionsProp>(() => ([
       {
         id: 'pagination-first',
         onClick: () => emit('change-current-page', 1),
