@@ -45,7 +45,73 @@ export default {
       table: {
         category: 'Events'
       }
-    }
+    },
+    'sort-change': {
+      table: {
+        disable: true,
+      }
+    },
+    sortChange: {
+      action: 'sort-change',
+      table: {
+        category: 'Events'
+      }
+    },
+    'open-details': {
+      table: {
+        disable: true,
+      }
+    },
+    openDetails: {
+      action: 'open-details',
+      table: {
+        category: 'Events'
+      }
+    },
+    'selection-change': {
+      table: {
+        disable: true,
+      }
+    },
+    selectionChange: {
+      action: 'selection-change',
+      table: {
+        category: 'Events'
+      }
+    },
+    'multiple-selection-change': {
+      table: {
+        disable: true,
+      }
+    },
+    multipleSelectionChange: {
+      action: 'multiple-selection-change',
+      table: {
+        category: 'Events'
+      }
+    },
+    'bulk-edit': {
+      table: {
+        disable: true,
+      }
+    },
+    bulkEdit: {
+      action: 'bulk-edit',
+      table: {
+        category: 'Events'
+      }
+    },
+    'bulk-delete': {
+      table: {
+        disable: true,
+      }
+    },
+    bulkDelete: {
+      action: 'bulk-delete',
+      table: {
+        category: 'Events'
+      }
+    },
   },
   args: {
     dataSource: SwDataTableFixtures,
@@ -312,6 +378,8 @@ const Template = (args, { argTypes }) => ({
       this.simulateLoading();
     },
     sortChangeValueHandler(property, direction) {
+      this.sortChange(property, direction)
+
       this.sortByValue = property;
       this.sortDirectionValue = direction;
 
@@ -325,6 +393,8 @@ const Template = (args, { argTypes }) => ({
     },
 
     selectionChangeHandler(event) {
+      this.selectionChange(event);
+
       const id = event.id;
       const value = event.value;
       
@@ -336,6 +406,8 @@ const Template = (args, { argTypes }) => ({
     },
 
     multipleSelectionChangeHandler(event) {
+      this.multipleSelectionChange(event);
+
       const selections = event.selections;
       const value = event.value;
 
@@ -381,6 +453,9 @@ const Template = (args, { argTypes }) => ({
       :selectedRows="selectedRowsValue"
       @selection-change="selectionChangeHandler"
       @multiple-selection-change="multipleSelectionChangeHandler"
+      @open-details="openDetails"
+      @bulk-edit="bulkEdit"
+      @bulk-delete="bulkDelete"
     >
       {{ $props.default}}
     </sw-data-table>
