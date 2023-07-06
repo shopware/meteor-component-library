@@ -16,8 +16,8 @@
       <sw-popover
         v-if="(typeof action !== 'string')"
         :key="action.id"
-        :child-views="action.popover?.childViews"
-        :title="action.popover?.title"
+        :child-views="action.popover && action.popover.childViews"
+        :title="action.popover && action.popover.title"
       >
         <template #trigger="{ toggleFloatingUi }">
           <button
@@ -65,7 +65,7 @@
         </template>
 
         <template
-          v-for="(childView) in flatChildViews(action.popover?.childViews)"
+          v-for="(childView) in flatChildViews(action.popover && action.popover.childViews)"
           #[`popover-items__${childView.name}`]="{ toggleFloatingUi, changeView }"
         >
           <slot

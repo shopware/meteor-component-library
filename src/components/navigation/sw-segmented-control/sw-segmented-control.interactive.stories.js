@@ -1,7 +1,6 @@
 import SwSegmentedControlDefaultStory, { Default as Template } from './sw-segmented-control.stories';
 import { within, userEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
-import { waitUntilRendered } from '../../../_internal/test-helper';
 
 export default {
   ...SwSegmentedControlDefaultStory,

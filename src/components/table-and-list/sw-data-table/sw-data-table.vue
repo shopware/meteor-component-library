@@ -230,11 +230,20 @@
               </template>
 
               <td class="sw-data-table__table-context-button">
+                <a
+                  href="#"
+                  @click.prevent="$emit('open-details')"
+                >
+                  Edit
+                </a>
                 <sw-context-button>
                   <!-- TODO: add translation -->
                   <!-- TODO: add conditions -->
                   <!-- TODO: add styling for types and disabled state -->
-                  <sw-context-menu-item label="Edit" />
+                  <sw-context-menu-item
+                    label="Edit"
+                    @click="$emit('open-details')"
+                  />
 
                   <sw-context-menu-item
                     disabled
@@ -551,7 +560,7 @@ export default defineComponent({
     },
 
     selectedRows: {
-      type: Array as PropType<Record<string, unknown>[]>,
+      type: Array as PropType<string[]>,
       required: false,
       default: () => [],
     },
@@ -1027,6 +1036,9 @@ export default defineComponent({
       return {
         'sw-data-table__layout-default': props.layout === 'default',
         'sw-data-table__layout-full': props.layout === 'full',
+        'sw-data-table__first-column-fixed': props.allowRowSelection,
+        // TODO: could be relevant in the feature when you can disable the context button
+        'sw-data-table__last-column-fixed': true,
       };
     });
 
@@ -1035,7 +1047,8 @@ export default defineComponent({
      */
     const tableStylingVariables = computed(() => {
       return {
-        '--fixed-left-column-width': props.allowRowSelection ? '42px' : '0px',
+        '--fixed-left-column-width': props.allowRowSelection ? '67px' : '0px',
+        '--fixed-right-column-width': '105px',
       };
     });
 
@@ -1073,7 +1086,7 @@ export default defineComponent({
           label: `${props.selectedRows.length} items selected`,
           onClick: () => {
             emit('multiple-selection-change', {
-              selections: props.selectedRows.map(r => r.id),
+              selections: props.selectedRows,
               value: false
             });
           },
@@ -1175,6 +1188,7 @@ $line-height-md: 24px;
 $line-height-lg: 28px;
 
 $color-card-headline: #1c1c1c;
+$color-shopware-brand-vivacious-500: #0F76DE;
 
 $scrollShadowSize: 16px;
 $scrollShadowColor: rgba(120, 120, 120, 0.2);
@@ -1268,6 +1282,7 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     position: absolute;
     opacity: 0;
     transition: 0.1s ease opacity;
+    z-index: 100;
   }
 
   .sw-data-table__scroll-shadow-top {
@@ -1300,6 +1315,20 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     left: var(--fixed-left-column-width);
     height: $scrollShadowHeight;
     width: $scrollShadowSize;
+  }
+
+  &__first-column-fixed {
+    .sw-data-table__scroll-shadow-left {
+      top: 0.5px;
+      height: calc($scrollShadowHeight + $tableHeaderSize);
+    }
+  }
+
+  &__last-column-fixed {
+    .sw-data-table__scroll-shadow-right {
+      top: 0.5px;
+      height: calc($scrollShadowHeight + $tableHeaderSize);
+    }
   }
 
   .sw-data-table__table-wrapper[data-scroll-top] ~ .sw-data-table__scroll-shadow-top {
@@ -1362,6 +1391,7 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     background-color: $color-gray-50;
     color: #6b7280; // TODO: this needs to be a variable in the future
     min-width: 50px;
+    height: $tableHeaderSize;
     // header is sticky so it needs to have the full border
     border-bottom-width: 1px;
     border-top: 0;
@@ -1440,9 +1470,9 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   .sw-data-table__table-selection-bulk-edit {
     background-color: $color-gray-50; 
     position: absolute;
-    top: 0;
-    left: 0;
-    width: calc(100% - var(--scrollbar-width));
+    top: -0.5px;
+    left: -0.5px;
+    width: calc(100% - var(--scrollbar-width) - 105px);
     height: $tableHeaderSize;
     display: flex;
     align-items: center;
@@ -1546,6 +1576,8 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   $settingsColumnWidth: 65px;
 
   .sw-data-table__table-settings-button {
+    position: sticky;
+    right: 0;
     padding: 0;
     text-align: center;
     vertical-align: middle;
@@ -1559,7 +1591,27 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   }
 
   .sw-data-table__table-context-button {
+    width: 105px;
+    min-width: 105px;
     text-align: center;
+    position: sticky;
+    right: 0;
+    background-color: inherit;
+
+    a {
+      position: relative;
+      top: 1px;
+      color: $color-shopware-brand-vivacious-500;
+      text-decoration: none;
+      font-weight: $font-weight-semi-bold;
+      font-size: $font-size-xs;
+      line-height: $line-height-xs;
+      margin-right: 8px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   /**

@@ -247,7 +247,7 @@ VisualTestEnsureSingleSelectionWithoutLoadMore.play = async ({ args }) => {
   const canvas = within(document.getElementById('root'));
   await userEvent.type(canvas.getByRole('textbox'), 'Option long text');
 
-  let popover = within(document.querySelector('.sw-popover__wrapper'));
+  let popover = within(document.querySelector('.sw-popover-deprecated__wrapper'));
   await userEvent.click(popover.getByTestId('sw-select-option--Longer value text'));
 
   expect(args.itemAdd).toHaveBeenCalledWith({

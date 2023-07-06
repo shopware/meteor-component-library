@@ -12,7 +12,7 @@ module.exports = {
   transform: {
     // process `*.vue` files with `vue-jest`
     ".*\\.(vue)$": "@vue/vue2-jest",
-    '.*\\.js$':'ts-jest',
+    // '.*\\.js$':'ts-jest',
     // stringify svg imports
     ".*\\.(svg)$": "<rootDir>/utils/svgStringifyTransformer.js",
   },
