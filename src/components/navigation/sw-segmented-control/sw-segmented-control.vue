@@ -12,42 +12,69 @@
         class="sw-segmented-control__divider"
       />
 
-      <button
-        v-if="typeof action !== 'string'"
+      <!-- TOOD: Add is-opened from action value -->
+      <sw-popover
+        v-if="(typeof action !== 'string')"
         :key="action.id"
-        class="sw-segmented-control__action"
-        :class="getActionClass(action)"
-        :aria-pressed="action.isPressed"
-        @click="() => handleClick(action)"
+        :child-views="action.popover && action.popover.childViews"
+        :title="action.popover && action.popover.title"
       >
-        <sw-icon
-          v-if="action.iconName"
-          :name="action.iconName"
-          class="sw-segmented-control__action-icon"
-        />
+        <template #trigger="{ toggleFloatingUi }">
+          <button
+            class="sw-segmented-control__action"
+            :class="getActionClass(action)"
+            :aria-pressed="action.isPressed"
+            @click="() => handleClick(action, toggleFloatingUi)"
+          >
+            <sw-icon
+              v-if="action.iconName"
+              :name="action.iconName"
+              class="sw-segmented-control__action-icon"
+            />
 
-        <template v-if="action.hasCheckbox">
-          <sw-checkbox
-            :checked="action.checked"
-            :label="action.label"
-            @change="(event) => handleCheckboxChange(action, event)"
+            <template v-if="action.hasCheckbox">
+              <sw-checkbox
+                :checked="action.checked"
+                :label="action.label"
+                @change="(event) => handleCheckboxChange(action, event)"
+              />
+            </template>
+
+            <template v-else>
+              <slot :name="'label__' + action.id" />
+
+              {{ action.label }}
+            </template>
+
+            <sw-icon
+              v-if="action.options"
+              class="sw-segmented-control__action-options-icon"
+              name="regular-chevron-down-xs"
+            />
+
+            <slot :name="'options__' + action.id" />
+          </button>
+        </template>
+
+        <template #popover-items__base="{ toggleFloatingUi, changeView }">
+          <slot
+            :name="action.id + '--popover-items__base'"
+            :toggle-floating-ui="toggleFloatingUi"
+            :change-view="changeView"
           />
         </template>
 
-        <template v-else>
-          <slot :name="'label__' + action.id" />
-
-          {{ action.label }}
+        <template
+          v-for="(childView) in flatChildViews(action.popover && action.popover.childViews)"
+          #[`popover-items__${childView.name}`]="{ toggleFloatingUi, changeView }"
+        >
+          <slot
+            :name="action.id + '--popover-items__' + childView.name"
+            :toggle-floating-ui="toggleFloatingUi"
+            :change-view="changeView"
+          />
         </template>
-
-        <sw-icon
-          v-if="action.options"
-          class="sw-segmented-control__action-options-icon"
-          name="regular-chevron-down-xs"
-        />
-
-        <slot :name="'options__' + action.id" />
-      </button>
+      </sw-popover>
     </template>
   </div>
 </template>
@@ -55,10 +82,12 @@
 <script lang="ts">
 import SwCheckbox from '../../form/sw-checkbox/sw-checkbox.vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
+import SwPopover from '../../overlay/sw-popover/sw-popover.vue'
+import { View } from '../../overlay/sw-popover/sw-popover.vue';
 import type { PropType } from 'vue';
 import { defineComponent, computed } from 'vue';
 
-interface Action {
+export interface SegmentedControlAction {
   id: string,
   label?: string,
   onClick?: ({ checkboxValue }: {checkboxValue?: boolean}) => void,
@@ -69,20 +98,29 @@ interface Action {
   iconName?: string,
   options?: boolean,
   disabled?: boolean,
+  popover?: {
+    title?: string,
+    childViews?: View[],
+    disableFloat?: boolean,
+  }
 }
 
-export type ActionsProp = (Action | 'divider')[]
+export type SegmentedControlActionsProp = (SegmentedControlAction | 'divider')[]
 
 export default defineComponent({
   components: {
     'sw-checkbox': SwCheckbox,
     'sw-icon': SwIcon,
+    'sw-popover': SwPopover
   },
   props: {
     actions: {
-      type: Array as PropType<ActionsProp>,
+      type: Array as PropType<SegmentedControlActionsProp>,
       required: true
     },
+    /**
+     * Activate to hide the padding around the controls.
+     */
     disableContext: {
       type: Boolean,
       required: false,
@@ -91,7 +129,7 @@ export default defineComponent({
   },
   emits: [],
   setup(props) {
-    const getActionClass = (action: Action) => {
+    const getActionClass = (action: SegmentedControlAction) => {
       const classes = [
         `sw-segmented-control__action-id-${action.id}`
       ];
@@ -111,7 +149,10 @@ export default defineComponent({
       return classes;
     }
 
-    const handleClick = (action: Action) => {
+    const handleClick = (
+      action: SegmentedControlAction,
+      toggleFloatingUi: () => void
+    ) => {
       if (action.disabled) {
         return;
       }
@@ -120,12 +161,16 @@ export default defineComponent({
         return;
       }
 
+      if (action.popover) {
+        toggleFloatingUi();
+      }
+
       if (action.onClick) {
         action.onClick({});
       }
     }
 
-    const handleCheckboxChange = (action: Action, checkboxValue: boolean) => {
+    const handleCheckboxChange = (action: SegmentedControlAction, checkboxValue: boolean) => {
       if (action.disabled) {
         return;
       }
@@ -141,11 +186,26 @@ export default defineComponent({
       }
     })
 
+    const flatChildViews = (childViews?: View[]): View[] => {
+      if (!childViews) {
+        return [];
+      }
+
+      return childViews.reduce<View[]>((acc, childView) => {
+        if (childView.childViews) {
+          return [...acc, childView, ...flatChildViews(childView.childViews)];
+        }
+
+        return [...acc, childView];
+      }, []);
+    }
+
     return {
       getActionClass,
       handleClick,
       handleCheckboxChange,
-      segmentedControlClasses
+      segmentedControlClasses,
+      flatChildViews
     };
   }
 })
@@ -163,6 +223,14 @@ export default defineComponent({
   border: 1px solid $color-gray-500;
   border-radius: $border-radius-default;
   padding: 2px;
+
+  .sw-floating-ui {
+    display: flex;
+  }
+
+  .sw-floating-ui__trigger {
+    display: flex;
+  }
 
   &__action {
     display: flex;
@@ -280,21 +348,21 @@ export default defineComponent({
     padding: 0px;
     gap: 0;
 
-    .sw-segmented-control__action {
+    .sw-floating-ui .sw-segmented-control__action {
       border-radius: 0;
       border-right: 1px solid $color-gray-500;
+    }
 
-      &:first-child {
-        border-top-left-radius: $border-radius-default - 1;
-        border-bottom-left-radius: $border-radius-default - 1;
-        border-left: none;
-      }
+    .sw-floating-ui:first-child .sw-segmented-control__action {
+      border-top-left-radius: $border-radius-default - 1;
+      border-bottom-left-radius: $border-radius-default - 1;
+      border-left: none;
+    }
 
-      &:last-child {
-        border-top-right-radius: $border-radius-default - 1;
-        border-bottom-right-radius: $border-radius-default - 1;
-        border-right: none;
-      }
+    .sw-floating-ui:last-child .sw-segmented-control__action {
+      border-top-right-radius: $border-radius-default - 1;
+      border-bottom-right-radius: $border-radius-default - 1;
+      border-right: none;
     }
   }
 

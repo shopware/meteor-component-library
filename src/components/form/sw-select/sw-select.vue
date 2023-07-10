@@ -357,7 +357,7 @@ export default Vue.extend({
     },
 
     totalValuesCount(): number {
-      if (this.enableMultiSelection === true && this.currentValue.length) {
+      if (this.enableMultiSelection && Array.isArray(this.currentValue) && this.currentValue.length) {
         return this.currentValue.length;
       }
 

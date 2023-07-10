@@ -9,7 +9,7 @@
   >
     <template #toolbar>
       <sw-search
-        v-if="!disableSearch"
+        v-if="disableSearch !== true"
         size="small"
         :value="searchValue"
         @change="emitSearchValueChange"
@@ -18,12 +18,45 @@
 
     <template #default>
       <div
+        v-if="somethingSelected"
+        class="sw-data-table__table-selection-bulk-edit"
+      >
+        <sw-segmented-control
+          disable-context
+          :actions="bulkEditSegmentedControlActions"
+        >
+          <template #more--popover-items__base>
+            <sw-popover-item
+              v-for="moreAction in bulkEditMoreActions"
+              :key="moreAction.id"
+              :label="moreAction.label"
+              :on-label-click="moreAction.onClick"
+              :type="moreAction.type"
+              :icon="moreAction.icon"
+              :meta-copy="moreAction.metaCopy"
+              :contextual-detail="moreAction.contextualDetail"
+            />
+          </template>
+        </sw-segmented-control>
+      </div>
+
+      <div
         ref="tableWrapper"
         class="sw-data-table__table-wrapper"
       >
         <table ref="dataTable">
           <thead>
             <tr>
+              <th
+                v-if="allowRowSelection"
+                class="sw-data-table__table-selection-head"
+              >
+                <sw-checkbox
+                  :checked="somethingSelected"
+                  @change="handleSelectAll"
+                />
+              </th>
+
               <template v-for="column in sortedColumns">
                 <th
                   v-if="isColumnVisible(column)"
@@ -137,6 +170,16 @@
               v-for="(data, rowIndex) in dataSource"
               :key="data.id"
             >
+              <td
+                v-if="allowRowSelection"
+                class="sw-data-table__table-select-row"
+              >
+                <sw-checkbox
+                  :checked="getSelectionValue(data.id)"
+                  @change="onRowSelect(data.id)"
+                />
+              </td>
+
               <template v-for="column in sortedColumns">
                 <td
                   v-if="isColumnVisible(column)"
@@ -187,11 +230,20 @@
               </template>
 
               <td class="sw-data-table__table-context-button">
+                <a
+                  href="#"
+                  @click.prevent="$emit('open-details')"
+                >
+                  Edit
+                </a>
                 <sw-context-button>
                   <!-- TODO: add translation -->
                   <!-- TODO: add conditions -->
                   <!-- TODO: add styling for types and disabled state -->
-                  <sw-context-menu-item label="Edit" />
+                  <sw-context-menu-item
+                    label="Edit"
+                    @click="$emit('open-details')"
+                  />
 
                   <sw-context-menu-item
                     disabled
@@ -214,10 +266,22 @@
         </table>
       </div>
 
-      <div class="sw-data-table__scroll-shadow sw-data-table__scroll-shadow-top" />
-      <div class="sw-data-table__scroll-shadow sw-data-table__scroll-shadow-right" />
-      <div class="sw-data-table__scroll-shadow sw-data-table__scroll-shadow-bottom" />
-      <div class="sw-data-table__scroll-shadow sw-data-table__scroll-shadow-left" />
+      <div
+        :style="tableStylingVariables"
+        class="sw-data-table__scroll-shadow sw-data-table__scroll-shadow-top"
+      />
+      <div
+        :style="tableStylingVariables"
+        class="sw-data-table__scroll-shadow sw-data-table__scroll-shadow-right"
+      />
+      <div
+        :style="tableStylingVariables"
+        class="sw-data-table__scroll-shadow sw-data-table__scroll-shadow-bottom"
+      />
+      <div
+        :style="tableStylingVariables"
+        class="sw-data-table__scroll-shadow sw-data-table__scroll-shadow-left"
+      />
     </template>
 
     <template #footer>
@@ -271,6 +335,7 @@ import SwDataTableSettings from './sub-components/sw-data-table-settings/sw-data
 import SwPopover from '../../overlay/sw-popover/sw-popover.vue';
 import SwPopoverItem from '../../overlay/sw-popover-item/sw-popover-item.vue';
 import SwSkeletonBar from '../../feedback-indicator/sw-skeleton-bar/sw-skeleton-bar.vue';
+import SwCheckbox from '../../form/sw-checkbox/sw-checkbox.vue';
 import type { DropConfig, DragConfig} from '../../../directives/dragdrop.directive';
 import { draggable, droppable } from '../../../directives/dragdrop.directive';
 import type { TextColumnDefinition } from './renderer/sw-data-table-text-renderer.vue';
@@ -281,6 +346,8 @@ import type { BadgeColumnDefinition } from './renderer/sw-data-table-badge-rende
 import SwDataTableBadgeRenderer from './renderer/sw-data-table-badge-renderer.vue';
 import SwDataTablePriceRenderer from './renderer/sw-data-table-price-renderer.vue';
 import type { PriceColumnDefinition } from './renderer/sw-data-table-price-renderer.vue';
+import SwSegmentedControl from '../../navigation/sw-segmented-control/sw-segmented-control.vue';
+import { SegmentedControlActionsProp } from '../../navigation/sw-segmented-control/sw-segmented-control.vue';
 
 export interface BaseColumnDefinition {
   label: string; // the label for the column
@@ -324,12 +391,14 @@ export default defineComponent({
     "sw-icon": SwIcon,
     "sw-pagination": SwPagination,
     "sw-search": SwSearch,
+    'sw-checkbox': SwCheckbox,
     'sw-context-button': SwContextButton,
     'sw-data-table-settings': SwDataTableSettings,
     'sw-popover': SwPopover,
     'sw-popover-item': SwPopoverItem,
     'sw-skeleton-bar': SwSkeletonBar,
     'sw-context-menu-item': SwContextMenu,
+    'sw-segmented-control': SwSegmentedControl,
     'sw-data-table-text-renderer': SwDataTableTextRenderer,
     'sw-data-table-number-renderer': SwDataTableNumberRenderer,
     'sw-data-table-badge-renderer': SwDataTableBadgeRenderer,
@@ -480,7 +549,55 @@ export default defineComponent({
       type: Boolean,
       required: false,
       default: false,
-    }
+    },
+    /**
+     * If active user can select rows and can perform actions on them.
+     */
+    allowRowSelection: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    selectedRows: {
+      type: Array as PropType<string[]>,
+      required: false,
+      default: () => [],
+    },
+
+    /**
+     * If active user can do bulk edit by selecting items
+     */
+    allowBulkEdit: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    /**
+     * If active user can do bulk delete by selecting items
+     */
+    allowBulkDelete: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    /**
+     * Add more custom bulk edit actions
+     */
+     bulkEditMoreActions: {
+      type: Array as PropType<{
+        id: string,
+        label: string,
+        onClick: () => void,
+        icon: 'default'|'critical'|'active',
+        type: string,
+        metaCopy: string,
+        contextualDetail: string,
+      }[]>,
+      required: false,
+      default: () => [],
+     }
   },
   emits: [
     "reload",
@@ -490,6 +607,10 @@ export default defineComponent({
     'sort-change',
     // TODO: implement event with payload (id + column property)
     'open-details',
+    'selection-change',
+    'multiple-selection-change',
+    'bulk-edit',
+    'bulk-delete',
   ],
   i18n: {
     messages: {
@@ -915,8 +1036,100 @@ export default defineComponent({
       return {
         'sw-data-table__layout-default': props.layout === 'default',
         'sw-data-table__layout-full': props.layout === 'full',
+        'sw-data-table__first-column-fixed': props.allowRowSelection,
+        // TODO: could be relevant in the feature when you can disable the context button
+        'sw-data-table__last-column-fixed': true,
       };
     });
+
+    /**
+     * Adjust table variables
+     */
+    const tableStylingVariables = computed(() => {
+      return {
+        '--fixed-left-column-width': props.allowRowSelection ? '67px' : '0px',
+        '--fixed-right-column-width': '105px',
+      };
+    });
+
+    /**
+     * Row selection
+     */
+    const getSelectionValue = (dataId: string) => {
+      if (props.allowRowSelection) {
+        return props.selectedRows.includes(dataId);
+      }
+
+      return false;
+    };
+
+    const onRowSelect = (dataId: string) => {
+      if (props.allowRowSelection) {
+        const previousValue = getSelectionValue(dataId);
+        
+        emit('selection-change', {
+          id: dataId,
+          value: !previousValue
+        });
+      }
+    };
+
+    const somethingSelected = computed(() => {
+      return props.selectedRows.length > 0;
+    });
+
+    const bulkEditSegmentedControlActions = computed(() => {
+      const actions: SegmentedControlActionsProp = [
+        {
+          id: 'item-selection-count',
+          // TODO: add translation and alternative label for "items"
+          label: `${props.selectedRows.length} items selected`,
+          onClick: () => {
+            emit('multiple-selection-change', {
+              selections: props.selectedRows,
+              value: false
+            });
+          },
+          isPressed: true,
+          checked: true,
+          hasCheckbox: true,
+        },
+      ]
+
+      if (props.allowBulkEdit) {
+        actions.push({
+          id: 'edit',
+          label: 'Edit',
+          onClick: () => emit('bulk-edit'),
+        })
+      }
+
+      if (props.allowBulkDelete) {
+        actions.push({
+          id: 'delete',
+          label: 'Delete',
+          onClick: () => emit('bulk-delete'),
+          isCritical: true
+        })
+      }
+
+      if (props.bulkEditMoreActions.length > 0) {
+        actions.push({
+          id: 'more',
+          label: '...',
+          popover: {}
+        })
+      }
+
+      return actions;
+    });
+
+    const handleSelectAll = () => {
+      emit('multiple-selection-change', {
+        selections: props.dataSource.map(r => r.id),
+        value: true
+      });
+    }
 
     return {
       sortedColumns,
@@ -941,7 +1154,13 @@ export default defineComponent({
       changeColumnVisibility,
       emitSortChange,
       onColumnSettingsSortChange,
-      swDataTableClasses
+      swDataTableClasses,
+      tableStylingVariables,
+      getSelectionValue,
+      onRowSelect,
+      somethingSelected,
+      bulkEditSegmentedControlActions,
+      handleSelectAll
     };
   },
 });
@@ -969,16 +1188,25 @@ $line-height-md: 24px;
 $line-height-lg: 28px;
 
 $color-card-headline: #1c1c1c;
+$color-shopware-brand-vivacious-500: #0F76DE;
 
 $scrollShadowSize: 16px;
 $scrollShadowColor: rgba(120, 120, 120, 0.2);
 $tableHeaderSize: 51px;
 $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
 
+$tableHeaderPaddingTop: 18px;
+$tableHeaderPaddingRight: 16px;
+$tableHeaderPaddingBottom: 14px;
+$tableHeaderPaddingLeft: 16px;
+$tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeaderPaddingBottom $tableHeaderPaddingLeft;
+
 .sw-data-table {
   display: flex;
   flex-direction: column;
   height: 100%;
+
+  --table-header-size: $tableHeaderSize;
 
   &.sw-data-table__layout-default {
     height: 650px;
@@ -1046,25 +1274,30 @@ $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
   // add scroll shadows
   --scrollbar-height: 0px;
   --scrollbar-width: 0px;
+  --fixed-left-column-width: 0px;
+  --fixed-right-column-width: 0px;
 
   .sw-data-table__scroll-shadow {
     pointer-events: none;
     position: absolute;
     opacity: 0;
     transition: 0.1s ease opacity;
+    z-index: 100;
   }
 
   .sw-data-table__scroll-shadow-top {
     background: linear-gradient($scrollShadowColor, transparent);
-    top: $tableHeaderSize; // more pixel because of the table header
+    top: calc($tableHeaderSize - 0.5px);
     width: calc(100% - var(--scrollbar-width));
+    left: var(--fixed-left-column-width);
+    left: 0;
     height: $scrollShadowSize;
   }
 
   .sw-data-table__scroll-shadow-right {
     background: linear-gradient(-90deg, $scrollShadowColor, transparent);
-    top: $tableHeaderSize;
-    right: var(--scrollbar-width);
+    top: calc($tableHeaderSize - 0.5px);
+    right: calc(var(--scrollbar-width) + var(--fixed-right-column-width));
     height: $scrollShadowHeight;
     width: $scrollShadowSize;
   }
@@ -1078,10 +1311,24 @@ $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
 
   .sw-data-table__scroll-shadow-left {
     background: linear-gradient(90deg, $scrollShadowColor, transparent);
-    top: $tableHeaderSize;
-    left: 0;
+    top: calc($tableHeaderSize - 0.5px);
+    left: var(--fixed-left-column-width);
     height: $scrollShadowHeight;
     width: $scrollShadowSize;
+  }
+
+  &__first-column-fixed {
+    .sw-data-table__scroll-shadow-left {
+      top: 0.5px;
+      height: calc($scrollShadowHeight + $tableHeaderSize);
+    }
+  }
+
+  &__last-column-fixed {
+    .sw-data-table__scroll-shadow-right {
+      top: 0.5px;
+      height: calc($scrollShadowHeight + $tableHeaderSize);
+    }
   }
 
   .sw-data-table__table-wrapper[data-scroll-top] ~ .sw-data-table__scroll-shadow-top {
@@ -1120,7 +1367,7 @@ $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
 
   td,
   th {
-    padding: 18px 16px 14px 16px;
+    padding: $tableHeaderPadding;
     // border needs to be half the size because they are getting combined with other cells
     border: 0.5px solid $color-gray-200;
     white-space: nowrap;
@@ -1144,6 +1391,7 @@ $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
     background-color: $color-gray-50;
     color: #6b7280; // TODO: this needs to be a variable in the future
     min-width: 50px;
+    height: $tableHeaderSize;
     // header is sticky so it needs to have the full border
     border-bottom-width: 1px;
     border-top: 0;
@@ -1151,7 +1399,7 @@ $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
     top: -0.5px;
     text-transform: uppercase;
     cursor: default;
-    z-index: 1;
+    z-index: 10;
   }
 
   // custom skeleton styling
@@ -1172,6 +1420,67 @@ $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
     display: flex;
     align-items: center;
     gap: 8px;
+  }
+
+  /**
+  * Row selection
+  */
+  .sw-data-table__table-select-row,
+  .sw-data-table__table-selection-head {
+    position: sticky;
+    min-width: 67px;
+    max-width: 67px;
+    width: 67px;
+    padding-right: 8px;
+    border-right: 0px;
+    left: 0;
+  }
+
+  .sw-data-table__table-select-row {
+    background-color: inherit;
+  }
+
+  .sw-data-table__table-selection-head {
+    z-index: 20;
+  }
+
+  .sw-data-table__table-select-row + td,
+  .sw-data-table__table-selection-head + th {
+    border-left: 0px;
+    padding-left: 8px;
+  }
+
+  .sw-data-table__table-select-row,
+  .sw-data-table__table-selection-head {
+    .sw-field--checkbox {
+      margin-bottom: 0;
+
+      .sw-field--checkbox__content {
+        display: flex;
+        justify-content: center;
+        margin-top: 2px;
+      }
+
+      .sw-field {
+        display: none;
+      }
+    }
+  }
+
+  .sw-data-table__table-selection-bulk-edit {
+    background-color: $color-gray-50; 
+    position: absolute;
+    top: -0.5px;
+    left: -0.5px;
+    width: calc(100% - var(--scrollbar-width) - 105px);
+    height: $tableHeaderSize;
+    display: flex;
+    align-items: center;
+    padding: $tableHeaderPadding;
+    border: 1px solid $color-gray-200;
+    border-top: none;
+    border-right: none;
+    z-index: 30;
   }
 
   /***
@@ -1267,6 +1576,8 @@ $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
   $settingsColumnWidth: 65px;
 
   .sw-data-table__table-settings-button {
+    position: sticky;
+    right: 0;
     padding: 0;
     text-align: center;
     vertical-align: middle;
@@ -1280,7 +1591,27 @@ $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
   }
 
   .sw-data-table__table-context-button {
+    width: 105px;
+    min-width: 105px;
     text-align: center;
+    position: sticky;
+    right: 0;
+    background-color: inherit;
+
+    a {
+      position: relative;
+      top: 1px;
+      color: $color-shopware-brand-vivacious-500;
+      text-decoration: none;
+      font-weight: $font-weight-semi-bold;
+      font-size: $font-size-xs;
+      line-height: $line-height-xs;
+      margin-right: 8px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   /**
@@ -1347,7 +1678,7 @@ $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
   }
   text-align: left;
   font-size: $font-size-xs;
-  padding: 18px 16px 14px 16px;
+  padding: $tableHeaderPadding;
   border: 1px solid $color-shopware-brand-900;
   border-radius: $border-radius-default $border-radius-default 0 0;
   border-top: 0;

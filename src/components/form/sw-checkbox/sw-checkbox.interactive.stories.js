@@ -90,6 +90,7 @@ VisualTestInherited.storyName = 'Should trigger inheritance-remove event';
 VisualTestInherited.args = {
   label: 'Inherited',
   inheritedValue: false,
+  isInherited: true,
 };
 VisualTestInherited.play = async ({ args }) => {
   // we can't use canvasElement because it is not available anymore

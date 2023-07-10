@@ -99,7 +99,7 @@ export default Vue.extend({
     checked: {
       type: Boolean,
       required: false,
-      default: null,
+      default: undefined,
     },
 
     /**
@@ -215,7 +215,12 @@ export default Vue.extend({
   },
 
   watch: {
-    checked() { this.currentValue = this.checked; },
+    checked: {
+      handler() {
+        this.currentValue = this.checked;
+      },
+      immediate: true,      
+    },
   },
 
   methods: {

@@ -22,7 +22,7 @@
     "dist"
   ],
   "dependencies": {
-    "@floating-ui/dom": "^1.0.3",
+    "@floating-ui/dom": "^1.4.3",
     "@shopware-ag/meteor-icon-kit": "^4.1.0",
     "ace-builds": "^1.4.13",
     "apexcharts": "^3.33.0",

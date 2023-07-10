@@ -63,7 +63,6 @@
       </div>
 
       <div
-        v-if="!!$slots.toolbar"
         class="sw-card__toolbar"
       >
         <!-- @slot Slot for adding toolbar functionality like search-bar, buttons, etc. -->
@@ -330,6 +329,10 @@ export default Vue.extend({
         flex-basis: auto;
         padding: 20px 24px 16px 24px;
         background-color: $color-white;
+
+        &:empty {
+            display: none;
+        }
     }
 
     &__tabs {
