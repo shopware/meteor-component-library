@@ -57,7 +57,7 @@
                 />
               </th>
 
-              <template v-for="column in sortedColumns">
+              <template v-for="(column, index) in sortedColumns">
                 <th
                   v-if="isColumnVisible(column)"
                   :key="column.property"
@@ -68,6 +68,7 @@
                   }"
                   v-draggable="{ ...dragConfig, data: column }"
                   class="sw-data-table__table-wrapper-table-head"
+                  :class="getColumnHeaderClasses(column)"
                   :data-header-column-property="column.property"
                   :style="renderColumnHeaderStyle(column)"
                   :data-testid="'column-table-head__' + column.property"
@@ -147,8 +148,18 @@
 
                   <div
                     v-if="column.allowResize !== false"
-                    class="sw-data-table__table-head-resizable"
+                    class="sw-data-table__table-head-resizable sw-data-table__table-head-resizable-before"
+                    @mousedown.prevent.stop="() => startColumnResizing(getPreviousVisibleColumn(column))"
+                    @mouseenter="() => setHighlightedColumn(getPreviousVisibleColumn(column))"
+                    @mouseleave="() => setHighlightedColumn(null)"
+                  />
+
+                  <div
+                    v-if="column.allowResize !== false"
+                    class="sw-data-table__table-head-resizable sw-data-table__table-head-resizable-after"
                     @mousedown.prevent.stop="() => startColumnResizing(column)"
+                    @mouseenter="() => setHighlightedColumn(column)"
+                    @mouseleave="() => setHighlightedColumn(null)"
                   />
                 </th>
               </template>
@@ -191,6 +202,7 @@
                   "
                   :data-cell-column-property="column.property"
                   :style="renderColumnDataCellStyle(column)"
+                  :class="getColumnDataCellClasses(column)"
                 >
                   <template v-if="isLoading">
                     <sw-skeleton-bar />
@@ -348,6 +360,7 @@ import SwDataTablePriceRenderer from './renderer/sw-data-table-price-renderer.vu
 import type { PriceColumnDefinition } from './renderer/sw-data-table-price-renderer.vue';
 import SwSegmentedControl from '../../navigation/sw-segmented-control/sw-segmented-control.vue';
 import { SegmentedControlActionsProp } from '../../navigation/sw-segmented-control/sw-segmented-control.vue';
+import { is } from "date-fns/locale";
 
 export interface BaseColumnDefinition {
   label: string; // the label for the column
@@ -709,7 +722,11 @@ export default defineComponent({
     /***
      * This method will be executed when the user press the mouse down on the hidden resize bar of the column
      */
-    const startColumnResizing = (column: ColumnDefinition) => {
+    const startColumnResizing = (column: ColumnDefinition|null) => {
+      if (!column) {
+        return;
+      }
+
       makeAllColumnsFixedWidth();
 
       // get the refs for the column header and all column data cells
@@ -887,8 +904,43 @@ export default defineComponent({
       };
     };
 
+    const getColumnDataCellClasses = (column: ColumnDefinition) => {
+      const classes = [];
+
+      if (highlightedColumn.value === column.property) {
+        classes.push("--highlighted");
+      }
+
+      return classes;
+    };
+
+    const getColumnHeaderClasses = (column: ColumnDefinition) => {
+      const classes = [];
+
+      if (highlightedColumn.value === column.property) {
+        classes.push("--highlighted");
+      }
+
+      return classes;
+    };
+
     const isColumnVisible = (column: ColumnDefinition) => {
       return column.visible ?? true;
+    }
+
+    const highlightedColumn = ref<string|null>(null);
+
+    const setHighlightedColumn = (column: ColumnDefinition|null) => {
+      if (dataTable.value?.classList.contains("--resizing")) {
+        return;
+      }
+
+      if (!column) {
+        highlightedColumn.value = null;
+        return;
+      }
+
+      highlightedColumn.value = column.property;
     }
 
     /***
@@ -1131,6 +1183,18 @@ export default defineComponent({
       });
     }
 
+    const getPreviousVisibleColumn = (column: ColumnDefinition): ColumnDefinition|null => {
+      const visibleColumns = sortedColumns.value.filter((c) => isColumnVisible(c));
+
+      const index = visibleColumns.findIndex((c) => c.property === column.property);
+
+      if (index <= 0) {
+        return null;
+      }
+
+      return visibleColumns[index - 1];
+    }
+
     return {
       sortedColumns,
       renderColumnDataCellStyle,
@@ -1160,7 +1224,11 @@ export default defineComponent({
       onRowSelect,
       somethingSelected,
       bulkEditSegmentedControlActions,
-      handleSelectAll
+      handleSelectAll,
+      setHighlightedColumn,
+      getColumnDataCellClasses,
+      getColumnHeaderClasses,
+      getPreviousVisibleColumn,
     };
   },
 });
@@ -1367,6 +1435,7 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
 
   td,
   th {
+    position: relative;
     padding: $tableHeaderPadding;
     // border needs to be half the size because they are getting combined with other cells
     border: 0.5px solid $color-gray-200;
@@ -1374,6 +1443,16 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: top;
+
+    &.--highlighted {
+      border-right: 1px solid $color-shopware-brand-900;
+      padding-right: calc($tableHeaderPaddingRight - 0.5px);
+    }
+  }
+
+  th {
+    // needed for resizable container outside of table header cell
+    overflow: visible;
   }
 
   tr:nth-child(even) {
@@ -1487,13 +1566,20 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   * Resizable
   */
   &__table-head-resizable {
-    z-index: 1;
+    z-index: 1000;
     cursor: col-resize;
     height: 100%;
-    width: 3px;
+    width: 6px;
     position: absolute;
     top: 0;
-    right: 0;
+  }
+
+  &__table-head-resizable-before {
+    left: -1px;
+  }
+
+  &__table-head-resizable-after {
+    right: -1px;
   }
 
   /**
