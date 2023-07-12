@@ -57,7 +57,7 @@
                 />
               </th>
 
-              <template v-for="(column, index) in sortedColumns">
+              <template v-for="(column) in sortedColumns">
                 <th
                   v-if="isColumnVisible(column)"
                   :key="column.property"
@@ -146,7 +146,6 @@
                     </template>
                   </sw-popover>
 
-                  <!-- TODO: make this clickable -->
                   <sw-floating-ui
                     v-if="highlightedColumn === column.property"
                     :is-opened="true"
@@ -154,21 +153,52 @@
                     class="sw-data-table__table-head-add-column-indicator"
                     :auto-update-options="{ animationFrame: true }"
                   >
-                    <sw-icon
-                      v-tooltip="{
-                        // TODO: add translation for tooltip
-                        message: 'Add column',
-                        width: 'auto',
+                    <!-- TODO: add translation -->
+                    <sw-popover
+                      title="Add column content"
+                      @update:isOpened="(value) => {
+                        if (value === false) {
+                          forceHighlightedColumn = false;
+                          setHighlightedColumn(null)
+                        }
                       }"
-                      name="solid-plus-square-s"
-                      @mouseenter="() => setHighlightedColumn(column)"
-                      @mouseleave="() => setHighlightedColumn(null)"
-                    />
+                    >
+                      <template #trigger="{ toggleFloatingUi }">
+                        <sw-icon
+                          v-tooltip="{
+                            // TODO: add translation for tooltip
+                            message: 'Add column',
+                            width: 'auto',
+                          }"
+                          name="solid-plus-square-s"
+                          :data-testid="'add-column-indicator-icon__' + column.property"
+                          @mouseenter="() => setHighlightedColumn(column)"
+                          @mouseleave="() => setHighlightedColumn(null)"
+                          @click="() => {
+                            forceHighlightedColumn = true;
+                            toggleFloatingUi()
+                          }"
+                        />
+                      </template>
+
+                      <template #popover-items__base="{ toggleFloatingUi }">
+                        <!-- TODO: add translation -->
+                        <sw-popover-item-result
+                          :options="addColumnOptions"
+                          @search="onAddColumnSearch"
+                          @click-option="(columnProperty) => {
+                            onAddColumnOptionClick(columnProperty, column.property)
+                            toggleFloatingUi()
+                          }"
+                        />
+                      </template>
+                    </sw-popover>
                   </sw-floating-ui>
 
                   <div
                     v-if="column.allowResize !== false"
                     class="sw-data-table__table-head-resizable sw-data-table__table-head-resizable-before"
+                    :data-testid="'sw-data-table__table-head-resizable-before__' + column.property"
                     @mousedown.prevent.stop="() => startColumnResizing(getPreviousVisibleColumn(column))"
                     @mouseenter="() => setHighlightedColumn(getPreviousVisibleColumn(column))"
                     @mouseleave="() => setHighlightedColumn(null)"
@@ -177,6 +207,7 @@
                   <div
                     v-if="column.allowResize !== false"
                     class="sw-data-table__table-head-resizable sw-data-table__table-head-resizable-after"
+                    :data-testid="'sw-data-table__table-head-resizable-after__' + column.property"
                     @mousedown.prevent.stop="() => startColumnResizing(column)"
                     @mouseenter="() => setHighlightedColumn(column)"
                     @mouseleave="() => setHighlightedColumn(null)"
@@ -366,6 +397,7 @@ import SwContextMenu from '../../context-menu/sw-context-menu-item/sw-context-me
 import SwDataTableSettings from './sub-components/sw-data-table-settings/sw-data-table-settings.vue';
 import SwPopover from '../../overlay/sw-popover/sw-popover.vue';
 import SwPopoverItem from '../../overlay/sw-popover-item/sw-popover-item.vue';
+import SwPopoverItemResult from '../../overlay/sw-popover-item-result/sw-popover-item-result.vue';
 import SwSkeletonBar from '../../feedback-indicator/sw-skeleton-bar/sw-skeleton-bar.vue';
 import SwCheckbox from '../../form/sw-checkbox/sw-checkbox.vue';
 import type { DropConfig, DragConfig} from '../../../directives/dragdrop.directive';
@@ -431,6 +463,7 @@ export default defineComponent({
     'sw-data-table-settings': SwDataTableSettings,
     'sw-popover': SwPopover,
     'sw-popover-item': SwPopoverItem,
+    'sw-popover-item-result': SwPopoverItemResult,
     'sw-skeleton-bar': SwSkeletonBar,
     'sw-context-menu-item': SwContextMenu,
     'sw-floating-ui': SwFloatingUi,
@@ -674,6 +707,33 @@ export default defineComponent({
     const sortedColumns = computed(() => {
       return columnsWithChanges.value.slice().sort((a, b) => a.position - b.position);
     });
+
+    const addColumnOptionsSearch = ref('');
+    const onAddColumnSearch = (value: string) => {
+      addColumnOptionsSearch.value = value;
+    }
+    const addColumnOptions = computed(() => {
+      return sortedColumns.value
+        .map((column) => {
+          return {
+            id: column.property,
+            label: column.label,
+            parentGroup: undefined,
+            position: column.position,
+            isVisible: column.visible ?? true,
+            isClickable: column.visible === false ? true : false,
+            disabled: column.visible === false ? false : true,
+          }
+        })
+        .filter((column) => {
+          return column.label.toLowerCase().includes(addColumnOptionsSearch.value.toLowerCase());
+        });
+    })
+
+    const onAddColumnOptionClick = (columnProperty: string, previousColumnProperty: string) => {
+      changeColumnPosition(columnProperty, previousColumnProperty, 'after');
+      changeColumnVisibility(columnProperty, true);
+    }
 
     /***
     * Colum changes helper
@@ -952,6 +1012,7 @@ export default defineComponent({
     }
 
     const isMouseOver = ref<boolean>(false);
+    const forceHighlightedColumn = ref<boolean>(false);
     const highlightedColumn = ref<string|null>(null);
 
     const setHighlightedColumn = (column: ColumnDefinition|null) => {
@@ -960,6 +1021,10 @@ export default defineComponent({
       }
 
       if (!column) {
+        if (forceHighlightedColumn.value) {
+          return;
+        }
+
         isMouseOver.value = false;
 
         window.setTimeout(() => {
@@ -967,6 +1032,10 @@ export default defineComponent({
             highlightedColumn.value = null;
           }
         }, 100);
+        return;
+      }
+
+      if (forceHighlightedColumn.value) {
         return;
       }
 
@@ -1228,6 +1297,7 @@ export default defineComponent({
 
     return {
       sortedColumns,
+      addColumnOptions,
       renderColumnDataCellStyle,
       renderColumnHeaderStyle,
       tableWrapper,
@@ -1261,8 +1331,10 @@ export default defineComponent({
       getColumnDataCellClasses,
       getColumnHeaderClasses,
       getPreviousVisibleColumn,
-      // TODO: just for debugging
-      console
+      forceHighlightedColumn,
+      addColumnOptionsSearch,
+      onAddColumnOptionClick,
+      onAddColumnSearch,
     };
   },
 });
@@ -1550,6 +1622,7 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   }
 
   .sw-data-table__table-select-row {
+    z-index: 1;
     background-color: inherit;
   }
 
@@ -1624,11 +1697,6 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     top: 0;
     right: 0;
     transform: translate3d(50%, -150%, 0);
-
-    // TODO: just for testing to see something
-    width: 14px;
-    height: 16px;
-    background-color: green;
   }
 
   /**

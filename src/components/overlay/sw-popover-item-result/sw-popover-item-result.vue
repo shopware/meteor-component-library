@@ -61,6 +61,8 @@
               :show-visibility="hidable"
               :visible="option.isVisible"
               :icon="draggable ? 'solid-grip-vertical-s' : undefined"
+              :on-label-click="option.isClickable ? () => $emit('click-option', option.id) : undefined"
+              :disabled="option.disabled"
               @change-checkbox="$emit('change-checkbox', option.id, $event)"
               @change-visibility="$emit('change-visibility', option.id, $event)"
             />
@@ -95,6 +97,8 @@ export interface Option {
   position?: number;
   isVisible?: boolean;
   isSelected?: boolean;
+  isClickable?: boolean;
+  disabled?: boolean;
 }
 
 export interface Group {
@@ -145,6 +149,7 @@ export default defineComponent({
     'change-checkbox',
     'change-visibility',
     'click-group-action',
+    'click-option',
     'change-order',
     'search',
   ],

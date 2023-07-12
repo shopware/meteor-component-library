@@ -10,6 +10,7 @@
       <slot name="trigger" />
     </div>
     <div
+      v-if="isOpened"
       ref="floatingUiContent"
       v-click-outside="{
         handler: onClickOutside,
@@ -17,7 +18,6 @@
       }"
       class="sw-floating-ui__content"
       :data-show="isOpened"
-      v-if="isOpened"
       tabindex="0"
     >
       <div
@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import type { PropType } from 'vue';
-import { defineComponent, watch, onMounted, ref, onBeforeUnmount, watch, nextTick } from 'vue';
+import { defineComponent, ref, onBeforeUnmount, watch, nextTick } from 'vue';
 import type { AutoUpdateOptions, ComputePositionConfig} from '@floating-ui/dom';
 import {computePosition, autoUpdate, offset, arrow, flip} from '@floating-ui/dom';
 import vClickOutside from 'v-click-outside';
@@ -232,7 +232,7 @@ export default defineComponent({
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 100;
 
   &[data-show] {
     display: block;

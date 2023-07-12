@@ -62,7 +62,7 @@
 
 <script lang="ts">
 import type { PropType} from 'vue';
-import { defineComponent, computed, ref } from 'vue';
+import { defineComponent, computed, ref, watch } from 'vue';
 import SwCheckbox from '../../form/sw-checkbox/sw-checkbox.vue';
 import SwSwitch from '../../form/sw-switch/sw-switch.vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
@@ -104,12 +104,16 @@ export default defineComponent({
       default: false,
     },
   },
-  emits: [],
-  setup(props) {
+  emits: ['update:isOpened'],
+  setup(props, { emit }) {
     const SwPopover = ref<HTMLElement|null>(null);
     const activeView = ref('base');
     const viewTransition = ref<'slideIn'|'slideOut'>('slideIn');
     const isOpened = ref(false);
+
+    watch(isOpened, (value) => {
+      emit('update:isOpened', value);
+    });
 
     const mainComponentTag = computed(() => {
       return props.disableFloat ? 'div' : 'sw-floating-ui';
