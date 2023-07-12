@@ -146,6 +146,26 @@
                     </template>
                   </sw-popover>
 
+                  <!-- TODO: make this clickable -->
+                  <sw-floating-ui
+                    v-if="highlightedColumn === column.property"
+                    :is-opened="true"
+                    :offset="0"
+                    class="sw-data-table__table-head-add-column-indicator"
+                    :auto-update-options="{ animationFrame: true }"
+                  >
+                    <sw-icon
+                      v-tooltip="{
+                        // TODO: add translation for tooltip
+                        message: 'Add column',
+                        width: 'auto',
+                      }"
+                      name="solid-plus-square-s"
+                      @mouseenter="() => setHighlightedColumn(column)"
+                      @mouseleave="() => setHighlightedColumn(null)"
+                    />
+                  </sw-floating-ui>
+
                   <div
                     v-if="column.allowResize !== false"
                     class="sw-data-table__table-head-resizable sw-data-table__table-head-resizable-before"
@@ -360,7 +380,8 @@ import SwDataTablePriceRenderer from './renderer/sw-data-table-price-renderer.vu
 import type { PriceColumnDefinition } from './renderer/sw-data-table-price-renderer.vue';
 import SwSegmentedControl from '../../navigation/sw-segmented-control/sw-segmented-control.vue';
 import { SegmentedControlActionsProp } from '../../navigation/sw-segmented-control/sw-segmented-control.vue';
-import { is } from "date-fns/locale";
+import SwFloatingUi from '../../_internal/sw-floating-ui/sw-floating-ui.vue';
+import SwTooltipDirective from '../../../directives/tooltip.directive';
 
 export interface BaseColumnDefinition {
   label: string; // the label for the column
@@ -396,6 +417,7 @@ export default defineComponent({
   directives: {
     draggable: draggable,
     droppable: droppable,
+    tooltip: SwTooltipDirective,
   },
   components: {
     "sw-card": SwCard,
@@ -411,6 +433,7 @@ export default defineComponent({
     'sw-popover-item': SwPopoverItem,
     'sw-skeleton-bar': SwSkeletonBar,
     'sw-context-menu-item': SwContextMenu,
+    'sw-floating-ui': SwFloatingUi,
     'sw-segmented-control': SwSegmentedControl,
     'sw-data-table-text-renderer': SwDataTableTextRenderer,
     'sw-data-table-number-renderer': SwDataTableNumberRenderer,
@@ -928,6 +951,7 @@ export default defineComponent({
       return column.visible ?? true;
     }
 
+    const isMouseOver = ref<boolean>(false);
     const highlightedColumn = ref<string|null>(null);
 
     const setHighlightedColumn = (column: ColumnDefinition|null) => {
@@ -936,10 +960,17 @@ export default defineComponent({
       }
 
       if (!column) {
-        highlightedColumn.value = null;
+        isMouseOver.value = false;
+
+        window.setTimeout(() => {
+          if (!isMouseOver.value) {
+            highlightedColumn.value = null;
+          }
+        }, 100);
         return;
       }
 
+      isMouseOver.value = true;
       highlightedColumn.value = column.property;
     }
 
@@ -1225,10 +1256,13 @@ export default defineComponent({
       somethingSelected,
       bulkEditSegmentedControlActions,
       handleSelectAll,
+      highlightedColumn,
       setHighlightedColumn,
       getColumnDataCellClasses,
       getColumnHeaderClasses,
       getPreviousVisibleColumn,
+      // TODO: just for debugging
+      console
     };
   },
 });
@@ -1566,12 +1600,12 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   * Resizable
   */
   &__table-head-resizable {
-    z-index: 1000;
+    z-index: 10;
     cursor: col-resize;
     height: 100%;
     width: 6px;
     position: absolute;
-    top: 0;
+    top: 0px;
   }
 
   &__table-head-resizable-before {
@@ -1580,6 +1614,21 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
 
   &__table-head-resizable-after {
     right: -1px;
+  }
+
+  /***
+  * Add column indicator
+  */
+  .sw-data-table__table-head-add-column-indicator {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate3d(50%, -150%, 0);
+
+    // TODO: just for testing to see something
+    width: 14px;
+    height: 16px;
+    background-color: green;
   }
 
   /**
@@ -1855,6 +1904,24 @@ table.is--dragging-inside {
   #meteor-icon-kit__regular-grip-horizontal-s {
     color: $color-white;
     width: 9px;
+  }
+}
+
+.sw-floating-ui__content {
+  &.sw-data-table__table-head-add-column-indicator {
+    cursor: pointer;
+    z-index: 10;
+    background-color: $color-white;
+
+    .sw-icon {
+      display: block;
+      color: $color-darkgray-200;
+
+      #meteor-icon-kit__solid-plus-square-s {
+        width: 14px;
+        height: 14px;
+      }
+    }
   }
 }
 </style>
