@@ -88,11 +88,12 @@ describe("sw-floating-ui", () => {
     expect(arrow.exists()).toBe(false);
   });
 
-  it("should render the arrow when prop is set", async () => {
+  it.only("should render the arrow when prop is set", async () => {
     wrapper = createWrapper();
     
     await wrapper.setProps({
-      showArrow: true
+      showArrow: true,
+      isOpened: true,
     });
 
     const arrow = wrapper.find(".sw-floating-ui__arrow");

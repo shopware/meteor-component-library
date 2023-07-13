@@ -10,6 +10,7 @@
       <slot name="trigger" />
     </div>
     <div
+      v-if="isOpened"
       ref="floatingUiContent"
       v-click-outside="{
         handler: onClickOutside,
@@ -37,8 +38,8 @@
 
 <script lang="ts">
 import type { PropType } from 'vue';
-import { defineComponent, onMounted, ref, onBeforeUnmount } from 'vue';
-import type { ComputePositionConfig} from '@floating-ui/dom';
+import { defineComponent, ref, onBeforeUnmount, watch, nextTick } from 'vue';
+import type { AutoUpdateOptions, ComputePositionConfig} from '@floating-ui/dom';
 import {computePosition, autoUpdate, offset, arrow, flip} from '@floating-ui/dom';
 import vClickOutside from 'v-click-outside';
 
@@ -63,13 +64,23 @@ export default defineComponent({
       type: Boolean,
       required: false,
       default: false,
+    },
+    offset: {
+      type: Number,
+      required: false,
+      default: 6,
+    },
+    autoUpdateOptions: {
+      type: Object as PropType<Partial<AutoUpdateOptions>>,
+      default: () => ({}),
+      required: false,
     }
   },
 
   emits: ['close'],
 
   setup: (props, { emit }) => {
-    const floatingUiContent = ref<HTMLElement|null>(null);
+    let floatingUiContent = ref<HTMLElement|null>(null);
     const floatingUiTrigger = ref<HTMLElement|null>(null);
     const floatingUiArrow = ref<HTMLElement|null>(null);
     const floatingUi = ref<HTMLElement|null>(null);
@@ -78,7 +89,7 @@ export default defineComponent({
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const bodyContainer = window.document.querySelector('body')!;
 
-    onMounted(() => {
+    const createFloatingUi = () => {      
       if (!floatingUiTrigger.value || !floatingUiContent.value) {
         return;
       }
@@ -100,7 +111,7 @@ export default defineComponent({
           placement: 'bottom-start',
           strategy: 'fixed',
           middleware: [
-            offset(6),
+            offset(props.offset),
             ...(() => {
               if (props.showArrow && floatingUiArrow.value) {
                 return [arrow({ element: floatingUiArrow.value })];
@@ -150,11 +161,12 @@ export default defineComponent({
         });
       }, {
         // fixes endless compute loop in rare situations (e.g. data-table)
-        layoutShift: false
+        layoutShift: false,
+        ...props.autoUpdateOptions,
       })
-    });
+    };
 
-    onBeforeUnmount(() => {
+    const removeFloatingUi = () => {
       // cleanup the floating ui listener
       if (cleanup) {
         cleanup();
@@ -164,7 +176,21 @@ export default defineComponent({
       if (floatingUiContent.value && bodyContainer.contains(floatingUiContent.value)) {
         bodyContainer.removeChild(floatingUiContent.value);
       }
-    });
+    };
+
+    watch(
+      () => props.isOpened,
+      (isOpened) => {
+        if (isOpened) {
+          nextTick(() => {
+            createFloatingUi();
+          });
+        } else {
+          removeFloatingUi();
+        }
+      },
+      { immediate: true }
+    );
 
     const onClickOutside = (event: Event) => {
       // emit close when click is not inside trigger or content
@@ -174,6 +200,10 @@ export default defineComponent({
 
       emit('close');
     };
+
+    onBeforeUnmount(() => {
+      removeFloatingUi();
+    });
 
     return {
       floatingUiContent,
@@ -202,7 +232,7 @@ export default defineComponent({
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 100;
 
   &[data-show] {
     display: block;

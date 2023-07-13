@@ -57,7 +57,7 @@
                 />
               </th>
 
-              <template v-for="column in sortedColumns">
+              <template v-for="(column) in sortedColumns">
                 <th
                   v-if="isColumnVisible(column)"
                   :key="column.property"
@@ -68,6 +68,7 @@
                   }"
                   v-draggable="{ ...dragConfig, data: column }"
                   class="sw-data-table__table-wrapper-table-head"
+                  :class="getColumnHeaderClasses(column)"
                   :data-header-column-property="column.property"
                   :style="renderColumnHeaderStyle(column)"
                   :data-testid="'column-table-head__' + column.property"
@@ -145,10 +146,71 @@
                     </template>
                   </sw-popover>
 
+                  <sw-floating-ui
+                    v-if="highlightedColumn === column.property"
+                    :is-opened="true"
+                    :offset="0"
+                    class="sw-data-table__table-head-add-column-indicator"
+                    :auto-update-options="{ animationFrame: true }"
+                  >
+                    <!-- TODO: add translation -->
+                    <sw-popover
+                      title="Add column content"
+                      @update:isOpened="(value) => {
+                        if (value === false) {
+                          forceHighlightedColumn = false;
+                          setHighlightedColumn(null)
+                        }
+                      }"
+                    >
+                      <template #trigger="{ toggleFloatingUi }">
+                        <sw-icon
+                          v-tooltip="{
+                            // TODO: add translation for tooltip
+                            message: 'Add column',
+                            width: 'auto',
+                          }"
+                          name="solid-plus-square-s"
+                          :data-testid="'add-column-indicator-icon__' + column.property"
+                          @mouseenter="() => setHighlightedColumn(column)"
+                          @mouseleave="() => setHighlightedColumn(null)"
+                          @click="() => {
+                            forceHighlightedColumn = true;
+                            toggleFloatingUi()
+                          }"
+                        />
+                      </template>
+
+                      <template #popover-items__base="{ toggleFloatingUi }">
+                        <!-- TODO: add translation -->
+                        <sw-popover-item-result
+                          :options="addColumnOptions"
+                          @search="onAddColumnSearch"
+                          @click-option="(columnProperty) => {
+                            onAddColumnOptionClick(columnProperty, column.property)
+                            toggleFloatingUi()
+                          }"
+                        />
+                      </template>
+                    </sw-popover>
+                  </sw-floating-ui>
+
                   <div
                     v-if="column.allowResize !== false"
-                    class="sw-data-table__table-head-resizable"
+                    class="sw-data-table__table-head-resizable sw-data-table__table-head-resizable-before"
+                    :data-testid="'sw-data-table__table-head-resizable-before__' + column.property"
+                    @mousedown.prevent.stop="() => startColumnResizing(getPreviousVisibleColumn(column))"
+                    @mouseenter="() => setHighlightedColumn(getPreviousVisibleColumn(column))"
+                    @mouseleave="() => setHighlightedColumn(null)"
+                  />
+
+                  <div
+                    v-if="column.allowResize !== false"
+                    class="sw-data-table__table-head-resizable sw-data-table__table-head-resizable-after"
+                    :data-testid="'sw-data-table__table-head-resizable-after__' + column.property"
                     @mousedown.prevent.stop="() => startColumnResizing(column)"
+                    @mouseenter="() => setHighlightedColumn(column)"
+                    @mouseleave="() => setHighlightedColumn(null)"
                   />
                 </th>
               </template>
@@ -191,6 +253,7 @@
                   "
                   :data-cell-column-property="column.property"
                   :style="renderColumnDataCellStyle(column)"
+                  :class="getColumnDataCellClasses(column)"
                 >
                   <template v-if="isLoading">
                     <sw-skeleton-bar />
@@ -334,6 +397,7 @@ import SwContextMenu from '../../context-menu/sw-context-menu-item/sw-context-me
 import SwDataTableSettings from './sub-components/sw-data-table-settings/sw-data-table-settings.vue';
 import SwPopover from '../../overlay/sw-popover/sw-popover.vue';
 import SwPopoverItem from '../../overlay/sw-popover-item/sw-popover-item.vue';
+import SwPopoverItemResult from '../../overlay/sw-popover-item-result/sw-popover-item-result.vue';
 import SwSkeletonBar from '../../feedback-indicator/sw-skeleton-bar/sw-skeleton-bar.vue';
 import SwCheckbox from '../../form/sw-checkbox/sw-checkbox.vue';
 import type { DropConfig, DragConfig} from '../../../directives/dragdrop.directive';
@@ -348,6 +412,8 @@ import SwDataTablePriceRenderer from './renderer/sw-data-table-price-renderer.vu
 import type { PriceColumnDefinition } from './renderer/sw-data-table-price-renderer.vue';
 import SwSegmentedControl from '../../navigation/sw-segmented-control/sw-segmented-control.vue';
 import { SegmentedControlActionsProp } from '../../navigation/sw-segmented-control/sw-segmented-control.vue';
+import SwFloatingUi from '../../_internal/sw-floating-ui/sw-floating-ui.vue';
+import SwTooltipDirective from '../../../directives/tooltip.directive';
 
 export interface BaseColumnDefinition {
   label: string; // the label for the column
@@ -383,6 +449,7 @@ export default defineComponent({
   directives: {
     draggable: draggable,
     droppable: droppable,
+    tooltip: SwTooltipDirective,
   },
   components: {
     "sw-card": SwCard,
@@ -396,8 +463,10 @@ export default defineComponent({
     'sw-data-table-settings': SwDataTableSettings,
     'sw-popover': SwPopover,
     'sw-popover-item': SwPopoverItem,
+    'sw-popover-item-result': SwPopoverItemResult,
     'sw-skeleton-bar': SwSkeletonBar,
     'sw-context-menu-item': SwContextMenu,
+    'sw-floating-ui': SwFloatingUi,
     'sw-segmented-control': SwSegmentedControl,
     'sw-data-table-text-renderer': SwDataTableTextRenderer,
     'sw-data-table-number-renderer': SwDataTableNumberRenderer,
@@ -639,6 +708,33 @@ export default defineComponent({
       return columnsWithChanges.value.slice().sort((a, b) => a.position - b.position);
     });
 
+    const addColumnOptionsSearch = ref('');
+    const onAddColumnSearch = (value: string) => {
+      addColumnOptionsSearch.value = value;
+    }
+    const addColumnOptions = computed(() => {
+      return sortedColumns.value
+        .map((column) => {
+          return {
+            id: column.property,
+            label: column.label,
+            parentGroup: undefined,
+            position: column.position,
+            isVisible: column.visible ?? true,
+            isClickable: column.visible === false ? true : false,
+            disabled: column.visible === false ? false : true,
+          }
+        })
+        .filter((column) => {
+          return column.label.toLowerCase().includes(addColumnOptionsSearch.value.toLowerCase());
+        });
+    })
+
+    const onAddColumnOptionClick = (columnProperty: string, previousColumnProperty: string) => {
+      changeColumnPosition(columnProperty, previousColumnProperty, 'after');
+      changeColumnVisibility(columnProperty, true);
+    }
+
     /***
     * Colum changes helper
     */
@@ -709,7 +805,11 @@ export default defineComponent({
     /***
      * This method will be executed when the user press the mouse down on the hidden resize bar of the column
      */
-    const startColumnResizing = (column: ColumnDefinition) => {
+    const startColumnResizing = (column: ColumnDefinition|null) => {
+      if (!column) {
+        return;
+      }
+
       makeAllColumnsFixedWidth();
 
       // get the refs for the column header and all column data cells
@@ -887,8 +987,60 @@ export default defineComponent({
       };
     };
 
+    const getColumnDataCellClasses = (column: ColumnDefinition) => {
+      const classes = [];
+
+      if (highlightedColumn.value === column.property) {
+        classes.push("--highlighted");
+      }
+
+      return classes;
+    };
+
+    const getColumnHeaderClasses = (column: ColumnDefinition) => {
+      const classes = [];
+
+      if (highlightedColumn.value === column.property) {
+        classes.push("--highlighted");
+      }
+
+      return classes;
+    };
+
     const isColumnVisible = (column: ColumnDefinition) => {
       return column.visible ?? true;
+    }
+
+    const isMouseOver = ref<boolean>(false);
+    const forceHighlightedColumn = ref<boolean>(false);
+    const highlightedColumn = ref<string|null>(null);
+
+    const setHighlightedColumn = (column: ColumnDefinition|null) => {
+      if (dataTable.value?.classList.contains("--resizing")) {
+        return;
+      }
+
+      if (!column) {
+        if (forceHighlightedColumn.value) {
+          return;
+        }
+
+        isMouseOver.value = false;
+
+        window.setTimeout(() => {
+          if (!isMouseOver.value) {
+            highlightedColumn.value = null;
+          }
+        }, 100);
+        return;
+      }
+
+      if (forceHighlightedColumn.value) {
+        return;
+      }
+
+      isMouseOver.value = true;
+      highlightedColumn.value = column.property;
     }
 
     /***
@@ -1131,8 +1283,21 @@ export default defineComponent({
       });
     }
 
+    const getPreviousVisibleColumn = (column: ColumnDefinition): ColumnDefinition|null => {
+      const visibleColumns = sortedColumns.value.filter((c) => isColumnVisible(c));
+
+      const index = visibleColumns.findIndex((c) => c.property === column.property);
+
+      if (index <= 0) {
+        return null;
+      }
+
+      return visibleColumns[index - 1];
+    }
+
     return {
       sortedColumns,
+      addColumnOptions,
       renderColumnDataCellStyle,
       renderColumnHeaderStyle,
       tableWrapper,
@@ -1160,7 +1325,16 @@ export default defineComponent({
       onRowSelect,
       somethingSelected,
       bulkEditSegmentedControlActions,
-      handleSelectAll
+      handleSelectAll,
+      highlightedColumn,
+      setHighlightedColumn,
+      getColumnDataCellClasses,
+      getColumnHeaderClasses,
+      getPreviousVisibleColumn,
+      forceHighlightedColumn,
+      addColumnOptionsSearch,
+      onAddColumnOptionClick,
+      onAddColumnSearch,
     };
   },
 });
@@ -1367,6 +1541,7 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
 
   td,
   th {
+    position: relative;
     padding: $tableHeaderPadding;
     // border needs to be half the size because they are getting combined with other cells
     border: 0.5px solid $color-gray-200;
@@ -1374,6 +1549,16 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: top;
+
+    &.--highlighted {
+      border-right: 1px solid $color-shopware-brand-900;
+      padding-right: calc($tableHeaderPaddingRight - 0.5px);
+    }
+  }
+
+  th {
+    // needed for resizable container outside of table header cell
+    overflow: visible;
   }
 
   tr:nth-child(even) {
@@ -1437,6 +1622,7 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   }
 
   .sw-data-table__table-select-row {
+    z-index: 1;
     background-color: inherit;
   }
 
@@ -1487,13 +1673,30 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   * Resizable
   */
   &__table-head-resizable {
-    z-index: 1;
+    z-index: 10;
     cursor: col-resize;
     height: 100%;
-    width: 3px;
+    width: 6px;
+    position: absolute;
+    top: 0px;
+  }
+
+  &__table-head-resizable-before {
+    left: -1px;
+  }
+
+  &__table-head-resizable-after {
+    right: -1px;
+  }
+
+  /***
+  * Add column indicator
+  */
+  .sw-data-table__table-head-add-column-indicator {
     position: absolute;
     top: 0;
     right: 0;
+    transform: translate3d(50%, -150%, 0);
   }
 
   /**
@@ -1769,6 +1972,24 @@ table.is--dragging-inside {
   #meteor-icon-kit__regular-grip-horizontal-s {
     color: $color-white;
     width: 9px;
+  }
+}
+
+.sw-floating-ui__content {
+  &.sw-data-table__table-head-add-column-indicator {
+    cursor: pointer;
+    z-index: 10;
+    background-color: $color-white;
+
+    .sw-icon {
+      display: block;
+      color: $color-darkgray-200;
+
+      #meteor-icon-kit__solid-plus-square-s {
+        width: 14px;
+        height: 14px;
+      }
+    }
   }
 }
 </style>

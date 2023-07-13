@@ -328,3 +328,70 @@ VisualTestRenderSkeleton.args = {
 VisualTestRenderSkeleton.play = async () =>{
   await waitUntilRendered(() => document.querySelector('.sw-skeleton-bar'));
 };
+
+export const VisualTestAddColumnIndicator = Template.bind();
+VisualTestAddColumnIndicator.storyName = 'Render the add column indicator';
+VisualTestAddColumnIndicator.play = async () => {
+  const canvas = within(document.getElementById('root'));
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
+
+  await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+  await waitUntilRendered(() => document.querySelector('.sw-data-table__table-head-dragzone'));
+
+  const tableHeadResizableAfter = await canvas.getByTestId('sw-data-table__table-head-resizable-before__manufacturer.name');
+  await userEvent.hover(tableHeadResizableAfter);
+
+  await waitUntilRendered(() => document.querySelector('.sw-floating-ui__content.sw-data-table__table-head-add-column-indicator'));
+};
+
+export const VisualTestAddColumnIndicatorPopover = Template.bind();
+VisualTestAddColumnIndicatorPopover.storyName = 'Render the add column indicator popover';
+VisualTestAddColumnIndicatorPopover.play = async () => {
+  const canvas = within(document.getElementById('root'));
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
+
+  await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+  await waitUntilRendered(() => document.querySelector('.sw-data-table__table-head-dragzone'));
+
+  const tableHeadResizableAfter = await canvas.getByTestId('sw-data-table__table-head-resizable-before__manufacturer.name');
+  await userEvent.hover(tableHeadResizableAfter);
+
+  await waitUntilRendered(() => document.querySelector('.sw-floating-ui__content.sw-data-table__table-head-add-column-indicator'));
+
+  let popover = within(document.querySelector('.sw-floating-ui__content[data-show="true"]'));
+  const addColumnIndicatorIcon = await popover.getByTestId('add-column-indicator-icon__name');
+
+  await userEvent.click(addColumnIndicatorIcon);
+  await waitUntilRendered(() => document.querySelector('.sw-popover-item-result__option'));
+};
+
+export const VisualTestAddNewColumn = Template.bind();
+VisualTestAddNewColumn.storyName = 'Add new column with add column indicator popover';
+VisualTestAddNewColumn.play = async () => {
+  const canvas = within(document.getElementById('root'));
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
+
+  await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+  await waitUntilRendered(() => document.querySelector('.sw-data-table__table-head-dragzone'));
+
+  const tableHeadResizableAfter = await canvas.getByTestId('sw-data-table__table-head-resizable-before__manufacturer.name');
+  await userEvent.hover(tableHeadResizableAfter);
+
+  await waitUntilRendered(() => document.querySelector('.sw-floating-ui__content.sw-data-table__table-head-add-column-indicator'));
+
+  let popover = within(document.querySelector('.sw-floating-ui__content[data-show="true"]'));
+  const addColumnIndicatorIcon = await popover.getByTestId('add-column-indicator-icon__name');
+
+  await userEvent.click(addColumnIndicatorIcon);
+  await waitUntilRendered(() => document.querySelector('.sw-popover-item-result__option'));
+
+  popover = within(document.querySelector('.sw-floating-ui__content.sw-popover'));
+  const stockOption = await popover.getByText('Stock');
+
+  await userEvent.click(stockOption);
+
+  const columnSettingsTriggerStock = await canvas.getByTestId('column-settings-trigger__stock');
+  
+  await waitUntilRendered(() => document.querySelectorAll('.sw-floating-ui__content.sw-data-table__table-head-add-column-indicator').length === 0);
+  expect(columnSettingsTriggerStock).toBeInTheDocument();
+};

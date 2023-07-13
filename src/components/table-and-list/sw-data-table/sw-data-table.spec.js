@@ -590,9 +590,9 @@ describe("sw-data-table", () => {
       const tableHeadCellManufacturer = wrapper.find('[data-header-column-property="manufacturer.name"]');
       const tableHeadCellPrice = wrapper.find('[data-header-column-property="price"]');
 
-      expect(tableHeadCellName.find('.sw-data-table__table-head-resizable').exists()).toBe(true);
-      expect(tableHeadCellManufacturer.find('.sw-data-table__table-head-resizable').exists()).toBe(true);
-      expect(tableHeadCellPrice.find('.sw-data-table__table-head-resizable').exists()).toBe(true);
+      expect(tableHeadCellName.find('.sw-data-table__table-head-resizable-after').exists()).toBe(true);
+      expect(tableHeadCellManufacturer.find('.sw-data-table__table-head-resizable-after').exists()).toBe(true);
+      expect(tableHeadCellPrice.find('.sw-data-table__table-head-resizable-after').exists()).toBe(true);
     })
 
     it('should not render the resizable div when allowedResize is set to false', async () => {
@@ -600,7 +600,7 @@ describe("sw-data-table", () => {
 
       const tableHeadCellActive = wrapper.find('[data-header-column-property="active"]');
 
-      expect(tableHeadCellActive.find('.sw-data-table__table-head-resizable').exists()).toBe(false);
+      expect(tableHeadCellActive.find('.sw-data-table__table-head-resizable-after').exists()).toBe(false);
     })
 
     it('should make all columns fixed width when start resizing', async () => {
@@ -640,7 +640,7 @@ describe("sw-data-table", () => {
       tableHeadCellManufacturer.element.getBoundingClientRect = () => ({ width: 100 });
       tableHeadCellActive.element.getBoundingClientRect = () => ({ width: 123 });
 
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
       await resizableDiv.trigger('mousedown');
 
       // check header columns after resizing
@@ -660,7 +660,7 @@ describe("sw-data-table", () => {
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
 
       // TRIGGER RESIZING
       await resizableDiv.trigger('mousedown');
@@ -674,7 +674,7 @@ describe("sw-data-table", () => {
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
 
       // TRIGGER RESIZING
       await resizableDiv.trigger('mousedown');
@@ -697,7 +697,7 @@ describe("sw-data-table", () => {
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
 
       // TRIGGER RESIZING
       await resizableDiv.trigger('mousedown');
@@ -711,7 +711,7 @@ describe("sw-data-table", () => {
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
 
       // check if class not exists before resizing
       expect(wrapper.find('table').classes()).not.toContain('--no-transition');
@@ -734,7 +734,7 @@ describe("sw-data-table", () => {
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
 
       // TRIGGER RESIZING
       await resizableDiv.trigger('mousedown');
@@ -755,7 +755,7 @@ describe("sw-data-table", () => {
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
 
       tableHeadCellName.element.getBoundingClientRect = () => ({ left: 75 });
 
@@ -783,7 +783,7 @@ describe("sw-data-table", () => {
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
 
       tableHeadCellName.element.getBoundingClientRect = () => ({ width: 200, left: 75 });
 
@@ -807,7 +807,7 @@ describe("sw-data-table", () => {
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
 
       tableHeadCellName.element.getBoundingClientRect = () => ({ width: 200, left: 75 });
 
@@ -831,7 +831,7 @@ describe("sw-data-table", () => {
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
 
       tableHeadCellName.element.getBoundingClientRect = () => ({ width: 200, left: 75 });
 
@@ -861,7 +861,7 @@ describe("sw-data-table", () => {
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
 
       tableHeadCellName.element.getBoundingClientRect = () => ({ left: 75 });
 
@@ -905,7 +905,7 @@ describe("sw-data-table", () => {
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable');
+      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
 
       tableHeadCellName.element.getBoundingClientRect = () => ({ left: 75 });
 

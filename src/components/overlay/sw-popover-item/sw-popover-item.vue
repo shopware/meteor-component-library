@@ -20,7 +20,7 @@
         :class="iconClasses"
         :tabindex="onLabelClickTabIndex"
         :name="icon"
-        @click="handleLableClick"
+        @click.prevent="handleLableClick"
         @keyup.enter="handleLableClick"
       />
 
@@ -236,6 +236,7 @@ export default defineComponent({
       return {
         'sw-popover-item--default': props.type === 'default',
         'sw-popover-item--critical': props.type === 'critical',
+        'sw-popover-item--disabled': props.disabled,
         'sw-popover-item--border-top': props.borderTop,
         'sw-popover-item--border-bottom': props.borderBottom,
       };
@@ -243,7 +244,7 @@ export default defineComponent({
 
     const labelClasses = computed(() => {
       return {
-        'sw-popover-item__label--clickable': !!props.onLabelClick,
+        'sw-popover-item__label--clickable': !!props.onLabelClick && !props.disabled,
       };
     });
 
@@ -328,6 +329,15 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
 
   &--critical {
     color: $color-crimson-500;
+  }
+
+  &--disabled {
+    color: $color-custom-lightgrey;
+
+    &:hover {
+      text-decoration: none;
+      cursor: default;
+    }
   }
 
   &--border-top {
