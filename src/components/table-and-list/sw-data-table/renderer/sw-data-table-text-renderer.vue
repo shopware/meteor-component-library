@@ -64,6 +64,7 @@ a.sw-data-table-text-renderer {
 
   &:hover {
     text-decoration: underline;
+    color: $color-shopware-brand-900
   }
 }
 

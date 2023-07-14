@@ -112,6 +112,30 @@ export default {
         category: 'Events'
       }
     },
+    changeShowOutlines: {
+      action: 'change-show-outlines',
+      table: {
+        category: 'Events'
+      }
+    },
+    changeShowStripes: {
+      action: 'change-show-stripes',
+      table: {
+        category: 'Events'
+      }
+    },
+    changeOutlineFraming: {
+      action: 'change-outline-framing',
+      table: {
+        category: 'Events'
+      }
+    },
+    changeEnableRowNumbering: {
+      action: 'change-enable-row-numbering',
+      table: {
+        category: 'Events'
+      }
+    },
   },
   args: {
     dataSource: SwDataTableFixtures,
@@ -197,6 +221,10 @@ export default {
     selectedRows: [],
     allowBulkEdit: true,
     allowBulkDelete: true,
+    showOutlines: true,
+    showStripes: true,
+    enableOutlineFraming: true,
+    enableRowNumbering: false,
     bulkEditMoreActions: [
       {
         id: 'send-to-warehouse',
@@ -240,6 +268,10 @@ const Template = (args, { argTypes }) => ({
       sortDirectionValue: '',
       isLoadingValue: true,
       selectedRowsValue: [],
+      showOutlinesValue: true,
+      showStripesValue: true,
+      enableOutlineFramingValue: true,
+      enableRowNumberingValue: true,
     }
   },
   computed: {
@@ -343,6 +375,46 @@ const Template = (args, { argTypes }) => ({
       },
       immediate: true
     },
+    showOutlines: {
+      handler(v) {
+        if (this.showOutlinesValue === v) {
+          return;
+        }
+
+        this.showOutlinesValue = v;
+      },
+      immediate: true
+    },
+    showStripes: {
+      handler(v) {
+        if (this.showStripesValue === v) {
+          return;
+        }
+
+        this.showStripesValue = v;
+      },
+      immediate: true
+    },
+    enableOutlineFraming: {
+      handler(v) {
+        if (this.enableOutlineFramingValue === v) {
+          return;
+        }
+
+        this.enableOutlineFramingValue = v;
+      },
+      immediate: true
+    },
+    enableRowNumbering: {
+      handler(v) {
+        if (this.enableRowNumberingValue === v) {
+          return;
+        }
+
+        this.enableRowNumberingValue = v;
+      },
+      immediate: true
+    },
   },
   created() {
     if (!this.isLoading) {
@@ -422,6 +494,30 @@ const Template = (args, { argTypes }) => ({
           this.selectedRowsValue.splice(this.selectedRowsValue.indexOf(selection), 1);
         });
       }
+    },
+
+    changeShowOutlinesHandler(event) {
+      this.changeShowOutlines(event);
+
+      this.showOutlinesValue = event;
+    },
+
+    changeShowStripesHandler(event) {
+      this.changeShowStripes(event);
+
+      this.showStripesValue = event;
+    },
+
+    changeOutlineFramingHandler(event) {
+      this.changeOutlineFraming(event);
+
+      this.enableOutlineFramingValue = event;
+    },
+
+    changeEnableRowNumberingHandler(event) {
+      this.changeEnableRowNumbering(event);
+
+      this.enableRowNumberingValue = event;
     }
   },
   template: `
@@ -456,6 +552,14 @@ const Template = (args, { argTypes }) => ({
       @open-details="openDetails"
       @bulk-edit="bulkEdit"
       @bulk-delete="bulkDelete"
+      @change-show-outlines="changeShowOutlinesHandler"
+      :showOutlines="showOutlinesValue"
+      @change-show-stripes="changeShowStripesHandler"
+      :showStripes="showStripesValue"
+      @change-outline-framing="changeOutlineFramingHandler"
+      :enableOutlineFraming="enableOutlineFramingValue"
+      @change-enable-row-numbering="changeEnableRowNumberingHandler"
+      :enableRowNumbering="enableRowNumberingValue"
     >
       {{ $props.default}}
     </sw-data-table>

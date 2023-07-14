@@ -84,14 +84,19 @@ describe("sw-data-table-settings", () => {
 
     const popoverItems = popoverContent.findAll('.sw-popover-item');
 
-    expect(popoverItems.length).toBe(2);
+    expect(popoverItems.length).toBe(6);
 
     // The "Columns" popover item should have the correct label and should render the number of columns
     expect(popoverItems.at(0).text()).toContain('sw-data-table-settings.columnOrder.title');
     expect(popoverItems.at(0).text()).toContain('6');
 
-    // The "Reset" popover item should have the correct label
-    expect(popoverItems.at(1).text()).toContain('sw-data-table-settings.resetAllChanges');
+    // The popover items should have the correct label
+    expect(popoverItems.at(1).text()).toContain('Numbered column');
+    expect(popoverItems.at(2).text()).toContain('Show stripes');
+    expect(popoverItems.at(3).text()).toContain('Show outlines');
+    expect(popoverItems.at(4).text()).toContain('Frame outlines');
+    expect(popoverItems.at(4).text()).toContain('Highlight column outlines on mouse hover.');
+    expect(popoverItems.at(5).text()).toContain('sw-data-table-settings.resetAllChanges');
   });
 
   it("should switch to columns view", async () => {
@@ -228,7 +233,7 @@ describe("sw-data-table-settings", () => {
     const wrapper = await createWrapper();
 
     // Click on "Reset" button to reset all changes
-    const resetButton = wrapper.findAll('.sw-popover-item__label').at(1);
+    const resetButton = wrapper.findAll('.sw-popover-item__label').at(5);
     expect(resetButton.text()).toContain('sw-data-table-settings.resetAllChanges');
     await resetButton.trigger('click');
 

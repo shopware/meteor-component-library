@@ -25,6 +25,41 @@
         @click-options="() => changeView('columnOrder')"
       />
 
+      <sw-popover-item
+        label="Numbered column"
+        show-switch
+        :switch-value="enableRowNumbering"
+        icon="solid-hashtag"
+        @change-switch="($event) => $emit('change-enable-row-numbering', $event)"
+      />
+
+      <!-- TODO: add translation -->
+      <sw-popover-item
+        label="Show stripes"
+        show-switch
+        :switch-value="showStripes"
+        icon="solid-bars"
+        @change-switch="($event) => $emit('change-show-stripes', $event)"
+      />
+
+      <!-- TODO: the icon in figma solid-grip-lines was rotated and is not available -->
+      <sw-popover-item
+        label="Show outlines"
+        show-switch
+        :switch-value="showOutlines"
+        icon="solid-table"
+        @change-switch="($event) => $emit('change-show-outlines', $event)"
+      />
+
+      <sw-popover-item
+        label="Frame outlines"
+        metaCopy="Highlight column outlines on mouse hover."
+        show-switch
+        :switch-value="enableOutlineFraming"
+        icon="solid-highlight"
+        @change-switch="($event) => $emit('change-outline-framing', $event)"
+      />
+
       <!-- 
         More popover items will be added in the future. 
         Some examples can be found in the sw-popover story.
@@ -78,8 +113,36 @@ export default defineComponent({
       type: Array as PropType<ColumnDefinition[]>,
       required: true,
     },
+    showOutlines: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    showStripes: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    enableOutlineFraming: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    enableRowNumbering: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
-  emits: ['reset-all-changes', 'change-column-order', 'change-column-visibility'],
+  emits: [
+    'reset-all-changes',
+    'change-column-order',
+    'change-column-visibility',
+    'change-show-outlines',
+    'change-show-stripes',
+    'change-outline-framing',
+    'change-enable-row-numbering'
+  ],
   i18n: {
     messages: {
       en: {
