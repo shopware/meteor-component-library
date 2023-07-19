@@ -395,3 +395,28 @@ VisualTestAddNewColumn.play = async () => {
   await waitUntilRendered(() => document.querySelectorAll('.sw-floating-ui__content.sw-data-table__table-head-add-column-indicator').length === 0);
   expect(columnSettingsTriggerStock).toBeInTheDocument();
 };
+
+export const VisualTestHideOutlines = Template.bind();
+VisualTestHideOutlines.storyName = 'Without outlines';
+VisualTestHideOutlines.args = {
+  showOutlines: false,
+};
+
+export const VisualTestHideStripes = Template.bind();
+VisualTestHideStripes.storyName = 'Without stripes';
+VisualTestHideStripes.args = {
+  showStripes: false,
+};
+
+export const VisualTestBlankTable = Template.bind();
+VisualTestBlankTable.storyName = 'Without stripes and outlines';
+VisualTestBlankTable.args = {
+  showOutlines: false,
+  showStripes: false,
+};
+
+export const VisualTestEnableRowNumbering = Template.bind();
+VisualTestEnableRowNumbering.storyName = 'With row numbering';
+VisualTestEnableRowNumbering.args = {
+  enableRowNumbering: true,
+};

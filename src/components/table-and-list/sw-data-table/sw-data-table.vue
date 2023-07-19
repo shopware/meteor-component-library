@@ -220,6 +220,14 @@
               >
                 <sw-data-table-settings
                   :columns="sortedColumns"
+                  :show-outlines="showOutlines"
+                  :show-stripes="showStripes"
+                  :enable-outline-framing="enableOutlineFraming"
+                  :enable-row-numbering="enableRowNumbering"
+                  @change-show-outlines="(newValue) => $emit('change-show-outlines', newValue)"
+                  @change-show-stripes="(newValue) => $emit('change-show-stripes', newValue)"
+                  @change-outline-framing="(newValue) => $emit('change-outline-framing', newValue)"
+                  @change-enable-row-numbering="(newValue) => $emit('change-enable-row-numbering', newValue)"
                   @reset-all-changes="resetAllChanges"
                   @change-column-order="({ itemId, dropId, dropZone }) => changeColumnPosition(itemId, dropId, dropZone)"
                   @change-column-visibility="(columnProperty, visibility) => changeColumnVisibility(columnProperty, visibility)"
@@ -254,12 +262,19 @@
                   :data-cell-column-property="column.property"
                   :style="renderColumnDataCellStyle(column)"
                   :class="getColumnDataCellClasses(column)"
+                  @mouseenter="() => currentHoveredColumn = column.property"
+                  @mouseleave="() => currentHoveredColumn = null"
                 >
                   <template v-if="isLoading">
                     <sw-skeleton-bar />
                   </template>
 
                   <template v-else>
+                    <template v-if="enableRowNumbering && isFirstVisibleColumn(column)">
+                      <!-- TODO: make this more beautiful -->
+                      <span>{{ rowIndex + 1 }} - </span>
+                    </template>
+
                     <!-- Use the correct renderer for the column -->
                     <sw-data-table-number-renderer
                       v-if="column.renderer === 'number'"
@@ -666,7 +681,44 @@ export default defineComponent({
       }[]>,
       required: false,
       default: () => [],
-     }
+     },
+
+     // TODO: implement this
+     /***
+      * Enable numbered rows
+      */
+    enableRowNumbering: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    /**
+     * Enable or disable the stripe design for the table.
+     */
+     showStripes: {
+      type: Boolean,
+      required: false,
+      default: true,
+     },
+
+     /**
+      * Enable or disable outlines for the table.
+      */
+     showOutlines: {
+      type: Boolean,
+      required: false,
+      default: true,
+     },
+
+     /**
+      * Enable or disable outline framing on hover
+      */
+     enableOutlineFraming: {
+      type: Boolean,
+      required: false,
+      default: false,
+     },
   },
   emits: [
     "reload",
@@ -680,6 +732,10 @@ export default defineComponent({
     'multiple-selection-change',
     'bulk-edit',
     'bulk-delete',
+    'change-show-outlines',
+    'change-show-stripes',
+    'change-outline-framing',
+    'change-enable-row-numbering'
   ],
   i18n: {
     messages: {
@@ -704,10 +760,26 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    /**
+     * General
+     */
     const sortedColumns = computed(() => {
       return columnsWithChanges.value.slice().sort((a, b) => a.position - b.position);
     });
 
+    const currentHoveredColumn = ref<string|null>(null);
+
+    const visibleColumns = computed(() => {
+      return sortedColumns.value.filter((column) => column.visible !== false);
+    });
+
+    const isFirstVisibleColumn = (column: ColumnDefinition) => {
+      return visibleColumns.value[0].property === column.property;
+    };
+
+    /***
+     * Add column indicator
+     */
     const addColumnOptionsSearch = ref('');
     const onAddColumnSearch = (value: string) => {
       addColumnOptionsSearch.value = value;
@@ -994,6 +1066,10 @@ export default defineComponent({
         classes.push("--highlighted");
       }
 
+      if (currentHoveredColumn.value === column.property) {
+        classes.push("--hovered");
+      }
+
       return classes;
     };
 
@@ -1191,6 +1267,9 @@ export default defineComponent({
         'sw-data-table__first-column-fixed': props.allowRowSelection,
         // TODO: could be relevant in the feature when you can disable the context button
         'sw-data-table__last-column-fixed': true,
+        'sw-data-table__stripes': props.showStripes,
+        'sw-data-table__outlines': props.showOutlines,
+        'sw-data-table__column-outline-framing-active': props.enableOutlineFraming,
       };
     });
 
@@ -1297,6 +1376,7 @@ export default defineComponent({
 
     return {
       sortedColumns,
+      isFirstVisibleColumn,
       addColumnOptions,
       renderColumnDataCellStyle,
       renderColumnHeaderStyle,
@@ -1335,6 +1415,7 @@ export default defineComponent({
       addColumnOptionsSearch,
       onAddColumnOptionClick,
       onAddColumnSearch,
+      currentHoveredColumn,
     };
   },
 });
@@ -1545,6 +1626,8 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     padding: $tableHeaderPadding;
     // border needs to be half the size because they are getting combined with other cells
     border: 0.5px solid $color-gray-200;
+    border-right-color: transparent;
+    border-left-color: transparent;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1556,12 +1639,24 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     }
   }
 
+  &.sw-data-table__outlines td,
+  &.sw-data-table__outlines th {
+    border-right-color: $color-gray-200;
+    border-left-color: $color-gray-200;
+  }
+
   th {
     // needed for resizable container outside of table header cell
     overflow: visible;
   }
 
-  tr:nth-child(even) {
+  &__column-outline-framing-active td.--hovered {
+    // TODO: the styling needs to be aligned with the design
+    border-right-color: $color-darkgray-400;
+    border-left-color: $color-darkgray-400;
+  }
+
+  &.sw-data-table__stripes tr:nth-child(even) {
     background-color: $color-gray-50;
   }
 
@@ -1697,6 +1792,8 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     top: 0;
     right: 0;
     transform: translate3d(50%, -150%, 0);
+    width: 14px;
+    height: 16px;
   }
 
   /**
