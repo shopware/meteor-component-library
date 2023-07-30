@@ -37,6 +37,7 @@
 
 <script lang="ts">
 import type { PropType } from 'vue';
+
 import Vue from 'vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 import type { View } from '../../overlay/sw-popover/sw-popover.interfaces';
@@ -51,6 +52,36 @@ export default Vue.extend({
   },
 
   props: {
+    menuWidth: {
+      type: Number,
+      required: false,
+      default: 220,
+    },
+
+    menuHorizontalAlign: {
+      type: String as PropType<'right' | 'left'>,
+      required: false,
+      default: 'right',
+      validator(value: string) {
+        if (!value.length) {
+          return true;
+        }
+        return ['right', 'left'].includes(value);
+      },
+    },
+
+    menuVerticalAlign: {
+      type: String,
+      required: false,
+      default: 'bottom',
+      validator(value: string) {
+        if (!value.length) {
+          return true;
+        }
+        return ['bottom', 'top'].includes(value);
+      },
+    },
+
     icon: {
       type: String,
       required: false,

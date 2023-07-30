@@ -71,26 +71,28 @@ const tabItems = [
   },
 ]
 
-export default {
+const meta = {
   title: 'Components/Navigation/sw-tabs',
   component: SwTabs,
+  render: (args, { argTypes }) => ({
+    props: Object.keys(argTypes),
+    components: { SwTabs },
+    template: `
+    <sw-tabs v-bind="$props"></sw-tabs>`
+  }),
   args: {
     vertical: false,
     small: false,
     defaultItem: 'item1',
   },
 };
+ 
+export default meta;
 
-const Template = (args, { argTypes }) => ({
-  props: Object.keys(argTypes),
-  components: { SwTabs },
-  template: `
-  <sw-tabs v-bind="$props"></sw-tabs>`
-});
-
-export const Default = Template.bind({});
-Default.storyName = 'sw-tabs';
-Default.args = {
-  items: tabItems,
-  small: true
-}
+export const Default = {
+  name: 'sw-tabs',
+  args: {
+    items: tabItems,
+    small: true
+  }
+};

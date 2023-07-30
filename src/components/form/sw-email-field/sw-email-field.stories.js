@@ -1,19 +1,11 @@
 import SwEmailField from './sw-email-field.vue';
 import baseFieldArgTypes from '../_internal/sw-base-field/arg-types';
 
-export default {
+const meta = {
   title: 'Components/Form/sw-email-field',
   component: SwEmailField,
-  argTypes: {
-    ...baseFieldArgTypes
-  },
-  args: {
-    label: 'Emailfield',
-  },
-};
-
-const Template = (args, { argTypes }) => ({
-  template: `
+  render: (args, { argTypes }) => ({
+    template: `
     <div>
       <sw-email-field
           v-bind="$props"
@@ -44,35 +36,48 @@ const Template = (args, { argTypes }) => ({
       <!-- Helper element to loose focus -->
       <h4 style="display: none;">hidden</h4>
     </div>`,
-  props: Object.keys(argTypes),
-  components: { SwEmailField },
-  data() {
-    return { currentValue: '' }
-  },
-  watch: {
-    value(v) {
-      if (this.currentValue === v) {
-        return;
-      }
-
-      this.currentValue = v;
-    }
-  },
-  created() {
-    this.currentValue = this.value;
-  },
-  methods: {
-    inheritanceRemoveWrapper() {
-      this.inheritanceRemove(...arguments);
-      this.isInherited = false;
+    props: Object.keys(argTypes),
+    components: { SwEmailField },
+    data() {
+      return { currentValue: '' }
     },
+    watch: {
+      value(v) {
+        if (this.currentValue === v) {
+          return;
+        }
 
-    inheritanceRestoreWrapper() {
-      this.inheritanceRestore(...arguments);
-      this.isInherited = true;
+        this.currentValue = v;
+      }
+    },
+    created() {
+      
+      this.currentValue = this.value;
+    },
+    methods: {
+      inheritanceRemoveWrapper() {
+        this.inheritanceRemove(...arguments);
+        this.isInherited = false;
+      },
+
+      inheritanceRestoreWrapper() {
+        this.inheritanceRestore(...arguments);
+        this.isInherited = true;
+      }
     }
-  }
-});
+  }),
+  argTypes: {
+    ...baseFieldArgTypes
+  },
+  args: {
+    label: 'Emailfield',
+  },
+};
 
-export const Default = Template.bind({});
-Default.storyName = 'sw-email-field';
+export default meta;
+
+
+
+export const defaultStory = {
+  name: 'sw-email-field',
+};

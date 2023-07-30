@@ -1,7 +1,13 @@
 import SwSwitch from './sw-switch.vue';
-export default {
+
+const meta = {
   title: 'Components/Form/sw-switch',
   component: SwSwitch,
+  render: (args, { argTypes }) => ({
+    props: Object.keys(argTypes),
+    components: { SwSwitch },
+    template: '<sw-switch v-bind="$props" @change="change" @inheritance-remove="inheritanceRemove"></sw-switch>',
+  }),
   argTypes: {
     change: {
       action: 'change',
@@ -30,11 +36,10 @@ export default {
   },
 };
 
-const Template = (args, { argTypes }) => ({
-  props: Object.keys(argTypes),
-  components: { SwSwitch },
-  template: '<sw-switch v-bind="$props" @change="change" @inheritance-remove="inheritanceRemove"></sw-switch>',
-});
+export default meta;
 
-export const Default = Template.bind({});
-Default.storyName = 'sw-switch';
+
+
+export const defaultStory = {
+  name: 'sw-switch',
+};

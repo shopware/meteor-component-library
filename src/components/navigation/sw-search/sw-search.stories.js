@@ -1,6 +1,6 @@
 import SwSearch from './sw-search.vue'
 
-export default {
+const meta = {
   title: 'Components/Navigation/sw-search',
   component: SwSearch,
   argTypes: {
@@ -29,40 +29,39 @@ export default {
     size: 'default',
     placeholder: '',
     disabled: false,
-  }
-};
+  },
+  render:
+      (args, { argTypes }) => ({
+        components: { SwSearch },
+        props: Object.keys(argTypes),
+        data() {
+          return {
+            currentValue: this.value
+          }
+        },
+        watch: {
+          value: {
+            handler(v) {
+              if (this.currentValue === v) {
+                return;
+              }
 
-const Template = (args, { argTypes }) => ({
-  components: { SwSearch },
-  props: Object.keys(argTypes),
-  data() {
-    return {
-      currentValue: this.value
-    }
-  },
-  watch: {
-    value: {
-      handler(v) {
-        if (this.currentValue === v) {
-          return;
-        }
-  
-        this.currentValue = v;
-      },
-      immediate: true
-    },
-  },
-  methods: {
-    changeHandler(value) {
-      this.change(value);
-      this.currentValue = value;
-    },
-    inputHandler(value) {
-      this.input(value);
-      this.currentValue = value;
-    }
-  },
-  template: `
+              this.currentValue = v;
+            },
+            immediate: true
+          },
+        },
+        methods: {
+          changeHandler(value) {
+            this.change(value);
+            this.currentValue = value;
+          },
+          inputHandler(value) {
+            this.input(value);
+            this.currentValue = value;
+          }
+        },
+        template: `
   <div>
     <sw-search
       v-bind="$props"
@@ -70,12 +69,18 @@ const Template = (args, { argTypes }) => ({
       @change="changeHandler"
       @input="inputHandler"
     >
-      {{ $props.default}}
+      {{ $props.default }}
     </sw-search>
+
+    <!-- Element is used for storybook being able to lose focus of search component  -->
     <h4 style="display: none;">hidden</h4>
   </div>
   `,
-});
+      })
+};
 
-export const Default = Template.bind();
-Default.storyName = 'sw-search';
+export default meta;
+
+export const Default = {
+  name: 'sw-search',
+}

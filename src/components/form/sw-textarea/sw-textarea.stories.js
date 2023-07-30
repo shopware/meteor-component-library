@@ -1,8 +1,24 @@
 import SwTextarea from './sw-textarea.vue';
 
-export default {
+const meta = {
   title: 'Components/Form/sw-textarea',
   component: SwTextarea,
+  render: (args, { argTypes }) => ({
+    template: '<div><sw-textarea v-bind="$props" v-model="currentValue" @input="input" @change="change" @inheritance-restore="inheritanceRestore" @inheritance-remove="inheritanceRemove"><template #hint>{{ hint }}</template></sw-textarea><p style="display: none">hidden</p></div>',
+    props: Object.keys(argTypes),
+    components: { SwTextarea },
+    data() {
+      return { currentValue: '' }
+    },
+    watch: {
+      value(v) {
+        this.currentValue = v;
+      }
+    },
+    created() {
+      this.currentValue = this.value;
+    },
+  }),
   args: {
     label: 'Textareafield',
   },
@@ -37,22 +53,10 @@ export default {
   },
 };
 
-const Template = (args, { argTypes }) => ({
-  template: '<div><sw-textarea v-bind="$props" v-model="currentValue" @input="input" @change="change" @inheritance-restore="inheritanceRestore" @inheritance-remove="inheritanceRemove"><template #hint>{{ hint }}</template></sw-textarea><p style="display: none">hidden</p></div>',
-  props: Object.keys(argTypes),
-  components: { SwTextarea },
-  data() {
-    return { currentValue: '' }
-  },
-  watch: {
-    value(v) {
-      this.currentValue = v;
-    }
-  },
-  created() {
-    this.currentValue = this.value;
-  },
-});
+export default meta;
 
-export const Default = Template.bind({});
-Default.storyName = 'sw-textarea';
+
+
+export const defaultStory = {
+  name: 'sw-textarea',
+};

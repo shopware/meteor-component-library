@@ -84,6 +84,7 @@
 
 <script lang="ts">
 import type { PropType } from 'vue';
+
 import Vue from 'vue';
 import SwTextField from '../sw-text-field/sw-text-field.vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';

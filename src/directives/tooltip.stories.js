@@ -1,9 +1,24 @@
 import SwIcon from '../components/icons-media/sw-icon/sw-icon.vue';
 import TooltipDirective from './tooltip.directive';
 
-export default {
+const meta = {
   title: 'Directives/Tooltip',
   component: SwIcon,
+  render: (args, { argTypes }) => ({
+    props: Object.keys(argTypes),
+    components: { SwIcon },
+    directives: {
+      tooltip: TooltipDirective,
+    },
+    template: `<div>
+      <sw-icon
+        name="regular-question-circle"
+          v-tooltip="{
+          ...$props
+        }">
+      </sw-icon>
+    </div>`,
+  }),
   args: {
     message: 'Help text',
     width: 200,
@@ -43,21 +58,8 @@ export default {
   }
 };
 
-const Template = (args, { argTypes }) => ({
-  props: Object.keys(argTypes),
-  components: { SwIcon },
-  directives: {
-    tooltip: TooltipDirective,
-  },
-  template: `<div>
-    <sw-icon
-      name="regular-question-circle"
-        v-tooltip="{
-        ...$props
-      }">
-    </sw-icon>
-  </div>`,
-});
+export default meta;
 
-export const Default = Template.bind({});
-Default.storyName = 'Tooltip';
+export const Default = {
+  name: 'Tooltip',
+};
