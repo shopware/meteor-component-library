@@ -45,22 +45,22 @@
             :aria-label="((group && group.label) ? group.label : 'No group') + ': ' + option.label"
           >
             <div
-              v-if="draggable"
+              v-if="isOptionDraggable(option)"
               v-droppable="{ ...dropConfig, data: { ...option, dropZone: 'before' } }"
               class="sw-popover-item-result__option_drop_before"
             />
 
             <sw-popover-item  
-              v-draggable="{ ...dragConfig, data: option }"
+              v-draggable="{ ...getDragConfigForOption(option), data: option }"
               class="sw-popover-item-result__option_item"
               :label="option.label"
               :show-checkbox="selectable"
               :checkbox-checked="option.isSelected"
               :contextual-detail="option.contextualDetail"
               :meta-copy="option.metaCopy"
-              :show-visibility="hidable"
+              :show-visibility="hidable && option.isHidable"
               :visible="option.isVisible"
-              :icon="draggable ? 'solid-grip-vertical-s' : undefined"
+              :icon="isOptionDraggable(option) ? 'solid-grip-vertical-s' : 'solid-thumbtack'"
               :on-label-click="option.isClickable ? () => $emit('click-option', option.id) : undefined"
               :disabled="option.disabled"
               @change-checkbox="$emit('change-checkbox', option.id, $event)"
@@ -68,7 +68,7 @@
             />
 
             <div
-              v-if="draggable"
+              v-if="isOptionDraggable(option)"
               v-droppable="{ ...dropConfig, data: { ...option, dropZone: 'after' } }"
               class="sw-popover-item-result__option_drop_after"
             />
@@ -98,6 +98,8 @@ export interface Option {
   isVisible?: boolean;
   isSelected?: boolean;
   isClickable?: boolean;
+  isHidable?: boolean;
+  isSortable?: boolean;
   disabled?: boolean;
 }
 
@@ -173,12 +175,25 @@ export default defineComponent({
       }
     };
 
+    const isOptionDraggable = (option: Option) => {
+      return props.draggable && option.isSortable;
+    };
+
+    const getDragConfigForOption = (option: Option) => {
+      return {
+        ...dragConfig,
+        disabled: !isOptionDraggable(option),
+      };
+    };
+
     const getOptionsForGroup = (groupId: string|undefined) => {
       return props.options.filter((option) => option.parentGroup === groupId);
     };
 
     return {
       getOptionsForGroup,
+      getDragConfigForOption,
+      isOptionDraggable,
       dropConfig,
       dragConfig,
     };

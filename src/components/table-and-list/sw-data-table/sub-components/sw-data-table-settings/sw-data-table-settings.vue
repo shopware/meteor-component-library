@@ -74,6 +74,7 @@
     </template>
 
     <template #popover-items__columnOrder>
+      <!-- Make first item not hidable -->
       <sw-popover-item-result
         :groups="columnGroups"
         :options="columnOrderOptions"
@@ -210,6 +211,8 @@ export default defineComponent({
           parentGroup: (column.visible ?? true) ? 'visible' : 'hidden',
           position: column.position,
           isVisible: column.visible ?? true,
+          isHidable: isPrimaryColumn(column) ? false : true,
+          isSortable: isPrimaryColumn(column) ? false : true,
         }
       });
     })
@@ -247,6 +250,10 @@ export default defineComponent({
       emit('reset-all-changes')
     }
 
+    const isPrimaryColumn = (column: ColumnDefinition) => {
+      return props.columns[0].property === column.property;
+    };
+
     return {
       tableSettingsChildViews,
       resetAllChanges,
@@ -254,7 +261,8 @@ export default defineComponent({
       columnOrderOptions,
       onColumnChangeVisibility,
       onColumnClickGroupAction,
-      onColumnChangeOrder
+      onColumnChangeOrder,
+      isPrimaryColumn,
     };
   },
 });

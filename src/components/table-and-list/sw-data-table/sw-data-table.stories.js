@@ -1,4 +1,5 @@
 import SwDataTable from './sw-data-table.vue';
+import SwButton from '../../form/sw-button/sw-button.vue';
 import SwDataTableFixtures from './sw-data-table.fixtures.json';
 import { get } from 'lodash-es';
 
@@ -155,6 +156,7 @@ export default {
         renderer: 'text',
         position: 100,
         cellWrap: 'normal',
+        sortable: true,
       },
       {
         label: 'Active',
@@ -252,12 +254,14 @@ export default {
         metaCopy: 'This action will delete the selected rows in the ERP system. This action cannot be undone.',
         contextualDetail: 'MagicERP',
       },
-    ]
+    ],
+    disableEdit: false,
+    disableDelete: false,
   }
 };
 
 const Template = (args, { argTypes }) => ({
-  components: { SwDataTable },
+  components: { SwDataTable, SwButton },
   props: Object.keys(argTypes),
   data() {
     return {
@@ -562,6 +566,15 @@ const Template = (args, { argTypes }) => ({
       :enableRowNumbering="enableRowNumberingValue"
     >
       {{ $props.default}}
+
+      <template #toolbar>
+        <sw-button
+          variant="primary"
+          @click="reloadHandler"
+        >
+          Primary
+        </sw-button>
+      </template>
     </sw-data-table>
   </div>
   `,

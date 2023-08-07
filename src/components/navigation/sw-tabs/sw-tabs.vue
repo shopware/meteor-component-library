@@ -56,7 +56,7 @@
             <sw-context-menu-item
               v-for="moreItem in moreItems"
               :key="moreItem.name"
-              :variant="getContextMenuItemVariant(moreItem)"
+              :type="getContextMenuItemVariant(moreItem)"
               role="tab"
               :aria-selected="moreItem.name === activeItemName"
               :label="moreItem.label"
@@ -295,28 +295,20 @@ export default Vue.extend({
       }
     },
 
-    getContextMenuItemVariant(item: TabItem): string|undefined {
+    getContextMenuItemVariant(item: TabItem): string {
       if (item.hasError) {
-        return 'danger';
+        return 'critical';
       }
 
       if (item.name === this.activeItemName) {
         return 'active'
       }
 
-      if (item.badge === 'warning') {
-        return 'warning'
-      }
-
-      if (item.badge === 'positive') {
-        return 'success'
-      }
-
       if (item.badge === 'critical') {
         return 'critical'
       }
 
-      return undefined;
+      return 'default';
     },
 
     setActiveItem(itemName: string): void {

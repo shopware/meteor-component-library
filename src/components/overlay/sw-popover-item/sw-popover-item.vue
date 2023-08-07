@@ -113,7 +113,6 @@ export default defineComponent({
       type: String as PropType<'default'|'critical'|'active'>,
       required: false,
       default: 'default',
-      // TODO: missing "active" type needed for tabs
       validator: (value: string) => {
         return [
           'default',
@@ -236,6 +235,7 @@ export default defineComponent({
       return {
         'sw-popover-item--default': props.type === 'default',
         'sw-popover-item--critical': props.type === 'critical',
+        'sw-popover-item--active': props.type === 'active',
         'sw-popover-item--disabled': props.disabled,
         'sw-popover-item--border-top': props.borderTop,
         'sw-popover-item--border-bottom': props.borderBottom,
@@ -329,6 +329,10 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
 
   &--critical {
     color: $color-crimson-500;
+  }
+
+  &--active {
+    text-decoration: underline;
   }
 
   &--disabled {

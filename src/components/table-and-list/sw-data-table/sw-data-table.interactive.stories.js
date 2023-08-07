@@ -18,6 +18,12 @@ VisualTestRenderFullTable.args = {
   layout: 'full',
 };
 
+export const VisualTestRenderEmptyState = Template.bind();
+VisualTestRenderEmptyState.storyName = 'Should render the empty state';
+VisualTestRenderEmptyState.args = {
+  dataSource: [],
+};
+
 export const VisualTestRenderTableStickyHeader = Template.bind();
 VisualTestRenderTableStickyHeader.storyName = 'Should render the Table with sticky header';
 VisualTestRenderTableStickyHeader.play = async () => {

@@ -83,8 +83,13 @@ export default function useScrollPossibilitiesClasses(refElement: Ref) {
   })
 
   onMounted(() => {
-    refElement.value.addEventListener('scroll', updateSetScrollPossibiltiesClasses);
     window.addEventListener('resize', updateSetScrollPossibiltiesClasses)
+
+    if (!refElement.value) {
+      return;
+    }
+
+    refElement.value.addEventListener('scroll', updateSetScrollPossibiltiesClasses);
     refElementResizeObserver.observe(refElement.value);
 
     nextTick().then(() => {
@@ -93,8 +98,13 @@ export default function useScrollPossibilitiesClasses(refElement: Ref) {
   })
 
   onBeforeUnmount(() => {
-    refElement.value.removeEventListener('scroll', updateSetScrollPossibiltiesClasses);
     window.removeEventListener('resize', updateSetScrollPossibiltiesClasses)
+
+    if (!refElement.value) {
+      return;
+    }
+
+    refElement.value.removeEventListener('scroll', updateSetScrollPossibiltiesClasses);
     refElementResizeObserver.unobserve(refElement.value);
   })
 

@@ -326,7 +326,9 @@ export default Vue.extend({
     }
 
     .sw-card__toolbar {
+        display: flex;
         flex-basis: auto;
+        gap: 8px;
         padding: 20px 24px 16px 24px;
         background-color: $color-white;
 
