@@ -79,6 +79,8 @@ const Template = (args, { argTypes }) => ({
           position: 0,
           isVisible: true,
           parentGroup: 'visible',
+          isSortable: false,
+          isHidable: false,
         },
         {
           id: 'manufacturer',
@@ -86,6 +88,8 @@ const Template = (args, { argTypes }) => ({
           position: 1,
           isVisible: true,
           parentGroup: 'visible',
+          isSortable: true,
+          isHidable: true,
         },
         {
           id: 'active',
@@ -93,6 +97,8 @@ const Template = (args, { argTypes }) => ({
           position: 2,
           isVisible: true,
           parentGroup: 'visible',
+          isSortable: true,
+          isHidable: true,
         },
         {
           id: 'price',
@@ -100,6 +106,8 @@ const Template = (args, { argTypes }) => ({
           position: 3,
           isVisible: true,
           parentGroup: 'visible',
+          isSortable: true,
+          isHidable: true,
         },
         {
           id: 'stock',
@@ -107,6 +115,8 @@ const Template = (args, { argTypes }) => ({
           position: 4,
           isVisible: false,
           parentGroup: 'hidden',
+          isSortable: true,
+          isHidable: true,
         },
         {
           id: 'available',
@@ -114,6 +124,8 @@ const Template = (args, { argTypes }) => ({
           position: 5,
           isVisible: false,
           parentGroup: 'hidden',
+          isSortable: true,
+          isHidable: true,
          }
       ],
     }
