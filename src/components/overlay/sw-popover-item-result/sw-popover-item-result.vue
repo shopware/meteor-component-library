@@ -60,7 +60,7 @@
               :meta-copy="option.metaCopy"
               :show-visibility="hidable && option.isHidable"
               :visible="option.isVisible"
-              :icon="isOptionDraggable(option) ? 'solid-grip-vertical-s' : 'solid-thumbtack'"
+              :icon="getIconForOption(option)"
               :on-label-click="option.isClickable ? () => $emit('click-option', option.id) : undefined"
               :disabled="option.disabled"
               @change-checkbox="$emit('change-checkbox', option.id, $event)"
@@ -190,10 +190,23 @@ export default defineComponent({
       return props.options.filter((option) => option.parentGroup === groupId);
     };
 
+    const getIconForOption = (option: Option) => {
+      if (isOptionDraggable(option)) {
+        return 'solid-grip-vertical-s';
+      }
+
+      if (props.draggable) {
+        return 'solid-thumbtack';
+      }
+
+      return undefined;
+    };
+
     return {
       getOptionsForGroup,
       getDragConfigForOption,
       isOptionDraggable,
+      getIconForOption,
       dropConfig,
       dragConfig,
     };

@@ -59,6 +59,10 @@
                   />
                 </th>
 
+                <th v-if="enableRowNumbering">
+                  <span>#</span>
+                </th>
+
                 <template v-for="(column) in sortedColumns">
                   <th
                     v-if="isColumnVisible(column)"
@@ -264,6 +268,10 @@
                   />
                 </td>
 
+                <td v-if="enableRowNumbering">
+                  <span>{{ getRealIndex(rowIndex) }}</span>
+                </td>
+
                 <template v-for="column in sortedColumns">
                   <!-- TODO: add currentHoveredRow -->
                   <td
@@ -285,10 +293,6 @@
                     </template>
 
                     <template v-else>
-                      <template v-if="enableRowNumbering && isPrimaryColumn(column)">
-                        <span>{{ rowIndex + 1 }}. </span>
-                      </template>
-
                       <!-- Use the correct renderer for the column -->
                       <sw-data-table-number-renderer
                         v-if="column.renderer === 'number'"
@@ -888,6 +892,8 @@ export default defineComponent({
             position: column.position,
             isVisible: column.visible ?? true,
             isClickable: column.visible === false ? true : false,
+            isSortable: false,
+            isHidable: false,
             disabled: column.visible === false ? false : true,
           }
         })
@@ -1488,6 +1494,13 @@ export default defineComponent({
       return Array.from({ length: props.paginationLimit }, () => ({}));
     });
 
+    /**
+     * Calculate the real index number based on page, limit and index
+     */
+    const getRealIndex = (index: number) => {
+      return (props.currentPage - 1) * props.paginationLimit + index + 1;
+    }
+
     return {
       sortedColumns,
       isFirstVisibleColumn,
@@ -1535,6 +1548,7 @@ export default defineComponent({
       setCurrentHoveredCell,
       isPrimaryColumn,
       emptyData,
+      getRealIndex,
     };
   },
 });
@@ -1791,10 +1805,11 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   }
 
   &__column-outline-framing-active tr.--hovered td.--hovered {
-    border-top-color: $color-gray-200;
-    border-bottom-color: $color-gray-200;
-    border-right-color: $color-gray-200;
-    border-left-color: $color-gray-200;
+    // TODO: evaluate with design if this is wanted
+    // border-top-color: $color-gray-200;
+    // border-bottom-color: $color-gray-200;
+    // border-right-color: $color-gray-200;
+    // border-left-color: $color-gray-200;
   }
 
   &.sw-data-table__stripes tr:nth-child(even) {
