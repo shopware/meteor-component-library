@@ -47,11 +47,16 @@
           class="sw-data-table__table-wrapper"
         >
           <table ref="dataTable">
+            <caption class="sw-data-table__caption">
+              {{ caption }}
+            </caption>
+
             <thead>
               <tr>
                 <th
                   v-if="allowRowSelection"
                   class="sw-data-table__table-selection-head"
+                  scope="col"
                 >
                   <sw-checkbox
                     :checked="somethingSelected"
@@ -59,7 +64,10 @@
                   />
                 </th>
 
-                <th v-if="enableRowNumbering">
+                <th
+                  v-if="enableRowNumbering"
+                  scope="col"
+                >
                   <span>#</span>
                 </th>
 
@@ -73,6 +81,7 @@
                       }
                     }"
                     v-draggable="{ ...dragConfig, data: column }"
+                    scope="col"
                     class="sw-data-table__table-wrapper-table-head"
                     :class="getColumnHeaderClasses(column)"
                     :data-header-column-property="column.property"
@@ -159,7 +168,7 @@
                           icon="regular-eye-slash"
                           :on-label-click="() => changeColumnVisibility(column.property, false)"
                           type="critical"
-                          borderTop
+                          border-top
                         />
                       </template>
                     </sw-popover>
@@ -233,6 +242,7 @@
 
                 <th
                   class="sw-data-table__table-settings-button"
+                  scope="col"
                 >
                   <sw-data-table-settings
                     :columns="sortedColumns"
@@ -758,6 +768,15 @@ export default defineComponent({
       type: Boolean,
       required: false,
       default: false,
+     },
+
+     /**
+      * Caption for accessibility
+      */
+     caption: {
+      type: String,
+      required: false,
+      default: 'Data table',
      },
   },
   emits: [
@@ -1661,6 +1680,15 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   font-weight: $font-weight-regular;
   color: $color-darkgray-300;
   line-height: $line-height-sm;
+
+  &__caption {
+    // Hide the caption visually but show it for screen readers
+    position: absolute !important;
+    height: 1px; 
+    width: 1px; 
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+  }
 
   .sw-data-table__table-wrapper {
     position: relative;

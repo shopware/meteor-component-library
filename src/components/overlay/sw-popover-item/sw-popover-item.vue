@@ -244,7 +244,12 @@ export default defineComponent({
 
     const labelClasses = computed(() => {
       return {
-        'sw-popover-item__label--clickable': !!props.onLabelClick && !props.disabled,
+        'sw-popover-item__label--clickable': (
+          !!props.onLabelClick ||
+          props.showSwitch ||
+          props.showCheckbox ||
+          props.showOptions
+        ) && !props.disabled,
       };
     });
 
@@ -255,6 +260,22 @@ export default defineComponent({
     const handleLableClick = () => {
       if (props.onLabelClick) {
         props.onLabelClick();
+        return;
+      }
+
+      if (props.showOptions) {
+        emitClickOptions();
+        return;
+      }
+
+      if (props.showSwitch) {
+        emitChangeSwitch(!props.switchValue);
+        return;
+      }
+
+      if (props.showCheckbox) {
+        emitChangeCheckbox(!props.checkboxChecked);
+        return;
       }
     };
 

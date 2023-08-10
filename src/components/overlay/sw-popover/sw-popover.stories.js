@@ -128,6 +128,11 @@ const Template = (args, { argTypes }) => ({
           isHidable: true,
          }
       ],
+      numberedColumn: false,
+      showStripes: false,
+      showOutlines: false,
+      frameOutlines: false,
+      openContentInPeekMode: false,
     }
   },
   watch: {},
@@ -218,18 +223,24 @@ const Template = (args, { argTypes }) => ({
           icon="solid-hashtag"
           showSwitch
           border-top
+          :switchValue="numberedColumn"
+          @change-switch="(switchValue) => numberedColumn = switchValue"
         />
 
         <sw-popover-item 
           label="Show stripes"
           icon="solid-bars"
           showSwitch
+          :switchValue="showStripes"
+          @change-switch="(switchValue) => showStripes = switchValue"
         />
 
         <sw-popover-item 
           label="Show outlines"
           icon="solid-grip-lines"
           showSwitch
+          :switchValue="showOutlines"
+          @change-switch="(switchValue) => showOutlines = switchValue"
         />
 
         <sw-popover-item 
@@ -238,6 +249,8 @@ const Template = (args, { argTypes }) => ({
           showSwitch
           metaCopy="Highlight column outlines on mouse hover."
           border-bottom
+          :switchValue="frameOutlines"
+          @change-switch="(switchValue) => frameOutlines = switchValue"
         />
 
         <sw-popover-item 
@@ -246,6 +259,8 @@ const Template = (args, { argTypes }) => ({
           showSwitch
           metaCopy="Open content on the side. Keeps the view behind interactive."
           border-bottom
+          :switchValue="openContentInPeekMode"
+          @change-switch="(switchValue) => openContentInPeekMode = switchValue"
         />
 
         <sw-popover-item 
