@@ -252,6 +252,7 @@
               <tr
                 v-for="(data, rowIndex) in (isLoading ? emptyData : dataSource)"
                 :key="data.id"
+                :class="getColumnDataRowClasses(data.id)"
               >
                 <td
                   v-if="allowRowSelection"
@@ -264,6 +265,7 @@
                 </td>
 
                 <template v-for="column in sortedColumns">
+                  <!-- TODO: add currentHoveredRow -->
                   <td
                     v-if="isColumnVisible(column)"
                     :key="column.property + JSON.stringify(columnChanges[column.property])"
@@ -275,8 +277,8 @@
                     :data-cell-column-property="column.property"
                     :style="renderColumnDataCellStyle(column)"
                     :class="getColumnDataCellClasses(column)"
-                    @mouseenter="() => currentHoveredColumn = column.property"
-                    @mouseleave="() => currentHoveredColumn = null"
+                    @mouseenter="() => setCurrentHoveredCell(column.property, data.id)"
+                    @mouseleave="() => setCurrentHoveredCell(null, null)"
                   >
                     <template v-if="isLoading">
                       <sw-skeleton-bar />
@@ -850,6 +852,12 @@ export default defineComponent({
     });
 
     const currentHoveredColumn = ref<string|null>(null);
+    const currentHoveredRow = ref<string|null>(null);
+
+    const setCurrentHoveredCell = (columnProperty: string, rowId: string) => {
+      currentHoveredColumn.value = columnProperty;
+      currentHoveredRow.value = rowId;
+    }
 
     const visibleColumns = computed(() => {
       return sortedColumns.value.filter((column) => column.visible !== false);
@@ -1167,6 +1175,16 @@ export default defineComponent({
       }
 
       if (currentHoveredColumn.value === column.property) {
+        classes.push("--hovered");
+      }
+
+      return classes;
+    };
+
+    const getColumnDataRowClasses = (rowId: string) => {
+      const classes = [];
+
+      if (currentHoveredRow.value === rowId) {
         classes.push("--hovered");
       }
 
@@ -1507,11 +1525,14 @@ export default defineComponent({
       getColumnDataCellClasses,
       getColumnHeaderClasses,
       getPreviousVisibleColumn,
+      getColumnDataRowClasses,
       forceHighlightedColumn,
       addColumnOptionsSearch,
       onAddColumnOptionClick,
       onAddColumnSearch,
       currentHoveredColumn,
+      currentHoveredRow,
+      setCurrentHoveredCell,
       isPrimaryColumn,
       emptyData,
     };
@@ -1760,9 +1781,20 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
 
   &__column-outline-framing-active th.--hovered,
   &__column-outline-framing-active td.--hovered {
-    // TODO: the styling needs to be aligned with the design
     border-right-color: $color-shopware-brand-400;
     border-left-color: $color-shopware-brand-400;
+  }
+
+  &__column-outline-framing-active tr.--hovered td {
+    border-top-color: $color-shopware-brand-400;
+    border-bottom-color: $color-shopware-brand-400;
+  }
+
+  &__column-outline-framing-active tr.--hovered td.--hovered {
+    border-top-color: $color-gray-200;
+    border-bottom-color: $color-gray-200;
+    border-right-color: $color-gray-200;
+    border-left-color: $color-gray-200;
   }
 
   &.sw-data-table__stripes tr:nth-child(even) {
