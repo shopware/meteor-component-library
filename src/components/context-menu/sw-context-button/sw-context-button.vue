@@ -9,6 +9,7 @@
         <button
           role="button"
           aria-haspopup="menu"
+          aria-label="Context menu"
           class="sw-context-button__button"
           @click="toggleFloatingUi"
           @keyup.enter="toggleFloatingUi"
