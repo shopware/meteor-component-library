@@ -45,15 +45,30 @@
         ref="tableWrapper"
         class="sw-data-table__table-wrapper"
       >
-        <table ref="dataTable">
+        <table
+          ref="dataTable"
+        >
           <caption class="sw-data-table__caption">
             {{ caption }}
           </caption>
 
           <thead>
             <tr>
+              <!-- TODO: check if this sticky thing works -->
+              <th
+                v-if="enableRowNumbering" 
+                v-stickyColumn
+                class="sw-data-table__table-row-number-head"
+                scope="col"
+              >
+                <span>
+                  #
+                </span>
+              </th>
+
               <th
                 v-if="allowRowSelection"
+                v-stickyColumn
                 class="sw-data-table__table-selection-head"
                 scope="col"
               >
@@ -61,13 +76,6 @@
                   :checked="somethingSelected"
                   @change="handleSelectAll"
                 />
-              </th>
-
-              <th
-                v-if="enableRowNumbering"
-                scope="col"
-              >
-                <span>#</span>
               </th>
 
               <template v-for="(column) in sortedColumns">
@@ -269,7 +277,18 @@
                 :class="getColumnDataRowClasses(data.id)"
               >
                 <td
+                  v-if="enableRowNumbering"
+                  v-stickyColumn
+                  class="sw-data-table__table-row-number"
+                >
+                  <span>
+                    {{ getRealIndex(rowIndex) }}
+                  </span>
+                </td>
+
+                <td
                   v-if="allowRowSelection"
+                  v-stickyColumn
                   class="sw-data-table__table-select-row"
                 >
                   <sw-checkbox
@@ -278,9 +297,10 @@
                   />
                 </td>
 
-                <td v-if="enableRowNumbering">
+                <!-- TODO: remove this -->
+                <!-- <td v-if="enableRowNumbering">
                   <span>{{ getRealIndex(rowIndex) }}</span>
-                </td>
+                </td> -->
 
                 <template v-for="column in sortedColumns">
                   <!-- TODO: add currentHoveredRow -->
@@ -430,8 +450,8 @@
 
 <script lang="ts">
 import useScrollPossibilitiesClasses from "./composables/useScrollPossibilitiesClasses";
-import { PropType } from "vue";
-import { defineComponent, computed, onBeforeUpdate, ref, set, getCurrentInstance, onBeforeMount } from "vue";
+import { onUpdated, PropType } from "vue";
+import { defineComponent, computed, onBeforeUpdate, onMounted, onBeforeUnmount, onUpdated, ref, set, getCurrentInstance, onBeforeMount } from "vue";
 import SwCard from "../../layout/sw-card/sw-card.vue";
 import SwButton from "../../form/sw-button/sw-button.vue";
 import SwSelect from "../../form/sw-select/sw-select.vue";
@@ -461,6 +481,8 @@ import { SegmentedControlActionsProp } from '../../navigation/sw-segmented-contr
 import SwFloatingUi from '../../_internal/sw-floating-ui/sw-floating-ui.vue';
 import SwTooltipDirective from '../../../directives/tooltip.directive';
 import SwEmptyState from '../../layout/sw-empty-state/sw-empty-state.vue';
+import StickyColumn from '../../../directives/stickyColumn.directive';
+import { throttle } from 'lodash-es';
 
 export interface BaseColumnDefinition {
   label: string; // the label for the column
@@ -497,6 +519,7 @@ export default defineComponent({
     draggable: draggable,
     droppable: droppable,
     tooltip: SwTooltipDirective,
+    stickyColumn: StickyColumn,
   },
   components: {
     "sw-card": SwCard,
@@ -1406,12 +1429,54 @@ export default defineComponent({
       };
     });
 
+    const leftFixedColumnWidth = ref<number>(0);
+
+    const calculateLeftFixedColumnWith = () => {
+      if (dataTable.value) {
+        const stickyColumns = dataTable.value.querySelectorAll(
+          "thead th[data-sticky-column]"
+        );
+        const lastStickyColumn = stickyColumns[stickyColumns.length - 1] as HTMLElement;
+        const lastStickyColumnRight =
+          lastStickyColumn.dataset.stickyColumnRight;
+
+        leftFixedColumnWidth.value = Number(lastStickyColumnRight);
+      }
+    }
+
+    let tableMutationObserver: MutationObserver|undefined;
+    
+    const createTableMutationObserver = () => {
+      if (dataTable.value) {
+        tableMutationObserver = new MutationObserver(throttle(() => {
+          calculateLeftFixedColumnWith();
+        }, 60));
+
+        tableMutationObserver.observe(dataTable.value, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+        });
+      }
+    }
+    
+    onMounted(() => {
+      createTableMutationObserver();
+      calculateLeftFixedColumnWith();
+    });
+
+    onBeforeUnmount(() => {
+      if (tableMutationObserver) {
+        tableMutationObserver.disconnect();
+      }
+    });
+
     /**
      * Adjust table variables
      */
     const tableStylingVariables = computed(() => {
       return {
-        '--fixed-left-column-width': props.allowRowSelection ? '67px' : '0px',
+        '--fixed-left-column-width': `${leftFixedColumnWidth.value}px`,
         '--fixed-right-column-width': '105px',
       };
     });
@@ -1849,6 +1914,10 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     border-top-color: transparent;
   }
 
+  thead tr {
+    background-color: $color-gray-50;
+  }
+
   thead th {
     font-weight: $font-weight-medium;
     line-height: $line-height-xs;
@@ -1905,15 +1974,33 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   */
   .sw-data-table__table-select-row,
   .sw-data-table__table-selection-head {
-    position: sticky;
     min-width: 67px;
     max-width: 67px;
     width: 67px;
     padding-right: 8px;
     border-right: 0px;
-    left: 0;
   }
 
+  .sw-data-table__table-row-number {
+    min-width: 50px;
+    max-width: 50px;
+    width: 50px;
+  }
+
+  th[data-sticky-column],
+  td[data-sticky-column] {
+    position: sticky;
+    // left value will be calculated dynamically in JS
+    left: 0;
+    z-index: 100;
+    background-color: inherit;
+  }
+
+  th[data-sticky-column] {
+    z-index: 110;
+  }
+
+  .sw-data-table__table-row-number,
   .sw-data-table__table-select-row {
     z-index: 1;
     background-color: inherit;

@@ -494,8 +494,8 @@ const Template = (args, { argTypes }) => ({
           }
         });
       } else {
-        selections.forEach((selection) => {
-          this.selectedRowsValue.splice(this.selectedRowsValue.indexOf(selection), 1);
+        this.selectedRowsValue = this.selectedRowsValue.filter((row) => {
+          return selections.indexOf(row) === -1;
         });
       }
     },
