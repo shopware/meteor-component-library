@@ -3,7 +3,10 @@
     class="sw-popover-item"
     :class="componentClasses"
   >
-    <div class="sw-popover-item__top-row">
+    <div
+      class="sw-popover-item__top-row"
+      @click="handleLableClick"
+    >
       <sw-checkbox
         v-if="showCheckbox"
         class="sw-popover-item__checkbox"
@@ -20,7 +23,7 @@
         :class="iconClasses"
         :tabindex="onLabelClickTabIndex"
         :name="icon"
-        @click.prevent="handleLableClick"
+        @click="handleLableClick"
         @keyup.enter="handleLableClick"
       />
 
@@ -29,7 +32,7 @@
         :class="labelClasses"
         :tabindex="onLabelClickTabIndex"
         :role="role"
-        @click="handleLableClick"
+        @click.stop.prevent="handleLableClick"
         @keyup.enter="handleLableClick"
       >
         {{ label }}
@@ -211,7 +214,12 @@ export default defineComponent({
       type: String,
       required: false,
       default: 'menuitem',
-    }
+    },
+    isOptionItem: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   emits: ['change-checkbox', 'change-switch', 'change-visibility', 'click-options'],
   setup(props, { emit }) {
@@ -231,6 +239,16 @@ export default defineComponent({
       emit('click-options');
     };
 
+    const isClickable = computed(() => {
+      return (
+        !!props.onLabelClick ||
+        props.showSwitch ||
+        props.showCheckbox ||
+        props.showOptions ||
+        props.isOptionItem
+      ) && !props.disabled;
+    });
+
     const componentClasses = computed(() => {
       return {
         'sw-popover-item--default': props.type === 'default',
@@ -239,6 +257,7 @@ export default defineComponent({
         'sw-popover-item--disabled': props.disabled,
         'sw-popover-item--border-top': props.borderTop,
         'sw-popover-item--border-bottom': props.borderBottom,
+        'sw-popover-item--clickable': !!isClickable.value,
       };
     });
 
@@ -294,6 +313,7 @@ export default defineComponent({
       labelClasses,
       onLabelClickTabIndex,
       handleLableClick,
+      isClickable,
       iconClasses
     };
   },
@@ -348,8 +368,43 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
     }
   }
 
+  &.sw-popover-item--clickable {
+    cursor: pointer;
+  }
+
+  &.sw-popover-item--clickable:hover {
+    position: relative;
+
+    &::before {
+      content: '';
+    }
+  }
+
+  &:hover {
+    &::before {
+      position: absolute;
+      background-color: $color-shopware-brand-50;
+      border-radius: $border-radius-default;
+      top: 4px;
+      right: -8px;
+      bottom: 4px;
+      left: -8px;
+      pointer-events: none;
+    }
+  }
+
+  &.is--draggable {
+    cursor: grab;
+  }
+
   &--critical {
     color: $color-crimson-500;
+  }
+
+  &--critical:hover {
+    &::before {
+      background-color: $color-crimson-50;
+    }
   }
 
   &--active {
@@ -362,6 +417,10 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
     &:hover {
       text-decoration: none;
       cursor: default;
+
+      &::before {
+        background-color: transparent;
+      }
     }
   }
 
@@ -378,6 +437,7 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
   &__top-row {
     display: flex;
     gap: 8px;
+    z-index: 1;
   }
 
   &__align-right {

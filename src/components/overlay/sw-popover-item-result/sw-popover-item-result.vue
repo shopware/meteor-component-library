@@ -53,6 +53,7 @@
             <sw-popover-item  
               v-draggable="{ ...getDragConfigForOption(option), data: option }"
               class="sw-popover-item-result__option_item"
+              :is-option-item="isOptionDraggable(option)"
               :label="option.label"
               :show-checkbox="selectable"
               :checkbox-checked="option.isSelected"

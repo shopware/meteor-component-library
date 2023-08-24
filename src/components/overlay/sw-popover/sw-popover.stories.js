@@ -211,7 +211,6 @@ const Template = (args, { argTypes }) => ({
       <template #popover-items__base="{ changeView }">
         <sw-popover-item 
           label="Columns"
-          border-bottom
           showOptions
           :onLabelClick="() => changeView('columnOrder')"
           @click-options="() => changeView('columnOrder')"
