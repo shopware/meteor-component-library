@@ -6,9 +6,13 @@
   >
     <template #trigger="{ toggleFloatingUi }">
       <sw-button
+        v-tooltip="{
+          message: $t('sw-data-table-settings.tooltip'),
+          width: 'auto',
+        }"
         variant="secondary"
         square
-        aria-label="Toggle table settings"
+        :aria-label="$t('sw-data-table-settings.aria-toggle-table-settings')"
         @click="toggleFloatingUi"
       >
         <sw-icon name="solid-cog-s" />
@@ -53,7 +57,7 @@
 
       <sw-popover-item
         label="Frame outlines"
-        metaCopy="Highlight column outlines on mouse hover."
+        meta-copy="Highlight column outlines on mouse hover."
         show-switch
         :switch-value="enableOutlineFraming"
         icon="solid-highlight"
@@ -97,6 +101,7 @@ import SwIcon from "../../../../icons-media/sw-icon/sw-icon.vue";
 import SwPopover from '../../../../overlay/sw-popover/sw-popover.vue';
 import SwPopoverItem from '../../../../overlay/sw-popover-item/sw-popover-item.vue';
 import SwPopoverItemResult from '../../../../overlay/sw-popover-item-result/sw-popover-item-result.vue';
+import SwTooltipDirective from '../../../../../directives/tooltip.directive';
 import type { ColumnDefinition } from '../../sw-data-table.vue';
 import type { Option as ItemResultOption } from '../../../../overlay/sw-popover-item-result/sw-popover-item-result.vue';
 
@@ -108,6 +113,9 @@ export default defineComponent({
     'sw-popover': SwPopover,
     'sw-popover-item': SwPopoverItem,
     'sw-popover-item-result': SwPopoverItemResult,
+  },
+  directives: {
+    'tooltip': SwTooltipDirective,
   },
   props: {
     columns: {
@@ -158,13 +166,26 @@ export default defineComponent({
               labelHidden: 'Hidden in table',
               actionLabelHidden: 'Show all',
             }
-          }
+          },
+          tooltip: "Table settings",
+          'aria-toggle-table-settings': 'Toggle table settings',
         },
       },
       de: {
         "sw-data-table-settings": {
           title: "Einstellungen",
           resetAllChanges: "Alle Änderungen zurücksetzen",
+          columnOrder: {
+            title: 'Spalten',
+            columnGroups: {
+              labelShown: 'In Tabelle sichtbar',
+              actionLabelShown: 'Alle ausblenden',
+              labelHidden: 'In Tabelle ausgeblendet',
+              actionLabelHidden: 'Alle einblenden',
+            }
+          },
+          tooltip: "Tabelleneinstellungen",
+          'aria-toggle-table-settings': 'Tabelleneinstellungen umschalten',
         },
       },
     },
