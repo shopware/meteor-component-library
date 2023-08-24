@@ -181,7 +181,7 @@
                   </sw-popover>
 
                   <sw-floating-ui
-                    v-if="highlightedColumn === column.property"
+                    v-if="highlightedColumn === column.property && !isDragging"
                     :is-opened="true"
                     :offset="0"
                     class="sw-data-table__table-head-add-column-indicator"
@@ -1340,6 +1340,7 @@ export default defineComponent({
       });
     };
 
+    const isDragging = ref<boolean>(false);
     const DRAG_GROUP_COLUMN = 'drag-group-column';
 
     const dragConfig: Partial<DragConfig<ColumnDefinition & {dropZone?: 'before'|'after'}>> = {
@@ -1360,6 +1361,7 @@ export default defineComponent({
 
         // set cursor globally to grabbing
         document.body.style.cursor = "grabbing";
+        isDragging.value = true;
       },
       onDrop: (dragConfigData, dropConfigData) => {
         // remove drag information to the table
@@ -1369,6 +1371,7 @@ export default defineComponent({
 
         // reset global cursor
         document.body.style.cursor = "";
+        isDragging.value = false;
 
         if (dragConfigData && dropConfigData) {
           changeColumnPosition(dragConfigData.property, dropConfigData.property, dropConfigData.dropZone);
@@ -1633,6 +1636,7 @@ export default defineComponent({
       isPrimaryColumn,
       emptyData,
       getRealIndex,
+      isDragging,
     };
   },
 });
@@ -2046,7 +2050,7 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     border: 1px solid $color-gray-200;
     border-top: none;
     border-right: none;
-    z-index: 30;
+    z-index: 120;
   }
 
   /***
@@ -2079,6 +2083,10 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     transform: translate3d(50%, -150%, 0);
     width: 14px;
     height: 16px;
+  }
+
+  table.is--dragging-inside .sw-data-table__table-head-add-column-indicator {
+    display: none;
   }
 
   /**
