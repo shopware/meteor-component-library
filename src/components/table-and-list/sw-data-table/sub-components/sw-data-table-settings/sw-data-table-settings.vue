@@ -244,6 +244,10 @@ export default defineComponent({
 
     const onColumnClickGroupAction = (groupId: string) => {
       props.columns.forEach((column) => {
+        if (isPrimaryColumn(column)) {
+          return;
+        }
+
         onColumnChangeVisibility(column.property, groupId === 'visible' ? false : true);
       })
     }
