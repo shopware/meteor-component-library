@@ -1677,7 +1677,7 @@ $color-card-headline: #1c1c1c;
 $color-shopware-brand-vivacious-500: #0F76DE;
 
 $scrollShadowSize: 16px;
-$scrollShadowColor: rgba(120, 120, 120, 0.2);
+$scrollShadowColor: rgba(120, 120, 120, 0.1);
 $tableHeaderSize: 51px;
 $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
 

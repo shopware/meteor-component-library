@@ -212,7 +212,7 @@ export default {
     enableReload: true,
     currentPage: 1,
     paginationLimit: 25,
-    paginationOptions: [5,10,25,50,250,5000],
+    paginationOptions: [5,10,25,50],
     searchValue: '',
     disableSearch: false,
     sortBy: 'name',
