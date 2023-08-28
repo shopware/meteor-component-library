@@ -113,7 +113,10 @@
                     </div>
                   </div>
 
-                  <div class="sw-data-table__table-head-inner-wrapper">
+                  <div
+                    class="sw-data-table__table-head-inner-wrapper"
+                    :class="getColumnHeaderInnerWrapperClasses(column)"
+                  >
                     <span>{{ column.label }}</span>
 
                     <div
@@ -1432,6 +1435,12 @@ export default defineComponent({
       };
     });
 
+    const getColumnHeaderInnerWrapperClasses = (column: ColumnDefinition) => {
+      return [
+        `sw-data-table__table-head-inner-wrapper-${column.renderer}-renderer`
+      ];
+    }
+
     const leftFixedColumnWidth = ref<number>(0);
 
     const calculateLeftFixedColumnWith = () => {
@@ -1626,6 +1635,7 @@ export default defineComponent({
       getColumnHeaderClasses,
       getPreviousVisibleColumn,
       getColumnDataRowClasses,
+      getColumnHeaderInnerWrapperClasses,
       forceHighlightedColumn,
       addColumnOptionsSearch,
       onAddColumnOptionClick,

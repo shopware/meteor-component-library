@@ -54,7 +54,11 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style>
+.sw-data-table__table-head-inner-wrapper-number-renderer {
+  justify-content: flex-end;
+}
+
 .sw-data-table-number-renderer {
   text-align: right;
 }
