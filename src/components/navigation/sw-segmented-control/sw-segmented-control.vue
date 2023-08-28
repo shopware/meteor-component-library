@@ -98,6 +98,7 @@ export interface SegmentedControlAction {
   iconName?: string,
   options?: boolean,
   disabled?: boolean,
+  minSquare?: boolean,
   popover?: {
     title?: string,
     childViews?: View[],
@@ -144,6 +145,10 @@ export default defineComponent({
 
       if (action.disabled) {
         classes.push('sw-segmented-control__action--disabled');
+      }
+
+      if (action.minSquare) {
+        classes.push('sw-segmented-control__action--min-square');
       }
 
       return classes;
@@ -247,6 +252,8 @@ export default defineComponent({
     font-weight: $font-weight-semi-bold;
     color: $color-darkgray-900;
     transition: 0.15s all ease;
+    justify-content: center;
+    text-align: center;
 
     @include focus-style();
 
@@ -334,6 +341,10 @@ export default defineComponent({
       color: $color-gray-400;
       cursor: default;
       pointer-events: none;
+    }
+
+    &--min-square {
+      min-width: 30px;
     }
   }
 
