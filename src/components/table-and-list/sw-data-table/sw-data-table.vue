@@ -1448,7 +1448,13 @@ export default defineComponent({
         const stickyColumns = dataTable.value.querySelectorAll(
           "thead th[data-sticky-column]"
         );
+
         const lastStickyColumn = stickyColumns[stickyColumns.length - 1] as HTMLElement;
+
+        if (!lastStickyColumn) {
+          return;
+        }
+
         const lastStickyColumnRight =
           lastStickyColumn.dataset.stickyColumnRight;
 

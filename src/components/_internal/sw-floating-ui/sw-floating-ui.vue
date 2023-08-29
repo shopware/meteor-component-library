@@ -174,6 +174,7 @@ export default defineComponent({
 
       // remove the popover from the body
       if (floatingUiContent.value && bodyContainer.contains(floatingUiContent.value)) {
+        // TODO: this needs to be refactored in Vue3 to use teleport
         bodyContainer.removeChild(floatingUiContent.value);
       }
     };

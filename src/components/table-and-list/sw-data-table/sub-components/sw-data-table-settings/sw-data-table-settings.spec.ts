@@ -185,7 +185,7 @@ describe("sw-data-table-settings", () => {
     expect(wrapper.emitted()['change-column-visibility']![0]).toEqual(['active', false]);
   });
 
-  it("should change the visibility of all column items to false when click on group header of visibility", async () => {
+  it("should change the visibility of all non-pinned column items to false when click on group header of visibility", async () => {
     const wrapper = await createWrapper();
 
     // Click on "Columns" label to switch to the columns view
@@ -201,13 +201,13 @@ describe("sw-data-table-settings", () => {
 
     // Check if the change-column-visibility was emitted correctly to false for all columns
     expect(wrapper.emitted()['change-column-visibility']).toBeTruthy();
-    expect(wrapper.emitted()['change-column-visibility']!.length).toBe(6);
+    expect(wrapper.emitted()['change-column-visibility']!.length).toBe(5);
     wrapper.emitted()['change-column-visibility']!.forEach(emit => {
       expect(emit[1]).toBe(false);
     })
   });
 
-  it("should change the visibility of all column items to true when click on group header of hidden", async () => {
+  it("should change the visibility of all non-pinned column items to true when click on group header of hidden", async () => {
     const wrapper = await createWrapper();
 
     // Click on "Columns" label to switch to the columns view
@@ -223,7 +223,7 @@ describe("sw-data-table-settings", () => {
 
     // Check if the change-column-visibility was emitted correctly to false for all columns
     expect(wrapper.emitted()['change-column-visibility']).toBeTruthy();
-    expect(wrapper.emitted()['change-column-visibility']!.length).toBe(6);
+    expect(wrapper.emitted()['change-column-visibility']!.length).toBe(5);
     wrapper.emitted()['change-column-visibility']!.forEach(emit => {
       expect(emit[1]).toBe(true);
     })
