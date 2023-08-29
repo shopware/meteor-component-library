@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { createId } from '../utils/uuid';
 import { hasOwnProperty } from '../utils/object';
 

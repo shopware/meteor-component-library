@@ -36,10 +36,10 @@ const setLeftValue = (el: HTMLElement) => {
 let mutationObserver: MutationObserver|undefined;
 
 const stickyColumn: DirectiveOptions = {
-  bind(el, binding, vnode, oldVnode) {
+  bind(el) {
     el.dataset.stickyColumn = "";
   },
-  inserted(el, binding, vnode, oldVnode) {
+  inserted(el) {
     // Set the left value on load
     setLeftValue(el);
 
@@ -53,9 +53,7 @@ const stickyColumn: DirectiveOptions = {
       subtree: true,
     });
   },
-  update(el, binding, vnode, oldVnode) {},
-  componentUpdated(el, binding, vnode, oldVnode) {},
-  unbind(el, binding, vnode, oldVnode) {
+  unbind() {
     mutationObserver?.disconnect();
   }
 };

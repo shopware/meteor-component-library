@@ -453,8 +453,8 @@
 
 <script lang="ts">
 import useScrollPossibilitiesClasses from "./composables/useScrollPossibilitiesClasses";
-import { onUpdated, PropType } from "vue";
-import { defineComponent, computed, onBeforeUpdate, onMounted, onBeforeUnmount, onUpdated, ref, set, getCurrentInstance, onBeforeMount } from "vue";
+import { PropType } from "vue";
+import { defineComponent, computed, onBeforeUpdate, onMounted, onBeforeUnmount, ref, set, getCurrentInstance, onBeforeMount } from "vue";
 import SwCard from "../../layout/sw-card/sw-card.vue";
 import SwButton from "../../form/sw-button/sw-button.vue";
 import SwSelect from "../../form/sw-select/sw-select.vue";
