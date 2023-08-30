@@ -16,6 +16,8 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { TranslateResult } from "vue-i18n";
+import { PropType } from "vue/types/v3-component-props";
 import SwIcon from "../../icons-media/sw-icon/sw-icon.vue";
 
 export default defineComponent({
@@ -27,12 +29,12 @@ export default defineComponent({
 
   props: {
     headline: {
-      type: String,
+      type: String as PropType<string|TranslateResult>,
       required: true,
     },
 
     description: {
-      type: String,
+      type: String as PropType<string|TranslateResult>,
       required: true,
     },
 

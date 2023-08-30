@@ -177,7 +177,6 @@
                         :label="$t('sw-data-table.columnSettings.hideColumn')"
                         icon="regular-eye-slash"
                         :on-label-click="() => changeColumnVisibility(column.property, false)"
-                        type="critical"
                         border-top
                       />
                     </template>
@@ -443,6 +442,10 @@
           square
           aria-label="reload-data"
           @click="emitReload"
+          v-tooltip="{
+            message: $t('sw-data-table.reload.tooltip'),
+            width: 'auto',
+          }"
         >
           <sw-icon name="solid-undo-s" />
         </sw-button>
@@ -849,6 +852,9 @@ export default defineComponent({
             edit: "Edit",
             delete: "Delete",
             more: '...',
+          },
+          reload: {
+            tooltip: 'Reload',
           }
         },
       },
@@ -877,6 +883,9 @@ export default defineComponent({
             edit: "Bearbeiten",
             delete: "Löschen",
             more: '...',
+          },
+          reload: {
+            tooltip: 'Neu laden',
           }
         },
       },
@@ -903,7 +912,7 @@ export default defineComponent({
     const currentHoveredColumn = ref<string|null>(null);
     const currentHoveredRow = ref<string|null>(null);
 
-    const setCurrentHoveredCell = (columnProperty: string, rowId: string) => {
+    const setCurrentHoveredCell = (columnProperty: string|null, rowId: string) => {
       currentHoveredColumn.value = columnProperty;
       currentHoveredRow.value = rowId;
     }
@@ -1687,11 +1696,11 @@ $scrollShadowColor: rgba(120, 120, 120, 0.1);
 $tableHeaderSize: 51px;
 $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
 
-$tableHeaderPaddingTop: 18px;
-$tableHeaderPaddingRight: 16px;
-$tableHeaderPaddingBottom: 14px;
-$tableHeaderPaddingLeft: 16px;
-$tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeaderPaddingBottom $tableHeaderPaddingLeft;
+$tableCellPaddingTop: 18px;
+$tableCellPaddingRight: 16px;
+$tableCellPaddingBottom: 14px;
+$tableCellPaddingLeft: 16px;
+$tableCellPadding: $tableCellPaddingTop $tableCellPaddingRight $tableCellPaddingBottom $tableCellPaddingLeft;
 
 .sw-data-table {
   display: flex;
@@ -1885,7 +1894,7 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   td,
   th {
     position: relative;
-    padding: $tableHeaderPadding;
+    padding: $tableCellPadding;
     // border needs to be half the size because they are getting combined with other cells
     border: 0.5px solid $color-gray-200;
     border-right-color: transparent;
@@ -1897,7 +1906,7 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
 
     &.--highlighted {
       border-right: 1px solid $color-shopware-brand-900;
-      padding-right: calc($tableHeaderPaddingRight - 0.5px);
+      padding-right: calc($tableCellPaddingRight - 0.5px);
     }
   }
 
@@ -1969,12 +1978,6 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     background-color: $color-white;
   }
 
-  .sw-data-table__table-head-inner-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
   /**
   * Empty state
   */
@@ -2003,8 +2006,12 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
 
   .sw-data-table__table-row-number {
     min-width: 50px;
-    max-width: 50px;
     width: 50px;
+    text-align: center;
+  }
+
+  .sw-data-table__table-row-number-head {
+    text-align: center;
   }
 
   th[data-sticky-column],
@@ -2062,7 +2069,7 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     height: $tableHeaderSize;
     display: flex;
     align-items: center;
-    padding: $tableHeaderPadding;
+    padding: $tableCellPadding;
     border: 1px solid $color-gray-200;
     border-top: none;
     border-right: none;
@@ -2162,24 +2169,6 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   }
 
   /**
-  * Sorting in columns
-  */
-  .sw-data-table__table-head-sorting-icons {
-    display: flex;
-    flex-direction: column;
-
-    .sw-data-table__table-head-sort {
-      transition: 0.3s color ease;
-      color: $color-gray-800;
-
-      #meteor-icon-kit__solid-long-arrow-up,
-      #meteor-icon-kit__solid-long-arrow-down {
-        height: 12px;
-      }
-    }
-  }
-
-  /**
   * Table Settings
   */
   $settingsColumnWidth: 65px;
@@ -2272,6 +2261,33 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
 }
 
 /**
+* Non-scoped styling for elements inside and outside of the table (Drag & Drop, ...)
+*/
+.sw-data-table__table-head-inner-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/**
+* Sorting in columns
+*/
+.sw-data-table__table-head-sorting-icons {
+  display: flex;
+  flex-direction: column;
+
+  .sw-data-table__table-head-sort {
+    transition: 0.3s color ease;
+    color: $color-gray-800;
+
+    #meteor-icon-kit__solid-long-arrow-up,
+    #meteor-icon-kit__solid-long-arrow-down {
+      height: 12px;
+    }
+  }
+}
+
+/**
 * Drag & Drop styling
 */
 .sw-data-table__table-wrapper-table-head.is--drag-element {
@@ -2287,7 +2303,7 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   }
   text-align: left;
   font-size: $font-size-xs;
-  padding: $tableHeaderPadding;
+  padding: $tableCellPadding;
   border: 1px solid $color-shopware-brand-900;
   border-radius: $border-radius-default $border-radius-default 0 0;
   border-top: 0;

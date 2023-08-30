@@ -70,10 +70,11 @@ import SwPopoverItem from '../sw-popover-item/sw-popover-item.vue';
 import SwButton from '../../form/sw-button/sw-button.vue';
 import SwSmoothReflow from '../../_internal/sw-smooth-reflow.vue';
 import SwFloatingUi from '../../_internal/sw-floating-ui/sw-floating-ui.vue';
+import { TranslateResult } from 'vue-i18n';
 
 export interface View {
-  name: string;
-  title: string;
+  name: string|TranslateResult;
+  title: string|TranslateResult;
   childViews?: View[];
 }
 
@@ -89,7 +90,7 @@ export default defineComponent({
   },
   props: {
     title: {
-      type: String,
+      type: String as PropType<string|TranslateResult>,
       required: false,
       default: '',
     },
@@ -102,6 +103,14 @@ export default defineComponent({
       type: Boolean,
       required: false,
       default: false,
+    },
+    width: {
+      type: String as PropType<'auto'|'large'|'medium'|'small'>,
+      required: false,
+      default: 'dynamic',
+      validator: (value: string) => {
+        return ['dynamic', 'large', 'medium', 'small'].includes(value);
+      },
     },
   },
   emits: ['update:isOpened'],
@@ -188,15 +197,24 @@ export default defineComponent({
     };
 
     const showHeader = computed(() => {
-      return currentView.value.title || currentView.value.name !== 'base';
+      return !!currentView.value.title || currentView.value.name !== 'base';
     });
 
     const componentClasses = computed(() => {
-      return {
+      const classes: {
+        'is--float': boolean;
+        'is--open': boolean;
+        'has--header': boolean;
+        [key: `is--width-${string}`]: boolean;
+      } = {
         'is--float': !props.disableFloat,
         'is--open': isOpened.value,
-        'has--header': showHeader.value
+        'has--header': showHeader.value,
       };
+
+      classes[`is--width-${props.width}`] = true;
+
+      return classes;
     });
 
     return {
@@ -258,9 +276,6 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
     padding-top: 4px;
     padding-bottom: 4px;
     background-color: $color-white;
-    min-width: 220px;
-    max-width: 340px;
-    max-width: 440px;
     overflow: auto;
     border-radius: $border-radius-default;
     @include drop-shadow-default;
@@ -321,6 +336,26 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
     }
   }
 
+  &.is--width-dynamic .sw-popover__content {
+    min-width: 220px;
+    max-width: 440px;
+  }
+
+  &.is--width-large .sw-popover__content {
+    min-width: 340px;
+    max-width: 340px;
+  }
+
+  &.is--width-medium .sw-popover__content {
+    min-width: 280px;
+    max-width: 280px;
+  }
+
+  &.is--width-small .sw-popover__content {
+    min-width: 220px;
+    max-width: 220px;
+  }
+
   &__items {
     position: relative;
   }
@@ -335,7 +370,8 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
   }
   .slideIn-enter-active,
   .slideOut-enter-active {
-    transition: all .25s ease;
+    transition: all .125s ease;
+    transition-delay: .125s;
   }
 
   .slideIn-leave-active,
@@ -344,19 +380,19 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
   }
 
   .slideIn-leave-to {
-    transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-110%, 0, 0);
     opacity: 0;
   }
   .slideIn-enter {
-    transform: translate3d(100%, 0, 0);
+    transform: translate3d(110%, 0, 0);
   }
 
   .slideOut-leave-to {
-    transform: translate3d(100%, 0, 0);
+    transform: translate3d(110%, 0, 0);
     opacity: 0;
   }
   .slideOut-enter {
-    transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-110%, 0, 0);
   }
 }
 </style>

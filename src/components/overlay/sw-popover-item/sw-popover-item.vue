@@ -96,6 +96,7 @@
 <script lang="ts">
 import type { PropType } from "vue";
 import { defineComponent, computed } from "vue";
+import { TranslateResult } from "vue-i18n";
 import SwCheckbox from '../../form/sw-checkbox/sw-checkbox.vue';
 import SwSwitch from '../../form/sw-switch/sw-switch.vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
@@ -109,7 +110,7 @@ export default defineComponent({
   },
   props: {
     label: {
-      type: String,
+      type: String as PropType<string|TranslateResult>,
       required: true,
     },
     type: {
@@ -150,7 +151,7 @@ export default defineComponent({
       default: undefined,
     },
     metaCopy: {
-      type: String,
+      type: String as PropType<string|TranslateResult>,
       required: false,
       default: '',
     },
@@ -468,6 +469,10 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
     }
   }
 
+  &__label {
+    margin-right: 4px;
+  }
+
   &__label,
   &__contextual-detail,
   &__shortcut {
@@ -477,14 +482,6 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
 
     &--clickable {
       cursor: pointer;
-    }
-  }
-
-  &__label {
-    &--clickable {
-      &:hover {
-        text-decoration: underline;
-      }
     }
   }
 

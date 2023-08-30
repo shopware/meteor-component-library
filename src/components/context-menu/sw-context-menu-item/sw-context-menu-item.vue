@@ -14,6 +14,7 @@
 import SwPopoverItem from '../../overlay/sw-popover-item/sw-popover-item.vue';
 import type { PropType } from 'vue';
 import { defineComponent } from 'vue';
+import { TranslateResult } from 'vue-i18n';
 
 export default defineComponent({
   name: 'SwContextMenuItem',
@@ -24,7 +25,7 @@ export default defineComponent({
 
   props: {
     label: {
-      type: String,
+      type: String as PropType<string|TranslateResult>,
       required: true,
     },
 
