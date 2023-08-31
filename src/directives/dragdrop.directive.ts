@@ -504,6 +504,7 @@ export const draggable: DirectiveOptions = {
       }
     }
 
+    // @ts-expect-error - typescript support is missing here
     Object.assign(el.dragConfig, dragConfig);
   },
 
@@ -552,8 +553,10 @@ export const droppable: DirectiveOptions = {
     const dropZone = dropZones.find((zone) => zone.el === el);
 
     if (isObject(binding.value)) {
+      // @ts-expect-error - typescript support is missing here
       Object.assign(dropZone?.dropConfig, binding.value);
     } else {
+      // @ts-expect-error - typescript support is missing here
       Object.assign(dropZone?.dropConfig, { data: binding.value });
     }
   },

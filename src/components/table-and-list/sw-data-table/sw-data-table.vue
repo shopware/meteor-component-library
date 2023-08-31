@@ -54,7 +54,6 @@
 
           <thead>
             <tr>
-              <!-- TODO: check if this sticky thing works -->
               <th
                 v-if="enableRowNumbering" 
                 v-stickyColumn
@@ -79,6 +78,7 @@
               </th>
 
               <template v-for="(column) in sortedColumns">
+                <!-- @vue-skip -->
                 <th
                   v-if="isColumnVisible(column)"
                   :key="column.property"
@@ -189,7 +189,6 @@
                     class="sw-data-table__table-head-add-column-indicator"
                     :auto-update-options="{ animationFrame: true }"
                   >
-                    <!-- TODO: add translation -->
                     <sw-popover
                       :title="$t('sw-data-table.addColumnIndicator.popoverTitle')"
                       @update:isOpened="(value) => {
@@ -273,6 +272,7 @@
             
           <tbody>
             <template v-if="dataSource.length > 0 || isLoading">
+              <!-- @vue-skip -->
               <tr
                 v-for="(data, rowIndex) in (isLoading ? emptyData : dataSource)"
                 :key="data.id"
@@ -299,13 +299,7 @@
                   />
                 </td>
 
-                <!-- TODO: remove this -->
-                <!-- <td v-if="enableRowNumbering">
-                  <span>{{ getRealIndex(rowIndex) }}</span>
-                </td> -->
-
                 <template v-for="column in sortedColumns">
-                  <!-- TODO: add currentHoveredRow -->
                   <td
                     v-if="isColumnVisible(column)"
                     :key="column.property + JSON.stringify(columnChanges[column.property])"
@@ -439,13 +433,13 @@
 
         <sw-button
           v-if="enableReload"
-          square
-          aria-label="reload-data"
-          @click="emitReload"
           v-tooltip="{
             message: $t('sw-data-table.reload.tooltip'),
             width: 'auto',
           }"
+          square
+          aria-label="reload-data"
+          @click="emitReload"
         >
           <sw-icon name="solid-undo-s" />
         </sw-button>
@@ -468,7 +462,7 @@ import SwContextButton from '../../context-menu/sw-context-button/sw-context-but
 import SwContextMenu from '../../context-menu/sw-context-menu-item/sw-context-menu-item.vue';
 import SwDataTableSettings from './sub-components/sw-data-table-settings/sw-data-table-settings.vue';
 import SwPopover from '../../overlay/sw-popover/sw-popover.vue';
-import SwPopoverItem from '../../overlay/sw-popover-item/sw-popover-item.vue';
+import SwPopoverItem, { SwPopoverItemType } from '../../overlay/sw-popover-item/sw-popover-item.vue';
 import SwPopoverItemResult from '../../overlay/sw-popover-item-result/sw-popover-item-result.vue';
 import SwSkeletonBar from '../../feedback-indicator/sw-skeleton-bar/sw-skeleton-bar.vue';
 import SwCheckbox from '../../form/sw-checkbox/sw-checkbox.vue';
@@ -520,6 +514,9 @@ type DataSourcePropType = {
 
 type ColumnProperty = ColumnDefinition[];
 
+/**
+ * @experimental - This component can be used but there are no guarantees for API stability yet.
+ */
 export default defineComponent({
   directives: {
     draggable: draggable,
@@ -737,7 +734,7 @@ export default defineComponent({
         label: string,
         onClick: () => void,
         icon: 'default'|'critical'|'active',
-        type: string,
+        type: SwPopoverItemType,
         metaCopy: string,
         contextualDetail: string,
       }[]>,
@@ -1924,14 +1921,6 @@ $tableCellPadding: $tableCellPaddingTop $tableCellPaddingRight $tableCellPadding
   &__column-outline-framing-active tr.--hovered td {
     border-top-color: $color-shopware-brand-400;
     border-bottom-color: $color-shopware-brand-400;
-  }
-
-  &__column-outline-framing-active tr.--hovered td.--hovered {
-    // TODO: evaluate with design if this is wanted
-    // border-top-color: $color-gray-200;
-    // border-bottom-color: $color-gray-200;
-    // border-right-color: $color-gray-200;
-    // border-left-color: $color-gray-200;
   }
 
   &.sw-data-table__stripes tr:nth-child(even) {

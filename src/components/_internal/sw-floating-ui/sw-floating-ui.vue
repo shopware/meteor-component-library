@@ -127,7 +127,6 @@ export default defineComponent({
             return;
           }
 
-          // @ts-expect-error - placement is one of these values
           const staticSide = {
             top: 'bottom',
             right: 'left',

@@ -101,6 +101,8 @@ import SwCheckbox from '../../form/sw-checkbox/sw-checkbox.vue';
 import SwSwitch from '../../form/sw-switch/sw-switch.vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 
+export type SwPopoverItemType = 'default'|'critical'|'active';
+
 export default defineComponent({
   name: 'SwPopoverItem',
   components: {
@@ -114,7 +116,7 @@ export default defineComponent({
       required: true,
     },
     type: {
-      type: String as PropType<'default'|'critical'|'active'>,
+      type: String as PropType<SwPopoverItemType>,
       required: false,
       default: 'default',
       validator: (value: string) => {

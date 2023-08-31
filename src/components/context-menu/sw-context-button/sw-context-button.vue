@@ -39,7 +39,7 @@
 import type { PropType } from 'vue';
 import Vue from 'vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
-import type { View } from '../../overlay/sw-popover/sw-popover.vue';
+import type { View } from '../../overlay/sw-popover/sw-popover.interfaces';
 import SwPopover from '../../overlay/sw-popover/sw-popover.vue';
 
 export default Vue.extend({

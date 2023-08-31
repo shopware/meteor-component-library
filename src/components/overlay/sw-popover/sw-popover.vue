@@ -47,7 +47,7 @@
         <transition
           :name="viewTransition"
         >
-          <div :key="currentView.name">
+          <div :key="currentView.name.toString()">
             <slot
               :name="'popover-items__' + currentView.name"
               :change-view="changeView"
@@ -71,12 +71,7 @@ import SwButton from '../../form/sw-button/sw-button.vue';
 import SwSmoothReflow from '../../_internal/sw-smooth-reflow.vue';
 import SwFloatingUi from '../../_internal/sw-floating-ui/sw-floating-ui.vue';
 import { TranslateResult } from 'vue-i18n';
-
-export interface View {
-  name: string|TranslateResult;
-  title: string|TranslateResult;
-  childViews?: View[];
-}
+import { View } from './sw-popover.interfaces';
 
 export default defineComponent({
   components: {
@@ -134,7 +129,7 @@ export default defineComponent({
       const previousView = allViews.value.find((view) => view.childViews?.some(v => v.name === activeView.value));
 
       if (previousView) {
-        activeView.value = previousView.name;
+        activeView.value = previousView.name as string;
       } else {
         activeView.value = 'base';
       }

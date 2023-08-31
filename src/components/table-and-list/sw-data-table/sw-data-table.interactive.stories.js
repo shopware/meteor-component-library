@@ -152,7 +152,7 @@ VisualTestOpenSettingsMenu.play = async () => {
 
   await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
 
-  const toggleTableSettingsButton = canvas.getByLabelText('Toggle table settings');
+  const toggleTableSettingsButton = canvas.getByLabelText('Toggle view settings');
 
   await userEvent.click(toggleTableSettingsButton);
 
@@ -175,7 +175,7 @@ VisualTestOpenColumnSettingsMenu.play = async () => {
 
   await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
 
-  const toggleTableSettingsButton = canvas.getByLabelText('Toggle table settings');
+  const toggleTableSettingsButton = canvas.getByLabelText('Toggle view settings');
 
   await userEvent.click(toggleTableSettingsButton);
 

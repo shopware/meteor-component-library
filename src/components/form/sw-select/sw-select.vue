@@ -45,6 +45,7 @@
       </sw-select-selection-list>
     </template>
     <template #results-list>
+      <!-- @vue-ignore -->
       <sw-select-result-list
         ref="swSelectResultList"
         :options="visibleResults"

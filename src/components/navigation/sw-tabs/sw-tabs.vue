@@ -42,6 +42,7 @@
           />
         </li>
 
+        <!-- @vue-skip -->
         <sw-context-button
           v-if="moreItems.length"
           ref="more-items-button"

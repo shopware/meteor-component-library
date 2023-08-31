@@ -91,7 +91,7 @@ export default Vue.extend({
     },
 
     focusEl: {
-      type: [HTMLDocument, HTMLElement],
+      type: [HTMLDocument, HTMLElement] as PropType<HTMLDocument|HTMLElement>,
       required: false,
       default() { return document; },
     },
@@ -117,7 +117,9 @@ export default Vue.extend({
     },
   },
 
-  data() {
+  data(): {
+    activeItemIndex: number,
+  } {
     return {
       activeItemIndex: 0,
     };
@@ -266,7 +268,7 @@ return this.emptyMessage || this.$tc('sw-select-result-list.messageNoResults');
       this.$emit('item-select-by-keyboard', this.activeItemIndex);
     },
 
-    onScroll(event: MouseEvent) {
+    onScroll(event: UIEvent) {
       // @ts-expect-error - event target is defined
       if (this.getBottomDistance(event.target) !== 0) {
         return;

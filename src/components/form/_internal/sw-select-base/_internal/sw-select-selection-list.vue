@@ -87,7 +87,7 @@ export default Vue.extend({
 
   props: {
     selections: {
-      type: Array,
+      type: Array as PropType<Record<string, string>[]>,
       required: false,
       default: () => [],
     },
@@ -142,7 +142,7 @@ export default Vue.extend({
       default: false,
     },
     selectionDisablingMethod: {
-      type: Function as PropType<(selection: string) => boolean>,
+      type: Function as PropType<(selection: Record<string, string>) => boolean>,
       required: false,
       default: () => false,
     },
@@ -177,7 +177,7 @@ export default Vue.extend({
   },
 
   methods: {
-    isSelectionDisabled(selection: string) {
+    isSelectionDisabled(selection: Record<string, string>) {
       if (!this.multiSelection) {
         return true;
       }

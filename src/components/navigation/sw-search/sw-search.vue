@@ -15,7 +15,7 @@
         :name="identification"
         :disabled="disabled"
         :value="currentValue"
-        :placeholder="$t(placeholder) ? $t(placeholder) : $t('sw-search.searchPlaceholder')"
+        :placeholder="$t(placeholder) ? $t(placeholder).toString() : $t('sw-search.searchPlaceholder').toString()"
         @input="onInput"
         @change="onChange"
         @focus="setFocusClass"

@@ -19,7 +19,7 @@
 <script lang="ts">
 import type { PropType} from 'vue';
 import { defineComponent, computed } from 'vue';
-import type { BaseColumnDefinition, ColumnDefinition } from '../sw-data-table.vue';
+import type { BaseColumnDefinition } from '../sw-data-table.vue';
 import { get } from 'lodash-es';
 
 export interface TextColumnDefinition extends BaseColumnDefinition {
@@ -32,7 +32,7 @@ export default defineComponent({
 
   props: {
     columnDefinition: {
-      type: Object as PropType<ColumnDefinition>,
+      type: Object as PropType<TextColumnDefinition>,
       required: true,
     },
 

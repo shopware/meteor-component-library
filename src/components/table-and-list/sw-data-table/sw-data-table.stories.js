@@ -1,5 +1,6 @@
 import SwDataTable from './sw-data-table.vue';
 import SwButton from '../../form/sw-button/sw-button.vue';
+import SwBanner from '../../feedback-indicator/sw-banner/sw-banner.vue';
 import SwDataTableFixtures from './sw-data-table.fixtures.json';
 import { get } from 'lodash-es';
 
@@ -7,6 +8,12 @@ export default {
   title: 'Components/Table and list/sw-data-table',
   component: SwDataTable,
   argTypes: {
+    // TODO: can be removed when component is not experimental anymore
+    _storybook_internal_show_experimental_warning_: {
+      table: {
+        disable: true,
+      }
+    },
     // events
     reload: {
       action: 'reload',
@@ -257,11 +264,13 @@ export default {
     ],
     disableEdit: false,
     disableDelete: false,
+    // TODO: can be removed when component is not experimental anymore
+    _storybook_internal_show_experimental_warning_: false,
   }
 };
 
 const Template = (args, { argTypes }) => ({
-  components: { SwDataTable, SwButton },
+  components: { SwDataTable, SwButton, SwBanner },
   props: Object.keys(argTypes),
   data() {
     return {
@@ -535,6 +544,22 @@ const Template = (args, { argTypes }) => ({
       overflow: auto;
     "
   >
+    <div
+      v-if="_storybook_internal_show_experimental_warning_"
+      style="width: 960px; max-width: 100%; margin: 0 auto;"
+    >
+      <sw-banner
+        title="Experimental component"
+        variant="attention"
+      >
+      This component is currently in an experimental state and may undergo frequent
+      changes. Please use it with discretion and be prepared for potential updates
+      that could impact its functionality, appearance, or behavior. We welcome
+      feedback, which can be submitted in the GitHub Discussions of the
+      Meteor Component Library.
+      </sw-banner>
+    </div>
+
     <sw-data-table
       v-bind="$props"
       :dataSource="dataSourceValue"
@@ -582,10 +607,15 @@ const Template = (args, { argTypes }) => ({
 
 export const Default = Template.bind();
 Default.storyName = 'Default';
+Default.args = {
+  ...Default.args,
+  _storybook_internal_show_experimental_warning_: true,
+};
 
 export const Full = Template.bind();
 Full.storyName = 'Full';
 Full.args = {
   ...Default.args,
+  _storybook_internal_show_experimental_warning_: true,
   layout: 'full'
 };

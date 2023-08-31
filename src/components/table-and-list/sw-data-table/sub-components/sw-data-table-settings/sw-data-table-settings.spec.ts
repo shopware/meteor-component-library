@@ -91,11 +91,11 @@ describe("sw-data-table-settings", () => {
     expect(popoverItems.at(0).text()).toContain('6');
 
     // The popover items should have the correct label
-    expect(popoverItems.at(1).text()).toContain('Numbered column');
-    expect(popoverItems.at(2).text()).toContain('Show stripes');
-    expect(popoverItems.at(3).text()).toContain('Show outlines');
-    expect(popoverItems.at(4).text()).toContain('Frame outlines');
-    expect(popoverItems.at(4).text()).toContain('Highlight column outlines on mouse hover.');
+    expect(popoverItems.at(1).text()).toContain('sw-data-table-settings.showNumberedColumn');
+    expect(popoverItems.at(2).text()).toContain('sw-data-table-settings.showStripedRows');
+    expect(popoverItems.at(3).text()).toContain('sw-data-table-settings.showOutlines');
+    expect(popoverItems.at(4).text()).toContain('sw-data-table-settings.frameOutlines');
+    expect(popoverItems.at(4).text()).toContain('sw-data-table-settings.frameOutlinesMetaCopy');
     expect(popoverItems.at(5).text()).toContain('sw-data-table-settings.resetAllChanges');
   });
 

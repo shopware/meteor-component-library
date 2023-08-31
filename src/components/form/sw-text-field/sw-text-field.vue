@@ -251,21 +251,21 @@ export default Vue.extend({
   },
 
   methods: {
-    onChange(event: Event) {
+    onChange(event: Event): void {
       // @ts-expect-error - target is defined
       this.$emit('change', event.target.value || '');
     },
 
-    onInput(event: Event) {
+    onInput(event: Event): void {
       // @ts-expect-error - target is defined
       this.$emit('input', event.target.value);
     },
 
-    restoreInheritance() {
+    restoreInheritance(): void {
       this.$emit('input', null);
     },
 
-    createInputId(identification: string) {
+    createInputId(identification: string): string {
       if (!this.idSuffix || this.idSuffix.length <= 0) {
         return identification;
       }
@@ -273,11 +273,11 @@ export default Vue.extend({
       return `${identification}-${this.idSuffix}`;
     },
 
-    setFocusClass() {
+    setFocusClass(): void {
       this.hasFocus = true;
     },
 
-    removeFocusClass() {
+    removeFocusClass(): void {
       this.hasFocus = false;
     },
   },

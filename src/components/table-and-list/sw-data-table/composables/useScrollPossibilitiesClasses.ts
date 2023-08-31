@@ -73,7 +73,6 @@ export default function useScrollPossibilitiesClasses(refElement: Ref) {
     setScrollPossibilitiesClasses(refElement.value)
   }, 15);
 
-  // @ts-expect-error - ResizeObserver is not defined in this older TS version
   const refElementResizeObserver = new ResizeObserver(() => {
     nextTick().then(updateSetScrollPossibiltiesClasses)
   })
