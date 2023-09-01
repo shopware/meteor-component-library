@@ -73,7 +73,6 @@ export default function useScrollPossibilitiesClasses(refElement: Ref) {
     setScrollPossibilitiesClasses(refElement.value)
   }, 15);
 
-  // @ts-expect-error - ResizeObserver is not defined in this older TS version
   const refElementResizeObserver = new ResizeObserver(() => {
     nextTick().then(updateSetScrollPossibiltiesClasses)
   })
@@ -83,8 +82,13 @@ export default function useScrollPossibilitiesClasses(refElement: Ref) {
   })
 
   onMounted(() => {
-    refElement.value.addEventListener('scroll', updateSetScrollPossibiltiesClasses);
     window.addEventListener('resize', updateSetScrollPossibiltiesClasses)
+
+    if (!refElement.value) {
+      return;
+    }
+
+    refElement.value.addEventListener('scroll', updateSetScrollPossibiltiesClasses);
     refElementResizeObserver.observe(refElement.value);
 
     nextTick().then(() => {
@@ -93,8 +97,13 @@ export default function useScrollPossibilitiesClasses(refElement: Ref) {
   })
 
   onBeforeUnmount(() => {
-    refElement.value.removeEventListener('scroll', updateSetScrollPossibiltiesClasses);
     window.removeEventListener('resize', updateSetScrollPossibiltiesClasses)
+
+    if (!refElement.value) {
+      return;
+    }
+
+    refElement.value.removeEventListener('scroll', updateSetScrollPossibiltiesClasses);
     refElementResizeObserver.unobserve(refElement.value);
   })
 

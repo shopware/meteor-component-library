@@ -25,6 +25,8 @@ function createWrapper({ propsData = {}}: {
           position: 0,
           isVisible: true,
           parentGroup: 'visible',
+          isSortable: true,
+          isHidable: false,
         },
         {
           id: 'manufacturer',
@@ -32,6 +34,8 @@ function createWrapper({ propsData = {}}: {
           position: 1,
           isVisible: true,
           parentGroup: 'visible',
+          isSortable: true,
+          isHidable: true,
         },
         {
           id: 'active',
@@ -39,6 +43,8 @@ function createWrapper({ propsData = {}}: {
           position: 2,
           isVisible: true,
           parentGroup: 'visible',
+          isSortable: true,
+          isHidable: true,
         },
         {
           id: 'price',
@@ -46,6 +52,8 @@ function createWrapper({ propsData = {}}: {
           position: 3,
           isVisible: true,
           parentGroup: 'visible',
+          isSortable: true,
+          isHidable: true,
         },
         {
           id: 'stock',
@@ -53,6 +61,8 @@ function createWrapper({ propsData = {}}: {
           position: 4,
           isVisible: false,
           parentGroup: 'hidden',
+          isSortable: true,
+          isHidable: true,
         },
         {
           id: 'available',
@@ -60,6 +70,8 @@ function createWrapper({ propsData = {}}: {
           position: 5,
           isVisible: false,
           parentGroup: 'hidden',
+          isSortable: true,
+          isHidable: true,
          },
          {
           id: 'release_date',
@@ -67,6 +79,8 @@ function createWrapper({ propsData = {}}: {
           position: 6,
           isVisible: false,
           parentGroup: undefined,
+          isSortable: true,
+          isHidable: true,
          }
       ],
       ...propsData
@@ -251,6 +265,10 @@ describe("sw-popover-item-result", () => {
     const allPopoverItems = wrapper.findAllComponents({ name: 'SwPopoverItem' });
 
     allPopoverItems.wrappers.forEach((popoverItem) => {
+      if (popoverItem.props('label') === 'Name') {
+        return;
+      }
+
       expect(popoverItem.props('showVisibility')).toBe(true);
     });
   })
@@ -284,6 +302,8 @@ describe("sw-popover-item-result", () => {
             isSelected: true,
             metaCopy: 'My example meta copy',
             contextualDetail: 'My example contextual detail',
+            isSortable: true,
+            isHidable: true,
           }
         ]
       }
@@ -312,6 +332,8 @@ describe("sw-popover-item-result", () => {
           isSelected: false,
           metaCopy: 'My changed example meta copy',
           contextualDetail: 'My changed example contextual detail',
+          isSortable: false,
+          isHidable: false,
         }
       ]
     })
@@ -322,7 +344,7 @@ describe("sw-popover-item-result", () => {
     expect(firstPopoverItem.props('checkboxPartial')).toBe(false);
     expect(firstPopoverItem.props('checkboxChecked')).toBe(false);
 
-    expect(firstPopoverItem.props('showVisibility')).toBe(true);
+    expect(firstPopoverItem.props('showVisibility')).toBe(false);
     expect(firstPopoverItem.props('visible')).toBe(false);
 
     expect(firstPopoverItem.props('label')).toBe('My changed example label');

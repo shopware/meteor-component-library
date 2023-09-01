@@ -108,26 +108,31 @@ export default defineComponent({
       {
         id: 'pagination-first',
         onClick: () => emit('change-current-page', 1),
-        disabled: !previousPageIsPossible.value
+        disabled: !previousPageIsPossible.value,
+        minSquare: true,
       },
       {
         id: 'pagination-previous',
         onClick: () => emit('change-current-page', props.currentPage - 1),
-        disabled: !previousPageIsPossible.value
+        disabled: !previousPageIsPossible.value,
+        minSquare: true,
       },
       {
         id: 'pagination-current',
-        disabled: totalPages.value <= 1
+        disabled: totalPages.value <= 1,
+        minSquare: true,
       },
       {
         id: 'pagination-next',
         onClick: () => emit('change-current-page', props.currentPage + 1),
-        disabled: !nextPageIsPossible.value
+        disabled: !nextPageIsPossible.value,
+        minSquare: true,
       },
       {
         id: 'pagination-last',
         onClick: () => emit('change-current-page', totalPages.value),
-        disabled: !nextPageIsPossible.value
+        disabled: !nextPageIsPossible.value,
+        minSquare: true,
       },
     ]));
 

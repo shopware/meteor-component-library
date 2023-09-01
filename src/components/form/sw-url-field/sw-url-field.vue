@@ -45,6 +45,7 @@
     </template>
 
     <template #element="{identification}">
+      <!-- @vue-ignore -->
       <input
         :id="identification"
         type="url"

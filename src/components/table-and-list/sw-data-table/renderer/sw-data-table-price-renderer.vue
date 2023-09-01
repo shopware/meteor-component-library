@@ -19,7 +19,6 @@
 <script lang="ts">
 import type { PropType} from 'vue';
 import { defineComponent, computed } from 'vue';
-import type { ColumnDefinition } from '../sw-data-table.vue';
 import { get } from 'lodash-es';
 import { currency } from '../../../../utils/format';
 import type { BaseColumnDefinition } from '../sw-data-table.vue';
@@ -39,7 +38,7 @@ export default defineComponent({
 
   props: {
     columnDefinition: {
-      type: Object as PropType<ColumnDefinition>,
+      type: Object as PropType<PriceColumnDefinition>,
       required: true,
     },
 
@@ -97,7 +96,11 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style>
+.sw-data-table__table-head-inner-wrapper-price-renderer {
+  justify-content: flex-end;
+}
+
 .sw-data-table-price-renderer {
   text-align: right;
 }

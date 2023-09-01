@@ -18,12 +18,18 @@ VisualTestRenderFullTable.args = {
   layout: 'full',
 };
 
+export const VisualTestRenderEmptyState = Template.bind();
+VisualTestRenderEmptyState.storyName = 'Should render the empty state';
+VisualTestRenderEmptyState.args = {
+  dataSource: [],
+};
+
 export const VisualTestRenderTableStickyHeader = Template.bind();
 VisualTestRenderTableStickyHeader.storyName = 'Should render the Table with sticky header';
 VisualTestRenderTableStickyHeader.play = async () => {
   const canvas = within(document.getElementById('root'));
 
-  await waitUntilRendered(() => document.body.textContent.includes('Last product name'));
+  await waitUntilRendered(() => document.body.textContent.includes('Gorgeous Wooden Ball'));
   await waitUntilRendered(() => document.body.textContent.includes('Available'));
 
   // wait until everything is correctly rendered
@@ -34,7 +40,7 @@ VisualTestRenderTableStickyHeader.play = async () => {
   const swDataTable = document.querySelector('.sw-data-table__table-wrapper');
   swDataTable.scrollTop = swDataTable.scrollHeight;
 
-  expect(canvas.getByText('Last product name')).toBeInTheDocument();
+  expect(canvas.getByText('Gorgeous Wooden Ball')).toBeInTheDocument();
 };
 
 export const VisualTestRenderTableWithoutCardHeader = Template.bind();
@@ -47,14 +53,14 @@ VisualTestRenderTableWithoutCardHeader.args = {
 VisualTestRenderTableWithoutCardHeader.play = async () => {
   const canvas = within(document.getElementById('root'));
 
-  await waitUntilRendered(() => document.body.textContent.includes('Awesome Wooden Hat'));
+  await waitUntilRendered(() => document.body.textContent.includes('Awesome Concrete Chair'));
   await waitUntilRendered(() => document.body.textContent.includes('Available'));
 
   // wait until everything is correctly rendered
   const dataTable = document.querySelector('.sw-data-table');
   await dataTable.parentElement.__vue__.$nextTick();
 
-  expect(canvas.getAllByText('Awesome Wooden Hat')[0]).toBeInTheDocument();
+  expect(canvas.getAllByText('Awesome Concrete Chair')[0]).toBeInTheDocument();
 };
 
 export const VisualTestRenderTableWithScrollShadows = Template.bind();
@@ -146,7 +152,7 @@ VisualTestOpenSettingsMenu.play = async () => {
 
   await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
 
-  const toggleTableSettingsButton = canvas.getByLabelText('Toggle table settings');
+  const toggleTableSettingsButton = canvas.getByLabelText('Toggle view settings');
 
   await userEvent.click(toggleTableSettingsButton);
 
@@ -169,7 +175,7 @@ VisualTestOpenColumnSettingsMenu.play = async () => {
 
   await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
 
-  const toggleTableSettingsButton = canvas.getByLabelText('Toggle table settings');
+  const toggleTableSettingsButton = canvas.getByLabelText('Toggle view settings');
 
   await userEvent.click(toggleTableSettingsButton);
 
@@ -315,7 +321,7 @@ VisualTestDataSortingInColumnSettings.play = async () => {
 
   await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
 
-  const rowContentName = await canvas.getAllByText('Unbranded Granite Chicken');
+  const rowContentName = await canvas.getAllByText('Unbranded Steel Bike');
   expect(rowContentName.length).toBeGreaterThan(0);
 };
 
@@ -401,11 +407,23 @@ VisualTestHideOutlines.storyName = 'Without outlines';
 VisualTestHideOutlines.args = {
   showOutlines: false,
 };
+VisualTestHideOutlines.play = async () => {
+  const canvas = within(document.getElementById('root'));
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
+
+  expect(canvas.getByText('Awesome Concrete Chair')).toBeInTheDocument();
+};
 
 export const VisualTestHideStripes = Template.bind();
 VisualTestHideStripes.storyName = 'Without stripes';
 VisualTestHideStripes.args = {
   showStripes: false,
+};
+VisualTestHideStripes.play = async () => {
+  const canvas = within(document.getElementById('root'));
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
+
+  expect(canvas.getByText('Awesome Concrete Chair')).toBeInTheDocument();
 };
 
 export const VisualTestBlankTable = Template.bind();
@@ -414,9 +432,21 @@ VisualTestBlankTable.args = {
   showOutlines: false,
   showStripes: false,
 };
+VisualTestBlankTable.play = async () => {
+  const canvas = within(document.getElementById('root'));
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
+
+  expect(canvas.getByText('Awesome Concrete Chair')).toBeInTheDocument();
+};
 
 export const VisualTestEnableRowNumbering = Template.bind();
 VisualTestEnableRowNumbering.storyName = 'With row numbering';
 VisualTestEnableRowNumbering.args = {
   enableRowNumbering: true,
+};
+VisualTestEnableRowNumbering.play = async () => {
+  const canvas = within(document.getElementById('root'));
+  await waitUntilRendered(() => document.querySelectorAll('.sw-skeleton-bar').length === 0);
+
+  expect(canvas.getByText('Awesome Concrete Chair')).toBeInTheDocument();
 };

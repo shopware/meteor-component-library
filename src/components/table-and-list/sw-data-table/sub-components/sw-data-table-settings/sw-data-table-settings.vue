@@ -3,12 +3,17 @@
     class="sw-data-table-settings"
     :title="$t('sw-data-table-settings.title')"
     :child-views="tableSettingsChildViews"
+    width="large"
   >
     <template #trigger="{ toggleFloatingUi }">
       <sw-button
+        v-tooltip="{
+          message: $t('sw-data-table-settings.tooltip'),
+          width: 'auto',
+        }"
         variant="secondary"
         square
-        aria-label="Toggle table settings"
+        :aria-label="$t('sw-data-table-settings.aria-toggle-table-settings')"
         @click="toggleFloatingUi"
       >
         <sw-icon name="solid-cog-s" />
@@ -26,16 +31,15 @@
       />
 
       <sw-popover-item
-        label="Numbered column"
+        :label="$t('sw-data-table-settings.showNumberedColumn')"
         show-switch
         :switch-value="enableRowNumbering"
         icon="solid-hashtag"
         @change-switch="($event) => $emit('change-enable-row-numbering', $event)"
       />
 
-      <!-- TODO: add translation -->
       <sw-popover-item
-        label="Show stripes"
+        :label="$t('sw-data-table-settings.showStripedRows')"
         show-switch
         :switch-value="showStripes"
         icon="solid-bars"
@@ -44,7 +48,7 @@
 
       <!-- TODO: the icon in figma solid-grip-lines was rotated and is not available -->
       <sw-popover-item
-        label="Show outlines"
+        :label="$t('sw-data-table-settings.showOutlines')"
         show-switch
         :switch-value="showOutlines"
         icon="solid-table"
@@ -52,8 +56,8 @@
       />
 
       <sw-popover-item
-        label="Frame outlines"
-        metaCopy="Highlight column outlines on mouse hover."
+        :label="$t('sw-data-table-settings.frameOutlines')"
+        :meta-copy="$t('sw-data-table-settings.frameOutlinesMetaCopy')"
         show-switch
         :switch-value="enableOutlineFraming"
         icon="solid-highlight"
@@ -66,8 +70,8 @@
       -->
 
       <sw-popover-item
-        type="critical"
         :label="$t('sw-data-table-settings.resetAllChanges')"
+        border-top
         icon="solid-undo"
         :on-label-click="resetAllChanges"
       />
@@ -96,6 +100,7 @@ import SwIcon from "../../../../icons-media/sw-icon/sw-icon.vue";
 import SwPopover from '../../../../overlay/sw-popover/sw-popover.vue';
 import SwPopoverItem from '../../../../overlay/sw-popover-item/sw-popover-item.vue';
 import SwPopoverItemResult from '../../../../overlay/sw-popover-item-result/sw-popover-item-result.vue';
+import SwTooltipDirective from '../../../../../directives/tooltip.directive';
 import type { ColumnDefinition } from '../../sw-data-table.vue';
 import type { Option as ItemResultOption } from '../../../../overlay/sw-popover-item-result/sw-popover-item-result.vue';
 
@@ -107,6 +112,9 @@ export default defineComponent({
     'sw-popover': SwPopover,
     'sw-popover-item': SwPopoverItem,
     'sw-popover-item-result': SwPopoverItemResult,
+  },
+  directives: {
+    'tooltip': SwTooltipDirective,
   },
   props: {
     columns: {
@@ -157,13 +165,36 @@ export default defineComponent({
               labelHidden: 'Hidden in table',
               actionLabelHidden: 'Show all',
             }
-          }
+          },
+          showNumberedColumn: 'Show numbered column',
+          showStripedRows: 'Show striped rows',
+          showOutlines: 'Show outlines',
+          frameOutlines: 'Frame outlines',
+          frameOutlinesMetaCopy: 'Highlight column and row outlines on mouse hover',
+          tooltip: "View settings",
+          'aria-toggle-table-settings': 'Toggle view settings',
         },
       },
       de: {
         "sw-data-table-settings": {
           title: "Einstellungen",
           resetAllChanges: "Alle Änderungen zurücksetzen",
+          columnOrder: {
+            title: 'Spalten',
+            columnGroups: {
+              labelShown: 'In Tabelle sichtbar',
+              actionLabelShown: 'Alle ausblenden',
+              labelHidden: 'In Tabelle ausgeblendet',
+              actionLabelHidden: 'Alle einblenden',
+            }
+          },
+          showNumberedColumn: 'Zeige nummerierte Spalte an',
+          showStripedRows: 'Zeige gestreifte Zeilen an',
+          showOutlines: 'Zeige Umrisse an',
+          frameOutlines: 'Hebe Umrisse vor',
+          frameOutlinesMetaCopy: 'Hervorhebung von Spalten- und Zeilenumrissen bei Mausüberlagerung',
+          tooltip: "Tabelleneinstellungen",
+          'aria-toggle-table-settings': 'Tabelleneinstellungen umschalten',
         },
       },
     },
@@ -210,6 +241,8 @@ export default defineComponent({
           parentGroup: (column.visible ?? true) ? 'visible' : 'hidden',
           position: column.position,
           isVisible: column.visible ?? true,
+          isHidable: isPrimaryColumn(column) ? false : true,
+          isSortable: isPrimaryColumn(column) ? false : true,
         }
       });
     })
@@ -220,6 +253,10 @@ export default defineComponent({
 
     const onColumnClickGroupAction = (groupId: string) => {
       props.columns.forEach((column) => {
+        if (isPrimaryColumn(column)) {
+          return;
+        }
+
         onColumnChangeVisibility(column.property, groupId === 'visible' ? false : true);
       })
     }
@@ -247,6 +284,10 @@ export default defineComponent({
       emit('reset-all-changes')
     }
 
+    const isPrimaryColumn = (column: ColumnDefinition) => {
+      return props.columns[0].property === column.property;
+    };
+
     return {
       tableSettingsChildViews,
       resetAllChanges,
@@ -254,7 +295,8 @@ export default defineComponent({
       columnOrderOptions,
       onColumnChangeVisibility,
       onColumnClickGroupAction,
-      onColumnChangeOrder
+      onColumnChangeOrder,
+      isPrimaryColumn,
     };
   },
 });

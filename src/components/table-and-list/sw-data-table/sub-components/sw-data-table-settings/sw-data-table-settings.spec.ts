@@ -91,11 +91,11 @@ describe("sw-data-table-settings", () => {
     expect(popoverItems.at(0).text()).toContain('6');
 
     // The popover items should have the correct label
-    expect(popoverItems.at(1).text()).toContain('Numbered column');
-    expect(popoverItems.at(2).text()).toContain('Show stripes');
-    expect(popoverItems.at(3).text()).toContain('Show outlines');
-    expect(popoverItems.at(4).text()).toContain('Frame outlines');
-    expect(popoverItems.at(4).text()).toContain('Highlight column outlines on mouse hover.');
+    expect(popoverItems.at(1).text()).toContain('sw-data-table-settings.showNumberedColumn');
+    expect(popoverItems.at(2).text()).toContain('sw-data-table-settings.showStripedRows');
+    expect(popoverItems.at(3).text()).toContain('sw-data-table-settings.showOutlines');
+    expect(popoverItems.at(4).text()).toContain('sw-data-table-settings.frameOutlines');
+    expect(popoverItems.at(4).text()).toContain('sw-data-table-settings.frameOutlinesMetaCopy');
     expect(popoverItems.at(5).text()).toContain('sw-data-table-settings.resetAllChanges');
   });
 
@@ -185,7 +185,7 @@ describe("sw-data-table-settings", () => {
     expect(wrapper.emitted()['change-column-visibility']![0]).toEqual(['active', false]);
   });
 
-  it("should change the visibility of all column items to false when click on group header of visibility", async () => {
+  it("should change the visibility of all non-pinned column items to false when click on group header of visibility", async () => {
     const wrapper = await createWrapper();
 
     // Click on "Columns" label to switch to the columns view
@@ -201,13 +201,13 @@ describe("sw-data-table-settings", () => {
 
     // Check if the change-column-visibility was emitted correctly to false for all columns
     expect(wrapper.emitted()['change-column-visibility']).toBeTruthy();
-    expect(wrapper.emitted()['change-column-visibility']!.length).toBe(6);
+    expect(wrapper.emitted()['change-column-visibility']!.length).toBe(5);
     wrapper.emitted()['change-column-visibility']!.forEach(emit => {
       expect(emit[1]).toBe(false);
     })
   });
 
-  it("should change the visibility of all column items to true when click on group header of hidden", async () => {
+  it("should change the visibility of all non-pinned column items to true when click on group header of hidden", async () => {
     const wrapper = await createWrapper();
 
     // Click on "Columns" label to switch to the columns view
@@ -223,7 +223,7 @@ describe("sw-data-table-settings", () => {
 
     // Check if the change-column-visibility was emitted correctly to false for all columns
     expect(wrapper.emitted()['change-column-visibility']).toBeTruthy();
-    expect(wrapper.emitted()['change-column-visibility']!.length).toBe(6);
+    expect(wrapper.emitted()['change-column-visibility']!.length).toBe(5);
     wrapper.emitted()['change-column-visibility']!.forEach(emit => {
       expect(emit[1]).toBe(true);
     })

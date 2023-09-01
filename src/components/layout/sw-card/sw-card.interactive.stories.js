@@ -74,7 +74,7 @@ VisualTestExtendedPageWithOpenedContextActions.args = {
 VisualTestExtendedPageWithOpenedContextActions.play = async () => {
   const canvas = within(document.getElementById('root'));
 
-  const button = await canvas.getByRole('button');
+  const button = await canvas.getByLabelText('Context menu');
 
   await userEvent.click(button);
 

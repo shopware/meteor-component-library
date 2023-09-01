@@ -127,7 +127,6 @@ export default defineComponent({
             return;
           }
 
-          // @ts-expect-error - placement is one of these values
           const staticSide = {
             top: 'bottom',
             right: 'left',
@@ -174,6 +173,7 @@ export default defineComponent({
 
       // remove the popover from the body
       if (floatingUiContent.value && bodyContainer.contains(floatingUiContent.value)) {
+        // TODO: this needs to be refactored in Vue3 to use teleport
         bodyContainer.removeChild(floatingUiContent.value);
       }
     };
@@ -232,7 +232,7 @@ export default defineComponent({
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 100;
+  z-index: 150;
 
   &[data-show] {
     display: block;

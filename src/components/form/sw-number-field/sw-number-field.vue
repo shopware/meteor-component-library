@@ -26,6 +26,7 @@
     </template>
 
     <template #element="{identification}">
+      <!-- @vue-ignore -->
       <input
         :id="createInputId(identification)"
         type="text"

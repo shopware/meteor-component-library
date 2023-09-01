@@ -14,6 +14,7 @@
         :value="searchValue"
         @change="emitSearchValueChange"
       />
+      <slot name="toolbar" />
     </template>
 
     <template #default>
@@ -44,12 +45,31 @@
         ref="tableWrapper"
         class="sw-data-table__table-wrapper"
       >
-        <table ref="dataTable">
+        <table
+          ref="dataTable"
+        >
+          <caption class="sw-data-table__caption">
+            {{ caption }}
+          </caption>
+
           <thead>
             <tr>
               <th
+                v-if="enableRowNumbering" 
+                v-stickyColumn
+                class="sw-data-table__table-row-number-head"
+                scope="col"
+              >
+                <span>
+                  #
+                </span>
+              </th>
+
+              <th
                 v-if="allowRowSelection"
+                v-stickyColumn
                 class="sw-data-table__table-selection-head"
+                scope="col"
               >
                 <sw-checkbox
                   :checked="somethingSelected"
@@ -58,6 +78,7 @@
               </th>
 
               <template v-for="(column) in sortedColumns">
+                <!-- @vue-skip -->
                 <th
                   v-if="isColumnVisible(column)"
                   :key="column.property"
@@ -67,11 +88,14 @@
                     }
                   }"
                   v-draggable="{ ...dragConfig, data: column }"
+                  scope="col"
                   class="sw-data-table__table-wrapper-table-head"
                   :class="getColumnHeaderClasses(column)"
                   :data-header-column-property="column.property"
                   :style="renderColumnHeaderStyle(column)"
                   :data-testid="'column-table-head__' + column.property"
+                  @mouseenter="() => currentHoveredColumn = column.property"
+                  @mouseleave="() => currentHoveredColumn = null"
                 >
                   <div
                     class="sw-data-table__table-head-dragzone"
@@ -89,7 +113,10 @@
                     </div>
                   </div>
 
-                  <div class="sw-data-table__table-head-inner-wrapper">
+                  <div
+                    class="sw-data-table__table-head-inner-wrapper"
+                    :class="getColumnHeaderInnerWrapperClasses(column)"
+                  >
                     <span>{{ column.label }}</span>
 
                     <div
@@ -136,6 +163,7 @@
                         contextual-detail="A -> Z"
                         :on-label-click="() => onColumnSettingsSortChange(column.property, 'ASC', toggleFloatingUi)"
                       />
+
                       <sw-popover-item
                         v-if="column.sortable"
                         :label="$t('sw-data-table.columnSettings.sortDescending')"
@@ -143,19 +171,26 @@
                         contextual-detail="Z -> A"
                         :on-label-click="() => onColumnSettingsSortChange(column.property, 'DESC', toggleFloatingUi)"
                       />
+
+                      <sw-popover-item
+                        v-if="!isPrimaryColumn(column)"
+                        :label="$t('sw-data-table.columnSettings.hideColumn')"
+                        icon="regular-eye-slash"
+                        :on-label-click="() => changeColumnVisibility(column.property, false)"
+                        border-top
+                      />
                     </template>
                   </sw-popover>
 
                   <sw-floating-ui
-                    v-if="highlightedColumn === column.property"
+                    v-if="highlightedColumn === column.property && !isDragging"
                     :is-opened="true"
                     :offset="0"
                     class="sw-data-table__table-head-add-column-indicator"
                     :auto-update-options="{ animationFrame: true }"
                   >
-                    <!-- TODO: add translation -->
                     <sw-popover
-                      title="Add column content"
+                      :title="$t('sw-data-table.addColumnIndicator.popoverTitle')"
                       @update:isOpened="(value) => {
                         if (value === false) {
                           forceHighlightedColumn = false;
@@ -166,8 +201,7 @@
                       <template #trigger="{ toggleFloatingUi }">
                         <sw-icon
                           v-tooltip="{
-                            // TODO: add translation for tooltip
-                            message: 'Add column',
+                            message: $t('sw-data-table.addColumnIndicator.tooltipMessage'),
                             width: 'auto',
                           }"
                           name="solid-plus-square-s"
@@ -182,7 +216,6 @@
                       </template>
 
                       <template #popover-items__base="{ toggleFloatingUi }">
-                        <!-- TODO: add translation -->
                         <sw-popover-item-result
                           :options="addColumnOptions"
                           @search="onAddColumnSearch"
@@ -217,6 +250,7 @@
 
               <th
                 class="sw-data-table__table-settings-button"
+                scope="col"
               >
                 <sw-data-table-settings
                   :columns="sortedColumns"
@@ -235,111 +269,124 @@
               </th>
             </tr>
           </thead>
+            
           <tbody>
-            <tr
-              v-for="(data, rowIndex) in dataSource"
-              :key="data.id"
-            >
-              <td
-                v-if="allowRowSelection"
-                class="sw-data-table__table-select-row"
+            <template v-if="dataSource.length > 0 || isLoading">
+              <!-- @vue-skip -->
+              <tr
+                v-for="(data, rowIndex) in (isLoading ? emptyData : dataSource)"
+                :key="data.id"
+                :class="getColumnDataRowClasses(data.id)"
               >
-                <sw-checkbox
-                  :checked="getSelectionValue(data.id)"
-                  @change="onRowSelect(data.id)"
-                />
-              </td>
-
-              <template v-for="column in sortedColumns">
                 <td
-                  v-if="isColumnVisible(column)"
-                  :key="column.property + JSON.stringify(columnChanges[column.property])"
-                  :ref="
-                    (el) => {
-                      setColumnDataCellRefs({ el, column, index: rowIndex });
-                    }
-                  "
-                  :data-cell-column-property="column.property"
-                  :style="renderColumnDataCellStyle(column)"
-                  :class="getColumnDataCellClasses(column)"
-                  @mouseenter="() => currentHoveredColumn = column.property"
-                  @mouseleave="() => currentHoveredColumn = null"
+                  v-if="enableRowNumbering"
+                  v-stickyColumn
+                  class="sw-data-table__table-row-number"
                 >
-                  <template v-if="isLoading">
-                    <sw-skeleton-bar />
-                  </template>
+                  <span>
+                    {{ getRealIndex(rowIndex) }}
+                  </span>
+                </td>
 
-                  <template v-else>
-                    <template v-if="enableRowNumbering && isFirstVisibleColumn(column)">
-                      <!-- TODO: make this more beautiful -->
-                      <span>{{ rowIndex + 1 }} - </span>
+                <td
+                  v-if="allowRowSelection"
+                  v-stickyColumn
+                  class="sw-data-table__table-select-row"
+                >
+                  <sw-checkbox
+                    :checked="getSelectionValue(data.id)"
+                    @change="onRowSelect(data.id)"
+                  />
+                </td>
+
+                <template v-for="column in sortedColumns">
+                  <td
+                    v-if="isColumnVisible(column)"
+                    :key="column.property + JSON.stringify(columnChanges[column.property])"
+                    :ref="
+                      (el) => {
+                        setColumnDataCellRefs({ el, column, index: rowIndex });
+                      }
+                    "
+                    :data-cell-column-property="column.property"
+                    :style="renderColumnDataCellStyle(column)"
+                    :class="getColumnDataCellClasses(column)"
+                    @mouseenter="() => setCurrentHoveredCell(column.property, data.id)"
+                    @mouseleave="() => setCurrentHoveredCell(null, null)"
+                  >
+                    <template v-if="isLoading">
+                      <sw-skeleton-bar />
                     </template>
 
-                    <!-- Use the correct renderer for the column -->
-                    <sw-data-table-number-renderer
-                      v-if="column.renderer === 'number'"
-                      :data="data"
-                      :column-definition="column"
-                      @click="$emit('open-details', data)"
+                    <template v-else>
+                      <!-- Use the correct renderer for the column -->
+                      <sw-data-table-number-renderer
+                        v-if="column.renderer === 'number'"
+                        :data="data"
+                        :column-definition="column"
+                        @click="$emit('open-details', data)"
+                      />
+
+                      <sw-data-table-text-renderer
+                        v-else-if="column.renderer === 'text'"
+                        :data="data"
+                        :column-definition="column"
+                        @click="$emit('open-details', data)"
+                      />
+
+                      <sw-data-table-badge-renderer
+                        v-else-if="column.renderer === 'badge'"
+                        :data="data"
+                        :column-definition="column"
+                        @click="$emit('open-details', data)"
+                      />
+
+                      <sw-data-table-price-renderer
+                        v-else-if="column.renderer === 'price'"
+                        :data="data"
+                        :column-definition="column"
+                        @click="$emit('open-details', data)"
+                      />
+                    </template>
+                  </td>
+                </template>
+
+                <td class="sw-data-table__table-context-button">
+                  <a
+                    v-if="!disableEdit"
+                    href="#"
+                    @click.prevent="$emit('open-details')"
+                  >
+                    {{ $t('sw-data-table.contextButtons.edit') }}
+                  </a>
+                  <sw-context-button>
+                    <sw-context-menu-item
+                      v-if="!disableEdit"
+                      :label="$t('sw-data-table.contextButtons.edit')"
+                      @click="$emit('open-details')"
                     />
 
-                    <sw-data-table-text-renderer
-                      v-else-if="column.renderer === 'text'"
-                      :data="data"
-                      :column-definition="column"
-                      @click="$emit('open-details', data)"
+                    <sw-context-menu-item
+                      v-if="!disableDelete"
+                      type="critical"
+                      :label="$t('sw-data-table.contextButtons.delete')"
+                      @click="$emit('item-delete')"
                     />
-
-                    <sw-data-table-badge-renderer
-                      v-else-if="column.renderer === 'badge'"
-                      :data="data"
-                      :column-definition="column"
-                      @click="$emit('open-details', data)"
-                    />
-
-                    <sw-data-table-price-renderer
-                      v-else-if="column.renderer === 'price'"
-                      :data="data"
-                      :column-definition="column"
-                      @click="$emit('open-details', data)"
-                    />
-                  </template>
+                  </sw-context-button>
                 </td>
-              </template>
+              </tr>
+            </template>
 
-              <td class="sw-data-table__table-context-button">
-                <a
-                  href="#"
-                  @click.prevent="$emit('open-details')"
-                >
-                  Edit
-                </a>
-                <sw-context-button>
-                  <!-- TODO: add translation -->
-                  <!-- TODO: add conditions -->
-                  <!-- TODO: add styling for types and disabled state -->
-                  <sw-context-menu-item
-                    label="Edit"
-                    @click="$emit('open-details')"
+            <template v-else>
+              <div class="sw-data-table__empty-state">
+                <slot name="empty-state">
+                  <sw-empty-state
+                    :headline="$t('sw-data-table.emptyState.headline')"
+                    :description="$t('sw-data-table.emptyState.description')"
                   />
-
-                  <sw-context-menu-item
-                    disabled
-                    label="Disabled"
-                  />
-
-                  <sw-context-menu-item
-                    type="active"
-                    label="Active"
-                  />
-
-                  <sw-context-menu-item
-                    type="critical"
-                    label="Delete"
-                  />
-                </sw-context-button>
-              </td>
-            </tr>
+                </slot>
+              </div>
+            </template>
           </tbody>
         </table>
       </div>
@@ -386,6 +433,10 @@
 
         <sw-button
           v-if="enableReload"
+          v-tooltip="{
+            message: $t('sw-data-table.reload.tooltip'),
+            width: 'auto',
+          }"
           square
           aria-label="reload-data"
           @click="emitReload"
@@ -399,8 +450,8 @@
 
 <script lang="ts">
 import useScrollPossibilitiesClasses from "./composables/useScrollPossibilitiesClasses";
-import type { PropType} from "vue";
-import { defineComponent, computed, onBeforeUpdate, ref, set } from "vue";
+import { PropType } from "vue";
+import { defineComponent, computed, onBeforeUpdate, onMounted, onBeforeUnmount, ref, set, getCurrentInstance, onBeforeMount } from "vue";
 import SwCard from "../../layout/sw-card/sw-card.vue";
 import SwButton from "../../form/sw-button/sw-button.vue";
 import SwSelect from "../../form/sw-select/sw-select.vue";
@@ -411,7 +462,7 @@ import SwContextButton from '../../context-menu/sw-context-button/sw-context-but
 import SwContextMenu from '../../context-menu/sw-context-menu-item/sw-context-menu-item.vue';
 import SwDataTableSettings from './sub-components/sw-data-table-settings/sw-data-table-settings.vue';
 import SwPopover from '../../overlay/sw-popover/sw-popover.vue';
-import SwPopoverItem from '../../overlay/sw-popover-item/sw-popover-item.vue';
+import SwPopoverItem, { SwPopoverItemType } from '../../overlay/sw-popover-item/sw-popover-item.vue';
 import SwPopoverItemResult from '../../overlay/sw-popover-item-result/sw-popover-item-result.vue';
 import SwSkeletonBar from '../../feedback-indicator/sw-skeleton-bar/sw-skeleton-bar.vue';
 import SwCheckbox from '../../form/sw-checkbox/sw-checkbox.vue';
@@ -429,6 +480,9 @@ import SwSegmentedControl from '../../navigation/sw-segmented-control/sw-segment
 import { SegmentedControlActionsProp } from '../../navigation/sw-segmented-control/sw-segmented-control.vue';
 import SwFloatingUi from '../../_internal/sw-floating-ui/sw-floating-ui.vue';
 import SwTooltipDirective from '../../../directives/tooltip.directive';
+import SwEmptyState from '../../layout/sw-empty-state/sw-empty-state.vue';
+import StickyColumn from '../../../directives/stickyColumn.directive';
+import { throttle } from 'lodash-es';
 
 export interface BaseColumnDefinition {
   label: string; // the label for the column
@@ -460,11 +514,15 @@ type DataSourcePropType = {
 
 type ColumnProperty = ColumnDefinition[];
 
+/**
+ * @experimental - This component can be used but there are no guarantees for API stability yet.
+ */
 export default defineComponent({
   directives: {
     draggable: draggable,
     droppable: droppable,
     tooltip: SwTooltipDirective,
+    stickyColumn: StickyColumn,
   },
   components: {
     "sw-card": SwCard,
@@ -483,6 +541,7 @@ export default defineComponent({
     'sw-context-menu-item': SwContextMenu,
     'sw-floating-ui': SwFloatingUi,
     'sw-segmented-control': SwSegmentedControl,
+    'sw-empty-state': SwEmptyState,
     'sw-data-table-text-renderer': SwDataTableTextRenderer,
     'sw-data-table-number-renderer': SwDataTableNumberRenderer,
     'sw-data-table-badge-renderer': SwDataTableBadgeRenderer,
@@ -675,7 +734,7 @@ export default defineComponent({
         label: string,
         onClick: () => void,
         icon: 'default'|'critical'|'active',
-        type: string,
+        type: SwPopoverItemType,
         metaCopy: string,
         contextualDetail: string,
       }[]>,
@@ -683,7 +742,6 @@ export default defineComponent({
       default: () => [],
      },
 
-     // TODO: implement this
      /***
       * Enable numbered rows
       */
@@ -719,6 +777,33 @@ export default defineComponent({
       required: false,
       default: false,
      },
+
+     /**
+      * Disable the possibility to delete items
+      */
+     disableDelete: {
+      type: Boolean,
+      required: false,
+      default: false,
+     },
+
+      /**
+      * Disable the possibility to edit items
+      */
+     disableEdit: {
+      type: Boolean,
+      required: false,
+      default: false,
+     },
+
+     /**
+      * Caption for accessibility
+      */
+     caption: {
+      type: String,
+      required: false,
+      default: 'Data table',
+     },
   },
   emits: [
     "reload",
@@ -726,7 +811,6 @@ export default defineComponent({
     "pagination-current-page-change",
     'search-value-change',
     'sort-change',
-    // TODO: implement event with payload (id + column property)
     'open-details',
     'selection-change',
     'multiple-selection-change',
@@ -735,7 +819,8 @@ export default defineComponent({
     'change-show-outlines',
     'change-show-stripes',
     'change-outline-framing',
-    'change-enable-row-numbering'
+    'change-enable-row-numbering',
+    'item-delete'
   ],
   i18n: {
     messages: {
@@ -745,6 +830,28 @@ export default defineComponent({
           columnSettings: {
             sortAscending: "Sort ascending",
             sortDescending: "Sort descending",
+            hideColumn: "Hide column",
+          },
+          addColumnIndicator: {
+            popoverTitle: "Add column content",
+            tooltipMessage: "Add column",
+          },
+          contextButtons: {
+            edit: "Edit",
+            delete: "Delete",
+          },
+          emptyState: {
+            headline: "Add your first item",
+            description: "Currently no items are available yet.",
+          },
+          bulkEdit: {
+            itemsSelected: "1 item selected | {n} items selected",
+            edit: "Edit",
+            delete: "Delete",
+            more: '...',
+          },
+          reload: {
+            tooltip: 'Reload',
           }
         },
       },
@@ -754,12 +861,44 @@ export default defineComponent({
           columnSettings: {
             sortAscending: "Aufsteigend sortieren",
             sortDescending: "Absteigend sortieren",
+            hideColumn: "Spalte ausblenden",
+          },
+          addColumnIndicator: {
+            popoverTitle: "Spalteninhalt hinzufügen",
+            tooltipMessage: "Spalte hinzufügen",
+          },
+          contextButtons: {
+            edit: "Bearbeiten",
+            delete: "Löschen",
+          },
+          emptyState: {
+            headline: "Füge dein erstes Element hinzu",
+            description: "Aktuell sind noch keine Elemente vorhanden.",
+          },
+          bulkEdit: {
+            itemsSelected: "1 Element ausgewählt | {n} Elemente ausgewählt",
+            edit: "Bearbeiten",
+            delete: "Löschen",
+            more: '...',
+          },
+          reload: {
+            tooltip: 'Neu laden',
           }
         },
       },
     },
   },
   setup(props, { emit }) {
+    /**
+     * hack for accessing i18n in legacy mode (https://github.com/intlify/vue-i18n-next/discussions/605#discussioncomment-2057136)
+     **/
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let i18n: any;
+
+    onBeforeMount(() => {
+      i18n = getCurrentInstance()?.proxy?.$i18n;
+    })
+
     /**
      * General
      */
@@ -768,6 +907,12 @@ export default defineComponent({
     });
 
     const currentHoveredColumn = ref<string|null>(null);
+    const currentHoveredRow = ref<string|null>(null);
+
+    const setCurrentHoveredCell = (columnProperty: string|null, rowId: string) => {
+      currentHoveredColumn.value = columnProperty;
+      currentHoveredRow.value = rowId;
+    }
 
     const visibleColumns = computed(() => {
       return sortedColumns.value.filter((column) => column.visible !== false);
@@ -775,6 +920,10 @@ export default defineComponent({
 
     const isFirstVisibleColumn = (column: ColumnDefinition) => {
       return visibleColumns.value[0].property === column.property;
+    };
+
+    const isPrimaryColumn = (column: ColumnDefinition) => {
+      return props.columns[0].property === column.property;
     };
 
     /***
@@ -794,6 +943,8 @@ export default defineComponent({
             position: column.position,
             isVisible: column.visible ?? true,
             isClickable: column.visible === false ? true : false,
+            isSortable: false,
+            isHidable: false,
             disabled: column.visible === false ? false : true,
           }
         })
@@ -1080,6 +1231,20 @@ export default defineComponent({
         classes.push("--highlighted");
       }
 
+      if (currentHoveredColumn.value === column.property) {
+        classes.push("--hovered");
+      }
+
+      return classes;
+    };
+
+    const getColumnDataRowClasses = (rowId: string) => {
+      const classes = [];
+
+      if (currentHoveredRow.value === rowId) {
+        classes.push("--hovered");
+      }
+
       return classes;
     };
 
@@ -1184,6 +1349,7 @@ export default defineComponent({
       });
     };
 
+    const isDragging = ref<boolean>(false);
     const DRAG_GROUP_COLUMN = 'drag-group-column';
 
     const dragConfig: Partial<DragConfig<ColumnDefinition & {dropZone?: 'before'|'after'}>> = {
@@ -1204,6 +1370,7 @@ export default defineComponent({
 
         // set cursor globally to grabbing
         document.body.style.cursor = "grabbing";
+        isDragging.value = true;
       },
       onDrop: (dragConfigData, dropConfigData) => {
         // remove drag information to the table
@@ -1213,6 +1380,7 @@ export default defineComponent({
 
         // reset global cursor
         document.body.style.cursor = "";
+        isDragging.value = false;
 
         if (dragConfigData && dropConfigData) {
           changeColumnPosition(dragConfigData.property, dropConfigData.property, dropConfigData.dropZone);
@@ -1265,7 +1433,7 @@ export default defineComponent({
         'sw-data-table__layout-default': props.layout === 'default',
         'sw-data-table__layout-full': props.layout === 'full',
         'sw-data-table__first-column-fixed': props.allowRowSelection,
-        // TODO: could be relevant in the feature when you can disable the context button
+        // could be relevant in the feature when you can disable the context button
         'sw-data-table__last-column-fixed': true,
         'sw-data-table__stripes': props.showStripes,
         'sw-data-table__outlines': props.showOutlines,
@@ -1273,12 +1441,66 @@ export default defineComponent({
       };
     });
 
+    const getColumnHeaderInnerWrapperClasses = (column: ColumnDefinition) => {
+      return [
+        `sw-data-table__table-head-inner-wrapper-${column.renderer}-renderer`
+      ];
+    }
+
+    const leftFixedColumnWidth = ref<number>(0);
+
+    const calculateLeftFixedColumnWith = () => {
+      if (dataTable.value) {
+        const stickyColumns = dataTable.value.querySelectorAll(
+          "thead th[data-sticky-column]"
+        );
+
+        const lastStickyColumn = stickyColumns[stickyColumns.length - 1] as HTMLElement;
+
+        if (!lastStickyColumn) {
+          return;
+        }
+
+        const lastStickyColumnRight =
+          lastStickyColumn.dataset.stickyColumnRight;
+
+        leftFixedColumnWidth.value = Number(lastStickyColumnRight);
+      }
+    }
+
+    let tableMutationObserver: MutationObserver|undefined;
+    
+    const createTableMutationObserver = () => {
+      if (dataTable.value) {
+        tableMutationObserver = new MutationObserver(throttle(() => {
+          calculateLeftFixedColumnWith();
+        }, 60));
+
+        tableMutationObserver.observe(dataTable.value, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+        });
+      }
+    }
+    
+    onMounted(() => {
+      createTableMutationObserver();
+      calculateLeftFixedColumnWith();
+    });
+
+    onBeforeUnmount(() => {
+      if (tableMutationObserver) {
+        tableMutationObserver.disconnect();
+      }
+    });
+
     /**
      * Adjust table variables
      */
     const tableStylingVariables = computed(() => {
       return {
-        '--fixed-left-column-width': props.allowRowSelection ? '67px' : '0px',
+        '--fixed-left-column-width': `${leftFixedColumnWidth.value}px`,
         '--fixed-right-column-width': '105px',
       };
     });
@@ -1313,8 +1535,7 @@ export default defineComponent({
       const actions: SegmentedControlActionsProp = [
         {
           id: 'item-selection-count',
-          // TODO: add translation and alternative label for "items"
-          label: `${props.selectedRows.length} items selected`,
+          label: i18n.tc('sw-data-table.bulkEdit.itemsSelected', props.selectedRows.length),
           onClick: () => {
             emit('multiple-selection-change', {
               selections: props.selectedRows,
@@ -1327,18 +1548,18 @@ export default defineComponent({
         },
       ]
 
-      if (props.allowBulkEdit) {
+      if (props.allowBulkEdit && !props.disableEdit) {
         actions.push({
           id: 'edit',
-          label: 'Edit',
+          label: i18n.t('sw-data-table.bulkEdit.edit'),
           onClick: () => emit('bulk-edit'),
         })
       }
 
-      if (props.allowBulkDelete) {
+      if (props.allowBulkDelete && !props.disableDelete) {
         actions.push({
           id: 'delete',
-          label: 'Delete',
+          label: i18n.t('sw-data-table.bulkEdit.delete'),
           onClick: () => emit('bulk-delete'),
           isCritical: true
         })
@@ -1347,7 +1568,7 @@ export default defineComponent({
       if (props.bulkEditMoreActions.length > 0) {
         actions.push({
           id: 'more',
-          label: '...',
+          label: i18n.t('sw-data-table.bulkEdit.more'),
           popover: {}
         })
       }
@@ -1372,6 +1593,20 @@ export default defineComponent({
       }
 
       return visibleColumns[index - 1];
+    }
+
+    /**
+     * Add empty data to source when data is loading
+     */
+    const emptyData = computed(() => {
+      return Array.from({ length: props.paginationLimit }, () => ({}));
+    });
+
+    /**
+     * Calculate the real index number based on page, limit and index
+     */
+    const getRealIndex = (index: number) => {
+      return (props.currentPage - 1) * props.paginationLimit + index + 1;
     }
 
     return {
@@ -1411,11 +1646,19 @@ export default defineComponent({
       getColumnDataCellClasses,
       getColumnHeaderClasses,
       getPreviousVisibleColumn,
+      getColumnDataRowClasses,
+      getColumnHeaderInnerWrapperClasses,
       forceHighlightedColumn,
       addColumnOptionsSearch,
       onAddColumnOptionClick,
       onAddColumnSearch,
       currentHoveredColumn,
+      currentHoveredRow,
+      setCurrentHoveredCell,
+      isPrimaryColumn,
+      emptyData,
+      getRealIndex,
+      isDragging,
     };
   },
 });
@@ -1446,15 +1689,15 @@ $color-card-headline: #1c1c1c;
 $color-shopware-brand-vivacious-500: #0F76DE;
 
 $scrollShadowSize: 16px;
-$scrollShadowColor: rgba(120, 120, 120, 0.2);
+$scrollShadowColor: rgba(120, 120, 120, 0.1);
 $tableHeaderSize: 51px;
 $scrollShadowHeight: calc(100% - $tableHeaderSize - var(--scrollbar-height));
 
-$tableHeaderPaddingTop: 18px;
-$tableHeaderPaddingRight: 16px;
-$tableHeaderPaddingBottom: 14px;
-$tableHeaderPaddingLeft: 16px;
-$tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeaderPaddingBottom $tableHeaderPaddingLeft;
+$tableCellPaddingTop: 18px;
+$tableCellPaddingRight: 16px;
+$tableCellPaddingBottom: 14px;
+$tableCellPaddingLeft: 16px;
+$tableCellPadding: $tableCellPaddingTop $tableCellPaddingRight $tableCellPaddingBottom $tableCellPaddingLeft;
 
 .sw-data-table {
   display: flex;
@@ -1501,6 +1744,16 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     overflow: hidden;
   }
 
+  .sw-search {
+    .sw-field__label {
+      display: none;
+    }
+
+    .sw-field__hint:empty {
+      display: none;
+    }
+  }
+
   // add new Inter font to data table
   * {
     font-family: $font-family-default;
@@ -1518,6 +1771,15 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   font-weight: $font-weight-regular;
   color: $color-darkgray-300;
   line-height: $line-height-sm;
+
+  &__caption {
+    // Hide the caption visually but show it for screen readers
+    position: absolute !important;
+    height: 1px; 
+    width: 1px; 
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+  }
 
   .sw-data-table__table-wrapper {
     position: relative;
@@ -1620,10 +1882,16 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     transition: none;
   }
 
+  &.sw-data-table__outlines td,
+  &.sw-data-table__outlines th {
+    border-right-color: $color-gray-200;
+    border-left-color: $color-gray-200;
+  }
+
   td,
   th {
     position: relative;
-    padding: $tableHeaderPadding;
+    padding: $tableCellPadding;
     // border needs to be half the size because they are getting combined with other cells
     border: 0.5px solid $color-gray-200;
     border-right-color: transparent;
@@ -1635,14 +1903,8 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
 
     &.--highlighted {
       border-right: 1px solid $color-shopware-brand-900;
-      padding-right: calc($tableHeaderPaddingRight - 0.5px);
+      padding-right: calc($tableCellPaddingRight - 0.5px);
     }
-  }
-
-  &.sw-data-table__outlines td,
-  &.sw-data-table__outlines th {
-    border-right-color: $color-gray-200;
-    border-left-color: $color-gray-200;
   }
 
   th {
@@ -1650,10 +1912,15 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     overflow: visible;
   }
 
+  &__column-outline-framing-active th.--hovered,
   &__column-outline-framing-active td.--hovered {
-    // TODO: the styling needs to be aligned with the design
-    border-right-color: $color-darkgray-400;
-    border-left-color: $color-darkgray-400;
+    border-right-color: $color-shopware-brand-400;
+    border-left-color: $color-shopware-brand-400;
+  }
+
+  &__column-outline-framing-active tr.--hovered td {
+    border-top-color: $color-shopware-brand-400;
+    border-bottom-color: $color-shopware-brand-400;
   }
 
   &.sw-data-table__stripes tr:nth-child(even) {
@@ -1663,6 +1930,10 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   // remove duplicated border from header
   tr:first-child td {
     border-top-color: transparent;
+  }
+
+  thead tr {
+    background-color: $color-gray-50;
   }
 
   thead th {
@@ -1696,10 +1967,18 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     background-color: $color-white;
   }
 
-  .sw-data-table__table-head-inner-wrapper {
+  /**
+  * Empty state
+  */
+  &__empty-state {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 8px;
   }
 
   /**
@@ -1707,15 +1986,37 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   */
   .sw-data-table__table-select-row,
   .sw-data-table__table-selection-head {
-    position: sticky;
     min-width: 67px;
     max-width: 67px;
     width: 67px;
     padding-right: 8px;
     border-right: 0px;
-    left: 0;
   }
 
+  .sw-data-table__table-row-number {
+    min-width: 50px;
+    width: 50px;
+    text-align: center;
+  }
+
+  .sw-data-table__table-row-number-head {
+    text-align: center;
+  }
+
+  th[data-sticky-column],
+  td[data-sticky-column] {
+    position: sticky;
+    // left value will be calculated dynamically in JS
+    left: 0;
+    z-index: 100;
+    background-color: inherit;
+  }
+
+  th[data-sticky-column] {
+    z-index: 110;
+  }
+
+  .sw-data-table__table-row-number,
   .sw-data-table__table-select-row {
     z-index: 1;
     background-color: inherit;
@@ -1757,11 +2058,11 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     height: $tableHeaderSize;
     display: flex;
     align-items: center;
-    padding: $tableHeaderPadding;
+    padding: $tableCellPadding;
     border: 1px solid $color-gray-200;
     border-top: none;
     border-right: none;
-    z-index: 30;
+    z-index: 120;
   }
 
   /***
@@ -1794,6 +2095,10 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     transform: translate3d(50%, -150%, 0);
     width: 14px;
     height: 16px;
+  }
+
+  table.is--dragging-inside .sw-data-table__table-head-add-column-indicator {
+    display: none;
   }
 
   /**
@@ -1849,24 +2154,6 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
     .sw-data-table__table-head-column-settings {
       display: none;
       pointer-events: none;
-    }
-  }
-
-  /**
-  * Sorting in columns
-  */
-  .sw-data-table__table-head-sorting-icons {
-    display: flex;
-    flex-direction: column;
-
-    .sw-data-table__table-head-sort {
-      transition: 0.3s color ease;
-      color: $color-gray-800;
-
-      #meteor-icon-kit__solid-long-arrow-up,
-      #meteor-icon-kit__solid-long-arrow-down {
-        height: 12px;
-      }
     }
   }
 
@@ -1963,6 +2250,33 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
 }
 
 /**
+* Non-scoped styling for elements inside and outside of the table (Drag & Drop, ...)
+*/
+.sw-data-table__table-head-inner-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/**
+* Sorting in columns
+*/
+.sw-data-table__table-head-sorting-icons {
+  display: flex;
+  flex-direction: column;
+
+  .sw-data-table__table-head-sort {
+    transition: 0.3s color ease;
+    color: $color-gray-800;
+
+    #meteor-icon-kit__solid-long-arrow-up,
+    #meteor-icon-kit__solid-long-arrow-down {
+      height: 12px;
+    }
+  }
+}
+
+/**
 * Drag & Drop styling
 */
 .sw-data-table__table-wrapper-table-head.is--drag-element {
@@ -1978,7 +2292,7 @@ $tableHeaderPadding: $tableHeaderPaddingTop $tableHeaderPaddingRight $tableHeade
   }
   text-align: left;
   font-size: $font-size-xs;
-  padding: $tableHeaderPadding;
+  padding: $tableCellPadding;
   border: 1px solid $color-shopware-brand-900;
   border-radius: $border-radius-default $border-radius-default 0 0;
   border-top: 0;

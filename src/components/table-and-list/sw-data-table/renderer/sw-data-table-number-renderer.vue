@@ -19,7 +19,7 @@
 <script lang="ts">
 import type { PropType} from 'vue';
 import { defineComponent, computed } from 'vue';
-import type { BaseColumnDefinition, ColumnDefinition } from '../sw-data-table.vue';
+import type { BaseColumnDefinition } from '../sw-data-table.vue';
 import { get } from 'lodash-es';
 
 export interface NumberColumnDefinition extends BaseColumnDefinition {
@@ -32,7 +32,7 @@ export default defineComponent({
 
   props: {
     columnDefinition: {
-      type: Object as PropType<ColumnDefinition>,
+      type: Object as PropType<NumberColumnDefinition>,
       required: true,
     },
 
@@ -54,7 +54,11 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style>
+.sw-data-table__table-head-inner-wrapper-number-renderer {
+  justify-content: flex-end;
+}
+
 .sw-data-table-number-renderer {
   text-align: right;
 }

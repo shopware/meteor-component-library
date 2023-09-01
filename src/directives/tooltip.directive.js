@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { createId } from '../utils/uuid';
 import { hasOwnProperty } from '../utils/object';
 
@@ -54,7 +53,6 @@ class Tooltip {
     this._isShown = false;
     this._state = false;
     this._DOMElement = null;
-    this._vue = null;
     this._parentDOMElementWrapper = null;
     this._actualTooltipPlacement = null;
   }
@@ -108,14 +106,6 @@ class Tooltip {
       this._message = Tooltip.validateMessage(message);
       this._DOMElement.innerHTML = this._message;
 
-      this._vue.$destroy();
-      this._vue = new Vue({
-        el: this._DOMElement,
-        parent: this._vue.$parent,
-        template: this._DOMElement.outerHTML,
-      });
-
-      this._DOMElement = this._vue.$el;
       this.registerEvents();
     }
 
@@ -175,7 +165,7 @@ class Tooltip {
   /**
    * @returns {HTMLElement}
    */
-  createDOMElement(node) {
+  createDOMElement() {
     const element = document.createElement('div');
     element.innerHTML = this._message;
     element.style.width = `${this._width}px`;
@@ -186,13 +176,7 @@ class Tooltip {
     element.classList.add(`sw-tooltip--${this._appearance}`);
     element.style.zIndex = this._zIndex;
 
-    this._vue = new Vue({
-      el: element,
-      parent: node.context,
-      template: element.outerHTML,
-    });
-
-    return this._vue.$el;
+    return element;
   }
 
   registerEvents() {
@@ -266,7 +250,6 @@ class Tooltip {
       return;
     }
     this._DOMElement.remove();
-    this._vue.$destroy();
     this._isShown = false;
   }
 

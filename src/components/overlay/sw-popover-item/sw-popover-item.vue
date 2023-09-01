@@ -3,7 +3,10 @@
     class="sw-popover-item"
     :class="componentClasses"
   >
-    <div class="sw-popover-item__top-row">
+    <div
+      class="sw-popover-item__top-row"
+      @click="handleLableClick"
+    >
       <sw-checkbox
         v-if="showCheckbox"
         class="sw-popover-item__checkbox"
@@ -20,7 +23,7 @@
         :class="iconClasses"
         :tabindex="onLabelClickTabIndex"
         :name="icon"
-        @click.prevent="handleLableClick"
+        @click="handleLableClick"
         @keyup.enter="handleLableClick"
       />
 
@@ -29,7 +32,7 @@
         :class="labelClasses"
         :tabindex="onLabelClickTabIndex"
         :role="role"
-        @click="handleLableClick"
+        @click.stop.prevent="handleLableClick"
         @keyup.enter="handleLableClick"
       >
         {{ label }}
@@ -93,9 +96,12 @@
 <script lang="ts">
 import type { PropType } from "vue";
 import { defineComponent, computed } from "vue";
+import { TranslateResult } from "vue-i18n";
 import SwCheckbox from '../../form/sw-checkbox/sw-checkbox.vue';
 import SwSwitch from '../../form/sw-switch/sw-switch.vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
+
+export type SwPopoverItemType = 'default'|'critical'|'active';
 
 export default defineComponent({
   name: 'SwPopoverItem',
@@ -106,14 +112,13 @@ export default defineComponent({
   },
   props: {
     label: {
-      type: String,
+      type: String as PropType<string|TranslateResult>,
       required: true,
     },
     type: {
-      type: String as PropType<'default'|'critical'|'active'>,
+      type: String as PropType<SwPopoverItemType>,
       required: false,
       default: 'default',
-      // TODO: missing "active" type needed for tabs
       validator: (value: string) => {
         return [
           'default',
@@ -148,7 +153,7 @@ export default defineComponent({
       default: undefined,
     },
     metaCopy: {
-      type: String,
+      type: String as PropType<string|TranslateResult>,
       required: false,
       default: '',
     },
@@ -212,7 +217,12 @@ export default defineComponent({
       type: String,
       required: false,
       default: 'menuitem',
-    }
+    },
+    isOptionItem: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   emits: ['change-checkbox', 'change-switch', 'change-visibility', 'click-options'],
   setup(props, { emit }) {
@@ -232,19 +242,36 @@ export default defineComponent({
       emit('click-options');
     };
 
+    const isClickable = computed(() => {
+      return (
+        !!props.onLabelClick ||
+        props.showSwitch ||
+        props.showCheckbox ||
+        props.showOptions ||
+        props.isOptionItem
+      ) && !props.disabled;
+    });
+
     const componentClasses = computed(() => {
       return {
         'sw-popover-item--default': props.type === 'default',
         'sw-popover-item--critical': props.type === 'critical',
+        'sw-popover-item--active': props.type === 'active',
         'sw-popover-item--disabled': props.disabled,
         'sw-popover-item--border-top': props.borderTop,
         'sw-popover-item--border-bottom': props.borderBottom,
+        'sw-popover-item--clickable': !!isClickable.value,
       };
     });
 
     const labelClasses = computed(() => {
       return {
-        'sw-popover-item__label--clickable': !!props.onLabelClick && !props.disabled,
+        'sw-popover-item__label--clickable': (
+          !!props.onLabelClick ||
+          props.showSwitch ||
+          props.showCheckbox ||
+          props.showOptions
+        ) && !props.disabled,
       };
     });
 
@@ -255,6 +282,22 @@ export default defineComponent({
     const handleLableClick = () => {
       if (props.onLabelClick) {
         props.onLabelClick();
+        return;
+      }
+
+      if (props.showOptions) {
+        emitClickOptions();
+        return;
+      }
+
+      if (props.showSwitch) {
+        emitChangeSwitch(!props.switchValue);
+        return;
+      }
+
+      if (props.showCheckbox) {
+        emitChangeCheckbox(!props.checkboxChecked);
+        return;
       }
     };
 
@@ -273,6 +316,7 @@ export default defineComponent({
       labelClasses,
       onLabelClickTabIndex,
       handleLableClick,
+      isClickable,
       iconClasses
     };
   },
@@ -327,8 +371,47 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
     }
   }
 
+  &.sw-popover-item--clickable {
+    cursor: pointer;
+  }
+
+  &.sw-popover-item--clickable:hover {
+    position: relative;
+
+    &::before {
+      content: '';
+    }
+  }
+
+  &:hover {
+    &::before {
+      position: absolute;
+      background-color: $color-shopware-brand-50;
+      border-radius: $border-radius-default;
+      top: 4px;
+      right: -8px;
+      bottom: 4px;
+      left: -8px;
+      pointer-events: none;
+    }
+  }
+
+  &.is--draggable {
+    cursor: grab;
+  }
+
   &--critical {
     color: $color-crimson-500;
+  }
+
+  &--critical:hover {
+    &::before {
+      background-color: $color-crimson-50;
+    }
+  }
+
+  &--active {
+    text-decoration: underline;
   }
 
   &--disabled {
@@ -337,6 +420,10 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
     &:hover {
       text-decoration: none;
       cursor: default;
+
+      &::before {
+        background-color: transparent;
+      }
     }
   }
 
@@ -353,6 +440,7 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
   &__top-row {
     display: flex;
     gap: 8px;
+    z-index: 1;
   }
 
   &__align-right {
@@ -383,6 +471,10 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
     }
   }
 
+  &__label {
+    margin-right: 4px;
+  }
+
   &__label,
   &__contextual-detail,
   &__shortcut {
@@ -392,14 +484,6 @@ $scrollShadowColor: rgba(120, 120, 120, 0.2);
 
     &--clickable {
       cursor: pointer;
-    }
-  }
-
-  &__label {
-    &--clickable {
-      &:hover {
-        text-decoration: underline;
-      }
     }
   }
 
