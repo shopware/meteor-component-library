@@ -1,4 +1,5 @@
 import SwCard from './sw-card.vue';
+import SwButton from '../../form/sw-button/sw-button.vue'
 import SwContextMenuItem from '../../context-menu/sw-context-menu-item/sw-context-menu-item.vue'
 import SwTabs from '../../navigation/sw-tabs/sw-tabs.vue'
 import SwAvatar from '../../icons-media/sw-avatar/sw-avatar.vue'
@@ -41,7 +42,7 @@ export default {
 };
 
 const MinimalTemplate = (args, { argTypes }) => ({
-  components: { SwCard, SwContextMenuItem, SwTabs, SwAvatar },
+  components: { SwCard, SwContextMenuItem, SwTabs, SwAvatar, SwButton },
   props: Object.keys(argTypes),
   template: `
   <sw-card v-bind="$props">
@@ -52,7 +53,7 @@ const MinimalTemplate = (args, { argTypes }) => ({
 });
 
 const ExtendedTemplate = (args, { argTypes }) => ({
-  components: { SwCard, SwContextMenuItem, SwTabs, SwAvatar },
+  components: { SwCard, SwContextMenuItem, SwTabs, SwAvatar, SwButton },
   props: Object.keys(argTypes),
   template: `
   <sw-card v-bind="$props">
@@ -64,7 +65,11 @@ const ExtendedTemplate = (args, { argTypes }) => ({
       <div v-html="$props.default"></div>
     </template>
 
-    <div slot="toolbar" v-if="$props.toolbar" v-html="$props.toolbar"></div>
+    <div slot="toolbar" v-if="$props.toolbar">
+      <sw-button variant="primary">Primary button</sw-button>
+      <sw-button variant="secondary">Secondary button</sw-button>
+    </div>
+
     <sw-tabs v-if="$props.tabs" 
              slot="tabs"
              :default-item="activeTab"
@@ -81,9 +86,9 @@ const ExtendedTemplate = (args, { argTypes }) => ({
     </div>
     <div slot="headerRight" v-html="$props.headerRight"></div>
     <div v-if="$props.contextActions" slot="context-actions">
-      <sw-context-menu-item>Menu Item A</sw-context-menu-item>
-      <sw-context-menu-item>Menu Item B</sw-context-menu-item>
-      <sw-context-menu-item>Menu Item C</sw-context-menu-item>
+      <sw-context-menu-item label="Menu Item A"></sw-context-menu-item>
+      <sw-context-menu-item label="Menu Item B"></sw-context-menu-item>
+      <sw-context-menu-item label="Menu Item C"></sw-context-menu-item>
     </div>
   </sw-card>`,
   data() {

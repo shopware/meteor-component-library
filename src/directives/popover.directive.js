@@ -1,4 +1,8 @@
 /**
+ * @deprecated - don't use this Directive anymore. Use sw-floating-ui instead
+ */
+
+/**
  * Directive for automatic edge detection of the element place
  *
  * Usage:
@@ -152,6 +156,9 @@ function unregisterVirtualScrollingElement(uid) {
   }
 }
 
+/**
+ * @deprecated - don't use this Directive anymore. Use sw-floating-ui instead
+ */
 export default {
   inserted(element, binding, vnode) {
     // We need a configuration

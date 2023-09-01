@@ -56,7 +56,7 @@
 
           <sw-icon
             class="sw-select__select-indicator"
-            name="regular-chevron-down-s"
+            name="solid-chevron-down-xs"
           />
         </div>
       </div>
@@ -229,7 +229,7 @@ export default Vue.extend({
 
       // @ts-expect-error - event is a click event
       // allow to step back through form via SHIFT+TAB
-      if (event && event?.shiftKey) {
+      if (event?.shiftKey) {
         event.preventDefault();
         this.focusPreviousFormElement();
       }
@@ -285,7 +285,7 @@ export default Vue.extend({
     },
 
     focusParentSelect(event: KeyboardEvent) {
-      if (event && event?.shiftKey) {
+      if (event?.shiftKey) {
         // @ts-expect-error - ref selectWrapper is defined
         this.$refs.selectWrapper.click();
         event.preventDefault();
@@ -302,6 +302,7 @@ $sw-select-focus-transition: all ease-in-out 0.2s;
 
 .sw-select {
   position: relative;
+  min-width: 100px;
 
   .sw-block-field__block {
     transition: $sw-select-focus-transition;
@@ -405,6 +406,16 @@ $sw-select-focus-transition: all ease-in-out 0.2s;
 
     input {
       background-color: $color-gray-100;
+    }
+  }
+
+  &--small {
+    cursor: pointer;
+
+    .sw-select-selection-list--single .sw-label {
+      cursor: pointer;
+      height: 18px;
+      padding-top: 1px;
     }
   }
 }

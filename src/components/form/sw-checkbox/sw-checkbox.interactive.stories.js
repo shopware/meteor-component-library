@@ -90,12 +90,15 @@ VisualTestInherited.storyName = 'Should trigger inheritance-remove event';
 VisualTestInherited.args = {
   label: 'Inherited',
   inheritedValue: false,
+  isInherited: true,
 };
 VisualTestInherited.play = async ({ args }) => {
   // we can't use canvasElement because it is not available anymore
   const canvas = within(document.getElementById('root'));
 
   await userEvent.click(canvas.getByTestId('sw-inheritance-switch-icon'));
+
+  await waitUntilRendered(() => document.querySelector('.sw-tooltip'))
 
   await expect(args.inheritanceRemove).toHaveBeenCalledWith(undefined);
 };

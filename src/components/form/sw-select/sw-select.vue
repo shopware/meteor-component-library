@@ -2,6 +2,7 @@
   <sw-select-base
     ref="selectBase"
     class="sw-select"
+    :class="componentClasses"
     :is-loading="isLoading"
     :label="label"
     v-bind="$attrs"
@@ -23,6 +24,7 @@
     <template #sw-select-selection="{ size }">
       <sw-select-selection-list
         ref="selectionList"
+        :disable-input="small"
         :multi-selection="enableMultiSelection"
         :selections="visibleValues"
         :invisible-count="invisibleValueCount"
@@ -43,11 +45,12 @@
       </sw-select-selection-list>
     </template>
     <template #results-list>
+      <!-- @vue-ignore -->
       <sw-select-result-list
         ref="swSelectResultList"
         :options="visibleResults"
         :is-loading="isLoading"
-        :empty-message="$tc('sw-select.messageNoResults', 0, { term: searchTerm })"
+        :empty-message="$t('sw-select.messageNoResults', { term: searchTerm })"
         :focus-el="$refs.selectionList.getFocusEl()"
         @paginate="$emit('paginate')"
         @item-select="addItem"
@@ -103,7 +106,8 @@
 
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Vue, { PropType } from 'vue';
+import type { PropType } from 'vue';
+import Vue from 'vue';
 import { debounce, get } from 'lodash-es';
 import SwSelectBase from '../_internal/sw-select-base/sw-select-base.vue';
 import SwSelectResultList from '../_internal/sw-select-base/_internal/sw-select-result-list.vue';
@@ -118,7 +122,6 @@ export default Vue.extend({
     messages: {
       en: {
         'sw-select': {
-          foo: 'FOO',
           messageNoResults: 'No results found for "{term}".',
         }
       },
@@ -168,7 +171,7 @@ export default Vue.extend({
      * Dependent on multiSelection, either a single value or an array of values.
      */
     value: {
-      type: [String, Number, Boolean, Array, null, undefined] as PropType<string|number|boolean|Array<any>|null|undefined>,
+      type: [String, Number, Boolean, Array, null, undefined] as PropType<string|number|boolean|unknown[]|null|undefined>,
       required: false,
       default: null,
     },
@@ -205,7 +208,8 @@ export default Vue.extend({
      */
     label: {
       type: String,
-      required: true,
+      required: false,
+      default: ''
     },
 
     /**
@@ -310,6 +314,15 @@ export default Vue.extend({
       required: false,
       default: false,
     },
+
+    /**
+     * Render the select field in small without a search input
+     */
+    small: {
+      type: Boolean,
+      required: false,
+      default: false,
+    }
   },
 
   data() {
@@ -321,16 +334,40 @@ export default Vue.extend({
 
   computed: {
     visibleValues(): any[] {
-      if (!this.currentValue || this.currentValue.length <= 0) {
-        return [];
+      if (
+        typeof this.currentValue === 'string' ||
+        typeof this.currentValue === 'number' ||
+        typeof this.currentValue === 'boolean'
+      ) {
+        const value = this.currentValue;
+
+        return this.options.filter((item) => value === this.getKey(item, this.valueProperty));
+      }
+
+      if (Array.isArray(this.currentValue)) {
+        const value = this.currentValue;
+
+        if (this.currentValue.length <= 0) {
+          return [];
+        }
+
+        return this.options.filter((item) => value.includes(this.getKey(item, this.valueProperty))).slice(0, this.limit);
       }
 
       return this.options.filter((item) => this.isSelected(item)).slice(0, this.limit);
     },
 
     totalValuesCount(): number {
-      if (this.enableMultiSelection === true && this.currentValue.length) {
+      if (this.enableMultiSelection && Array.isArray(this.currentValue) && this.currentValue.length) {
         return this.currentValue.length;
+      }
+
+      if (Array.isArray(this.currentValue)) {
+        this.currentValue.length;
+      }
+
+      if (this.currentValue !== undefined || this.currentValue !== null) {
+        return 1;
       }
 
       return 0;
@@ -345,14 +382,14 @@ export default Vue.extend({
     },
 
     currentValue: {
-      get(): any|any[] {
+      get(): string|number|boolean|unknown[]|null|undefined {
         if (!this.value) {
           return [];
         }
 
         return this.value;
       },
-      set(newValue: any) {
+      set(newValue: string|number|boolean|unknown[]|null|undefined) {
         this.$emit('change', newValue);
       },
     },
@@ -371,6 +408,12 @@ export default Vue.extend({
 
       return this.options;
     },
+
+    componentClasses(): Record<string, boolean> {
+      return {
+        'sw-select--small': this.small
+      }
+    }
   },
 
   watch: {
@@ -379,13 +422,9 @@ export default Vue.extend({
     },
   },
 
-  created(): void {
-    console.log(this.$tc('sw-select.messageNoResults'))
-  },
-
   methods: {
     isSelected(item: any) {
-      if (this.enableMultiSelection) {
+      if (this.enableMultiSelection && Array.isArray(this.currentValue)) {
         return this.currentValue.includes(this.getKey(item, this.valueProperty));
       }
 
@@ -403,7 +442,13 @@ export default Vue.extend({
       this.$emit('item-add', item);
 
       if (this.enableMultiSelection) {
-        this.currentValue = [...this.currentValue, identifier];
+        if (Array.isArray(this.currentValue)) {
+          this.currentValue = [...this.currentValue, identifier];
+        } else if (this.currentValue !== undefined || this.currentValue !== null) {
+          this.currentValue = [identifier];
+        } else {
+          this.currentValue = [this.currentValue, identifier];
+        }
       }else if (this.currentValue !== identifier) {
         this.currentValue = identifier;
         // @ts-expect-error - ref exists

@@ -23,6 +23,7 @@
 <script lang="ts">
 import cloneDeep from 'lodash-es/cloneDeep';
 import Vue from 'vue';
+import { StyleValue } from 'vue/types/jsx';
 
 const colors = [
   '#FFD700',
@@ -123,13 +124,13 @@ export default Vue.extend({
 
     avatarImage(): {
       'background-image': string,
-    } | null {
+    } | StyleValue {
       if (this.imageUrl) {
         return { 'background-image': `url('${this.imageUrl}')` };
       }
 
-      if (!this.sourceContext || !this.sourceContext.avatarMedia || !this.sourceContext.avatarMedia.url) {
-        return null;
+      if (!this.sourceContext?.avatarMedia?.url) {
+        return {};
       }
 
       const avatarMedia = cloneDeep(this.sourceContext.avatarMedia);
@@ -161,6 +162,7 @@ export default Vue.extend({
     },
 
     hasAvatarImage(): boolean {
+      // @ts-expect-error - background-image exists in avatarImage
       return !!this.avatarImage && !!this.avatarImage['background-image'];
     },
 

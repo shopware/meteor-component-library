@@ -21,7 +21,7 @@ TestRemovalOfSelectionByList.play = async ({ args }) => {
 
   await userEvent.click(canvas.getByRole('textbox'));
 
-  const popover = within(document.querySelector('.sw-popover__wrapper'));
+  const popover = within(document.querySelector('.sw-popover-deprecated__wrapper'));
   await userEvent.click(popover.getByTestId('sw-select-option--a'));
 
   expect(args.change).toHaveBeenCalledWith(['b', 'd']);
@@ -62,7 +62,7 @@ VisualTestSingleSelection.play = async ({ args }) => {
   const canvas = within(document.getElementById('root'));
   await userEvent.type(canvas.getByRole('textbox'), 'A');
 
-  let popover = within(document.querySelector('.sw-popover__wrapper'));
+  let popover = within(document.querySelector('.sw-popover-deprecated__wrapper'));
   await userEvent.click(popover.getByTestId('sw-select-option--a'));
 
   expect(args.itemAdd).toHaveBeenCalledWith({
@@ -74,7 +74,7 @@ VisualTestSingleSelection.play = async ({ args }) => {
   expect(canvas.getByRole('textbox').value).toBe('');
 
   await userEvent.type(canvas.getByRole('textbox'), 'F');
-  popover = within(document.querySelector('.sw-popover__wrapper'));
+  popover = within(document.querySelector('.sw-popover-deprecated__wrapper'));
   await userEvent.click(popover.getByTestId('sw-select-option--f'));
 
   expect(args.itemAdd).toHaveBeenCalledWith({
@@ -87,7 +87,7 @@ VisualTestSingleSelection.play = async ({ args }) => {
 
   // Only 'FF' is selected
   await userEvent.type(canvas.getByRole('textbox'), 'FF');
-  popover = within(document.querySelector('.sw-popover__wrapper'));
+  popover = within(document.querySelector('.sw-popover-deprecated__wrapper'));
   await userEvent.click(popover.getByTestId('sw-select-option--ff'));
   expect(args.itemAdd).toHaveBeenCalledWith({
     id: 7,
@@ -108,7 +108,7 @@ VisualTestMultiSelect.play = async ({ args }) => {
   // open selection
   await userEvent.click(canvas.getByRole('textbox'));
 
-  let popover = within(document.querySelector('.sw-popover__wrapper'));
+  let popover = within(document.querySelector('.sw-popover-deprecated__wrapper'));
   await userEvent.click(popover.getByTestId('sw-select-option--a'));
   expect(args.itemAdd).toHaveBeenCalledWith({
     id: 1,
@@ -190,7 +190,7 @@ VisualTestDisabled.play = async () => {
 
   await userEvent.click(canvas.getByRole('textbox'));
 
-  const popover = document.querySelector('.sw-popover__wrapper');
+  const popover = document.querySelector('.sw-popover-deprecated__wrapper');
   expect(popover).toBe(null);
 };
 
@@ -214,7 +214,7 @@ VisualTestHighlightSearchTerm.play = async () => {
   // wait until only one result is rendered
   await waitUntilRendered(() => document.getElementsByClassName('sw-select-result').length === 1)
 
-  let popover = within(document.querySelector('.sw-popover__wrapper'));
+  let popover = within(document.querySelector('.sw-popover-deprecated__wrapper'));
   // Option A is separated in different elements. This methods get the combined instance.
   expect(popover.getByText((content, element) => {
     const hasText = element => element.textContent === 'Option A'
@@ -247,7 +247,7 @@ VisualTestEnsureSingleSelectionWithoutLoadMore.play = async ({ args }) => {
   const canvas = within(document.getElementById('root'));
   await userEvent.type(canvas.getByRole('textbox'), 'Option long text');
 
-  let popover = within(document.querySelector('.sw-popover__wrapper'));
+  let popover = within(document.querySelector('.sw-popover-deprecated__wrapper'));
   await userEvent.click(popover.getByTestId('sw-select-option--Longer value text'));
 
   expect(args.itemAdd).toHaveBeenCalledWith({

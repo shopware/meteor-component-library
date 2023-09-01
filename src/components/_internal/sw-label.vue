@@ -33,7 +33,8 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import type { PropType } from 'vue';
+import Vue from 'vue';
 import SwIcon from '../icons-media/sw-icon/sw-icon.vue';
 import SwColorBadge from '../feedback-indicator/sw-color-badge/sw-color-badge.vue';
 
@@ -106,12 +107,12 @@ export default Vue.extend({
   },
 
   computed: {
-    labelClasses(): Array<string | {
+    labelClasses(): (string | {
         [x: string]: boolean;
         'sw-label--dismissable': boolean;
         'sw-label--ghost': boolean;
         'sw-label--caps': boolean;
-    }> {
+    })[] {
       return [
         `sw-label--appearance-${this.appearance}`,
         `sw-label--size-${this.size}`,

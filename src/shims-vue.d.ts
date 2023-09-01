@@ -4,3 +4,5 @@ declare module "*.vue" {
   import VueI18n from "vue-i18n";
   export default Vue;
 }
+
+declare module 'v-click-outside';

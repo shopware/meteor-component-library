@@ -125,13 +125,11 @@ export default Vue.extend({
   },
 
   computed: {
-    inputState(): boolean {
+    inputState(): string {
       if (this.isInherited) {
-        // @ts-expect-error - exists on mixin
         return this.inheritedValue;
       }
 
-      // @ts-expect-error - exists on mixin
       return this.currentValue || '';
     },
 

@@ -17,6 +17,7 @@ import SwUrlField from './components/form/sw-url-field/sw-url-field.vue';
 import SwIcon from './components/icons-media/sw-icon/sw-icon.vue';
 import SwCard from './components/layout/sw-card/sw-card.vue';
 import SwTabs from './components/navigation/sw-tabs/sw-tabs.vue'
+import SwDataTable from './components/table-and-list/sw-data-table/sw-data-table.vue';
 import TooltipDirective from './directives/tooltip.directive';
 // Import SCSS for styling
 import './components/assets/scss/all.scss';
@@ -41,5 +42,6 @@ export {
   SwIcon,
   SwCard,
   SwTabs,
+  SwDataTable,
   TooltipDirective,
 }

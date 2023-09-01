@@ -46,7 +46,7 @@
 /Users/j.leifeld/Sites/admin-component-library/__snapshots__/components-form-sw-boolean-radio-group--default-snap.png
 /Users/j.leifeld/Sites/admin-component-library/__snapshots__/components-form-sw-text-field--default-snap.png
 /Users/j.leifeld/Sites/admin-component-library/__snapshots__/components-form-sw-datepicker--default-snap.png
-/Users/j.leifeld/Sites/admin-component-library/__snapshots__/components-utils-sw-popover--default-snap.png
+/Users/j.leifeld/Sites/admin-component-library/__snapshots__/components-utils-sw-popover-deprecated--default-snap.png
 /Users/j.leifeld/Sites/admin-component-library/__snapshots__/components-form-sw-url-field--default-snap.png
 /Users/j.leifeld/Sites/admin-component-library/__snapshots__/components-base-sw-description-list--default-snap.png
 /Users/j.leifeld/Sites/admin-component-library/__snapshots__/components-utils-sw-loader--default-snap.png
@@ -102,7 +102,7 @@
 /Users/j.leifeld/Sites/admin-component-library/__snapshots__/components-base-sw-description-list--default-snap.png
 /Users/j.leifeld/Sites/admin-component-library/__snapshots__/components-structure-sw-card--default-snap.png
 /Users/j.leifeld/Sites/admin-component-library/__snapshots__/components-form-sw-url-field--default-snap.png
-/Users/j.leifeld/Sites/admin-component-library/__snapshots__/components-utils-sw-popover--default-snap.png
+/Users/j.leifeld/Sites/admin-component-library/__snapshots__/components-utils-sw-popover-deprecated--default-snap.png
 /Users/j.leifeld/Sites/admin-component-library/__snapshots__/interaction-tests-base-sw-button--visual-test-primary-variant-snap.png
 /Users/j.leifeld/Sites/admin-component-library/__snapshots__/interaction-tests-base-sw-button--visual-test-ghost-variant-snap.png
 /Users/j.leifeld/Sites/admin-component-library/__snapshots__/interaction-tests-base-sw-button--visual-test-danger-variant-snap.png

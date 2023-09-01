@@ -67,7 +67,8 @@ export default Vue.extend({
   props: {
     label: {
       type: String,
-      required: true,
+      required: false,
+      default: ''
     },
     required: {
       type: Boolean,
@@ -168,7 +169,7 @@ export default Vue.extend({
       return this.error && this.error.code !== 0;
     },
 
-    swSwitchFieldClasses(): Array<Record<string, boolean>> {
+    swSwitchFieldClasses(): Record<string, boolean>[] {
       return [
         {
           'has--error': this.hasError,
@@ -181,9 +182,9 @@ export default Vue.extend({
       ];
     },
 
-    errorClasses(): Array<{
+    errorClasses(): {
       'sw-field__error--move-up': boolean;
-    }> {
+    }[] {
       return [
         {
           'sw-field__error--move-up': !this.bordered,

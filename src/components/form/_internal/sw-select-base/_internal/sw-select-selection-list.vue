@@ -17,7 +17,10 @@
           :size="size"
           @dismiss="onClickDismiss(selection)"
         >
-          <span class="sw-select-selection-list__item">
+          <span
+            class="sw-select-selection-list__item"
+            :title="selection[labelProperty]"
+          >
             <slot
               name="label-property"
               v-bind="{ item: selection, index, labelProperty, valueProperty }"
@@ -46,7 +49,7 @@
       </slot>
     </li>
 
-    <li>
+    <li v-if="!disableInput">
       <slot
         name="input"
         v-bind="{ placeholder, searchTerm, onSearchTermChange, onKeyDownDelete }"
@@ -69,7 +72,8 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import type { PropType } from 'vue';
+import Vue from 'vue';
 import SwLabel from '../../../../_internal/sw-label.vue';
 import SwButton from '../../../sw-button/sw-button.vue';
 
@@ -83,7 +87,7 @@ export default Vue.extend({
 
   props: {
     selections: {
-      type: Array,
+      type: Array as PropType<Record<string, string>[]>,
       required: false,
       default: () => [],
     },
@@ -138,7 +142,7 @@ export default Vue.extend({
       default: false,
     },
     selectionDisablingMethod: {
-      type: Function as PropType<(selection: string) => boolean>,
+      type: Function as PropType<(selection: Record<string, string>) => boolean>,
       required: false,
       default: () => false,
     },
@@ -150,6 +154,11 @@ export default Vue.extend({
     multiSelection: {
       type: Boolean,
       required: true,
+    },
+    disableInput: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
 
@@ -168,7 +177,7 @@ export default Vue.extend({
   },
 
   methods: {
-    isSelectionDisabled(selection: string) {
+    isSelectionDisabled(selection: Record<string, string>) {
       if (!this.multiSelection) {
         return true;
       }
@@ -205,18 +214,24 @@ export default Vue.extend({
     },
 
     focus() {
-      // @ts-expect-error - ref swSelectInput is defined
-      this.$refs.swSelectInput.focus();
+      if (this.$refs.swSelectInput) {
+        // @ts-expect-error - ref swSelectInput is defined
+        this.$refs.swSelectInput.focus();
+      }
     },
 
     blur() {
-      // @ts-expect-error - ref swSelectInput is defined
-      this.$refs.swSelectInput.blur();
+      if (this.$refs.swSelectInput) {
+        // @ts-expect-error - ref swSelectInput is defined
+        this.$refs.swSelectInput.blur();
+      }
     },
 
     select() {
-      // @ts-expect-error - ref swSelectInput is defined
-      this.$refs.swSelectInput.select();
+      if (this.$refs.swSelectInput) {
+        // @ts-expect-error - ref swSelectInput is defined
+        this.$refs.swSelectInput.select();
+      }
     },
 
     getFocusEl() {
@@ -231,7 +246,7 @@ export default Vue.extend({
 
 .sw-select-selection-list {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   list-style: none;
   width: calc(100% - 30px);
 

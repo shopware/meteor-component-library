@@ -74,12 +74,12 @@ VisualTestExtendedPageWithOpenedContextActions.args = {
 VisualTestExtendedPageWithOpenedContextActions.play = async () => {
   const canvas = within(document.getElementById('root'));
 
-  const button = await canvas.getByRole('button');
+  const button = await canvas.getByLabelText('Context menu');
 
   await userEvent.click(button);
 
   // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover__wrapper')[0]);
+  const popover = within(document.getElementsByClassName('sw-popover__content')[0]);
 
   const menuItem = await popover.getAllByRole('menuitem');
 

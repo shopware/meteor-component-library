@@ -3,7 +3,10 @@ export function waitUntilRendered(check) {
     const waitUntilElementLoad = (retryTime = 0) => {
       // do not wait longer than 2.5 seconds
       if (retryTime > 100) {
-        reject();
+        reject(new Error(
+          `"waitUntilRendered": condition ${check.toString().replace(/(\r\n|\n|\r)/gm, "")} not met after 2.5 seconds`
+        ));
+        return;
       }
 
       const result = check();

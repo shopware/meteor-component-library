@@ -4,7 +4,9 @@
   "scripts": {
     "test:unit": "jest",
     "test:unit:watch": "jest --watch",
-    "lint": "vue-tsc --noEmit --declaration false && eslint --ext .js,.ts,.vue src",
+    "lint": "npm run lint:tsc && npm run lint:eslint",
+    "lint:tsc": "vue-tsc --noEmit --declaration false",
+    "lint:eslint": "eslint --ext .js,.ts,.vue src",
     "storybook": "SHOW_INTERACTIONS=true start-storybook -p 6006",
     "build-vue": "rollup -c",
     "build-storybook": "build-storybook",
@@ -20,6 +22,7 @@
     "dist"
   ],
   "dependencies": {
+    "@floating-ui/dom": "^1.4.3",
     "@shopware-ag/meteor-icon-kit": "^4.1.0",
     "ace-builds": "^1.4.13",
     "apexcharts": "^3.33.0",
@@ -28,7 +31,10 @@
     "flatpickr": "4.6.3",
     "inter-ui": "^3.19.3",
     "lodash-es": "^4.17.21",
-    "punycode": "^2.1.1"
+    "punycode": "^2.1.1",
+    "v-click-outside": "^3.2.0",
+    "vue-demi": "^0.13.11",
+    "vue-smooth-reflow": "^0.1.12"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
@@ -50,8 +56,8 @@
     "@types/jest": "^27.5.2",
     "@types/lodash-es": "^4.17.6",
     "@types/node": "^17.0.36",
-    "@typescript-eslint/eslint-plugin": "^4.18.0",
-    "@typescript-eslint/parser": "^4.18.0",
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
     "@vue/cli-plugin-babel": "~5.0.8",
     "@vue/cli-plugin-eslint": "~5.0.8",
     "@vue/cli-plugin-typescript": "~5.0.8",
@@ -86,15 +92,16 @@
     "storybook-dark-mode": "^1.1.0",
     "svg-inline-loader": "^0.8.2",
     "ts-jest": "^27.1.5",
-    "typescript": "~4.1.5",
-    "vue": "^2.7.10",
+    "typescript": "^4.9.5",
+    "vue": "2.7.10",
     "vue-apexcharts": "^1.6.2",
     "vue-class-component": "^7.2.3",
     "vue-i18n": "^8.26.8",
+    "vue-i18n-bridge": "^9.2.2",
     "vue-loader": "^15.10.0",
     "vue-property-decorator": "^9.1.2",
-    "vue-template-compiler": "^2.7.10",
-    "vue-tsc": "^0.39.5",
+    "vue-template-compiler": "2.7.10",
+    "vue-tsc": "^1.8.3",
     "wait-on": "^6.0.1",
     "webpack": "^5.74.0"
   }

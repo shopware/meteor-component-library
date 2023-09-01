@@ -1,6 +1,7 @@
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Vue, { PropType, VNode } from 'vue';
+import type { PropType, VNode } from 'vue';
+import Vue from 'vue';
 
 interface ItemBase {
   hidden?: boolean,
@@ -9,8 +10,8 @@ interface ItemBase {
 
 function getWidth(el: Element) {
   const styles = window.getComputedStyle(el)
-  const margin = parseFloat(styles['marginLeft']) +
-    parseFloat(styles['marginRight'])
+  const margin = parseFloat(styles.marginLeft) +
+    parseFloat(styles.marginRight)
 
   // @ts-expect-error - offsetWidth exists on this element
   return Math.ceil(el.offsetWidth + margin)
@@ -21,7 +22,7 @@ export default Vue.extend({
 
   props: {
     list: {
-      type: Array as PropType<Array<ItemBase>>,
+      type: Array as PropType<ItemBase[]>,
       required: true,
       default () { return [] }
     },
@@ -32,7 +33,7 @@ export default Vue.extend({
   },
 
   data(): {
-    accumItemWidths: Array<any>
+    accumItemWidths: any[]
   } {
     return {
       accumItemWidths: []
@@ -40,11 +41,11 @@ export default Vue.extend({
   },
 
   computed: {
-    mainItems(): Array<ItemBase> {
+    mainItems(): ItemBase[] {
       return this.list.filter((item) => !item.hidden)
     },
 
-    moreItems(): Array<ItemBase> {
+    moreItems(): ItemBase[] {
       return this.list.filter((item) => item.hidden)
     },
 

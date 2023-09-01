@@ -26,6 +26,7 @@
     </template>
 
     <template #element="{identification}">
+      <!-- @vue-ignore -->
       <input
         :id="createInputId(identification)"
         type="text"
@@ -82,7 +83,8 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import type { PropType } from 'vue';
+import Vue from 'vue';
 import SwTextField from '../sw-text-field/sw-text-field.vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 

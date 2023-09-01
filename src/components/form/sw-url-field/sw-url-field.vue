@@ -45,6 +45,7 @@
     </template>
 
     <template #element="{identification}">
+      <!-- @vue-ignore -->
       <input
         :id="identification"
         type="url"
@@ -157,7 +158,7 @@ export default Vue.extend({
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     combinedError(): any {
-      return this.errorUrl || this.error;
+      return this.errorUrl ?? this.error;
     },
   },
 
