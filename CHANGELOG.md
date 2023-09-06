@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.2] - 06.09.2023
+- Fix indeterminate state of `sw-checkbox`
 ## [2.1.1] - 26.04.2023
 - Fixed broken `sw-text-field` inheritance option
 - Fixed missing bannerIndex property in `sw-banner`
