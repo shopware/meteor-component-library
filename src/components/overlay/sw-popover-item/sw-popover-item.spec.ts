@@ -41,7 +41,7 @@ describe("sw-popover-item", () => {
     await wrapper.setProps({
       showCheckbox: true
     })
-    
+
     const checkbox = wrapper.find(".sw-popover-item__checkbox");
 
     expect(checkbox.exists()).toBe(true);
@@ -54,7 +54,7 @@ describe("sw-popover-item", () => {
       showCheckbox: true,
       checkboxChecked: true
     })
-    
+
     const checkbox = wrapper.find(".sw-popover-item__checkbox input");
 
     // @ts-expect-error
@@ -68,7 +68,7 @@ describe("sw-popover-item", () => {
       showCheckbox: true,
       checkboxChecked: false
     })
-    
+
     const checkbox = wrapper.find(".sw-popover-item__checkbox input");
 
     // @ts-expect-error
@@ -82,8 +82,11 @@ describe("sw-popover-item", () => {
       showCheckbox: true,
       checkboxPartial: true
     })
-    
-    const partialChecked = wrapper.find(".icon--solid-minus-xxs");
+
+    const checkbox = wrapper.find(".sw-field--checkbox");
+    expect(checkbox.classes()).toContain('is--partly-checked');
+
+    const partialChecked = wrapper.find(".icon--regular-minus-xxs");
     const fullChecked = wrapper.find(".icon--regular-checkmark-xxs");
 
     expect(partialChecked.exists()).toBe(true);
@@ -97,7 +100,7 @@ describe("sw-popover-item", () => {
       showCheckbox: true,
       checkboxPartial: false
     })
-    
+
     const partialChecked = wrapper.find(".icon--solid-minus-xxs");
     const fullChecked = wrapper.find(".icon--regular-checkmark-xxs");
 
@@ -365,7 +368,7 @@ describe("sw-popover-item", () => {
 
     const visibleEyeIcon = visibility.find(".icon--solid-eye");
     const hiddenEyeIcon = visibility.find(".icon--solid-eye-slash");
-    
+
     expect(visibleEyeIcon.exists()).toBe(true);
     expect(hiddenEyeIcon.exists()).toBe(false);
   });
@@ -497,7 +500,7 @@ describe("sw-popover-item", () => {
 
   it("should show the borderTop", async () => {
     const wrapper = createWrapper();
-    
+
     await wrapper.setProps({
       borderTop: true
     })
@@ -508,7 +511,7 @@ describe("sw-popover-item", () => {
 
   it("should show the borderBottom", async () => {
     const wrapper = createWrapper();
-    
+
     await wrapper.setProps({
       borderBottom: true
     })
@@ -519,7 +522,7 @@ describe("sw-popover-item", () => {
 
   it("should show both borders", async () => {
     const wrapper = createWrapper();
-    
+
     await wrapper.setProps({
       borderTop: true,
       borderBottom: true
