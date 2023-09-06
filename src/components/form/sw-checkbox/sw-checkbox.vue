@@ -12,18 +12,12 @@
             :name="identification"
             :checked="inputState"
             :disabled="isDisabled"
+            :indeterminate.prop="partial"
             @change="onChange"
           >
           <div class="sw-field__checkbox-state">
             <sw-icon
-              v-if="!partial"
-              name="regular-checkmark-xxs"
-              size="16"
-            />
-
-            <sw-icon
-              v-else
-              name="solid-minus-xxs"
+              :name="iconName"
               size="16"
             />
           </div>
@@ -170,12 +164,14 @@ export default Vue.extend({
       'is--disabled': boolean,
       'is--inherited': boolean,
       'is--bordered': boolean,
+      'is--partly-checked': boolean,
     } {
       return {
         'has--error': !!this.hasError,
         'is--disabled': this.disabled,
         'is--inherited': !!this.isInherited,
         'is--bordered': this.bordered,
+        'is--partly-checked': this.isPartlyChecked,
       };
     },
 
@@ -212,6 +208,14 @@ export default Vue.extend({
     isDisabled(): boolean {
       return this.disabled || this.isInherited;
     },
+
+    isPartlyChecked(): boolean {
+      return this.partial && !this.inputState;
+    },
+
+    iconName(): string {
+      return this.isPartlyChecked ? 'regular-minus-xxs' : 'regular-checkmark-xxs';
+    },
   },
 
   watch: {
@@ -219,7 +223,7 @@ export default Vue.extend({
       handler() {
         this.currentValue = this.checked;
       },
-      immediate: true,      
+      immediate: true,
     },
   },
 
@@ -324,6 +328,16 @@ $sw-field-color-inherited: $color-module-purple-900;
 
           .sw-icon {
             color: lighten($sw-field-color-text, 40%);
+          }
+        }
+
+        &:indeterminate ~ .sw-field__checkbox-state {
+          background-color: $color-shopware-brand-500;
+          border: 1px solid $color-shopware-brand-500;
+
+          .sw-icon {
+            display: inline-block;
+            color: white;
           }
         }
       }

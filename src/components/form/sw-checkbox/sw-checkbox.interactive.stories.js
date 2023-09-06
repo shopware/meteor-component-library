@@ -159,11 +159,14 @@ VisualTestPartialChecked.storyName = 'Partial checked should be displayed';
 VisualTestPartialChecked.args = {
   label: 'Partial checked label',
   partial: true,
-  checked: true,
+  checked: false,
 };
 VisualTestPartialChecked.play = async () => {
   // we can't use canvasElement because it is not available anymore
   const canvas = within(document.getElementById('root'));
 
-  await expect(canvas.getByRole('checkbox').checked).toBe(true);
+  await expect(canvas.getByRole('checkbox').indeterminate).toBe(true);
+  await expect(canvas.getByRole('checkbox').checked).toBe(false);
+
+  await expect(canvas.getByTestId('sw-icon__regular-minus-xxs')).toBeDefined();
 };
