@@ -61,5 +61,6 @@ export default defineComponent({
 
 .sw-data-table-number-renderer {
   text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 </style>
