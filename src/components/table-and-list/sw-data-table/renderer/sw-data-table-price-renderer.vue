@@ -103,5 +103,6 @@ export default defineComponent({
 
 .sw-data-table-price-renderer {
   text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 </style>
