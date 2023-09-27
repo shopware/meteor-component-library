@@ -24,8 +24,8 @@
           role="tab"
           :aria-selected="item.name === activeItemName"
           :tabindex="0"
-          @click="setActiveItem(item.name)"
-          @keyup.enter="setActiveItem(item.name)"
+          @click="handleClick(item.name)"
+          @keyup.enter="handleClick(item.name)"
         >
           {{ item.label }}
 
@@ -61,8 +61,8 @@
               role="tab"
               :aria-selected="moreItem.name === activeItemName"
               :label="moreItem.label"
-              @click="setActiveItem(moreItem.name); toggleFloatingUi();"
-              @keyup.enter="setActiveItem(moreItem.name)"
+              @click="handleClick(moreItem.name); toggleFloatingUi();"
+              @keyup.enter="handleClick(moreItem.name)"
             />
           </template>
         </sw-context-button>
@@ -76,7 +76,7 @@
           class="sw-tabs--item"
           :class="getItemClasses(item)"
           :data-item-name="item.name"
-          @click="setActiveItem(item.name)"
+          @click="handleClick(item.name)"
         >
           {{ item.label }}
         </li>
