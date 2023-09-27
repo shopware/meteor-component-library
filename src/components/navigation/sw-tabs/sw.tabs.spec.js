@@ -27,7 +27,7 @@ async function createWrapper(customOptions, props) {
 }
 
 
-describe('src/app/component/form/sw-datepicker', () => {
+describe('src/app/component/navigation/sw-tabs', () => {
     let wrapper;
 
     afterEach(() => {
