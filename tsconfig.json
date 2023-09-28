@@ -13,12 +13,12 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "declaration": true,
-    "declarationMap": true,
     "allowJs": true,
     "baseUrl": ".",
     "types": [
       "webpack-env",
       "jest",
+      "vite/client",
     ],
     "paths": {
       "@/*": [

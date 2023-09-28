@@ -66,14 +66,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import SwTextField from '../sw-text-field/sw-text-field.vue';
-import SwBaseField from '../_internal/sw-base-field/sw-base-field.vue';
 
 export default Vue.extend({
   name: 'SwEmailField',
-
-  components: {
-    'sw-base-field': SwBaseField,
-  },
 
   extends: SwTextField,
 
