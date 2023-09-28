@@ -5,7 +5,7 @@
     "test:unit": "jest",
     "test:unit:watch": "jest --watch",
     "lint": "npm run lint:tsc && npm run lint:eslint",
-    "lint:tsc": "vue-tsc --noEmit --declaration false",
+    "lint:tsc": "vue-tsc --noEmit --declaration false --declarationMap false",
     "lint:eslint": "eslint --ext .js,.ts,.vue src",
     "storybook": "SHOW_INTERACTIONS=true start-storybook -p 6006",
     "build-vue": "rollup -c",
@@ -85,7 +85,7 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-scss": "^3.0.0",
     "rollup-plugin-svg-import": "^1.6.0",
-    "rollup-plugin-typescript2": "^0.32.1",
+    "rollup-plugin-typescript2": "^0.36.0",
     "rollup-plugin-vue": "^5.1.9",
     "sass": "^1.54.4",
     "sass-loader": "^8.0.2",
@@ -101,7 +101,7 @@
     "vue-loader": "^15.10.0",
     "vue-property-decorator": "^9.1.2",
     "vue-template-compiler": "2.7.10",
-    "vue-tsc": "^1.8.3",
+    "vue-tsc": "^1.8.15",
     "wait-on": "^6.0.1",
     "webpack": "^5.74.0"
   }
