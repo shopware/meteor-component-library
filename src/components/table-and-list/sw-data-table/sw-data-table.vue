@@ -462,7 +462,7 @@ import SwContextButton from '../../context-menu/sw-context-button/sw-context-but
 import SwContextMenu from '../../context-menu/sw-context-menu-item/sw-context-menu-item.vue';
 import SwDataTableSettings from './sub-components/sw-data-table-settings/sw-data-table-settings.vue';
 import SwPopover from '../../overlay/sw-popover/sw-popover.vue';
-import SwPopoverItem, { SwPopoverItemType } from '../../overlay/sw-popover-item/sw-popover-item.vue';
+import SwPopoverItem, { type SwPopoverItemType } from '../../overlay/sw-popover-item/sw-popover-item.vue';
 import SwPopoverItemResult from '../../overlay/sw-popover-item-result/sw-popover-item-result.vue';
 import SwSkeletonBar from '../../feedback-indicator/sw-skeleton-bar/sw-skeleton-bar.vue';
 import SwCheckbox from '../../form/sw-checkbox/sw-checkbox.vue';
