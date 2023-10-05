@@ -18,7 +18,9 @@ import SwIcon from './components/icons-media/sw-icon/sw-icon.vue';
 import SwCard from './components/layout/sw-card/sw-card.vue';
 import SwTabs from './components/navigation/sw-tabs/sw-tabs.vue'
 import SwDataTable from './components/table-and-list/sw-data-table/sw-data-table.vue';
+import SwPagination from './components/table-and-list/sw-pagination/sw-pagination.vue';
 import TooltipDirective from './directives/tooltip.directive';
+import DeviceHelperPlugin from './plugin/device-helper.plugin';
 // Import SCSS for styling
 import './components/assets/scss/all.scss';
 
@@ -43,5 +45,7 @@ export {
   SwCard,
   SwTabs,
   SwDataTable,
+  SwPagination,
   TooltipDirective,
+  DeviceHelperPlugin,
 }
