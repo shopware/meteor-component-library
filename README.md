@@ -25,7 +25,7 @@ import '@shopware-ag/meteor-component-library/dist/style.css';
 
 Each component works independently and can be imported directly from the root like this:
 
-```js
+```html
 <script>
 import { SwButton } from '@shopware-ag/meteor-component-library';
 
