@@ -115,4 +115,4 @@ export const VisualTestPrimaryVariant = {
 
 The screenshot will  be generated at the end of the Play function. If no Play function is defined then it will be created immediatly.
 
-For reduced flakyness all animations are automatically disabled from Playwright.
+For reduced flakiness all animations are automatically disabled from Playwright.
