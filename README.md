@@ -94,6 +94,7 @@ export default {
   title: 'Interaction Tests/base/sw-button',
   component: SwButton,
 };
+```
 
 ### Writing visual tests
 
