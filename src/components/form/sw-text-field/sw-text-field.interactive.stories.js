@@ -1,135 +1,148 @@
 import { within, userEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
-import SwTextField from './sw-text-field.vue';
-import defaultTextFieldStory, { Default as Template } from './sw-text-field.stories';
+
+
+import meta from './sw-text-field.stories';
 
 export default {
-  ...defaultTextFieldStory,
+  ...meta,
   title: 'Interaction Tests/Form/sw-text-field',
-  component: SwTextField,
 };
 
-export const TestInputValue = Template.bind();
-TestInputValue.storyName = 'Should keep input value';
-TestInputValue.play = async ({ args }) => {
-  // we can't use canvasElement because it is not available anymore
-  const canvas = within(document.getElementById('root'));
+export const TestInputValue = {
+  name: 'Should keep input value',
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
 
-  await userEvent.type(canvas.getByRole('textbox'), 'Shopware');
-  await userEvent.click(canvas.getByText('hidden'));
+    await userEvent.type(canvas.getByRole('textbox'), 'Shopware');
+    await userEvent.click(canvas.getByText('hidden'));
 
-  expect(canvas.getByRole('textbox').value).toBe('Shopware');
-  await expect(args.change).toHaveBeenCalledWith('Shopware');
+    expect(canvas.getByRole('textbox').value).toBe('Shopware');
+    
+    expect(args.change).toHaveBeenCalledWith('Shopware');
+  }
 };
 
-export const VisualTestPrefix = Template.bind();
-VisualTestPrefix.storyName = 'Should display prefix';
-VisualTestPrefix.args = {
-  prefix: 'prefix',
-};
-VisualTestPrefix.play = async ({ args }) => {
-  const canvas = within(document.getElementById('root'));
+export const VisualTestPrefix = {
+  name: 'Should display prefix',
+  args: {
+    prefix: 'prefix',
+  },
+  play: ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
 
-  await expect(canvas.getByText(args.prefix)).toBeDefined();
-};
-
-export const VisualTestSuffix = Template.bind();
-VisualTestSuffix.storyName = 'Should display suffix';
-VisualTestSuffix.args = {
-  suffix: 'suffix',
-};
-VisualTestSuffix.play = async ({ args }) => {
-  const canvas = within(document.getElementById('root'));
-
-  await expect(canvas.getByText(args.suffix)).toBeDefined();
+    expect(canvas.getByText(args.prefix)).toBeDefined();
+  }
 };
 
-export const VisualTestHint = Template.bind();
-VisualTestHint.storyName = 'Should display hint';
-VisualTestHint.args = {
-  hint: 'hint',
-};
-VisualTestHint.play = async ({ args }) => {
-  const canvas = within(document.getElementById('root'));
-
-  await expect(canvas.getByText(args.hint)).toBeDefined();
-};
-
-export const TestLabel = Template.bind();
-TestLabel.storyName = 'Should display label';
-TestLabel.args = {
-  label: 'label',
-};
-TestLabel.play = async ({ args }) => {
-  const canvas = within(document.getElementById('root'));
-
-  await expect(canvas.getByText(args.label)).toBeDefined();
+export const VisualTestSuffix = {
+  name: 'Should display suffix',
+  args: {
+    suffix: 'suffix',
+  },
+  play: ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    
+    expect(canvas.getByText(args.suffix)).toBeDefined();
+  }
 };
 
-export const VisualTestDisabled = Template.bind();
-VisualTestDisabled.storyName = 'Should disable';
-VisualTestDisabled.args = {
-  disabled: true,
-  value: 'Shopware'
-}
-VisualTestDisabled.play = async () => {
-  const canvas = within(document.getElementById('root'));
-
-  await userEvent.type(canvas.getByRole('textbox'), '1337');
-
-  expect(canvas.getByRole('textbox').value).toBe('Shopware')
+export const VisualTestHint = {
+  name: 'Should display hint',
+  args: {
+    hint: 'hint',
+  },
+  play: ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    
+    expect(canvas.getByText(args.hint)).toBeDefined();
+  }
 };
 
-export const TestPlaceholder = Template.bind();
-TestPlaceholder.storyName = 'Should display placeholder';
-TestPlaceholder.args = {
-  placeholder: 'Placeholder',
-};
-TestPlaceholder.play = async ({ args }) => {
-  const canvas = within(document.getElementById('root'));
+export const TestLabel = {
+  name: 'Should display label',
+  args: {
+    label: 'label',
+  },
+  play: ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
 
-  await expect(canvas.getByPlaceholderText(args.placeholder)).toBeDefined();
-};
-
-export const VisualTestError = Template.bind();
-VisualTestError.storyName = 'Should display error';
-VisualTestError.args = {
-  error: {code: 500, detail: "Error while saving!"},
-};
-VisualTestError.play = async ({ args }) => {
-  const canvas = within(document.getElementById('root'));
-
-  await expect(canvas.getByText(args.error.detail)).toBeDefined();
+    expect(canvas.getByText(args.label)).toBeDefined();
+  }
 };
 
-export const TestCopyable = Template.bind();
-TestCopyable.storyName = 'Should be able to copy';
-TestCopyable.args = {
-  copyable: true,
+export const VisualTestDisabled = {
+  name: 'Should disable',
+  args: {
+    disabled: true,
+    value: 'Shopware'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.type(canvas.getByRole('textbox'), '1337');
+    
+    expect(canvas.getByRole('textbox').value).toBe('Shopware')
+  }
 };
-TestCopyable.play = async () => {
-  // TODO: Currently it is not possible to test Clipboard copying
-  //  @see https://github.com/microsoft/playwright/issues/8114
+
+export const TestPlaceholder = {
+  name: 'Should display placeholder',
+  args: {
+    placeholder: 'Placeholder',
+  },
+  play: ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    
+    expect(canvas.getByPlaceholderText(args.placeholder)).toBeDefined();
+  }
 };
 
-export const VisualTestInheritance = Template.bind();
-VisualTestInheritance.storyName = 'Should remove and restore inheritance';
-VisualTestInheritance.args = {
-  isInheritanceField: true,
-  isInherited: false
+export const VisualTestError = {
+  name: 'Should display error',
+  args: {
+    error: {
+      code: 500,
+      detail: "Error while saving!"
+    },
+  },
+  play: ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    
+    expect(canvas.getByText(args.error.detail)).toBeDefined();
+  }
 };
-VisualTestInheritance.play = async ({ args }) => {
-  const canvas = within(document.getElementById('root'));
 
-  await userEvent.click(canvas.getByTestId('sw-icon__regular-lock-open-s'));
+export const TestCopyable = {
+  name: 'Should be able to copy',
+  args: {
+    copyable: true,
+  },
+  play: async () => {
+    // TODO: Currently it is not possible to test Clipboard copying
+    //  @see https://github.com/microsoft/playwright/issues/8114
+  }
+};  
 
-  await expect(args.inheritanceRestore).toBeCalled();
+export const VisualTestInheritance = {
+  name: 'Should remove and restore inheritance',
+  args: {
+    isInheritanceField: true,
+    isInherited: false
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
 
-  expect(canvas.getByTestId('sw-inheritance-switch-icon')).toBeDefined();
+    await userEvent.click(canvas.getByTestId('sw-icon__regular-lock-open-s'));
+    
+    expect(args.inheritanceRestore).toBeCalled();
 
-  await userEvent.click(canvas.getByTestId('sw-inheritance-switch-icon'));
+    expect(canvas.getByTestId('sw-inheritance-switch-icon')).toBeDefined();
 
-  await expect(args.inheritanceRemove).toBeCalled();
+    await userEvent.click(canvas.getByTestId('sw-inheritance-switch-icon'));
+    
+    expect(args.inheritanceRemove).toBeCalled();
 
-  expect(canvas.getByTestId('sw-icon__regular-lock-open-s')).toBeDefined();
+    expect(canvas.getByTestId('sw-icon__regular-lock-open-s')).toBeDefined();
+  }
 };

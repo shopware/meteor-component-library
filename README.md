@@ -25,7 +25,7 @@ import '@shopware-ag/meteor-component-library/dist/style.css';
 
 Each component works independently and can be imported directly from the root like this:
 
-```js
+```html
 <script>
 import { SwButton } from '@shopware-ag/meteor-component-library';
 
@@ -87,23 +87,13 @@ All interaction tests are written in `component-name.interactive.stories.js` fil
 Example:
 
 ```js
+import meta from './sw-button.stories';
+
 export default {
-  ...defaultButtonStory,
+  ...meta,
   title: 'Interaction Tests/base/sw-button',
   component: SwButton,
 };
-```
-
-### canvasElement
-The canvasElement, which is described in the official Storybook documentation, is not working. To access the component you need to write the following:
-
-```js
-TestButtonClick.play = async () => {
-  // Get the cavnas
-  const canvas = within(document.getElementById('root'));
-
-  // Write here your interaction test
-}
 ```
 
 ### Writing visual tests
@@ -113,11 +103,16 @@ Stories for visual tests need to start with `VisualTest`.
 Example:
 
 ```js
-export const VisualTestPrimaryVariant = Default.bind();
-VisualTestPrimaryVariant.storyName = 'Render the primary variant';
-...
+export const VisualTestPrimaryVariant = {
+  name: 'Render the primary variant',
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    
+    // your interaction test ...
+  },
+}
 ```
 
 The screenshot will  be generated at the end of the Play function. If no Play function is defined then it will be created immediatly.
 
-For reduced flakyness all animations are automatically disabled from Playwright.
+For reduced flakiness all animations are automatically disabled from Playwright.

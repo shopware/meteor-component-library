@@ -73,6 +73,7 @@
 
 <script lang="ts">
 import type { PropType } from 'vue';
+
 import Vue from 'vue';
 import SwLabel from '../../../../_internal/sw-label.vue';
 import SwButton from '../../../sw-button/sw-button.vue';

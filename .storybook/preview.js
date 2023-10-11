@@ -1,4 +1,3 @@
-import { themes } from '@storybook/theming';
 import '!style-loader!css-loader!sass-loader!./../src/components/assets/scss/all.scss';
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';

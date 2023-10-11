@@ -203,6 +203,7 @@
 
 <script lang="ts">
 import type { PropType } from 'vue';
+
 import Vue from 'vue';
 import { debounce } from 'lodash-es';
 import SwBaseField from "../_internal/sw-base-field/sw-base-field.vue";
@@ -1194,7 +1195,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-/* stylelint-disable */
 @import "../../assets/scss/variables.scss";
 @import "../../assets/scss/mixins.scss";
 

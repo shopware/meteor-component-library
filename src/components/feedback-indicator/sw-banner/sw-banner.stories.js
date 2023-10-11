@@ -1,6 +1,6 @@
 import SwBanner from './sw-banner.vue';
 
-export default {
+const meta = {
   title: 'Components/Feedback Indicator/sw-banner',
   component: SwBanner,
   args: {
@@ -8,6 +8,17 @@ export default {
     default: 'I am in the default slot of the banner',
     variant: 'neutral',
   },
+  render: (args, { argTypes }) => ({
+    props: Object.keys(argTypes),
+    components: { SwBanner },
+    template: `
+      <sw-banner
+        v-bind="$props"
+        @close="close"
+      >
+        <div v-html="$props.default"></div>
+      </sw-banner>`,
+  }),
   argTypes: {
     close: {
       action: 'close',
@@ -16,19 +27,10 @@ export default {
       }
     },
   },
+}
+
+export default meta;
+
+export const defaultStory = {
+  name: 'sw-banner',
 };
-
-const Template = (args, { argTypes }) => ({
-  props: Object.keys(argTypes),
-  components: { SwBanner },
-  template: `
-    <sw-banner
-      v-bind="$props"
-      @close="close"
-    >
-      <div v-html="$props.default"></div>
-    </sw-banner>`,
-});
-
-export const Default = Template.bind({});
-Default.storyName = 'sw-banner';

@@ -1,81 +1,90 @@
 import { within, userEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
-import SwTextarea from './sw-textarea.vue';
-import defaultTextareaStory, { Default as Template } from './sw-textarea.stories';
+
+
+import meta from './sw-textarea.stories';
 
 export default {
-  ...defaultTextareaStory,
+  ...meta,
   title: 'Interaction Tests/Form/sw-textarea',
-  component: SwTextarea,
 };
 
-export const TestInputValue = Template.bind();
-TestInputValue.storyName = 'Should keep input value';
-TestInputValue.play = async ({ args }) => {
-  // we can't use canvasElement because it is not available anymore
-  const canvas = within(document.getElementById('root'));
+export const TestInputValue = {
+  name: 'Should keep input value',
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
 
-  await userEvent.type(canvas.getByRole('textbox'), 'Shopware');
-  await userEvent.click(canvas.getByText('hidden'));
+    await userEvent.type(canvas.getByRole('textbox'), 'Shopware');
+    await userEvent.click(canvas.getByText('hidden'));
 
-  expect(canvas.getByRole('textbox').value).toBe('Shopware');
-  await expect(args.change).toHaveBeenCalledWith('Shopware');
+    expect(canvas.getByRole('textbox').value).toBe('Shopware');
+    
+    expect(args.change).toHaveBeenCalledWith('Shopware');
+  }
 };
 
-export const VisualTestHint = Template.bind();
-VisualTestHint.storyName = 'Should display hint';
-VisualTestHint.args = {
-  hint: 'hint',
-};
-VisualTestHint.play = async ({ args }) => {
-  const canvas = within(document.getElementById('root'));
-
-  await expect(canvas.getByText(args.hint)).toBeDefined();
-};
-
-export const TestLabel = Template.bind();
-TestLabel.storyName = 'Should display label';
-TestLabel.args = {
-  label: 'label',
-};
-TestLabel.play = async ({ args }) => {
-  const canvas = within(document.getElementById('root'));
-
-  await expect(canvas.getByText(args.label)).toBeDefined();
+export const VisualTestHint = {
+  name: 'Should display hint',
+  args: {
+    hint: 'hint',
+  },
+  play: ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    
+    expect(canvas.getByText(args.hint)).toBeDefined();
+  }
 };
 
-export const VisualTestDisabled = Template.bind();
-VisualTestDisabled.storyName = 'Should disable';
-VisualTestDisabled.args = {
-  disabled: true,
-  value: 'Shopware'
-}
-VisualTestDisabled.play = async () => {
-  const canvas = within(document.getElementById('root'));
+export const TestLabel = {
+  name: 'Should display label',
+  args: {
+    label: 'label',
+  },
+  play: ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
 
-  await userEvent.type(canvas.getByRole('textbox'), '1337');
-
-  expect(canvas.getByRole('textbox').value).toBe('Shopware')
+    expect(canvas.getByText(args.label)).toBeDefined();
+  }
 };
 
-export const TestPlaceholder = Template.bind();
-TestPlaceholder.storyName = 'Should display placeholder';
-TestPlaceholder.args = {
-  placeholder: 'Placeholder',
-};
-TestPlaceholder.play = async ({ args }) => {
-  const canvas = within(document.getElementById('root'));
+export const VisualTestDisabled = {
+  name: 'Should disable',
+  args: {
+    disabled: true,
+    value: 'Shopware'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-  await expect(canvas.getByPlaceholderText(args.placeholder)).toBeDefined();
+    await userEvent.type(canvas.getByRole('textbox'), '1337');
+
+    expect(canvas.getByRole('textbox').value).toBe('Shopware')
+  }
 };
 
-export const VisualTestError = Template.bind();
-VisualTestError.storyName = 'Should display error';
-VisualTestError.args = {
-  error: {code: 500, detail: "Error while saving!"},
-};
-VisualTestError.play = async ({ args }) => {
-  const canvas = within(document.getElementById('root'));
+export const TestPlaceholder = {
+  name: 'Should display placeholder',
+  args: {
+    placeholder: 'Placeholder',
+  },
+  play: ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
 
-  await expect(canvas.getByText(args.error.detail)).toBeDefined();
+    expect(canvas.getByPlaceholderText(args.placeholder)).toBeDefined();
+  }
+};
+
+export const VisualTestError = {
+  name: 'Should display error',
+  args: {
+    error: {
+      code: 500,
+      detail: "Error while saving!"
+    },
+  },
+  play: ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+
+    expect(canvas.getByText(args.error.detail)).toBeDefined();
+  }
 };

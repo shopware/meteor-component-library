@@ -1,14 +1,13 @@
 import SwIcon from './sw-icon.vue';
 
-export default {
+const meta = {
   title: 'Components/Icons & Media/sw-icon',
   component: SwIcon,
-  args: {
-    name: 'regular-products',
-    color: '#3498db',
-    multicolor: false,
-    decorative: false,
-  },
+  render: (args, { argTypes }) => ({
+    props: Object.keys(argTypes),
+    components: { SwIcon },
+    template: '<sw-icon v-bind="$props"></sw-icon>',
+  }),
   argTypes: {
     name: {
       control: {
@@ -26,13 +25,18 @@ export default {
       },
     },
   },
+  args: {
+    name: 'regular-products',
+    color: '#3498db',
+    multicolor: false,
+    decorative: false,
+  },
 };
 
-const Template = (args, { argTypes }) => ({
-  props: Object.keys(argTypes),
-  components: { SwIcon },
-  template: '<sw-icon v-bind="$props"></sw-icon>',
-});
+export default meta;
 
-export const Default = Template.bind({});
-Default.storyName = 'sw-icon';
+
+
+export const Default = {
+  name: 'sw-icon',
+};

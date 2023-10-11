@@ -1,8 +1,14 @@
 import SwButton from './sw-button.vue';
 
-export default {
+
+const meta = {
   title: 'Components/Form/sw-button',
   component: SwButton,
+  render: (args, { argTypes }) => ({
+    components: { SwButton },
+    props: Object.keys(argTypes),
+    template: `<sw-button @click="click" v-bind="$props">{{ $props.default}}</sw-button>`,
+  }),
   argTypes: {
     click: {
       action: 'click',
@@ -14,22 +20,19 @@ export default {
       control: { type: 'text' },
     },
   },
+  args: {
+    default: 'Button',
+    variant: 'primary',
+    size: 'small',
+    disabled: false,
+    square: false,
+    block: false,
+    isLoading: false,
+  }
 };
 
-const Template = (args, { argTypes }) => ({
-  components: { SwButton },
-  props: Object.keys(argTypes),
-  template: `<sw-button @click="click" v-bind="$props">{{ $props.default}}</sw-button>`,
-});
+export default meta;
 
-export const Default = Template.bind();
-Default.args = {
-  default: 'Button',
-  variant: 'primary',
-  size: 'small',
-  disabled: false,
-  square: false,
-  block: false,
-  isLoading: false,
+export const defaultStory = {
+  name: 'sw-button',
 };
-Default.storyName = 'sw-button';

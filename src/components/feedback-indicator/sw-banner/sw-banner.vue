@@ -39,8 +39,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import type { PropType } from 'vue';
+
+import Vue from 'vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue'
 
 type CssClasses = (string | Record<string, boolean>)[] | Record<string, boolean>;
