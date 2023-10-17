@@ -1,28 +1,18 @@
-const path = require('path');
 const custom = require('../node_modules/@vue/cli-service/webpack.config.js');
+const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
 module.exports = {
-  core: {
-    builder: 'webpack5'
-  },
-  "stories": [
-    "../src/**/*.stories.mdx",
-    "../src/**/*.stories.@(js|jsx|ts|tsx)",
-  ],
-  "addons": [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@storybook/addon-interactions",
-    "@storybook/addon-a11y",
-    "storybook-dark-mode",
-  ],
+  "stories": ["../src/**/*.stories.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
+  "addons": ["@storybook/addon-links", "@storybook/addon-essentials", "@storybook/addon-interactions", "@storybook/addon-a11y", "storybook-dark-mode"],
   features: {
-    interactionsDebugger: true,
+    interactionsDebugger: true
   },
-  "framework": "@storybook/vue",
+  "framework": {
+    name: "@storybook/vue-webpack5",
+    options: {}
+  },
   staticDirs: ['../public'],
-  "webpackFinal": (config) => {
+  "webpackFinal": config => {
     // Add .scss rule to config from vue-cli-service
     const scssRule = custom.module.rules.find(rule => rule.test.toString() === /\.scss$/.toString());
     config.module.rules.push(scssRule);
@@ -37,22 +27,20 @@ module.exports = {
     // add svg inline loader for meteor icons
     config.module.rules.unshift({
       test: /\.svg$/,
-      include: [
-        /@shopware-ag\/meteor-icon-kit\/icons/,
-      ],
+      include: [/@shopware-ag\/meteor-icon-kit\/icons/],
       loader: 'svg-inline-loader',
       options: {
-        removeSVGTagAttrs: false,
-      },
-    })
+        removeSVGTagAttrs: false
+      }
+    });
 
     // add loader for css
-    config.plugins.unshift(
-      new MiniCssExtractPlugin({
-        filename: "[name].[contenthash].css",
-      })
-    )
-
+    config.plugins.unshift(new MiniCssExtractPlugin({
+      filename: "[name].[contenthash].css"
+    }));
     return config;
   },
+  docs: {
+    autodocs: true
+  }
 };

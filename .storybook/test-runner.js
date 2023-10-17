@@ -38,7 +38,8 @@ module.exports = {
       failureThreshold: 0.01,
       failureThresholdType: 'percent',
       customSnapshotsDir,
-      customSnapshotIdentifier: context.id,
+      blur: 0.001,
+      customSnapshotIdentifier: context.id + '-snap',
       storeReceivedOnFailure: true,
       customReceivedDir: customReceivedDir,
     });

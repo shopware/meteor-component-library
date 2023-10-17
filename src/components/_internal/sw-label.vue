@@ -34,6 +34,7 @@
 
 <script lang="ts">
 import type { PropType } from 'vue';
+
 import Vue from 'vue';
 import SwIcon from '../icons-media/sw-icon/sw-icon.vue';
 import SwColorBadge from '../feedback-indicator/sw-color-badge/sw-color-badge.vue';

@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import type { PropType} from 'vue';
+import type { PropType } from 'vue';
 import { defineComponent, computed, ref, watch } from 'vue';
 import SwCheckbox from '../../form/sw-checkbox/sw-checkbox.vue';
 import SwSwitch from '../../form/sw-switch/sw-switch.vue';

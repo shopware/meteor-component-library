@@ -1,8 +1,105 @@
 import SwSelect from './sw-select.vue';
 
-export default {
-  title: 'Components/Form/sw-select',
-  component: SwSelect,
+const meta = {
+    title: 'Components/Form/sw-select',
+    component: SwSelect,
+    render: (args, { argTypes }) => ({
+    template: `
+      <div>
+        <sw-select
+          v-bind="$props"
+          v-model="currentValue"
+          :label="label"
+          @change="change"
+          @item-add="itemAdd"
+          @item-remove="itemRemove"
+          @paginate="paginate"
+          @display-values-expand="displayValuesExpand"
+          @search-term-change="searchTermChange"
+          @inheritance-restore="inheritanceRestoreWrapper"
+          @inheritance-remove="inheritanceRemoveWrapper"
+        >
+          <template
+              v-if="$props.prefix"
+            #prefix
+          >
+            {{ prefix }}
+          </template>
+          <template
+              v-if="$props.suffix"
+              #suffix
+          >
+            {{ suffix }}
+          </template>
+          <template
+              v-if="$props.hint"
+              #hint
+          >
+            {{ hint }}
+          </template>
+          <template
+              v-if="$props.beforeItemList"
+              #before-item-list
+          >
+            {{ $props.beforeItemList }}
+          </template>
+          <template
+              v-if="$props.selectionLabelProperty"
+              #selection-label-property
+          >
+            {{ $props.selectionLabelProperty }}
+          </template>
+          <template
+              v-if="$props.resultItem"
+              #result-item
+          >
+            {{ $props.resultItem }}
+          </template>
+          <template
+              v-if="$props.resultLabelProperty"
+              #result-label-property
+          >
+            {{ $props.resultLabelProperty }}
+          </template>
+          <template
+              v-if="$props.afterItemList"
+              #after-item-list
+          >
+            {{ $props.afterItemList }}
+          </template>
+        </sw-select>
+        <h4 style="display: none;">hidden</h4>
+      </div>
+    `,
+    props: Object.keys(argTypes),
+    components: { SwSelect },
+    data() {
+      return { currentValue: [] }
+    },
+    watch: {
+      value(v) {
+        if (this.currentValue === v) {
+          return;
+        }
+  
+        this.currentValue = v;
+      }
+    },
+    created() {
+      this.currentValue = this.value;
+    },
+    methods: {
+      inheritanceRemoveWrapper() {
+        this.inheritanceRemove(...arguments);
+        this.isInherited = false;
+      },
+  
+      inheritanceRestoreWrapper() {
+        this.inheritanceRestore(...arguments);
+        this.isInherited = true;
+      }
+    }
+  }),
   args: {
     label: 'Select',
     value: 'b',
@@ -208,106 +305,13 @@ export default {
         disable: true,
       }
     },
-  }
+  },
 };
 
-const Template = (args, { argTypes }) => ({
-  template: `
-    <div>
-      <sw-select
-        v-bind="$props"
-        v-model="currentValue"
-        :label="label"
-        @change="change"
-        @item-add="itemAdd"
-        @item-remove="itemRemove"
-        @paginate="paginate"
-        @display-values-expand="displayValuesExpand"
-        @search-term-change="searchTermChange"
-        @inheritance-restore="inheritanceRestoreWrapper"
-        @inheritance-remove="inheritanceRemoveWrapper"
-      >
-        <template
-            v-if="$props.prefix"
-          #prefix
-        >
-          {{ prefix }}
-        </template>
-        <template
-            v-if="$props.suffix"
-            #suffix
-        >
-          {{ suffix }}
-        </template>
-        <template
-            v-if="$props.hint"
-            #hint
-        >
-          {{ hint }}
-        </template>
-        <template
-            v-if="$props.beforeItemList"
-            #before-item-list
-        >
-          {{ $props.beforeItemList }}
-        </template>
-        <template
-            v-if="$props.selectionLabelProperty"
-            #selection-label-property
-        >
-          {{ $props.selectionLabelProperty }}
-        </template>
-        <template
-            v-if="$props.resultItem"
-            #result-item
-        >
-          {{ $props.resultItem }}
-        </template>
-        <template
-            v-if="$props.resultLabelProperty"
-            #result-label-property
-        >
-          {{ $props.resultLabelProperty }}
-        </template>
-        <template
-            v-if="$props.afterItemList"
-            #after-item-list
-        >
-          {{ $props.afterItemList }}
-        </template>
-      </sw-select>
-      <h4 style="display: none;">hidden</h4>
-    </div>
-  `,
-  props: Object.keys(argTypes),
-  components: { SwSelect },
-  data() {
-    return { currentValue: [] }
-  },
-  watch: {
-    value(v) {
-      if (this.currentValue === v) {
-        return;
-      }
+export default meta;
 
-      this.currentValue = v;
-    }
-  },
-  created() {
-    this.currentValue = this.value;
-  },
-  methods: {
-    inheritanceRemoveWrapper() {
-      this.inheritanceRemove(...arguments);
-      this.isInherited = false;
-    },
 
-    inheritanceRestoreWrapper() {
-      this.inheritanceRestore(...arguments);
-      this.isInherited = true;
-    }
-  }
-});
 
-export const Default = Template.bind({});
-Default.storyName = 'sw-select';
+export const defaultStory = {
+  name: 'sw-select',
+};

@@ -1,446 +1,441 @@
 import { within, userEvent, fireEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
-import SwColorpicker from './sw-colorpicker.vue';
-import defaultColorpickerStory, { Default } from './sw-colorpicker.stories';
+
+import meta from './sw-colorpicker.stories';
 
 export default {
-  ...defaultColorpickerStory,
+  ...meta,
   title: 'Interaction Tests/Form/sw-colorpicker',
-  component: SwColorpicker,
 };
 
-const Template = (args, { argTypes }) => ({
-  props: Object.keys(argTypes),
-  components: { SwColorpicker },
-  template: '<sw-colorpicker v-bind="$props"></sw-colorpicker>',
-});
-
-export const VisualTestRenderColorpicker = Template.bind({});
-VisualTestRenderColorpicker.storyName = 'Render colorpicker';
-VisualTestRenderColorpicker.args = {
-  ...Default.args,
+export const VisualTestRenderColorpicker = {
+  name: 'Render colorpicker',
 };
 
-export const VisualTestOpenColorpicker = Template.bind({});
-VisualTestOpenColorpicker.storyName = 'Open colorpicker';
-VisualTestOpenColorpicker.args = {
-  ...Default.args,
-  value: 'rgba(72, 228, 37, 0.81)'
-};
-VisualTestOpenColorpicker.play = async () => {
-  const canvas = within(document.getElementById('root'));
+export const VisualTestOpenColorpicker = {
+  name: 'Open colorpicker',
+  args: {
+    value: 'rgba(72, 228, 37, 0.81)'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-  const pickerToggle = await canvas.getByLabelText('colorpicker-toggle');
+    const pickerToggle = canvas.getByLabelText('colorpicker-toggle');
 
-  await userEvent.click(pickerToggle);
+    await userEvent.click(pickerToggle);
 
-  // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
+    // todo: figure out what element this is
+    // Look inside the popover
+    const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
-  const colorRange = await popover.getByLabelText('colorpicker-color-range');
-  const alphaRange = await popover.getByLabelText('colorpicker-alpha-range');
-  const hexInput = await popover.getByLabelText('hex-value');
-  const redInput = await popover.getByLabelText('red-value');
-  const greenInput = await popover.getByLabelText('green-value');
-  const blueInput = await popover.getByLabelText('blue-value');
-  const alphaInput = await popover.getByLabelText('alpha-value');
+    const colorRange = popover.getByLabelText('colorpicker-color-range');
+    const alphaRange =  popover.getByLabelText('colorpicker-alpha-range');
+    const hexInput = popover.getByLabelText('hex-value');
+    const redInput = popover.getByLabelText('red-value');
+    const greenInput = popover.getByLabelText('green-value');
+    const blueInput = popover.getByLabelText('blue-value');
+    const alphaInput = popover.getByLabelText('alpha-value');
 
-  expect(colorRange).toBeDefined();
-  expect(colorRange.value).toEqual('109');
-  expect(alphaRange).toBeDefined();
-  expect(alphaRange.value).toEqual('0.81');
+    expect(colorRange).toBeDefined();
+    expect(colorRange.value).toEqual('109');
+    expect(alphaRange).toBeDefined();
+    expect(alphaRange.value).toEqual('0.81');
 
-  expect(hexInput).toBeDefined();
-  expect(hexInput.value).toEqual('#48e425cf');
-  expect(redInput).toBeDefined();
-  expect(redInput.value).toEqual('72');
-  expect(greenInput).toBeDefined();
-  expect(greenInput.value).toEqual('228');
-  expect(blueInput).toBeDefined();
-  expect(blueInput.value).toEqual('37');
-  expect(alphaInput).toBeDefined();
-  expect(alphaInput.value).toEqual('81');
-};
+    expect(hexInput).toBeDefined();
+    expect(hexInput.value).toEqual('#48e425cf');
+    expect(redInput).toBeDefined();
+    expect(redInput.value).toEqual('72');
+    expect(greenInput).toBeDefined();
+    expect(greenInput.value).toEqual('228');
+    expect(blueInput).toBeDefined();
+    expect(blueInput.value).toEqual('37');
+    expect(alphaInput).toBeDefined();
+    expect(alphaInput.value).toEqual('81');
+  }
+}
 
-export const VisualTestChangeColorpickerColor = Template.bind({});
-VisualTestChangeColorpickerColor.storyName = 'Change colorpicker color';
-VisualTestChangeColorpickerColor.args = {
-  ...Default.args,
-  value: 'rgba(72, 228, 37, 0.81)'
-};
-VisualTestChangeColorpickerColor.play = async () => {
-  const canvas = within(document.getElementById('root'));
+export const VisualTestChangeColorpickerColor = {
+  name: 'Change colorpicker color',
+  args: {
+    value: 'rgba(72, 228, 37, 0.81)'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-  const pickerToggle = await canvas.getByLabelText('colorpicker-toggle');
+    const pickerToggle = canvas.getByLabelText('colorpicker-toggle');
 
-  await userEvent.click(pickerToggle);
+    await userEvent.click(pickerToggle);
 
-  // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
+    // Look inside the popover
+    const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
-  const colorRange = await popover.getByLabelText('colorpicker-color-range');
-  const alphaRange = await popover.getByLabelText('colorpicker-alpha-range');
-  const hexInput = await popover.getByLabelText('hex-value');
-  const redInput = await popover.getByLabelText('red-value');
-  const greenInput = await popover.getByLabelText('green-value');
-  const blueInput = await popover.getByLabelText('blue-value');
-  const alphaInput = await popover.getByLabelText('alpha-value');
+    const colorRange = popover.getByLabelText('colorpicker-color-range');
+    const alphaRange = popover.getByLabelText('colorpicker-alpha-range');
+    const hexInput = popover.getByLabelText('hex-value');
+    const redInput = popover.getByLabelText('red-value');
+    const greenInput = popover.getByLabelText('green-value');
+    const blueInput = popover.getByLabelText('blue-value');
+    const alphaInput = popover.getByLabelText('alpha-value');
 
-  expect(colorRange).toBeDefined();
-  expect(colorRange.value).toEqual('109');
-  expect(alphaRange).toBeDefined();
-  expect(alphaRange.value).toEqual('0.81');
+    expect(colorRange).toBeDefined();
+    expect(colorRange.value).toEqual('109');
+    expect(alphaRange).toBeDefined();
+    expect(alphaRange.value).toEqual('0.81');
 
-  expect(hexInput).toBeDefined();
-  expect(hexInput.value).toEqual('#48e425cf');
-  expect(redInput).toBeDefined();
-  expect(redInput.value).toEqual('72');
-  expect(greenInput).toBeDefined();
-  expect(greenInput.value).toEqual('228');
-  expect(blueInput).toBeDefined();
-  expect(blueInput.value).toEqual('37');
-  expect(alphaInput).toBeDefined();
-  expect(alphaInput.value).toEqual('81');
+    expect(hexInput).toBeDefined();
+    expect(hexInput.value).toEqual('#48e425cf');
+    expect(redInput).toBeDefined();
+    expect(redInput.value).toEqual('72');
+    expect(greenInput).toBeDefined();
+    expect(greenInput.value).toEqual('228');
+    expect(blueInput).toBeDefined();
+    expect(blueInput.value).toEqual('37');
+    expect(alphaInput).toBeDefined();
+    expect(alphaInput.value).toEqual('81');
 
-  // Change colors
-  await fireEvent.input(colorRange, { target: { value: 300 } })
-  await fireEvent.input(alphaRange, { target: { value: 1 } })
+    // Change colors
+    fireEvent.input(colorRange, { target: { value: 300 } })
+    fireEvent.input(alphaRange, { target: { value: 1 } })
 
-  expect(colorRange.value).toEqual('300');
-  expect(alphaRange.value).toEqual('1');
+    expect(colorRange.value).toEqual('300');
+    expect(alphaRange.value).toEqual('1');
 
-  await userEvent.clear(redInput);
-  await userEvent.type(redInput, '240');
+    await userEvent.clear(redInput);
+    await userEvent.type(redInput, '240');
 
-  await userEvent.clear(greenInput);
-  await userEvent.type(greenInput, '60');
+    await userEvent.clear(greenInput);
+    await userEvent.type(greenInput, '60');
 
-  await userEvent.clear(blueInput);
-  await userEvent.type(blueInput, '150');
+    await userEvent.clear(blueInput);
+    await userEvent.type(blueInput, '150');
 
-  expect(redInput.value).toEqual('240');
-  expect(greenInput.value).toEqual('60');
-  expect(blueInput.value).toEqual('150');
+    expect(redInput.value).toEqual('240');
+    expect(greenInput.value).toEqual('60');
+    expect(blueInput.value).toEqual('150');
 
-  expect(hexInput.value).toEqual('#f03c96');
-};
+    expect(hexInput.value).toEqual('#f03c96');
+  }
+}
 
-export const VisualTestChangeColorpickerLabel = Template.bind({});
-VisualTestChangeColorpickerLabel.storyName = 'Change colorpicker label';
-VisualTestChangeColorpickerLabel.args = {
-  ...Default.args,
-  label: 'Another label'
-};
-
-export const VisualTestChangeColorpickerOutputHex = Template.bind({});
-VisualTestChangeColorpickerOutputHex.storyName = 'Change colorpicker output to HEX';
-VisualTestChangeColorpickerOutputHex.args = {
-  ...Default.args,
-  label: 'Should output HEX',
-  colorOutput: 'hex'
-};
-VisualTestChangeColorpickerOutputHex.play = async () => {
-  const canvas = within(document.getElementById('root'));
-
-  const pickerToggle = await canvas.getByLabelText('colorpicker-toggle');
-
-  await userEvent.click(pickerToggle);
-
-  // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
-
-  const hexInput = await popover.getByLabelText('hex-value');
-  expect(hexInput).toBeDefined();
-  expect(hexInput.value).toEqual('#0fcff5');
-
-  const colorValue = await canvas.getByLabelText('colorpicker-color-value');
-  expect(colorValue).toBeDefined();
-  expect(colorValue.value).toEqual('#0fcff5');
+export const VisualTestChangeColorpickerLabel = {
+  name: 'Change colorpicker label',
+  args: {
+    label: 'Another label'
+  },
 };
 
-export const VisualTestChangeColorpickerOutputHsl = Template.bind({});
-VisualTestChangeColorpickerOutputHsl.storyName = 'Change colorpicker output to HSL';
-VisualTestChangeColorpickerOutputHsl.args = {
-  ...Default.args,
-  label: 'Should output HSL',
-  colorOutput: 'hsl'
-};
-VisualTestChangeColorpickerOutputHsl.play = async () => {
-  const canvas = within(document.getElementById('root'));
+export const VisualTestChangeColorpickerOutputHex = {
+  name: 'Change colorpicker output to HEX',
+  args: {
+    label: 'Should output HEX',
+    colorOutput: 'hex'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-  const pickerToggle = await canvas.getByLabelText('colorpicker-toggle');
+    const pickerToggle = canvas.getByLabelText('colorpicker-toggle');
 
-  await userEvent.click(pickerToggle);
+    await userEvent.click(pickerToggle);
 
-  // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
+    // Look inside the popover
+    const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
-  const hexInput = await popover.getByLabelText('hex-value');
-  expect(hexInput).toBeDefined();
-  expect(hexInput.value).toEqual('#0fcff5');
+    const hexInput = popover.getByLabelText('hex-value');
+    expect(hexInput).toBeDefined();
+    expect(hexInput.value).toEqual('#0fcff5');
 
-  const colorValue = await canvas.getByLabelText('colorpicker-color-value');
-  expect(colorValue).toBeDefined();
-  expect(colorValue.value).toEqual('hsl(190, 92%, 51%)');
-};
+    const colorValue = canvas.getByLabelText('colorpicker-color-value');
+    expect(colorValue).toBeDefined();
+    expect(colorValue.value).toEqual('#0fcff5');
+  }
+}
 
-export const VisualTestChangeColorpickerOutputRgb = Template.bind({});
-VisualTestChangeColorpickerOutputRgb.storyName = 'Change colorpicker output to RGB';
-VisualTestChangeColorpickerOutputRgb.args = {
-  ...Default.args,
-  label: 'Should output RGB',
-  colorOutput: 'rgb'
-};
-VisualTestChangeColorpickerOutputRgb.play = async () => {
-  const canvas = within(document.getElementById('root'));
+export const VisualTestChangeColorpickerOutputHsl = {
+  name: 'Change colorpicker output to HSL',
+  args: {
+    label: 'Should output HSL',
+    colorOutput: 'hsl'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-  const pickerToggle = await canvas.getByLabelText('colorpicker-toggle');
+    const pickerToggle = canvas.getByLabelText('colorpicker-toggle');
 
-  await userEvent.click(pickerToggle);
+    await userEvent.click(pickerToggle);
 
-  // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
+    // Look inside the popover
+    const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
-  const hexInput = await popover.getByLabelText('hex-value');
-  expect(hexInput).toBeDefined();
-  expect(hexInput.value).toEqual('#0fcff5');
+    const hexInput = popover.getByLabelText('hex-value');
+    expect(hexInput).toBeDefined();
+    expect(hexInput.value).toEqual('#0fcff5');
 
-  const colorValue = await canvas.getByLabelText('colorpicker-color-value');
-  expect(colorValue).toBeDefined();
-  expect(colorValue.value).toEqual('rgb(15, 207, 245)');
-};
+    const colorValue = canvas.getByLabelText('colorpicker-color-value');
+    expect(colorValue).toBeDefined();
+    expect(colorValue.value).toEqual('hsl(190, 92%, 51%)');
+  }
+}
 
-export const VisualTestChangeColorpickerOutputHexAlpha = Template.bind({});
-VisualTestChangeColorpickerOutputHexAlpha.storyName = 'Change colorpicker output to HEX alpha';
-VisualTestChangeColorpickerOutputHexAlpha.args = {
-  ...Default.args,
-  label: 'Should output HEX',
-  value: '#0fcff582',
-  colorOutput: 'hex'
-};
-VisualTestChangeColorpickerOutputHexAlpha.play = async () => {
-  const canvas = within(document.getElementById('root'));
+export const VisualTestChangeColorpickerOutputRgb = {
+  name: 'Change colorpicker output to RGB',
+  args: {
+    label: 'Should output RGB',
+    colorOutput: 'rgb'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-  const pickerToggle = await canvas.getByLabelText('colorpicker-toggle');
+    const pickerToggle = canvas.getByLabelText('colorpicker-toggle');
 
-  await userEvent.click(pickerToggle);
+    await userEvent.click(pickerToggle);
 
-  // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
+    // Look inside the popover
+    const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
-  const hexInput = await popover.getByLabelText('hex-value');
-  expect(hexInput).toBeDefined();
-  expect(hexInput.value).toEqual('#0fcff582');
+    const hexInput = popover.getByLabelText('hex-value');
+    expect(hexInput).toBeDefined();
+    expect(hexInput.value).toEqual('#0fcff5');
 
-  const colorValue = await canvas.getByLabelText('colorpicker-color-value');
-  expect(colorValue).toBeDefined();
-  expect(colorValue.value).toEqual('#0fcff582');
-};
+    const colorValue = canvas.getByLabelText('colorpicker-color-value');
+    expect(colorValue).toBeDefined();
+    expect(colorValue.value).toEqual('rgb(15, 207, 245)');
+  }
+}
 
-export const VisualTestChangeColorpickerOutputHslAlpha = Template.bind({});
-VisualTestChangeColorpickerOutputHslAlpha.storyName = 'Change colorpicker output to HSL alpha';
-VisualTestChangeColorpickerOutputHslAlpha.args = {
-  ...Default.args,
-  label: 'Should output HSL',
-  value: '#0fcff582',
-  colorOutput: 'hsl'
-};
-VisualTestChangeColorpickerOutputHslAlpha.play = async () => {
-  const canvas = within(document.getElementById('root'));
+export const VisualTestChangeColorpickerOutputHexAlpha = {
+  name: 'Change colorpicker output to HEX alpha',
+  args: {
+    value: '#0fcff582',
+    label: 'Should output HEX',
+    colorOutput: 'hex'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-  const pickerToggle = await canvas.getByLabelText('colorpicker-toggle');
+    const pickerToggle = canvas.getByLabelText('colorpicker-toggle');
 
-  await userEvent.click(pickerToggle);
+    await userEvent.click(pickerToggle);
 
-  // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
+    // Look inside the popover
+    const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
-  const hexInput = await popover.getByLabelText('hex-value');
-  expect(hexInput).toBeDefined();
-  expect(hexInput.value).toEqual('#0fcff582');
+    const hexInput = popover.getByLabelText('hex-value');
+    expect(hexInput).toBeDefined();
+    expect(hexInput.value).toEqual('#0fcff582');
 
-  const colorValue = await canvas.getByLabelText('colorpicker-color-value');
-  expect(colorValue).toBeDefined();
-  expect(colorValue.value).toEqual('hsla(190, 92%, 51%, 0.51)');
-};
+    const colorValue = canvas.getByLabelText('colorpicker-color-value');
+    expect(colorValue).toBeDefined();
+    expect(colorValue.value).toEqual('#0fcff582');
+  }
+}
 
-export const VisualTestChangeColorpickerOutputRgbAlpha = Template.bind({});
-VisualTestChangeColorpickerOutputRgbAlpha.storyName = 'Change colorpicker output to RGB alpha';
-VisualTestChangeColorpickerOutputRgbAlpha.args = {
-  ...Default.args,
-  label: 'Should output RGB',
-  value: '#0fcff582',
-  colorOutput: 'rgb'
-};
-VisualTestChangeColorpickerOutputRgbAlpha.play = async () => {
-  const canvas = within(document.getElementById('root'));
+export const VisualTestChangeColorpickerOutputHslAlpha = {
+  name: 'Change colorpicker output to HSL alpha',
+  args: {
+    value: '#0fcff582',
+    label: 'Should output HSL',
+    colorOutput: 'hsl'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-  const pickerToggle = await canvas.getByLabelText('colorpicker-toggle');
+    const pickerToggle = canvas.getByLabelText('colorpicker-toggle');
 
-  await userEvent.click(pickerToggle);
+    await userEvent.click(pickerToggle);
 
-  // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
+    // Look inside the popover
+    const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
-  const hexInput = await popover.getByLabelText('hex-value');
-  expect(hexInput).toBeDefined();
-  expect(hexInput.value).toEqual('#0fcff582');
+    const hexInput = popover.getByLabelText('hex-value');
+    expect(hexInput).toBeDefined();
+    expect(hexInput.value).toEqual('#0fcff582');
 
-  const colorValue = await canvas.getByLabelText('colorpicker-color-value');
-  expect(colorValue).toBeDefined();
-  expect(colorValue.value).toEqual('rgba(15, 207, 245, 0.51)');
-};
+    const colorValue = canvas.getByLabelText('colorpicker-color-value');
+    expect(colorValue).toBeDefined();
+    expect(colorValue.value).toEqual('hsla(190, 92%, 51%, 0.51)');
+  }
+}
 
-export const VisualTestColorpickerWithoutAlpha = Template.bind({});
-VisualTestColorpickerWithoutAlpha.storyName = 'Render colorpicker without alpha';
-VisualTestColorpickerWithoutAlpha.args = {
-  ...Default.args,
-  label: 'Should render without alpha value',
-  alpha: false,
-};
-VisualTestColorpickerWithoutAlpha.play = async () => {
-  const canvas = within(document.getElementById('root'));
+export const VisualTestChangeColorpickerOutputRgbAlpha = {
+  name: 'Change colorpicker output to RGB alpha',
+  args: {
+    label: 'Should output RGB',
+    value: '#0fcff582',
+    colorOutput: 'rgb'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-  const pickerToggle = await canvas.getByLabelText('colorpicker-toggle');
+    const pickerToggle = canvas.getByLabelText('colorpicker-toggle');
 
-  await userEvent.click(pickerToggle);
+    await userEvent.click(pickerToggle);
 
-  // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
+    // Look inside the popover
+    const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
-  const hexInput = await popover.getByLabelText('hex-value');
-  expect(hexInput).toBeDefined();
-  expect(hexInput.value).toEqual('#0fcff5');
+    const hexInput = popover.getByLabelText('hex-value');
+    expect(hexInput).toBeDefined();
+    expect(hexInput.value).toEqual('#0fcff582');
 
-  const alphaInput = await popover.queryByLabelText('alpha-value');
-  expect(alphaInput).toEqual(null);
-};
+    const colorValue = canvas.getByLabelText('colorpicker-color-value');
+    expect(colorValue).toBeDefined();
+    expect(colorValue.value).toEqual('rgba(15, 207, 245, 0.51)');
+  }
+}
 
-export const VisualTestColorpickerDisabled = Template.bind({});
-VisualTestColorpickerDisabled.storyName = 'Render disabled colorpicker';
-VisualTestColorpickerDisabled.args = {
-  ...Default.args,
-  label: 'Should render disabled colorpicker',
-  disabled: true,
-};
-VisualTestColorpickerDisabled.play = async () => {
-  const canvas = within(document.getElementById('root'));
+export const VisualTestColorpickerWithoutAlpha = {
+  name: 'Render colorpicker without alpha',
+  args: {
+    label: 'Should render without alpha value',
+    alpha: false,
+  },
+  play: async ({ canvasElement }) => {
+      const canvas = within(canvasElement);
 
-  const pickerToggle = await canvas.getByLabelText('colorpicker-toggle');
+    const pickerToggle = canvas.getByLabelText('colorpicker-toggle');
 
-  await userEvent.click(pickerToggle);
+    await userEvent.click(pickerToggle);
 
-  // Expect no popover
-  expect(document.getElementsByClassName('sw-popover-deprecated__wrapper').length).toEqual(0);
-};
+    // Look inside the popover
+    const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
 
-export const VisualTestColorpickerClearValue = Template.bind({});
-VisualTestColorpickerClearValue.storyName = 'Clear colorpicker value';
-VisualTestColorpickerClearValue.args = {
-  ...Default.args,
-  label: 'Should clear colorpicker value',
-};
-VisualTestColorpickerClearValue.play = async () => {
-  const canvas = within(document.getElementById('root'));
+    const hexInput = popover.getByLabelText('hex-value');
+    expect(hexInput).toBeDefined();
+    expect(hexInput.value).toEqual('#0fcff5');
 
-  const colorValue = await canvas.getByLabelText('colorpicker-color-value');
-  await userEvent.clear(colorValue)
+    const alphaInput = popover.queryByLabelText('alpha-value');
+    expect(alphaInput).toEqual(null);
+  }
+}
 
-  expect(colorValue.value).toEqual('');
-};
+export const VisualTestColorpickerDisabled = {
+  name: 'Render disabled colorpicker',
+  args: {
+    label: 'Should render disabled colorpicker',
+    disabled: true,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-export const VisualTestColorpickerReadonly = Template.bind({});
-VisualTestColorpickerReadonly.storyName = 'Render readonly colorpicker';
-VisualTestColorpickerReadonly.args = {
-  ...Default.args,
-  label: 'Should render readonly colorpicker',
-  readonly: true,
-};
-VisualTestColorpickerReadonly.play = async () => {
-  const canvas = within(document.getElementById('root'));
+    const pickerToggle = canvas.getByLabelText('colorpicker-toggle');
 
-  const colorValue = await canvas.getByLabelText('colorpicker-color-value');
-  await userEvent.clear(colorValue)
+    await userEvent.click(pickerToggle);
 
-  expect(colorValue.value).toEqual('#0fcff5');
-};
+    // Expect no popover
+    expect(document.getElementsByClassName('sw-popover-deprecated__wrapper').length).toEqual(0);
+  }
+}
 
-export const VisualTestColorpickerDisabledColorLabels = Template.bind({});
-VisualTestColorpickerDisabledColorLabels.storyName = 'Render colorpicker without color labels';
-VisualTestColorpickerDisabledColorLabels.args = {
-  ...Default.args,
-  label: 'Should render colorpicker without color labels',
-  colorLabels: false,
-};
-VisualTestColorpickerDisabledColorLabels.play = async () => {
-  const canvas = within(document.getElementById('root'));
+export const VisualTestColorpickerClearValue = {
+  name: 'Clear colorpicker value',
+  args: {
+    label: 'Should clear colorpicker value',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-  const pickerToggle = await canvas.getByLabelText('colorpicker-toggle');
+    const colorValue = canvas.getByLabelText('colorpicker-color-value');
+    await userEvent.clear(colorValue)
 
-  await userEvent.click(pickerToggle);
+    expect(colorValue.value).toEqual('');
+  }
+}
 
-  // Look inside the popover
-  const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
+export const VisualTestColorpickerReadonly = {
+  name: 'Render readonly colorpicker',
+  args: {
+    label: 'Should render readonly colorpicker',
+    readonly: true,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-  const hexInput = await popover.getByLabelText('hex-value');
-  expect(hexInput).toBeDefined();
-  expect(hexInput.value).toEqual('#0fcff5');
+    const colorValue = canvas.getByLabelText('colorpicker-color-value');
 
-  const hexLabel = await popover.queryByText('HEX');
-  const rLabel = await popover.queryByText('R');
-  const gLabel = await popover.queryByText('G');
-  const bLabel = await popover.queryByText('B');
-  const alphaLabel = await popover.queryByText('Alpha');
+    expect(colorValue).toHaveAttribute('readonly');
+
+    await userEvent.click(colorValue);
+  }
+}
+
+export const VisualTestColorpickerDisabledColorLabels = {
+  name: 'Render colorpicker without color labels',
+  args: {
+    label: 'Should render colorpicker without color labels',
+    colorLabels: false,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    const pickerToggle = canvas.getByLabelText('colorpicker-toggle');
+
+    await userEvent.click(pickerToggle);
+
+    // Look inside the popover
+    const popover = within(document.getElementsByClassName('sw-popover-deprecated__wrapper')[0]);
+
+    const hexInput = popover.getByLabelText('hex-value');
+    expect(hexInput).toBeDefined();
+    expect(hexInput.value).toEqual('#0fcff5');
+
+    const hexLabel = popover.queryByText('HEX');
+    const rLabel = popover.queryByText('R');
+    const gLabel = popover.queryByText('G');
+    const bLabel = popover.queryByText('B');
+    const alphaLabel = popover.queryByText('Alpha');
 
 
-  expect(hexLabel).toEqual(null);
-  expect(rLabel).toEqual(null);
-  expect(gLabel).toEqual(null);
-  expect(bLabel).toEqual(null);
-  expect(alphaLabel).toEqual(null);
-};
+    expect(hexLabel).toEqual(null);
+    expect(rLabel).toEqual(null);
+    expect(gLabel).toEqual(null);
+    expect(bLabel).toEqual(null);
+    expect(alphaLabel).toEqual(null);
+  }
+}
 
-export const VisualTestColorpickerWithHelpText = Template.bind({});
-VisualTestColorpickerWithHelpText.storyName = 'Render colorpicker with help text';
-VisualTestColorpickerWithHelpText.args = {
-  ...Default.args,
-  helpText: 'Text for helping you',
-};
-VisualTestColorpickerWithHelpText.play = async () => {
-  const canvas = within(document.getElementById('root'));
+export const VisualTestColorpickerWithHelpText = {
+  name: 'Render colorpicker with help text',
+  args: {
+    helpText: 'Text for helping you',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-  const tooltip = await canvas.getByRole('tooltip');
+    const tooltip = canvas.getByRole('tooltip');
 
-  await userEvent.hover(tooltip);
+    await userEvent.hover(tooltip);
 
-  // wait until tooltip gets rendered
-  await (() => {
-    return new Promise((resolve, reject) => {
-      const waitUntilElementLoad = (retryTime = 0) => {
-        // do not wait longer than 2.5 seconds
-        if (retryTime > 100) {
-          reject();
+    // wait until tooltip gets rendered
+    await (() => {
+      return new Promise((resolve, reject) => {
+        const waitUntilElementLoad = (retryTime = 0) => {
+          // do not wait longer than 2.5 seconds
+          if (retryTime > 100) {
+            reject();
+          }
+
+          // check for tooltip
+          const result = document.querySelector('[aria-label="currently-opened-tooltip"]');
+
+          // retry selection when not found otherwise resolve it
+          if (!result) {
+            window.setTimeout(() => waitUntilElementLoad(retryTime + 1), 25)
+          } else {
+
+            resolve();
+          }
         }
 
-        // check for tooltip
-        const result = document.querySelector('[aria-label="currently-opened-tooltip"]');
+        waitUntilElementLoad();
+      })
+    })()
 
-        // retry selection when not found otherwise resolve it
-        if (!result) {
-          window.setTimeout(() => waitUntilElementLoad(retryTime + 1), 25)
-        } else {
-          resolve();
-        }
-      }
 
-      waitUntilElementLoad();
-    })
-  })()
+    const tooltipElement = within(document.querySelector('[aria-label="currently-opened-tooltip"]').parentElement);
 
-  const tooltipElement = within(document.querySelector('[aria-label="currently-opened-tooltip"]').parentElement);
+    const openedTooltip = tooltipElement.getByLabelText('currently-opened-tooltip');
 
-  const openedTooltip = await tooltipElement.getByLabelText('currently-opened-tooltip');
-
-  expect(openedTooltip).not.toEqual(null);
-  expect(openedTooltip.innerText).toEqual('Text for helping you');
-};
+    expect(openedTooltip).not.toEqual(null);
+    expect(openedTooltip.innerText).toEqual('Text for helping you');
+  }
+}

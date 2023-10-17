@@ -107,6 +107,7 @@
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { PropType } from 'vue';
+
 import Vue from 'vue';
 import { debounce, get } from 'lodash-es';
 import SwSelectBase from '../_internal/sw-select-base/sw-select-base.vue';

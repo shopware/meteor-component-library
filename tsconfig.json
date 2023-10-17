@@ -14,10 +14,12 @@
     "sourceMap": true,
     "declaration": true,
     "allowJs": true,
+    "strictBindCallApply": true,
     "baseUrl": ".",
     "types": [
       "webpack-env",
       "jest",
+      "vite/client",
     ],
     "paths": {
       "@/*": [

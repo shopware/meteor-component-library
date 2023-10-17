@@ -1,58 +1,68 @@
-import defaultSwPopoverStory, { Default as Template } from './sw-popover.stories';
-import { waitUntilRendered } from '../../../_internal/test-helper'
+import { waitUntilRendered } from '../../../_internal/test-helper';
 import { within, userEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
 
+import meta from './sw-popover.stories';
+
 export default {
-  ...defaultSwPopoverStory,
+  ...meta,
   title: 'Interaction Tests/Overlay/sw-popover',
 };
 
-export const VisualTestRenderPopoverTrigger = Template.bind();
-VisualTestRenderPopoverTrigger.storyName = 'Should render only the popover trigger';
-
-export const VisualTestRenderPopover = Template.bind();
-VisualTestRenderPopover.storyName = 'Should render the popover';
-VisualTestRenderPopover.play = async () => {
-  const canvas = within(document.getElementById('root'));
-
-  await waitUntilRendered(() => document.body.textContent.includes('Toggle popover'));
-
-  const popoverToggle = canvas.getByText('Toggle popover');
-  await userEvent.click(popoverToggle);
-
-  const popover = within(document.querySelector('.sw-floating-ui__content'));
-  expect(popover.getByText('Popover example')).toBeInTheDocument();
-}
-
-export const VisualTestRenderChildView = Template.bind();
-VisualTestRenderChildView.storyName = 'Should render the popover with child view';
-VisualTestRenderChildView.play = async () => {
-  const canvas = within(document.getElementById('root'));
-
-  await waitUntilRendered(() => document.body.textContent.includes('Toggle popover'));
-
-  const popoverToggle = canvas.getByText('Toggle popover');
-  await userEvent.click(popoverToggle);
-
-  const popover = within(document.querySelector('.sw-floating-ui__content'));
-  expect(popover.getByText('Popover example')).toBeInTheDocument();
-
-  const columnsItem = popover.getByText('Columns');
-
-  await userEvent.click(columnsItem);
-}
-
-export const VisualTestRenderWithoutFloat = Template.bind();
-VisualTestRenderWithoutFloat.storyName = 'Should render the popover with disabled float and without trigger';
-VisualTestRenderWithoutFloat.args = {
-  ...Template.args,
-  disableFloat: true,
+export const VisualTestRenderPopoverTrigger = {
+  name: 'Should render only the popover trigger',
 };
-VisualTestRenderWithoutFloat.play = async () => {
-  const canvas = within(document.getElementById('root'));
 
-  await waitUntilRendered(() => document.body.textContent.includes('Popover example'));
+export const VisualTestRenderPopover = {
+  name: 'Should render the popover',
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-  expect(canvas.getByText('Popover example')).toBeInTheDocument();
-}
+    await waitUntilRendered(() =>
+        document.body.textContent.includes('Toggle popover'),
+    );
+
+    const popoverToggle = canvas.getByText('Toggle popover');
+    await userEvent.click(popoverToggle);
+
+    const popover = within(document.querySelector('.sw-floating-ui__content'));
+    expect(popover.getByText('Popover example')).toBeInTheDocument();
+  },
+};
+
+export const VisualTestRenderChildView = {
+  name: 'Should render the popover with child view',
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await waitUntilRendered(() =>
+        document.body.textContent.includes('Toggle popover'),
+    );
+
+    const popoverToggle = canvas.getByText('Toggle popover');
+    await userEvent.click(popoverToggle);
+
+    const popover = within(document.querySelector('.sw-floating-ui__content'));
+    expect(popover.getByText('Popover example')).toBeInTheDocument();
+
+    const columnsItem = popover.getByText('Columns');
+
+    await userEvent.click(columnsItem);
+  },
+};
+
+export const VisualTestRenderWithoutFloat = {
+  name: 'Should render the popover with disabled float and without trigger',
+  args: {
+    disableFloat: true,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await waitUntilRendered(() =>
+      document.body.textContent.includes('Popover example'),
+    );
+
+    expect(canvas.getByText('Popover example')).toBeInTheDocument();
+  },
+};
