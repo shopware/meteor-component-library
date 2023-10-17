@@ -1,8 +1,13 @@
 import SwColorpicker from './sw-colorpicker.vue';
 
-export default {
+const meta = {
   title: 'Components/Form/sw-colorpicker',
   component: SwColorpicker,
+  render: (args, { argTypes }) => ({
+    props: Object.keys(argTypes),
+    components: { SwColorpicker },
+    template: '<sw-colorpicker v-bind="$props"></sw-colorpicker>',
+  }),
   args: {
     label: 'Colorpicker example',
     value: '#0fcff5',
@@ -20,11 +25,8 @@ export default {
   },
 };
 
-const Template = (args, { argTypes }) => ({
-  props: Object.keys(argTypes),
-  components: { SwColorpicker },
-  template: '<sw-colorpicker v-bind="$props"></sw-colorpicker>',
-});
+export default meta;
 
-export const Default = Template.bind({});
-Default.storyName = 'sw-colorpicker';
+export const defaultStory = {
+  name: 'sw-colorpicker',
+};

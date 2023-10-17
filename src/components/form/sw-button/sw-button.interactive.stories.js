@@ -1,192 +1,198 @@
 import { within, userEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
-import SwButton from './sw-button.vue';
-import defaultButtonStory, { Default } from './sw-button.stories';
+
+import meta from './sw-button.stories';
 
 export default {
-  ...defaultButtonStory,
+  ...meta,
   title: 'Interaction Tests/Form/sw-button',
-  component: SwButton,
 };
 
-export const TestDefaultSlot = Default.bind();
-TestDefaultSlot.storyName = 'Change the default slot';
-TestDefaultSlot.args = { ...Default.args, default: 'The new button text' };
-TestDefaultSlot.play = async () => {
-  const canvas = within(document.getElementById('root'));
+export const TestDefaultSlot = {
+  name: 'Change the default slot',
+  args: {
+    default: 'The new button text'
+  },
+  play: async ({  canvasElement }) => {
+    const canvas = within(canvasElement);
 
-  const button = await canvas.getByRole('button');
+    const button = canvas.getByRole('button');
+  
+    await expect(button).toHaveTextContent('The new button text');
+  }
+}
 
-  await expect(button).toHaveTextContent('The new button text');
+export const VisualTestPrimaryVariant = {
+  name: 'Render the primary variant',
+  args: {
+    default: 'Primary button',
+    variant: 'primary'
+  },
 };
 
-export const VisualTestPrimaryVariant = Default.bind();
-VisualTestPrimaryVariant.storyName = 'Render the primary variant';
-VisualTestPrimaryVariant.args = {
-  ...Default.args,
-  default: 'Primary button',
-  variant: 'primary'
+export const VisualTestGhostVariant = {
+  name: 'Render primary ghost variant',
+  args: {
+    default: 'Primary ghost button',
+    variant: 'primary',
+    ghost: true,
+  },
 };
 
-export const VisualTestGhostVariant = Default.bind();
-VisualTestGhostVariant.storyName = 'Render primary ghost variant';
-VisualTestGhostVariant.args = {
-  ...Default.args,
-  default: 'Primary ghost button',
-  variant: 'primary',
-  ghost: true,
+export const VisualTestSecondaryVariant = {
+  name: 'Render secondary variant',
+  args: {
+    default: 'Secondary button',
+    variant: 'secondary',
+  },
 };
 
-export const VisualTestSecondaryVariant = Default.bind();
-VisualTestSecondaryVariant.storyName = 'Render secondary variant';
-VisualTestSecondaryVariant.args = {
-  ...Default.args,
-  default: 'Secondary button',
-  variant: 'secondary',
+export const VisualTestSecondaryGhostVariant = {
+  name: 'Render secondary ghost variant',
+  args: {
+    default: 'Secondary ghost button',
+    variant: 'secondary',
+    ghost: true,
+  },
 };
 
-export const VisualTestSecondaryGhostVariant = Default.bind();
-VisualTestSecondaryGhostVariant.storyName = 'Render secondary ghost variant';
-VisualTestSecondaryGhostVariant.args = {
-  ...Default.args,
-  default: 'Secondary ghost button',
-  variant: 'secondary',
-  ghost: true,
+export const VisualTestCriticalVariant = {
+  name: 'Render the critical variant',
+  args: {
+    default: 'Critical button',
+    variant: 'critical'
+  },
 };
 
-export const VisualTestCriticalVariant = Default.bind();
-VisualTestCriticalVariant.storyName = 'Render the critical variant';
-VisualTestCriticalVariant.args = {
-  ...Default.args,
-  default: 'Critical button',
-  variant: 'critical'
+export const VisualTestCriticalGhostVariant = {
+  name: 'Render the critical ghost variant',
+  args: {
+    default: 'Critical ghost button',
+    variant: 'critical',
+    ghost: true,
+  },
 };
 
-export const VisualTestCriticalGhostVariant = Default.bind();
-VisualTestCriticalGhostVariant.storyName = 'Render the critical ghost variant';
-VisualTestCriticalGhostVariant.args = {
-  ...Default.args,
-  default: 'Critical button',
-  variant: 'critical',
-  ghost: true,
+export const VisualTestActionVariant = {
+  name: 'Render the action variant',
+  args: {
+    default: 'Action button',
+    variant: 'action'
+  },
 };
 
-export const VisualTestActionVariant = Default.bind();
-VisualTestActionVariant.storyName = 'Render the action variant';
-VisualTestActionVariant.args = {
-  ...Default.args,
-  default: 'Action button',
-  variant: 'action'
+export const VisualTestSmallSize = {
+  name: 'Render the small size',
+  args: {
+    default: 'Small button',
+    size: 'small'
+  },
 };
 
-export const VisualTestSmallSize = Default.bind();
-VisualTestSmallSize.storyName = 'Render the small size';
-VisualTestSmallSize.args = {
-  ...Default.args,
-  default: 'Small button',
-  size: 'small'
+export const VisualTestDefaultSize = {
+  name: 'Render the default size',
+  args: {
+    default: 'Default button',
+    size: 'default'
+  },
 };
 
-export const VisualTestDefaultSize = Default.bind();
-VisualTestDefaultSize.storyName = 'Render the default size';
-VisualTestDefaultSize.args = {
-  ...Default.args,
-  default: 'Default button',
-  size: 'default'
+export const VisualTestLargeSize = {
+  name: 'Render the large size',
+  args: {
+    default: 'Large button',
+    size: 'large'
+  },
 };
 
-export const VisualTestLargeSize = Default.bind();
-VisualTestLargeSize.storyName = 'Render the large size';
-VisualTestLargeSize.args = {
-  ...Default.args,
-  default: 'Large button',
-  size: 'large'
+export const TestButtonClick = {
+  name: 'Click the button',
+  args: {
+
+    default: 'Test button',
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button'));
+
+    expect(args.click).toHaveBeenCalled();
+  }
 };
 
-export const TestButtonClick = Default.bind();
-TestButtonClick.storyName = 'Click the button';
-TestButtonClick.args = { ...Default.args, default: 'Test button' };
-TestButtonClick.play = async ({ args }) => {
-  const canvas = within(document.getElementById('root'));
+export const TestDisabledButtonClick = {
+  name: 'Unable to click on disabled button',
+  args: {
+    default: 'Disabled test button',
+    disabled: true
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
 
-  await userEvent.click(canvas.getByRole('button'));
+    await userEvent.click(canvas.getByRole('button'));
 
-  await expect(args.click).toHaveBeenCalled();
+    expect(args.click).not.toHaveBeenCalled();
+  }
 };
 
-export const TestDisabledButtonClick = Default.bind();
-TestDisabledButtonClick.storyName = 'Unable to click on disabled button';
-TestDisabledButtonClick.args = {
-  ...Default.args,
-  default: 'Disabled test button',
-  disabled: true
-};
-TestDisabledButtonClick.play = async ({ args }) => {
-  const canvas = within(document.getElementById('root'));
-
-  await userEvent.click(canvas.getByRole('button'));
-
-  await expect(args.click).not.toHaveBeenCalled();
+export const VisualTestDisabledButton = {
+  name: 'Render the disabled button',
+  args: {
+    default: 'Disabled button',
+    disabled: true
+  },
 };
 
-export const VisualTestDisabledButton = Default.bind();
-VisualTestDisabledButton.storyName = 'Render the disabled button';
-VisualTestDisabledButton.args = {
-  ...Default.args,
-  default: 'Disabled button',
-  disabled: true,
+export const VisualTestSquareButton = {  
+  name: 'Render the square button',
+  args: {
+    default: 'X',
+    square: true,
+  },
 };
 
-export const VisualTestSquareButton = Default.bind();
-VisualTestSquareButton.storyName = 'Render the square button';
-VisualTestSquareButton.args = {
-  ...Default.args,
-  default: 'X',
-  square: true,
+export const VisualTestBlockButton = {
+  name: 'Render the block button',
+  args: {
+    default: 'This should go to full width',
+    block: true,
+  },
 };
 
-export const VisualTestBlockButton = Default.bind();
-VisualTestBlockButton.storyName = 'Render the block button';
-VisualTestBlockButton.args = {
-  ...Default.args,
-  default: 'This should go to full width',
-  block: true,
+export const VisualTestIsLoading = {
+  name: 'Render the isLoading state',
+  args: {
+    default: 'Is loading',
+    isLoading: true,
+  },
 };
 
-export const VisualTestIsLoading = Default.bind();
-VisualTestIsLoading.storyName = 'Render the isLoading state';
-VisualTestIsLoading.args = {
-  ...Default.args,
-  default: 'Is loading',
-  isLoading: true,
+export const IsLoadingButton = {
+  name: 'Unable to click on isLoading button',
+  args: {
+    default: 'Is loading',
+    isLoading: true,
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole('button'));
+
+    expect(args.click).not.toHaveBeenCalled();
+  }
 };
 
-export const IsLoadingButton = Default.bind();
-IsLoadingButton.storyName = 'Unable to click on isLoading button';
-IsLoadingButton.args = {
-  ...Default.args,
-  default: 'Is loading',
-  isLoading: true,
-};
-IsLoadingButton.play = async ({ args }) => {
-  const canvas = within(document.getElementById('root'));
+export const LinkButton = {
+  name: 'Redirect to the link',
+  args: {
+    default: 'Go to Shopware',
+    link: 'https://www.shopware.com',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-  await userEvent.click(canvas.getByRole('button'));
+    await userEvent.click(canvas.getByRole('button'));
 
-  await expect(args.click).not.toHaveBeenCalled();
-};
-
-export const LinkButton = Default.bind();
-LinkButton.storyName = 'Redirect to the link';
-LinkButton.args = {
-  ...Default.args,
-  default: 'Go to Shopware',
-  link: 'https://www.shopware.com',
-};
-LinkButton.play = async () => {
-  const canvas = within(document.getElementById('root'));
-
-  await userEvent.click(canvas.getByRole('button'));
-
-  // TODO: check redirects is currently not supported
+    // TODO: check redirects is currently not supported
+  }
 };

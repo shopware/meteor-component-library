@@ -93,7 +93,7 @@ export default Vue.extend({
     },
     /**
      * The button will be rendered as a square. You need to consider the text length
-     * if you activate this propety.
+     * if you activate this property.
      */
     square: {
       type: Boolean,

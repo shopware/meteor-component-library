@@ -1,8 +1,13 @@
 import SwCheckbox from './sw-checkbox.vue';
 
-export default {
+const meta = {
   title: 'Components/Form/sw-checkbox',
   component: SwCheckbox,
+  render: (args, { argTypes }) => ({
+    props: Object.keys(argTypes),
+    components: { SwCheckbox },
+    template: '<sw-checkbox v-bind="$props" @change="change" @inheritance-remove="inheritanceRemove"></sw-checkbox>',
+  }),
   argTypes: {
     change: {
       action: 'change',
@@ -33,11 +38,8 @@ export default {
   },
 };
 
-const Template = (args, { argTypes }) => ({
-  props: Object.keys(argTypes),
-  components: { SwCheckbox },
-  template: '<sw-checkbox v-bind="$props" @change="change" @inheritance-remove="inheritanceRemove"></sw-checkbox>',
-});
+export default meta;
 
-export const Default = Template.bind({});
-Default.storyName = 'sw-checkbox';
+export const defaultStory = {
+  name: 'sw-checkbox',
+};

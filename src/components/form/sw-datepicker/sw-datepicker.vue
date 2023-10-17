@@ -83,7 +83,6 @@ export default {
     SwFormFieldMixin,
   ],
 
-  inheritAttrs: false,
 
   props: {
     /**

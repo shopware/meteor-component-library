@@ -1,9 +1,42 @@
 import SwSegmentedControl from './sw-segmented-control.vue';
 import SwPopoverItem from '../../overlay/sw-popover-item/sw-popover-item.vue'
 
-export default {
+const meta = {
   title: 'Components/Navigation/sw-segmented-control',
   component: SwSegmentedControl,
+  render: (args, { argTypes }) => ({
+    components: { SwSegmentedControl, SwPopoverItem },
+    props: Object.keys(argTypes),
+    template: `
+      <div style="max-width: 1000px; max-height: 400px; height: 500px; margin: 0 auto;">
+        <sw-segmented-control
+            v-bind="$props"
+        >
+          {{ $props.default }}
+
+          <template #labelF--popover-items__base="{ toggleFloatingUi, changeView }">
+            <sw-popover-item
+                label="Go to second level"
+                :on-label-click="() => changeView('secondLevel')"
+            />
+          </template>
+
+          <template #labelF--popover-items__secondLevel="{ toggleFloatingUi, changeView }">
+            <sw-popover-item
+                label="Go to third level"
+                :on-label-click="() => changeView('thirdLevel')"
+            />
+          </template>
+
+          <template #labelF--popover-items__thirdLevel="{ toggleFloatingUi, changeView }">
+            <sw-popover-item
+                label="Go back to first level"
+                :on-label-click="() => changeView('base')"
+            />
+          </template>
+        </sw-segmented-control>
+      </div>`
+  }),
   argTypes: {},
   args: {
     disableContext: true,
@@ -69,40 +102,8 @@ export default {
   }
 };
 
-const Template = (args, { argTypes }) => ({
-  components: { SwSegmentedControl, SwPopoverItem },
-  props: Object.keys(argTypes),
-  template: `
-  <div style="max-width: 1000px; max-height: 400px; height: 500px; margin: 0 auto;">
-    <sw-segmented-control
-      v-bind="$props"
-    >
-      {{ $props.default}}
+export default meta;
 
-      <template #labelF--popover-items__base="{ toggleFloatingUi, changeView }">
-        <sw-popover-item
-          label="Go to second level"
-          :on-label-click="() => changeView('secondLevel')"
-        />
-      </template>
-
-      <template #labelF--popover-items__secondLevel="{ toggleFloatingUi, changeView }">
-        <sw-popover-item
-          label="Go to third level"
-          :on-label-click="() => changeView('thirdLevel')"
-        />
-      </template>
-
-      <template #labelF--popover-items__thirdLevel="{ toggleFloatingUi, changeView }">
-        <sw-popover-item
-          label="Go back to first level"
-          :on-label-click="() => changeView('base')"
-        />
-      </template>
-    </sw-segmented-control>
-  </div>
-  `,
-});
-
-export const Default = Template.bind();
-Default.storyName = 'sw-segmented-control';
+export const defaultStory = {
+  name: 'sw-segmented-control',
+}

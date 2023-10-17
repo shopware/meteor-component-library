@@ -4,7 +4,7 @@ import SwBanner from '../../feedback-indicator/sw-banner/sw-banner.vue';
 import SwDataTableFixtures from './sw-data-table.fixtures.json';
 import { get } from 'lodash-es';
 
-export default {
+const meta = {
   title: 'Components/Table and list/sw-data-table',
   component: SwDataTable,
   argTypes: {
@@ -12,137 +12,137 @@ export default {
     _storybook_internal_show_experimental_warning_: {
       table: {
         disable: true,
-      }
+      },
     },
     // events
     reload: {
       action: 'reload',
       table: {
-        category: 'Events'
-      }
+        category: 'Events',
+      },
     },
     'pagination-limit-change': {
       table: {
         disable: true,
-      }
+      },
     },
     paginationLimitChange: {
       action: 'pagination-limit-change',
       table: {
-        category: 'Events'
-      }
+        category: 'Events',
+      },
     },
     'pagination-current-page-change': {
       table: {
         disable: true,
-      }
+      },
     },
     paginationCurrentPageChange: {
       action: 'pagination-current-page-change',
       table: {
-        category: 'Events'
-      }
+        category: 'Events',
+      },
     },
     'search-value-change': {
       table: {
         disable: true,
-      }
+      },
     },
     searchValueChange: {
       action: 'search-value-change',
       table: {
-        category: 'Events'
-      }
+        category: 'Events',
+      },
     },
     'sort-change': {
       table: {
         disable: true,
-      }
+      },
     },
     sortChange: {
       action: 'sort-change',
       table: {
-        category: 'Events'
-      }
+        category: 'Events',
+      },
     },
     'open-details': {
       table: {
         disable: true,
-      }
+      },
     },
     openDetails: {
       action: 'open-details',
       table: {
-        category: 'Events'
-      }
+        category: 'Events',
+      },
     },
     'selection-change': {
       table: {
         disable: true,
-      }
+      },
     },
     selectionChange: {
       action: 'selection-change',
       table: {
-        category: 'Events'
-      }
+        category: 'Events',
+      },
     },
     'multiple-selection-change': {
       table: {
         disable: true,
-      }
+      },
     },
     multipleSelectionChange: {
       action: 'multiple-selection-change',
       table: {
-        category: 'Events'
-      }
+        category: 'Events',
+      },
     },
     'bulk-edit': {
       table: {
         disable: true,
-      }
+      },
     },
     bulkEdit: {
       action: 'bulk-edit',
       table: {
-        category: 'Events'
-      }
+        category: 'Events',
+      },
     },
     'bulk-delete': {
       table: {
         disable: true,
-      }
+      },
     },
     bulkDelete: {
       action: 'bulk-delete',
       table: {
-        category: 'Events'
-      }
+        category: 'Events',
+      },
     },
     changeShowOutlines: {
       action: 'change-show-outlines',
       table: {
-        category: 'Events'
-      }
+        category: 'Events',
+      },
     },
     changeShowStripes: {
       action: 'change-show-stripes',
       table: {
-        category: 'Events'
-      }
+        category: 'Events',
+      },
     },
     changeOutlineFraming: {
       action: 'change-outline-framing',
       table: {
-        category: 'Events'
-      }
+        category: 'Events',
+      },
     },
     changeEnableRowNumbering: {
       action: 'change-enable-row-numbering',
       table: {
-        category: 'Events'
-      }
+        category: 'Events',
+      },
     },
   },
   args: {
@@ -175,14 +175,16 @@ export default {
           renderItemBadge: (data, columnDefinition) => {
             const value = get(data, columnDefinition.property);
 
-            return value ? {
-              variant: 'positive',
-              label: 'Active',
-            } : {
-              variant: 'critical',
-              label: 'Inactive',
-            };
-          }
+            return value
+                ? {
+                  variant: 'positive',
+                  label: 'Active',
+                }
+                : {
+                  variant: 'critical',
+                  label: 'Inactive',
+                };
+          },
         },
       },
       {
@@ -196,7 +198,7 @@ export default {
         },
         position: 300,
         cellWrap: 'nowrap',
-        width: 150
+        width: 150,
       },
       {
         label: 'Stock',
@@ -219,7 +221,7 @@ export default {
     enableReload: true,
     currentPage: 1,
     paginationLimit: 25,
-    paginationOptions: [5,10,25,50],
+    paginationOptions: [5, 10, 25, 50],
     searchValue: '',
     disableSearch: false,
     sortBy: 'name',
@@ -258,7 +260,8 @@ export default {
           alert('Delete selected rows in ERP');
         },
         type: 'critical',
-        metaCopy: 'This action will delete the selected rows in the ERP system. This action cannot be undone.',
+        metaCopy:
+            'This action will delete the selected rows in the ERP system. This action cannot be undone.',
         contextualDetail: 'MagicERP',
       },
     ],
@@ -266,276 +269,276 @@ export default {
     disableDelete: false,
     // TODO: can be removed when component is not experimental anymore
     _storybook_internal_show_experimental_warning_: false,
-  }
-};
-
-const Template = (args, { argTypes }) => ({
-  components: { SwDataTable, SwButton, SwBanner },
-  props: Object.keys(argTypes),
-  data() {
-    return {
-      paginationLimitValue: 0,
-      currentPageValue: 0,
-      searchValueValue: '',
-      sortByValue: '',
-      sortDirectionValue: '',
-      isLoadingValue: true,
-      selectedRowsValue: [],
-      showOutlinesValue: true,
-      showStripesValue: true,
-      enableOutlineFramingValue: true,
-      enableRowNumberingValue: true,
-    }
   },
-  computed: {
-    dataSourceValue() {
-      /**
-       * Mock server data handling
-       */
-      return this.dataSource.sort((aData, bData) => {
-        const a = aData[this.sortByValue];
-        const b = bData[this.sortByValue];
-        let result = 0;
-
-        if (a < b) {
-          result = -1;
-        } else if (a > b) {
-          result = 1;
-        }
-
-        if (this.sortDirectionValue === 'DESC') {
-          result *= -1;
-        }
-
-        return result;
-      }).slice(
-        (this.currentPageValue - 1) * this.paginationLimitValue,
-        (this.currentPageValue) * this.paginationLimitValue
-      );
+  render: (args, { argTypes }) => ({
+    components: { SwDataTable, SwButton, SwBanner },
+    props: Object.keys(argTypes),
+    data() {
+      return {
+        paginationLimitValue: 0,
+        currentPageValue: 0,
+        searchValueValue: '',
+        sortByValue: '',
+        sortDirectionValue: '',
+        isLoadingValue: true,
+        selectedRowsValue: [],
+        showOutlinesValue: true,
+        showStripesValue: true,
+        enableOutlineFramingValue: true,
+        enableRowNumberingValue: true,
+      };
     },
-    paginationTotalItemsValue() {
-      return this.dataSource.length;
-    },
-  },
-  watch: {
-    paginationLimit: {
-      handler(v) {
-        if (this.paginationLimitValue === v) {
-          return;
-        }
-  
-        this.paginationLimitValue = v;
+    computed: {
+      dataSourceValue() {
+        /**
+         * Mock server data handling
+         */
+        return this.dataSource
+            .sort((aData, bData) => {
+              const a = aData[this.sortByValue];
+              const b = bData[this.sortByValue];
+              let result = 0;
+
+              if (a < b) {
+                result = -1;
+              } else if (a > b) {
+                result = 1;
+              }
+
+              if (this.sortDirectionValue === 'DESC') {
+                result *= -1;
+              }
+
+              return result;
+            })
+            .slice(
+                (this.currentPageValue - 1) * this.paginationLimitValue,
+                this.currentPageValue * this.paginationLimitValue,
+            );
       },
-      immediate: true
-    },
-    currentPage: {
-      handler(v) {
-        if (this.currentPageValue === v) {
-          return;
-        }
-
-        this.currentPageValue = v;
+      paginationTotalItemsValue() {
+        return this.dataSource.length;
       },
-      immediate: true
     },
-    sortBy: {
-      handler(v) {
-        if (this.sortByValue === v) {
-          return;
-        }
-
-        this.sortByValue = v;
-      },
-      immediate: true
-    },
-    sortDirection: {
-      handler(v) {
-        if (this.sortDirectionValue === v) {
-          return;
-        }
-
-        this.sortDirectionValue = v;
-      },
-      immediate: true
-    },
-    searchValue: {
-      handler(v) {
-        if (this.searchValueValue === v) {
-          return;
-        }
-
-        this.searchValueValue = v;
-      },
-      immediate: true
-    },
-    isLoading: {
-      handler(v) {
-        if (this.isLoadingValue === v) {
-          return;
-        }
-
-        this.isLoadingValue = v;
-      },
-      immediate: false
-    },
-    selectedRows: {
-      handler(v) {
-        if (this.selectedRowsValue === v) {
-          return;
-        }
-
-        this.selectedRowsValue = v;
-      },
-      immediate: true
-    },
-    showOutlines: {
-      handler(v) {
-        if (this.showOutlinesValue === v) {
-          return;
-        }
-
-        this.showOutlinesValue = v;
-      },
-      immediate: true
-    },
-    showStripes: {
-      handler(v) {
-        if (this.showStripesValue === v) {
-          return;
-        }
-
-        this.showStripesValue = v;
-      },
-      immediate: true
-    },
-    enableOutlineFraming: {
-      handler(v) {
-        if (this.enableOutlineFramingValue === v) {
-          return;
-        }
-
-        this.enableOutlineFramingValue = v;
-      },
-      immediate: true
-    },
-    enableRowNumbering: {
-      handler(v) {
-        if (this.enableRowNumberingValue === v) {
-          return;
-        }
-
-        this.enableRowNumberingValue = v;
-      },
-      immediate: true
-    },
-  },
-  created() {
-    if (!this.isLoading) {
-      this.simulateLoading();
-    }
-  },
-  methods: {
-    simulateLoading() {
-      // random loading time between 300 and 600ms
-      const loadingTime = Math.floor(Math.random() * 300) + 300;
-      this.isLoadingValue = true;
-
-      window.setTimeout(() => {
-        this.isLoadingValue = false;
-      }, loadingTime);
-    },
-    paginationLimitChangeHandler(event) {
-      this.paginationLimitChange(event)
-      this.paginationLimitValue = event;
-
-      this.simulateLoading();
-    },
-    paginationCurrentPageChangeHandler(event) {
-      this.paginationCurrentPageChange(event)
-      this.currentPageValue = event;
-
-      this.simulateLoading();
-    },
-    searchValueChangeHandler(event) {
-      this.searchValueChange(event)
-      this.searchValueValue = event;
-
-      this.simulateLoading();
-    },
-    sortChangeValueHandler(property, direction) {
-      this.sortChange(property, direction)
-
-      this.sortByValue = property;
-      this.sortDirectionValue = direction;
-
-      this.simulateLoading();
-    },
-
-    reloadHandler(event) {
-      this.reload(event);
-
-      this.simulateLoading();
-    },
-
-    selectionChangeHandler(event) {
-      this.selectionChange(event);
-
-      const id = event.id;
-      const value = event.value;
-      
-      if (value) {
-        this.selectedRowsValue.push(id);
-      } else {
-        this.selectedRowsValue.splice(this.selectedRowsValue.indexOf(id), 1);
-      }
-    },
-
-    multipleSelectionChangeHandler(event) {
-      this.multipleSelectionChange(event);
-
-      const selections = event.selections;
-      const value = event.value;
-
-      if (value) {
-        selections.forEach((selection) => {
-          if (this.selectedRowsValue.indexOf(selection) === -1) {
-            this.selectedRowsValue.push(selection);
+    watch: {
+      paginationLimit: {
+        handler(v) {
+          if (this.paginationLimitValue === v) {
+            return;
           }
-        });
-      } else {
-        this.selectedRowsValue = this.selectedRowsValue.filter((row) => {
-          return selections.indexOf(row) === -1;
-        });
+
+          this.paginationLimitValue = v;
+        },
+        immediate: true,
+      },
+      currentPage: {
+        handler(v) {
+          if (this.currentPageValue === v) {
+            return;
+          }
+
+          this.currentPageValue = v;
+        },
+        immediate: true,
+      },
+      sortBy: {
+        handler(v) {
+          if (this.sortByValue === v) {
+            return;
+          }
+
+          this.sortByValue = v;
+        },
+        immediate: true,
+      },
+      sortDirection: {
+        handler(v) {
+          if (this.sortDirectionValue === v) {
+            return;
+          }
+
+          this.sortDirectionValue = v;
+        },
+        immediate: true,
+      },
+      searchValue: {
+        handler(v) {
+          if (this.searchValueValue === v) {
+            return;
+          }
+
+          this.searchValueValue = v;
+        },
+        immediate: true,
+      },
+      isLoading: {
+        handler(v) {
+          if (this.isLoadingValue === v) {
+            return;
+          }
+
+          this.isLoadingValue = v;
+        },
+        immediate: false,
+      },
+      selectedRows: {
+        handler(v) {
+          if (this.selectedRowsValue === v) {
+            return;
+          }
+
+          this.selectedRowsValue = v;
+        },
+        immediate: true,
+      },
+      showOutlines: {
+        handler(v) {
+          if (this.showOutlinesValue === v) {
+            return;
+          }
+
+          this.showOutlinesValue = v;
+        },
+        immediate: true,
+      },
+      showStripes: {
+        handler(v) {
+          if (this.showStripesValue === v) {
+            return;
+          }
+
+          this.showStripesValue = v;
+        },
+        immediate: true,
+      },
+      enableOutlineFraming: {
+        handler(v) {
+          if (this.enableOutlineFramingValue === v) {
+            return;
+          }
+
+          this.enableOutlineFramingValue = v;
+        },
+        immediate: true,
+      },
+      enableRowNumbering: {
+        handler(v) {
+          if (this.enableRowNumberingValue === v) {
+            return;
+          }
+
+          this.enableRowNumberingValue = v;
+        },
+        immediate: true,
+      },
+    },
+    created() {
+      if (!this.isLoading) {
+        this.simulateLoading();
       }
     },
+    methods: {
+      simulateLoading() {
+        // random loading time between 300 and 600ms
+        const loadingTime = Math.floor(Math.random() * 300) + 300;
+        this.isLoadingValue = true;
 
-    changeShowOutlinesHandler(event) {
-      this.changeShowOutlines(event);
+        window.setTimeout(() => {
+          this.isLoadingValue = false;
+        }, loadingTime);
+      },
+      paginationLimitChangeHandler(event) {
+        this.paginationLimitChange(event);
+        this.paginationLimitValue = event;
 
-      this.showOutlinesValue = event;
+        this.simulateLoading();
+      },
+      paginationCurrentPageChangeHandler(event) {
+        this.paginationCurrentPageChange(event);
+        this.currentPageValue = event;
+
+        this.simulateLoading();
+      },
+      searchValueChangeHandler(event) {
+        this.searchValueChange(event);
+        this.searchValueValue = event;
+
+        this.simulateLoading();
+      },
+      sortChangeValueHandler(property, direction) {
+        this.sortChange(property, direction);
+
+        this.sortByValue = property;
+        this.sortDirectionValue = direction;
+
+        this.simulateLoading();
+      },
+
+      reloadHandler(event) {
+        this.reload(event);
+
+        this.simulateLoading();
+      },
+
+      selectionChangeHandler(event) {
+        this.selectionChange(event);
+
+        const id = event.id;
+        const value = event.value;
+
+        if (value) {
+          this.selectedRowsValue.push(id);
+        } else {
+          this.selectedRowsValue.splice(this.selectedRowsValue.indexOf(id), 1);
+        }
+      },
+
+      multipleSelectionChangeHandler(event) {
+        this.multipleSelectionChange(event);
+
+        const selections = event.selections;
+        const value = event.value;
+
+        if (value) {
+          selections.forEach((selection) => {
+            if (this.selectedRowsValue.indexOf(selection) === -1) {
+              this.selectedRowsValue.push(selection);
+            }
+          });
+        } else {
+          this.selectedRowsValue = this.selectedRowsValue.filter((row) => {
+            return selections.indexOf(row) === -1;
+          });
+        }
+      },
+
+      changeShowOutlinesHandler(event) {
+        this.changeShowOutlines(event);
+
+        this.showOutlinesValue = event;
+      },
+
+      changeShowStripesHandler(event) {
+        this.changeShowStripes(event);
+
+        this.showStripesValue = event;
+      },
+
+      changeOutlineFramingHandler(event) {
+        this.changeOutlineFraming(event);
+
+        this.enableOutlineFramingValue = event;
+      },
+
+      changeEnableRowNumberingHandler(event) {
+        this.changeEnableRowNumbering(event);
+
+        this.enableRowNumberingValue = event;
+      },
     },
-
-    changeShowStripesHandler(event) {
-      this.changeShowStripes(event);
-
-      this.showStripesValue = event;
-    },
-
-    changeOutlineFramingHandler(event) {
-      this.changeOutlineFraming(event);
-
-      this.enableOutlineFramingValue = event;
-    },
-
-    changeEnableRowNumberingHandler(event) {
-      this.changeEnableRowNumbering(event);
-
-      this.enableRowNumberingValue = event;
-    }
-  },
-  template: `
-  <div
-    style="
+    template: `
+      <div
+          style="
       margin: 0 auto;
       height: 100vh;
       width: 100vw;
@@ -543,79 +546,78 @@ const Template = (args, { argTypes }) => ({
       padding: 1rem;
       overflow: auto;
     "
-  >
-    <div
-      v-if="_storybook_internal_show_experimental_warning_"
-      style="width: 960px; max-width: 100%; margin: 0 auto;"
-    >
-      <sw-banner
-        title="Experimental component"
-        variant="attention"
       >
-      This component is currently in an experimental state and may undergo frequent
-      changes. Please use it with discretion and be prepared for potential updates
-      that could impact its functionality, appearance, or behavior. We welcome
-      feedback, which can be submitted in the GitHub Discussions of the
-      Meteor Component Library.
-      </sw-banner>
-    </div>
-
-    <sw-data-table
-      v-bind="$props"
-      :dataSource="dataSourceValue"
-      :paginationTotalItems="paginationTotalItemsValue"
-      @reload="reloadHandler"
-      :paginationLimit="paginationLimitValue"
-      @pagination-limit-change="paginationLimitChangeHandler"
-      :currentPage="currentPageValue"
-      @pagination-current-page-change="paginationCurrentPageChangeHandler"
-      :searchValue="searchValueValue"
-      @search-value-change="searchValueChangeHandler"
-      :sortBy="sortByValue"
-      :sortDirection="sortDirectionValue"
-      @sort-change="sortChangeValueHandler"
-      :isLoading="isLoadingValue"
-      :selectedRows="selectedRowsValue"
-      @selection-change="selectionChangeHandler"
-      @multiple-selection-change="multipleSelectionChangeHandler"
-      @open-details="openDetails"
-      @bulk-edit="bulkEdit"
-      @bulk-delete="bulkDelete"
-      @change-show-outlines="changeShowOutlinesHandler"
-      :showOutlines="showOutlinesValue"
-      @change-show-stripes="changeShowStripesHandler"
-      :showStripes="showStripesValue"
-      @change-outline-framing="changeOutlineFramingHandler"
-      :enableOutlineFraming="enableOutlineFramingValue"
-      @change-enable-row-numbering="changeEnableRowNumberingHandler"
-      :enableRowNumbering="enableRowNumberingValue"
-    >
-      {{ $props.default}}
-
-      <template #toolbar>
-        <sw-button
-          variant="primary"
-          @click="reloadHandler"
+        <div
+            v-if="_storybook_internal_show_experimental_warning_"
+            style="width: 960px; max-width: 100%; margin: 0 auto;"
         >
-          Primary
-        </sw-button>
-      </template>
-    </sw-data-table>
-  </div>
-  `,
-});
+          <sw-banner
+              title="Experimental component"
+              variant="attention"
+          >
+            This component is currently in an experimental state and may undergo frequent
+            changes. Please use it with discretion and be prepared for potential updates
+            that could impact its functionality, appearance, or behavior. We welcome
+            feedback, which can be submitted in the GitHub Discussions of the
+            Meteor Component Library.
+          </sw-banner>
+        </div>
 
-export const Default = Template.bind();
-Default.storyName = 'Default';
-Default.args = {
-  ...Default.args,
-  _storybook_internal_show_experimental_warning_: true,
+        <sw-data-table
+            v-bind="$props"
+            :dataSource="dataSourceValue"
+            :paginationTotalItems="paginationTotalItemsValue"
+            @reload="reloadHandler"
+            :paginationLimit="paginationLimitValue"
+            @pagination-limit-change="paginationLimitChangeHandler"
+            :currentPage="currentPageValue"
+            @pagination-current-page-change="paginationCurrentPageChangeHandler"
+            :searchValue="searchValueValue"
+            @search-value-change="searchValueChangeHandler"
+            :sortBy="sortByValue"
+            :sortDirection="sortDirectionValue"
+            @sort-change="sortChangeValueHandler"
+            :isLoading="isLoadingValue"
+            :selectedRows="selectedRowsValue"
+            @selection-change="selectionChangeHandler"
+            @multiple-selection-change="multipleSelectionChangeHandler"
+            @open-details="openDetails"
+            @bulk-edit="bulkEdit"
+            @bulk-delete="bulkDelete"
+            @change-show-outlines="changeShowOutlinesHandler"
+            :showOutlines="showOutlinesValue"
+            @change-show-stripes="changeShowStripesHandler"
+            :showStripes="showStripesValue"
+            @change-outline-framing="changeOutlineFramingHandler"
+            :enableOutlineFraming="enableOutlineFramingValue"
+            @change-enable-row-numbering="changeEnableRowNumberingHandler"
+            :enableRowNumbering="enableRowNumberingValue"
+        >
+          {{ $props.default}}
+
+          <template #toolbar>
+            <sw-button
+                variant="primary"
+                @click="reloadHandler"
+            >
+              Primary
+            </sw-button>
+          </template>
+        </sw-data-table>
+      </div>
+    `,
+  }),
 };
 
-export const Full = Template.bind();
-Full.storyName = 'Full';
-Full.args = {
-  ...Default.args,
-  _storybook_internal_show_experimental_warning_: true,
-  layout: 'full'
+export default meta;
+
+export const Default = {
+  name: 'Default',
+};
+
+export const Full = {
+  name: 'Full',
+  args: {
+    layout: 'full',
+  },
 };

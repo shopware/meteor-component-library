@@ -1,72 +1,70 @@
 import { within, userEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
-import DefaultBannerStory, { Default as Template } from './sw-banner.stories'
+
+import meta from './sw-banner.stories';
 
 export default {
-  ...DefaultBannerStory,
+  ...meta,
   title: 'Interaction Tests/Feedback Indicator/sw-banner',
 };
 
-export const VisualTestBannerNeutral = Template.bind({});
-VisualTestBannerNeutral.storyName = 'Banner neutral';
-VisualTestBannerNeutral.args = {
-  ...Template.args
+export const VisualTestBannerNeutral = {
+  name: 'Banner neutral',
+}
+
+export const VisualTestBannerInfo = {
+  name: 'Banner info',
+  args: {
+    variant: 'info'
+  },
 };
 
-export const VisualTestBannerInfo = Template.bind({});
-VisualTestBannerInfo.storyName = 'Banner info';
-VisualTestBannerInfo.args = {
-  ...Template.args,
-  variant: 'info'
+export const VisualTestBannerAttention = {
+  name: 'Banner attention',
+  args: {
+    variant: 'attention'
+  },
 };
 
-export const VisualTestBannerAttention = Template.bind({});
-VisualTestBannerAttention.storyName = 'Banner attention';
-VisualTestBannerAttention.args = {
-  ...Template.args,
-  variant: 'attention'
+export const VisualTestBannerCritical = {
+  name: 'Banner critical',
+  args: {
+    variant: 'critical'
+  },
 };
 
-export const VisualTestBannerCritical = Template.bind({});
-VisualTestBannerCritical.storyName = 'Banner critical';
-VisualTestBannerCritical.args = {
-  ...Template.args,
-  variant: 'critical'
+export const VisualTestBannerPositive = {
+  name: 'Banner positive',
+  args: {
+    variant: 'positive'
+  },
 };
 
-export const VisualTestBannerPositive = Template.bind({});
-VisualTestBannerPositive.storyName = 'Banner positive';
-VisualTestBannerPositive.args = {
-  ...Template.args,
-  variant: 'positive'
+export const VisualTestBannerInherited = {
+  name: 'Banner inherited',
+  args: {
+    variant: 'inherited'
+  },
 };
 
-export const VisualTestBannerInherited = Template.bind({});
-VisualTestBannerInherited.storyName = 'Banner inherited';
-VisualTestBannerInherited.args = {
-  ...Template.args,
-  variant: 'inherited'
+export const VisualTestRenderWithoutIcon = {
+  name: 'Render banner without icon',
+  args: {
+    hideIcon: true,
+  },
 };
 
-export const VisualTestRenderWithoutIcon = Template.bind({});
-VisualTestRenderWithoutIcon.storyName = 'Render banner without icon';
-VisualTestRenderWithoutIcon.args = {
-  ...Template.args,
-  hideIcon: true,
-};
-
-export const VisualTestCloseBannerBox = Template.bind({});
-VisualTestCloseBannerBox.storyName = 'Close the banner';
-VisualTestCloseBannerBox.args = {
-  ...Template.args,
-  closable: true,
-};
-VisualTestCloseBannerBox.play = async ({ args }) => {
-  const canvas = within(document.getElementById('root'));
-
-  await expect(args.close).not.toHaveBeenCalled();
-
-  await userEvent.click(canvas.getByRole('button'));
-
-  await expect(args.close).toHaveBeenCalledWith(null);
+export const VisualTestCloseBannerBox = {
+  name: 'Close the banner',
+  args: {
+    closable: true,
+  },
+  play:  async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+  
+    expect(args.close).not.toHaveBeenCalled();
+  
+    await userEvent.click(canvas.getByRole('button'));
+    expect(args.close).toHaveBeenCalledWith(null);
+  }
 };
