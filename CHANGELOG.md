@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.0] - 17.10.2023
+- Added SwPagination and DeviceHelperPlugin to public API
+- Fix sw-tab emitting 'new-item-active' event
 ## [2.1.2] - 06.09.2023
 - Fix indeterminate state of `sw-checkbox`
 ## [2.1.1] - 26.04.2023
