@@ -88,7 +88,7 @@
 <script lang="ts">
 import type { PropType } from 'vue';
 
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import SwContextButton from '../../context-menu/sw-context-button/sw-context-button.vue';
 import SwContextMenuItem from '../../context-menu/sw-context-menu-item/sw-context-menu-item.vue';
 import SwColorBadge from '../../feedback-indicator/sw-color-badge/sw-color-badge.vue';
@@ -106,7 +106,7 @@ interface TabItem {
   hidden?: boolean;
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SwTabs',
 
   components: {

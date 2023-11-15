@@ -1,5 +1,5 @@
 import { throttle } from "lodash-es";
-import { DirectiveOptions } from "vue";
+import type { Directive } from "vue";
 
 const getPreviousSibling = function (el: Element|undefined, selector: string) {
   if (!el) return;
@@ -35,7 +35,7 @@ const setLeftValue = (el: HTMLElement) => {
 
 let mutationObserver: MutationObserver|undefined;
 
-const stickyColumn: DirectiveOptions = {
+const stickyColumn: Directive = {
   bind(el) {
     el.dataset.stickyColumn = "";
   },

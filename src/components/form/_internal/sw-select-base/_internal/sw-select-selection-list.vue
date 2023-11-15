@@ -1,36 +1,39 @@
 <template>
   <ul class="sw-select-selection-list">
     <!-- eslint-disable vue/no-use-v-if-with-v-for -->
-    <li
+    <template
       v-for="(selection, index) in selections"
-      v-if="!hideLabels"
       :key="selection[valueProperty]"
-      :class="['sw-select-selection-list__item-holder--' + index, 'sw-select-selection-list__item-holder', classBindings]"
-      :data-id="selection[valueProperty]"
     >
-      <slot
-        name="selected-option"
-        v-bind="{ selection, defaultLabel: selection[labelProperty], disabled }"
+      <li
+        v-if="!hideLabels"
+        :class="['sw-select-selection-list__item-holder--' + index, 'sw-select-selection-list__item-holder', classBindings]"
+        :data-id="selection[valueProperty]"
       >
-        <sw-label
-          :dismissable="!isSelectionDisabled(selection)"
-          :size="size"
-          @dismiss="onClickDismiss(selection)"
+        <slot
+          name="selected-option"
+          v-bind="{ selection, defaultLabel: selection[labelProperty], disabled }"
         >
-          <span
-            class="sw-select-selection-list__item"
-            :title="selection[labelProperty]"
+          <sw-label
+            :dismissable="!isSelectionDisabled(selection)"
+            :size="size"
+            @dismiss="onClickDismiss(selection)"
           >
-            <slot
-              name="label-property"
-              v-bind="{ item: selection, index, labelProperty, valueProperty }"
+            <span
+              class="sw-select-selection-list__item"
+              :title="selection[labelProperty]"
             >
-              {{ selection[labelProperty] }}
-            </slot>
-          </span>
-        </sw-label>
-      </slot>
-    </li>
+              <slot
+                name="label-property"
+                v-bind="{ item: selection, index, labelProperty, valueProperty }"
+              >
+                {{ selection[labelProperty] }}
+              </slot>
+            </span>
+          </sw-label>
+        </slot>
+      </li>
+    </template>
 
     <li
       v-if="invisibleCount > 0 && !hideLabels"
@@ -74,11 +77,11 @@
 <script lang="ts">
 import type { PropType } from 'vue';
 
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import SwLabel from '../../../../_internal/sw-label.vue';
 import SwButton from '../../../sw-button/sw-button.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SwSelectSelectionList',
 
   components: {

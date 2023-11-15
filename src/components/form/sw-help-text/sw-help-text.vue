@@ -19,14 +19,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 import SwTooltipDirective from '../../../directives/tooltip.directive';
 
 /**
  * @internal
  */
-export default Vue.extend({
+export default defineComponent({
   name: 'SwHelpText',
 
   components: {

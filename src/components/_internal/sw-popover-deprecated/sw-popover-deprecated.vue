@@ -13,13 +13,13 @@
 
 <script lang="ts">
 import type { PropType } from 'vue';
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import SwPopoverDirective from '../../../directives/popover.directive';
 
 /**
  * @deprecated - Use `sw-floating-ui` instead
  */
-export default Vue.extend({
+export default defineComponent({
   name: 'SwPopover',
 
   directives: {

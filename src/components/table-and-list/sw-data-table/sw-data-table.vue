@@ -450,8 +450,8 @@
 
 <script lang="ts">
 import useScrollPossibilitiesClasses from "./composables/useScrollPossibilitiesClasses";
-import { PropType } from "vue";
-import { defineComponent, computed, onBeforeUpdate, onMounted, onBeforeUnmount, ref, set, getCurrentInstance, onBeforeMount } from "vue";
+import type { PropType } from "vue";
+import { defineComponent, computed, onBeforeUpdate, onMounted, onBeforeUnmount, ref, getCurrentInstance, onBeforeMount } from "vue";
 import SwCard from "../../layout/sw-card/sw-card.vue";
 import SwButton from "../../form/sw-button/sw-button.vue";
 import SwSelect from "../../form/sw-select/sw-select.vue";
@@ -477,7 +477,7 @@ import SwDataTableBadgeRenderer from './renderer/sw-data-table-badge-renderer.vu
 import SwDataTablePriceRenderer from './renderer/sw-data-table-price-renderer.vue';
 import type { PriceColumnDefinition } from './renderer/sw-data-table-price-renderer.vue';
 import SwSegmentedControl from '../../navigation/sw-segmented-control/sw-segmented-control.vue';
-import { SegmentedControlActionsProp } from '../../navigation/sw-segmented-control/sw-segmented-control.vue';
+import type { SegmentedControlActionsProp } from '../../navigation/sw-segmented-control/sw-segmented-control.vue';
 import SwFloatingUi from '../../_internal/sw-floating-ui/sw-floating-ui.vue';
 import SwTooltipDirective from '../../../directives/tooltip.directive';
 import SwEmptyState from '../../layout/sw-empty-state/sw-empty-state.vue';
@@ -963,20 +963,23 @@ export default defineComponent({
     */
     const resetAllChanges = () => {
       Object.keys(props.columnChanges).forEach((key) => {
-        set(props.columnChanges, key, {});
+        // eslint-disable-next-line vue/no-mutating-props
+        props.columnChanges[key] = {};
       });
     };
 
     const addToColumnChanges = (columnProperty: string, columnChanges: ColumnChanges) => {
       if (!props.columnChanges[columnProperty]) {
-          set(props.columnChanges, columnProperty, {});
+          // eslint-disable-next-line vue/no-mutating-props
+          props.columnChanges[columnProperty] = {};
         }
 
         // save new width to columnChanges to make changes permanent
-        set(props.columnChanges, columnProperty, {
+        // eslint-disable-next-line vue/no-mutating-props
+        props.columnChanges[columnProperty] = {
           ...props.columnChanges[columnProperty],
           ...columnChanges,
-        });
+        };
     }
 
     const columnsWithChanges = computed(() => {

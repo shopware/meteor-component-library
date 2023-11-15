@@ -1,8 +1,8 @@
 <script lang="ts">
 import type { VNode } from 'vue';
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SwHighlightText',
 
   props: {

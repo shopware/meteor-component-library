@@ -108,7 +108,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { PropType } from 'vue';
 
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { debounce, get } from 'lodash-es';
 import SwSelectBase from '../_internal/sw-select-base/sw-select-base.vue';
 import SwSelectResultList from '../_internal/sw-select-base/_internal/sw-select-result-list.vue';
@@ -116,7 +116,7 @@ import SwSelectResult from '../_internal/sw-select-base/_internal/sw-select-resu
 import SwSelectSelectionList from '../_internal/sw-select-base/_internal/sw-select-selection-list.vue';
 import SwHighlightText from '../../_internal/sw-highlight-text.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SwSelect',
 
   i18n: {

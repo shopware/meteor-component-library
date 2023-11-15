@@ -79,11 +79,11 @@
   </sw-base-field>
 </template>
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 import SwTextField from '../sw-text-field/sw-text-field.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SwPasswordField',
 
   i18n: {

@@ -43,11 +43,11 @@
 <script lang="ts">
 import type { PropType } from 'vue';
 
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import SwPopoverDeprecated from '../../../../_internal/sw-popover-deprecated/sw-popover-deprecated.vue';
 import SwIcon from '../../../../icons-media/sw-icon/sw-icon.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SwSelectResultList',
 
   i18n: {

@@ -95,12 +95,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import SwIgnoreClass from '../../_internal/sw-ignore-class.vue'
 import SwContextButton from '../../context-menu/sw-context-button/sw-context-button.vue'
 import SwLoader from '../../feedback-indicator/sw-loader/sw-loader.vue'
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     'sw-ignore-class': SwIgnoreClass,
     'sw-context-button': SwContextButton,

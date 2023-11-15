@@ -76,7 +76,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import SwTextField from '../sw-text-field/sw-text-field.vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 import UnicodeUriFilter from '../../../filters/unicode-uri.filter';
@@ -88,7 +88,7 @@ const URL_REGEX = {
   TRAILING_SLASH: /\/+$/,
 };
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SwUrlField',
 
   components: {

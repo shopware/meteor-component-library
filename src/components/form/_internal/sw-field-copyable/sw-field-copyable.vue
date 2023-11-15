@@ -16,13 +16,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import SwIcon from '../../../icons-media/sw-icon/sw-icon.vue';
 import SwTooltipDirective from '../../../../directives/tooltip.directive';
 import SwNotificationMixin from '../../../../mixins/notification.mixin';
 import { copyToClipboard as copyToClipboardUtil } from '../../../../utils/dom';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SwFieldCopyable',
 
   i18n: {

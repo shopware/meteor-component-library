@@ -61,11 +61,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import SwBaseField from "../_internal/sw-base-field/sw-base-field.vue";
 import SwFieldError from "../_internal/sw-field-error/sw-field-error.vue";
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SwTextField',
 
   components: {

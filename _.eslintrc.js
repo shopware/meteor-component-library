@@ -56,7 +56,8 @@ module.exports = {
           'atComponent': 'shorthand',
           'default': 'shorthand',
           'named': 'shorthand'
-        }]
+        }],
+        'vue/no-deprecated-slot-attribute': 'error',
       }
     }
   ]

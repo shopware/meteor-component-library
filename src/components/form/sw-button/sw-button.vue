@@ -37,10 +37,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import swLoader from '../../feedback-indicator/sw-loader/sw-loader.vue';
+import type { PropType } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SwButton',
 
   components: {
@@ -58,10 +59,11 @@ export default Vue.extend({
     },
     /**
      * Change the look of the button
+     * Values: primary, secondary, critical, action
      * @values primary, secondary, critical, action
      */
     variant: {
-      type: String,
+      type: String as PropType<'primary' | 'secondary' | 'critical' | 'action'>,
       required: false,
       default: '',
       validator(value: string) {

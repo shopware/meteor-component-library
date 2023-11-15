@@ -1,4 +1,4 @@
-import SwSkeletonBar from './sw-skeleton-bar';
+import SwSkeletonBar from './sw-skeleton-bar.vue';
 
 import meta from './sw-skeleton-bar.stories';
 

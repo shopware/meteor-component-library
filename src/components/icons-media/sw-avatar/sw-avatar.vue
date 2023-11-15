@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import cloneDeep from 'lodash-es/cloneDeep';
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { StyleValue } from 'vue/types/jsx';
 
 const colors = [
@@ -40,7 +40,7 @@ const colors = [
   '#3CCA88',
 ];
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SwAvatar',
 
   props: {

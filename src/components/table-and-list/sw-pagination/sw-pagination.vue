@@ -8,35 +8,40 @@
       disable-context
       :actions="segmentedControlActions"
     >
-      <sw-icon
-        slot="label__pagination-first"
-        name="solid-double-chevron-left-xxs"
-      />
+      <template #label__pagination-first>
+        <sw-icon
+          name="solid-double-chevron-left-xxs"
+        />
+      </template>
 
-      <sw-icon
-        slot="label__pagination-previous"
-        name="solid-chevron-left-xs"
-      />
+      <template #label__pagination-previous>
+        <sw-icon
+          name="solid-chevron-left-xs"
+        />
+      </template>
 
-      <sw-number-field
-        slot="label__pagination-current"
-        class="sw-pagination__current-input"
-        :value="currentPage"
-        :min="1"
-        :max="totalPages"
-        number-type="int"
-        @change="(event) => $emit('change-current-page', event)"
-      />
+      <template #label__pagination-current>
+        <sw-number-field
+          class="sw-pagination__current-input"
+          :value="currentPage"
+          :min="1"
+          :max="totalPages"
+          number-type="int"
+          @change="(event) => $emit('change-current-page', event)"
+        />
+      </template>
 
-      <sw-icon
-        slot="label__pagination-next"
-        name="solid-chevron-right-xs"
-      />
+      <template #label__pagination-next>
+        <sw-icon
+          name="solid-chevron-right-xs"
+        />
+      </template>
 
-      <sw-icon
-        slot="label__pagination-last"
-        name="solid-double-chevron-right-xxs"
-      />
+      <template #label__pagination-last>
+        <sw-icon
+          name="solid-double-chevron-right-xxs"
+        />
+      </template>
     </sw-segmented-control>
   </div>
 </template>

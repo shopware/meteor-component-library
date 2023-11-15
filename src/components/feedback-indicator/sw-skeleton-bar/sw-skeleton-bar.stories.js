@@ -1,4 +1,4 @@
-import SwSkeletonBar from './sw-skeleton-bar';
+import SwSkeletonBar from './sw-skeleton-bar.vue';
 
 const meta = {
     title: 'Components/Feedback Indicator/sw-skeleton-bar',

@@ -30,11 +30,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import SwTooltipDirective from '../../../../directives/tooltip.directive';
 import SwIcon from '../../../icons-media/sw-icon/sw-icon.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SwInheritanceSwitch',
 
   i18n: {

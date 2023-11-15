@@ -10,11 +10,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
 export type SwColorBadgeVariant = 'default' | 'warning' | 'critical' | 'positive' | 'info';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SwColorBadge',
   props: {
     variant: {

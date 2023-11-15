@@ -10,9 +10,9 @@
 
     <template
       v-for="group in [undefined, ...groups]"
+      :key="'transition-group-' + (group && group.id)"
     >
       <transition
-        :key="'transition-group-' + (group && group.id)"
         name="option-fade"
       >
         <div
@@ -33,7 +33,7 @@
         </div>
       </transition>
 
-      <sw-smooth-reflow :key="'smooth-reflow-' + (group && group.id)">
+      <sw-smooth-reflow>
         <transition-group
           name="option-item"
           tag="div"

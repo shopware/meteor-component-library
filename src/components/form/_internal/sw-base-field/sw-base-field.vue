@@ -75,7 +75,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import SwInheritanceSwitch from '../sw-inheritance-switch/sw-inheritance-switch.vue';
 import SwFieldCopyable from '../sw-field-copyable/sw-field-copyable.vue';
 import SwHelpText from '../../sw-help-text/sw-help-text.vue';
@@ -83,7 +83,7 @@ import SwValidationMixin from '../../../../mixins/validation.mixin';
 import SwFormFieldMixin from '../../../../mixins/form-field.mixin';
 import { createId } from '../../../../utils/uuid';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SwBaseField',
 
   components: {

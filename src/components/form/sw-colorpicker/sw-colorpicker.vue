@@ -204,12 +204,12 @@
 <script lang="ts">
 import type { PropType } from 'vue';
 
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { debounce } from 'lodash-es';
 import SwBaseField from "../_internal/sw-base-field/sw-base-field.vue";
 import SwPopoverDeprecated from '../../_internal/sw-popover-deprecated/sw-popover-deprecated.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SwColorpicker',
 
   components: {

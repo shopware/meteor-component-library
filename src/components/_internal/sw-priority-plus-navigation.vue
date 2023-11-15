@@ -1,7 +1,7 @@
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { PropType, VNode } from 'vue';
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
 interface ItemBase {
   hidden?: boolean,
@@ -17,7 +17,7 @@ function getWidth(el: Element) {
   return Math.ceil(el.offsetWidth + margin)
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'PriorityPlusMenu',
 
   props: {

@@ -41,13 +41,13 @@
 <script lang="ts">
 import type { PropType } from 'vue';
 
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue'
 
 type CssClasses = (string | Record<string, boolean>)[] | Record<string, boolean>;
 type BannerType = 'neutral' | 'info' | 'attention' | 'critical' | 'positive' | 'inherited';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SwBanner',
 
   components: {
