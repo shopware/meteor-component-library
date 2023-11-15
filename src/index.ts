@@ -19,6 +19,7 @@ import SwCard from './components/layout/sw-card/sw-card.vue';
 import SwTabs from './components/navigation/sw-tabs/sw-tabs.vue'
 import SwDataTable from './components/table-and-list/sw-data-table/sw-data-table.vue';
 import SwPagination from './components/table-and-list/sw-pagination/sw-pagination.vue';
+import SwSkeletonBar from './components/feedback-indicator/sw-skeleton-bar/sw-skeleton-bar.vue';
 import TooltipDirective from './directives/tooltip.directive';
 import DeviceHelperPlugin from './plugin/device-helper.plugin';
 // Import SCSS for styling
@@ -46,6 +47,7 @@ export {
   SwTabs,
   SwDataTable,
   SwPagination,
+  SwSkeletonBar,
   TooltipDirective,
   DeviceHelperPlugin,
 }
