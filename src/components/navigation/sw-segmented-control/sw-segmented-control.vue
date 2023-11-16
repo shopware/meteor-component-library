@@ -83,7 +83,7 @@
 import SwCheckbox from '../../form/sw-checkbox/sw-checkbox.vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 import SwPopover from '../../overlay/sw-popover/sw-popover.vue'
-import { View } from '../../overlay/sw-popover/sw-popover.interfaces';
+import type { View } from '../../overlay/sw-popover/sw-popover.interfaces';
 import type { PropType } from 'vue';
 import { defineComponent, computed } from 'vue';
 

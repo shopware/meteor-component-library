@@ -2,11 +2,13 @@
   <priority-plus
     ref="priorityPlus"
     #default="{ mainItems, moreItems }"
-    class="sw-tabs"
-    :class="tabClasses"
     :list="items"
   >
-    <ul role="tablist">
+    <ul
+      class="sw-tabs"
+      :class="tabClasses"
+      role="tablist"
+    >
       <span
         class="sw-tabs--slider"
         :class="sliderClasses"
@@ -17,6 +19,7 @@
         <li
           v-for="item in mainItems"
           :key="item.name"
+          :data-priority-plus="item.name"
           ref="items"
           class="sw-tabs--item"
           :class="getItemClasses(item)"
@@ -184,14 +187,12 @@ export default defineComponent({
     sliderPosition(): number {
       this.refreshKey;
 
-      if (!this.activeDomItem && !this.activeItem) {
+      if (!this.activeItem) {
         return 0;
       }
 
-      if (
-        this.activeItem?.hidden &&
-        this.$refs['more-items-button']
-      ) {
+      // Handle the case when the active item is hidden
+      if (!this.activeDomItem && this.$refs['more-items-button']) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return (this.$refs['more-items-button'] as any).$el?.offsetLeft
       }
@@ -202,8 +203,14 @@ export default defineComponent({
     sliderLength(): number {
       this.refreshKey;
 
-      if (!this.activeDomItem && !this.activeItem) {
+      if (!this.activeItem) {
         return 0;
+      }
+
+      // Handle the case when the active item is hidden
+      if (!this.activeDomItem && this.$refs['more-items-button']) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return (this.$refs['more-items-button'] as any).$el?.offsetWidth
       }
 
       if (
@@ -261,6 +268,10 @@ export default defineComponent({
   mounted() {
     this.setActiveItem(this.defaultItem);
 
+    this.$nextTick(() => {
+      this.handleResize();
+    });
+
     // @ts-expect-error $device helper is not registered in TS yet
     this.$device.onResize({
       listener() {
@@ -271,7 +282,7 @@ export default defineComponent({
     });
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     // @ts-expect-error $device helper is not registered in TS yet
     this.$device.removeResizeListener(this);
   },
@@ -330,7 +341,7 @@ export default defineComponent({
 
     toggleMoreTabItems() {
       this.showMoreItems = !this.showMoreItems;
-    }
+    },
   }
 });
 </script>

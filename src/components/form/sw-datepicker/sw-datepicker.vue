@@ -18,6 +18,7 @@
         :id="identification"
         ref="flatpickrInput"
         type="text"
+        autocomplete="off"
         :name="identification"
         :disabled="disabled"
         :placeholder="placeholder"
@@ -47,7 +48,7 @@
   </sw-base-field>
 </template>
 
-<script>
+<script lang="ts">
 import Flatpickr from 'flatpickr';
 import 'flatpickr/dist/l10n';
 import { zonedTimeToUtc, utcToZonedTime } from 'date-fns-tz';
@@ -55,6 +56,8 @@ import 'flatpickr/dist/flatpickr.css';
 import SwBaseField from "../_internal/sw-base-field/sw-base-field.vue";
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
 import SwFormFieldMixin from '../../../mixins/form-field.mixin';
+import { defineComponent } from 'vue';
+import type { Instance as FlatpickrInstance } from 'flatpickr/dist/types/instance';
 
 const allEvents = [
   'onChange',
@@ -71,7 +74,7 @@ const allEvents = [
   'onKeyDown',
 ];
 
-export default {
+export default defineComponent({
   name: 'SwDatepicker',
 
   components: {
@@ -115,7 +118,7 @@ export default {
     /**
      * The value of the datepicker.
      */
-    value: {
+    modelValue: {
       type: String,
       required: false,
       default: null,
@@ -139,7 +142,7 @@ export default {
       type: String,
       default: 'date',
       validValues: ['time', 'date', 'datetime'],
-      validator(value) {
+      validator(value: string) {
         return ['time', 'date', 'datetime'].includes(value);
       },
     },
@@ -181,7 +184,11 @@ export default {
     }
   },
 
-  data() {
+  data(): {
+    flatpickrInstance: FlatpickrInstance | null,
+    isDatepickerOpen: boolean,
+    defaultConfig: Record<string, any>,
+  } {
     return {
       flatpickrInstance: null,
       isDatepickerOpen: false,
@@ -223,16 +230,24 @@ export default {
     },
 
     additionalEventListeners() {
-      const listeners = {};
+      const listeners: {
+        [key: string]: (...args: any[]) => void;
+      } = {};
 
       /**
        * Do not pass "change" or "input" event listeners to the form elements
        * because the component implements its own listeners for this event types.
        * The callback methods will emit the corresponding event to the parent.
        */
-      Object.keys(this.$listeners).forEach((key) => {
-        if (!['change', 'input'].includes(key)) {
-          listeners[key] = this.$listeners[key];
+      Object.entries(this.$attrs).forEach(([key, value]) => {
+        // Just look for listeners
+        if (typeof value !== 'function') {
+          return;
+        }
+
+        if (!['change', 'update:modelValue'].includes(key)) {
+          // @ts-expect-error
+          listeners[key] = this.$attrs[key];
         }
       });
 
@@ -241,28 +256,28 @@ export default {
 
     timezoneFormattedValue: {
       get() {
-        if (!this.value) {
+        if (!this.modelValue) {
           return null;
         }
 
         if (['time', 'date'].includes(this.dateType)) {
-          return this.value;
+          return this.modelValue;
         }
 
         // convert from UTC timezone to user timezone (represented as UTC)
-        const timeZoneDate = utcToZonedTime(this.value, this.timeZone);
+        const timeZoneDate = utcToZonedTime(this.modelValue, this.timeZone);
 
         // get the time converted to the user timezone
         return timeZoneDate.toISOString();
       },
-      set(newValue) {
+      set(newValue: string | null) {
         if (newValue === null) {
-          this.$emit('input', null);
+          this.$emit('update:modelValue', null);
           return;
         }
 
         if (['time', 'date'].includes(this.dateType)) {
-          this.$emit('input', newValue);
+          this.$emit('update:modelValue', newValue);
           return;
         }
 
@@ -270,7 +285,7 @@ export default {
         const utcDate = zonedTimeToUtc(new Date(newValue), this.timeZone);
 
         // emit the UTC time so that the v-model value always work in UTC time (which is needed for the server)
-        this.$emit('input', utcDate.toISOString());
+        this.$emit('update:modelValue', utcDate.toISOString());
       },
     },
 
@@ -296,7 +311,7 @@ export default {
       immediate: true,
       handler() {
         this.defaultConfig.locale = this.locale;
-        this.updateFlatpickrInstance(this.config);
+        this.updateFlatpickrInstance();
       },
     },
 
@@ -310,6 +325,10 @@ export default {
     },
 
     disabled(isDisabled) {
+      if (!this.flatpickrInstance) {
+        return;
+      }
+
       this.flatpickrInstance._input.disabled = isDisabled;
     },
   },
@@ -325,7 +344,7 @@ export default {
   /**
    * Free up memory
    */
-  beforeDestroy() {
+  beforeUnmount() {
     this.beforeDestroyComponent();
   },
 
@@ -357,11 +376,11 @@ export default {
      *
      * @param value
      */
-    setDatepickerValue(value) {
+    setDatepickerValue(value: string | null) {
       // Make sure we have a flatpickr instance
       if (this.flatpickrInstance !== null) {
         // Notify flatpickr instance that there is a change in value
-        this.flatpickrInstance.setDate(value, false);
+        this.flatpickrInstance.setDate(value!, false);
       }
     },
 
@@ -371,7 +390,7 @@ export default {
      * @param newConfig
      * @returns {any}
      */
-    getMergedConfig(newConfig) {
+    getMergedConfig(newConfig: any) {
       if (newConfig.mode !== undefined) {
         console.warn(
           '[sw-datepicker] The only allowed mode is the default \'single\' mode '
@@ -401,9 +420,11 @@ export default {
       const mergedConfig = this.getMergedConfig(this.config);
 
       if (mergedConfig.enableTime !== undefined
+        // @ts-expect-error
         && mergedConfig.enableTime !== this.currentFlatpickrConfig.enableTime) {
         // The instance must be recreated for some config options to take effect like 'enableTime' changes.
         // See https://github.com/flatpickr/flatpickr/issues/1108 for details.
+        // @ts-expect-error
         this.createFlatpickrInstance(this.config);
         return;
       }
@@ -421,6 +442,7 @@ export default {
       // Workaround: Allow to change locale dynamically
       ['locale', 'showMonths'].forEach((name) => {
         if (typeof mergedConfig[name] !== 'undefined') {
+          // @ts-expect-error
           this.flatpickrInstance.set(name, mergedConfig[name]);
         }
       });
@@ -439,13 +461,15 @@ export default {
 
       // Set event hooks in config.
       this.getEventNames().forEach(({ kebabCase, camelCase }) => {
+        // @ts-expect-error
         mergedConfig[camelCase] = (...args) => {
           this.$emit(kebabCase, ...args);
         };
       });
 
+      // @ts-expect-error
       // Init flatpickr only if it is not already loaded.
-      this.flatpickrInstance = new Flatpickr(this.flatpickrInputRef, mergedConfig);
+      this.flatpickrInstance = new Flatpickr(this.flatpickrInputRef, mergedConfig) as unknown as FlatpickrInstance;
       this.flatpickrInstance.config.onOpen.push(() => {
         this.isDatepickerOpen = true;
       });
@@ -459,7 +483,8 @@ export default {
       });
 
       // Set the right datepicker value from the property.
-      this.setDatepickerValue(this.timezoneFormattedValue);
+      const initialValue = this.timezoneFormattedValue ? this.timezoneFormattedValue : new Date().toISOString();
+      this.setDatepickerValue(initialValue);
     },
 
     /**
@@ -471,7 +496,11 @@ export default {
      * @returns {Array}
      */
     getEventNames() {
-      const events = [];
+      const events: {
+        kebabCase: string,
+        camelCase: string,
+      }[] = [];
+
       Object.keys(this.additionalEventListeners).forEach((event) => {
         events.push({
           kebabCase: event,
@@ -487,6 +516,7 @@ export default {
      */
     openDatepicker() {
       this.$nextTick(() => {
+        // @ts-expect-error
         this.flatpickrInstance.open();
       });
     },
@@ -497,7 +527,7 @@ export default {
      * @param string
      * @returns {*}
      */
-    kebabToCamel(string) {
+    kebabToCamel(string: string) {
       return string.replace(/-([a-z])/g, (m, g1) => g1.toUpperCase());
     },
 
@@ -507,7 +537,7 @@ export default {
       });
     },
 
-    emitValue(value) {
+    emitValue(value: string | null) {
       // Prevent emitting an empty date, to reset a date, null should be emitted
       if (value === '') {
         value = null;
@@ -544,7 +574,7 @@ export default {
       };
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

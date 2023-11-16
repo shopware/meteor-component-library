@@ -30,14 +30,13 @@
         :id="createInputId(identification)"
         type="text"
         :name="identification"
-        :disabled="disabled"
+        :disabled="hasDisabledInput"
         :value="currentValue"
         :placeholder="placeholder"
         @input="onInput"
         @change="onChange"
         @focus="setFocusClass"
         @blur="removeFocusClass"
-        v-on="additionalListeners"
       >
     </template>
 
@@ -79,7 +78,7 @@ export default defineComponent({
     /**
      * The value of the text field.
      */
-    value: {
+    modelValue: {
       type: String,
       required: false,
       default: '',
@@ -221,31 +220,24 @@ export default defineComponent({
 
   data() {
     return {
-      currentValue: this.value,
+      currentValue: this.modelValue,
       hasFocus: false,
     };
   },
 
   computed: {
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    additionalListeners(): Record<string, (Function | Function[])> {
-
-      const additionalListeners = { ...this.$listeners };
-
-      delete additionalListeners.input;
-      delete additionalListeners.change;
-
-      return additionalListeners;
-    },
-
     hasError(): boolean {
       // @ts-expect-error - isValid gets called in the mixin
       return !this.isValid || !!this.error;
     },
+
+    hasDisabledInput(): boolean {
+      return this.disabled || this.isInherited;
+    },
   },
 
   watch: {
-    value(value) {
+    modelValue(value) {
       this.currentValue = value;
     },
   },
@@ -258,11 +250,11 @@ export default defineComponent({
 
     onInput(event: Event): void {
       // @ts-expect-error - target is defined
-      this.$emit('input', event.target.value);
+      this.$emit('update:modelValue', event.target.value);
     },
 
     restoreInheritance(): void {
-      this.$emit('input', null);
+      this.$emit('update:modelValue', null);
     },
 
     createInputId(identification: string): string {

@@ -44,7 +44,7 @@ describe("sw-popover-item", () => {
 
     const checkbox = wrapper.find(".sw-popover-item__checkbox");
 
-    expect(checkbox.exists()).toBe(true);
+    expect(checkbox.exists()).toBeTruthy();
   });
 
   it("should show the checkbox with checked value", async () => {
@@ -58,7 +58,7 @@ describe("sw-popover-item", () => {
     const checkbox = wrapper.find(".sw-popover-item__checkbox input");
 
     // @ts-expect-error
-    expect(checkbox.element.checked).toBe(true);
+    expect(checkbox.element.checked).toBeTruthy();
   });
 
   it("should show the checkbox with no checked value", async () => {
@@ -72,7 +72,7 @@ describe("sw-popover-item", () => {
     const checkbox = wrapper.find(".sw-popover-item__checkbox input");
 
     // @ts-expect-error
-    expect(checkbox.element.checked).toBe(false);
+    expect(checkbox.element.checked).toBeFalsy();
   });
 
   it("should show the checkbox with partial checked value", async () => {
@@ -89,8 +89,8 @@ describe("sw-popover-item", () => {
     const partialChecked = wrapper.find(".icon--regular-minus-xxs");
     const fullChecked = wrapper.find(".icon--regular-checkmark-xxs");
 
-    expect(partialChecked.exists()).toBe(true);
-    expect(fullChecked.exists()).toBe(false);
+    expect(partialChecked.exists()).toBeTruthy();
+    expect(fullChecked.exists()).toBeFalsy();
   });
 
   it("should show the checkbox with full checked value", async () => {
@@ -104,8 +104,8 @@ describe("sw-popover-item", () => {
     const partialChecked = wrapper.find(".icon--solid-minus-xxs");
     const fullChecked = wrapper.find(".icon--regular-checkmark-xxs");
 
-    expect(partialChecked.exists()).toBe(false);
-    expect(fullChecked.exists()).toBe(true);
+    expect(partialChecked.exists()).toBeFalsy();
+    expect(fullChecked.exists()).toBeTruthy();
   });
 
   it("should emit change-checkbox with true value when clicking on the checkbox", async () => {
@@ -118,7 +118,7 @@ describe("sw-popover-item", () => {
 
     const checkbox = wrapper.find(".sw-popover-item__checkbox input");
 
-    await checkbox.setChecked(true);
+    await checkbox.setValue(true);
 
     expect(wrapper.emitted('change-checkbox')).toEqual([[true]]);
   })
@@ -133,7 +133,7 @@ describe("sw-popover-item", () => {
 
     const checkbox = wrapper.find(".sw-popover-item__checkbox input");
 
-    await checkbox.setChecked(false);
+    await checkbox.setValue(false);
 
     expect(wrapper.emitted('change-checkbox')).toEqual([[false]]);
   })
@@ -143,7 +143,7 @@ describe("sw-popover-item", () => {
 
     const icon = wrapper.find(".sw-popover-item__icon");
 
-    expect(icon.exists()).toBe(false);
+    expect(icon.exists()).toBeFalsy();
   });
 
   it("should render the icon", async () => {
@@ -155,7 +155,7 @@ describe("sw-popover-item", () => {
 
     const icon = wrapper.find(".sw-popover-item__icon");
 
-    expect(icon.exists()).toBe(true);
+    expect(icon.exists()).toBeTruthy();
   });
 
   it("should render the label", async () => {
@@ -181,7 +181,7 @@ describe("sw-popover-item", () => {
   it("should execute the method in property onLabelClick when user clicks on label", async () => {
     const wrapper = createWrapper();
 
-    const onLabelClick = jest.fn();
+    const onLabelClick = vi.fn();
 
     await wrapper.setProps({
       onLabelClick
@@ -191,7 +191,7 @@ describe("sw-popover-item", () => {
 
     await label.trigger('click');
 
-    expect(onLabelClick).toHaveBeenCalled();
+    expect(onLabelClick).toHaveBeenCalledWith();
   });
 
   it("should render the metaCopy", async () => {
@@ -263,7 +263,7 @@ describe("sw-popover-item", () => {
 
     const switchElement = wrapper.find(".sw-popover-item__switch");
 
-    expect(switchElement.exists()).toBe(true);
+    expect(switchElement.exists()).toBeTruthy();
   })
 
   it("should show the switch with checked value", async () => {
@@ -277,7 +277,7 @@ describe("sw-popover-item", () => {
     const switchElement = wrapper.find(".sw-popover-item__switch input");
 
     // @ts-expect-error
-    expect(switchElement.element.checked).toBe(true);
+    expect(switchElement.element.checked).toBeTruthy();
   });
 
   it("should show the switch with no checked value", async () => {
@@ -291,7 +291,7 @@ describe("sw-popover-item", () => {
     const switchElement = wrapper.find(".sw-popover-item__switch input");
 
     // @ts-expect-error
-    expect(switchElement.element.checked).toBe(false);
+    expect(switchElement.element.checked).toBeFalsy();
   });
 
   it("should not show a switch field", async () => {
@@ -299,7 +299,7 @@ describe("sw-popover-item", () => {
 
     const switchElement = wrapper.find(".sw-popover-item__switch");
 
-    expect(switchElement.exists()).toBe(false);
+    expect(switchElement.exists()).toBeFalsy();
   });
 
   it("should emit change-switch with true value when clicking on the switch input", async () => {
@@ -312,7 +312,7 @@ describe("sw-popover-item", () => {
 
     const switchElement = wrapper.find(".sw-popover-item__switch input");
 
-    await switchElement.setChecked(true);
+    await switchElement.setValue(true);
 
     expect(wrapper.emitted('change-switch')).toEqual([[true]]);
   });
@@ -327,7 +327,7 @@ describe("sw-popover-item", () => {
 
     const switchElement = wrapper.find(".sw-popover-item__switch input");
 
-    await switchElement.setChecked(false);
+    await switchElement.setValue(false);
 
     expect(wrapper.emitted('change-switch')).toEqual([[false]]);
   });
@@ -341,7 +341,7 @@ describe("sw-popover-item", () => {
 
     const visibility = wrapper.find(".sw-popover-item__visibility");
 
-    expect(visibility.exists()).toBe(true);
+    expect(visibility.exists()).toBeTruthy();
   });
 
   it("should not show visibility", async() => {
@@ -353,24 +353,23 @@ describe("sw-popover-item", () => {
 
     const visibility = wrapper.find(".sw-popover-item__visibility");
 
-    expect(visibility.exists()).toBe(false);
+    expect(visibility.exists()).toBeFalsy();
   });
 
   it("should show visibility with visible status", async() => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
+      ...wrapper.props(),
       showVisibility: true,
       visible: true
     })
 
-    const visibility = wrapper.find(".sw-popover-item__visibility");
+    const visibleEyeIcon = wrapper.find(".sw-popover-item__visibility.icon--solid-eye");
+    const hiddenEyeIcon = wrapper.find(".sw-popover-item__visibility.icon--solid-eye-slash");
 
-    const visibleEyeIcon = visibility.find(".icon--solid-eye");
-    const hiddenEyeIcon = visibility.find(".icon--solid-eye-slash");
-
-    expect(visibleEyeIcon.exists()).toBe(true);
-    expect(hiddenEyeIcon.exists()).toBe(false);
+    expect(visibleEyeIcon.exists()).toBeTruthy();
+    expect(hiddenEyeIcon.exists()).toBeFalsy();
   });
 
   it("should show visibility with invisible status", async() => {
@@ -381,13 +380,11 @@ describe("sw-popover-item", () => {
       visible: false
     })
 
-    const visibility = wrapper.find(".sw-popover-item__visibility");
+    const visibleEyeIcon = wrapper.find(".sw-popover-item__visibility.icon--solid-eye");
+    const hiddenEyeIcon = wrapper.find(".sw-popover-item__visibility.icon--solid-eye-slash");
 
-    const visibleEyeIcon = visibility.find(".icon--solid-eye");
-    const hiddenEyeIcon = visibility.find(".icon--solid-eye-slash");
-
-    expect(visibleEyeIcon.exists()).toBe(false);
-    expect(hiddenEyeIcon.exists()).toBe(true);
+    expect(visibleEyeIcon.exists()).toBeFalsy();
+    expect(hiddenEyeIcon.exists()).toBeTruthy();
   });
 
   it("should emit change-visibility with true value when clicking on the visibility", async () => {
@@ -429,7 +426,7 @@ describe("sw-popover-item", () => {
 
     const options = wrapper.find(".sw-popover-item__options");
 
-    expect(options.exists()).toBe(true);
+    expect(options.exists()).toBeTruthy();
   })
 
   it("should not show options", async () => {
@@ -441,7 +438,7 @@ describe("sw-popover-item", () => {
 
     const options = wrapper.find(".sw-popover-item__options");
 
-    expect(options.exists()).toBe(false);
+    expect(options.exists()).toBeFalsy();
   });
 
   it("should show no options count", async () => {
@@ -453,7 +450,7 @@ describe("sw-popover-item", () => {
 
     const optionsCount = wrapper.find(".sw-popover-item__options-count");
 
-    expect(optionsCount.exists()).toBe(false);
+    expect(optionsCount.exists()).toBeFalsy();
   });
 
   it("should show the correct options count", async () => {
@@ -466,7 +463,7 @@ describe("sw-popover-item", () => {
 
     const optionsCount = wrapper.find(".sw-popover-item__options-count");
 
-    expect(optionsCount.exists()).toBe(true);
+    expect(optionsCount.exists()).toBeTruthy();
     expect(optionsCount.text()).toBe('5');
   });
 
@@ -480,7 +477,7 @@ describe("sw-popover-item", () => {
 
     const optionsCount = wrapper.find(".sw-popover-item__options-count");
 
-    expect(optionsCount.exists()).toBe(true);
+    expect(optionsCount.exists()).toBeTruthy();
     expect(optionsCount.text()).toBe('42');
   });
 

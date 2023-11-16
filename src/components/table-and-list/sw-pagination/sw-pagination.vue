@@ -23,7 +23,7 @@
       <template #label__pagination-current>
         <sw-number-field
           class="sw-pagination__current-input"
-          :value="currentPage"
+          :model-value="(currentPage as never)"
           :min="1"
           :max="totalPages"
           number-type="int"
@@ -58,7 +58,7 @@ export default defineComponent({
     "sw-segmented-control": SwSegmentedControl,
     "sw-icon": SwIcon,
     'sw-number-field': SwNumberField
-},
+  },
   props: {
     currentPage: {
       type: Number,

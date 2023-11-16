@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { VNode } from 'vue';
+import { h } from 'vue';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -41,12 +42,12 @@ export default defineComponent({
     },
   },
 
-  render(createElement): VNode {
-    return createElement(
+  render(): VNode {
+    return h(
       'div',
       {
         class: 'sw-highlight-text',
-        domProps: { innerHTML: this.searchAndReplace() },
+        innerHTML: this.searchAndReplace(),
       },
     );
   },

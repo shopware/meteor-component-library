@@ -3,8 +3,8 @@ import { mount } from '@vue/test-utils';
 import { ref, onMounted } from 'vue';
 
 // mock throttle
-jest.mock('lodash-es', () => ({
-  throttle: jest.fn(fn => fn)
+vi.mock('lodash-es', () => ({
+  throttle: vi.fn(fn => fn)
 }))
 
 // mock resizeObserver callbackFn for manual calling
@@ -28,16 +28,16 @@ const createWrapper = async ({
     }
 
     observe() {
-        // do nothing
-        return jest.fn()
+      // do nothing
+      return vi.fn()
     }
     unobserve() {
-        // do nothing
-        return jest.fn()
+      // do nothing
+      return vi.fn()
     }
     disconnect() {
-        // do nothing
-        return jest.fn()
+      // do nothing
+      return vi.fn()
     }
   };
 
@@ -52,25 +52,25 @@ const createWrapper = async ({
       const parentElement = ref();
 
       onMounted(() => {
-        jest.spyOn(exampleElement.value, 'clientWidth', 'get')
+        vi.spyOn(exampleElement.value, 'clientWidth', 'get')
           .mockImplementation(() => clientWidth);
-        jest.spyOn(exampleElement.value, 'clientHeight', 'get')
+        vi.spyOn(exampleElement.value, 'clientHeight', 'get')
           .mockImplementation(() => clientHeight);
-        jest.spyOn(exampleElement.value, 'scrollWidth', 'get')
+        vi.spyOn(exampleElement.value, 'scrollWidth', 'get')
           .mockImplementation(() => scrollWidth);
-        jest.spyOn(exampleElement.value, 'scrollHeight', 'get')
+        vi.spyOn(exampleElement.value, 'scrollHeight', 'get')
           .mockImplementation(() => scrollHeight);
-        jest.spyOn(exampleElement.value, 'scrollTop', 'get')
+        vi.spyOn(exampleElement.value, 'scrollTop', 'get')
           .mockImplementation(() => scrollTop);
-        jest.spyOn(exampleElement.value, 'scrollLeft', 'get')
+        vi.spyOn(exampleElement.value, 'scrollLeft', 'get')
           .mockImplementation(() => scrollLeft);
-        jest.spyOn(exampleElement.value, 'offsetWidth', 'get')
+        vi.spyOn(exampleElement.value, 'offsetWidth', 'get')
           .mockImplementation(() => offsetWidth);
-        jest.spyOn(exampleElement.value, 'offsetHeight', 'get')
+        vi.spyOn(exampleElement.value, 'offsetHeight', 'get')
           .mockImplementation(() => offsetHeight);
 
-        jest.spyOn(exampleElement.value, 'addEventListener').mockImplementation(() => {});
-        jest.spyOn(window, 'addEventListener').mockImplementation(() => {});
+        vi.spyOn(exampleElement.value, 'addEventListener').mockImplementation(() => {});
+        vi.spyOn(window, 'addEventListener').mockImplementation(() => {});
       })
 
       useScrollPossibilitiesClasses(exampleElement);
@@ -86,7 +86,7 @@ const createWrapper = async ({
   return wrapper;
 }
 
-describe('Test the composable useScrollPossibilitiesClasses', () => {
+describe('test the composable useScrollPossibilitiesClasses', () => {
   it('should use the composable in a component', async () => {
     const wrapper = await createWrapper();
 
@@ -109,10 +109,10 @@ describe('Test the composable useScrollPossibilitiesClasses', () => {
       const exampleElement = wrapper.find('#exampleElement');
       const attr = exampleElement.attributes();
   
-      expect(attr['data-scroll-top']).toEqual(undefined);
-      expect(attr['data-scroll-right']).toEqual('');
-      expect(attr['data-scroll-bottom']).toEqual('');
-      expect(attr['data-scroll-left']).toEqual(undefined);
+      expect(attr['data-scroll-top']).toBeUndefined();
+      expect(attr['data-scroll-right']).toBe('');
+      expect(attr['data-scroll-bottom']).toBe('');
+      expect(attr['data-scroll-left']).toBeUndefined();
     });
   
     it('should set the data attributes for scrolling left and bottom', async () => {
@@ -130,10 +130,10 @@ describe('Test the composable useScrollPossibilitiesClasses', () => {
       const exampleElement = wrapper.find('#exampleElement');
       const attr = exampleElement.attributes();
   
-      expect(attr['data-scroll-top']).toEqual(undefined);
-      expect(attr['data-scroll-right']).toEqual(undefined);
-      expect(attr['data-scroll-bottom']).toEqual('');
-      expect(attr['data-scroll-left']).toEqual('');
+      expect(attr['data-scroll-top']).toBeUndefined();
+      expect(attr['data-scroll-right']).toBeUndefined();
+      expect(attr['data-scroll-bottom']).toBe('');
+      expect(attr['data-scroll-left']).toBe('');
     });
   
     it('should set the data attributes for scrolling left and top', async () => {
@@ -151,10 +151,10 @@ describe('Test the composable useScrollPossibilitiesClasses', () => {
       const exampleElement = wrapper.find('#exampleElement');
       const attr = exampleElement.attributes();
   
-      expect(attr['data-scroll-top']).toEqual('');
-      expect(attr['data-scroll-right']).toEqual(undefined);
-      expect(attr['data-scroll-bottom']).toEqual(undefined);
-      expect(attr['data-scroll-left']).toEqual('');
+      expect(attr['data-scroll-top']).toBe('');
+      expect(attr['data-scroll-right']).toBeUndefined();
+      expect(attr['data-scroll-bottom']).toBeUndefined();
+      expect(attr['data-scroll-left']).toBe('');
     });
   
     it('should set the data attributes for scrolling top, right, bottom and left', async () => {
@@ -172,10 +172,10 @@ describe('Test the composable useScrollPossibilitiesClasses', () => {
       const exampleElement = wrapper.find('#exampleElement');
       const attr = exampleElement.attributes();
   
-      expect(attr['data-scroll-top']).toEqual('');
-      expect(attr['data-scroll-right']).toEqual('');
-      expect(attr['data-scroll-bottom']).toEqual('');
-      expect(attr['data-scroll-left']).toEqual('');
+      expect(attr['data-scroll-top']).toBe('');
+      expect(attr['data-scroll-right']).toBe('');
+      expect(attr['data-scroll-bottom']).toBe('');
+      expect(attr['data-scroll-left']).toBe('');
     });
   });
 
@@ -274,10 +274,10 @@ describe('Test the composable useScrollPossibilitiesClasses', () => {
       let exampleElement = wrapper.find('#exampleElement');
       let attr = exampleElement.attributes();
   
-      expect(attr['data-scroll-top']).toEqual(undefined);
-      expect(attr['data-scroll-right']).toEqual('');
-      expect(attr['data-scroll-bottom']).toEqual('');
-      expect(attr['data-scroll-left']).toEqual(undefined);
+      expect(attr['data-scroll-top']).toBeUndefined();
+      expect(attr['data-scroll-right']).toBe('');
+      expect(attr['data-scroll-bottom']).toBe('');
+      expect(attr['data-scroll-left']).toBeUndefined();
 
       let parentElement = wrapper.find('#parentElement');
       let style = parentElement.attributes().style;
@@ -286,11 +286,11 @@ describe('Test the composable useScrollPossibilitiesClasses', () => {
       expect(style).toContain('--scrollbar-height: 0px;');
 
       // update values
-      jest.spyOn(exampleElement.element, 'scrollLeft', 'get')
-          .mockImplementation(() => 500);
+      vi.spyOn(exampleElement.element, 'scrollLeft', 'get')
+        .mockImplementation(() => 500);
       // @ts-expect-error
-      jest.spyOn(exampleElement.element, 'offsetWidth', 'get')
-          .mockImplementation(() => 750);
+      vi.spyOn(exampleElement.element, 'offsetWidth', 'get')
+        .mockImplementation(() => 750);
 
       await wrapper.vm.$forceUpdate();
       await wrapper.vm.$nextTick();
@@ -299,10 +299,10 @@ describe('Test the composable useScrollPossibilitiesClasses', () => {
       exampleElement = wrapper.find('#exampleElement');
       attr = exampleElement.attributes();
   
-      expect(attr['data-scroll-top']).toEqual(undefined);
-      expect(attr['data-scroll-right']).toEqual(undefined);
-      expect(attr['data-scroll-bottom']).toEqual('');
-      expect(attr['data-scroll-left']).toEqual('');
+      expect(attr['data-scroll-top']).toBeUndefined();
+      expect(attr['data-scroll-right']).toBeUndefined();
+      expect(attr['data-scroll-bottom']).toBe('');
+      expect(attr['data-scroll-left']).toBe('');
 
       parentElement = wrapper.find('#parentElement');
       style = parentElement.attributes().style;
@@ -327,10 +327,10 @@ describe('Test the composable useScrollPossibilitiesClasses', () => {
       let exampleElement = wrapper.find('#exampleElement');
       let attr = exampleElement.attributes();
   
-      expect(attr['data-scroll-top']).toEqual(undefined);
-      expect(attr['data-scroll-right']).toEqual('');
-      expect(attr['data-scroll-bottom']).toEqual('');
-      expect(attr['data-scroll-left']).toEqual(undefined);
+      expect(attr['data-scroll-top']).toBeUndefined();
+      expect(attr['data-scroll-right']).toBe('');
+      expect(attr['data-scroll-bottom']).toBe('');
+      expect(attr['data-scroll-left']).toBeUndefined();
 
       let parentElement = wrapper.find('#parentElement');
       let style = parentElement.attributes().style;
@@ -339,11 +339,11 @@ describe('Test the composable useScrollPossibilitiesClasses', () => {
       expect(style).toContain('--scrollbar-height: 0px;');
 
       // update values by emulating scroll
-      jest.spyOn(exampleElement.element, 'scrollLeft', 'get')
-          .mockImplementation(() => 500);
+      vi.spyOn(exampleElement.element, 'scrollLeft', 'get')
+        .mockImplementation(() => 500);
       // @ts-expect-error
-      jest.spyOn(exampleElement.element, 'offsetWidth', 'get')
-          .mockImplementation(() => 750);
+      vi.spyOn(exampleElement.element, 'offsetWidth', 'get')
+        .mockImplementation(() => 750);
 
       // @ts-expect-error
       const triggerScrollEvent = exampleElement.element.addEventListener.mock.lastCall[1];
@@ -353,10 +353,10 @@ describe('Test the composable useScrollPossibilitiesClasses', () => {
       exampleElement = wrapper.find('#exampleElement');
       attr = exampleElement.attributes();
   
-      expect(attr['data-scroll-top']).toEqual(undefined);
-      expect(attr['data-scroll-right']).toEqual(undefined);
-      expect(attr['data-scroll-bottom']).toEqual('');
-      expect(attr['data-scroll-left']).toEqual('');
+      expect(attr['data-scroll-top']).toBeUndefined();
+      expect(attr['data-scroll-right']).toBeUndefined();
+      expect(attr['data-scroll-bottom']).toBe('');
+      expect(attr['data-scroll-left']).toBe('');
 
       parentElement = wrapper.find('#parentElement');
       style = parentElement.attributes().style;
@@ -381,10 +381,10 @@ describe('Test the composable useScrollPossibilitiesClasses', () => {
       let exampleElement = wrapper.find('#exampleElement');
       let attr = exampleElement.attributes();
   
-      expect(attr['data-scroll-top']).toEqual(undefined);
-      expect(attr['data-scroll-right']).toEqual('');
-      expect(attr['data-scroll-bottom']).toEqual('');
-      expect(attr['data-scroll-left']).toEqual(undefined);
+      expect(attr['data-scroll-top']).toBeUndefined();
+      expect(attr['data-scroll-right']).toBe('');
+      expect(attr['data-scroll-bottom']).toBe('');
+      expect(attr['data-scroll-left']).toBeUndefined();
 
       let parentElement = wrapper.find('#parentElement');
       let style = parentElement.attributes().style;
@@ -393,11 +393,11 @@ describe('Test the composable useScrollPossibilitiesClasses', () => {
       expect(style).toContain('--scrollbar-height: 0px;');
 
       // update values by emulating window resize
-      jest.spyOn(exampleElement.element, 'scrollLeft', 'get')
-          .mockImplementation(() => 500);
+      vi.spyOn(exampleElement.element, 'scrollLeft', 'get')
+        .mockImplementation(() => 500);
       // @ts-expect-error
-      jest.spyOn(exampleElement.element, 'offsetWidth', 'get')
-          .mockImplementation(() => 750);
+      vi.spyOn(exampleElement.element, 'offsetWidth', 'get')
+        .mockImplementation(() => 750);
 
       // @ts-expect-error
       const triggerWindowResizeEvent = window.addEventListener.mock.lastCall[1];
@@ -407,10 +407,10 @@ describe('Test the composable useScrollPossibilitiesClasses', () => {
       exampleElement = wrapper.find('#exampleElement');
       attr = exampleElement.attributes();
   
-      expect(attr['data-scroll-top']).toEqual(undefined);
-      expect(attr['data-scroll-right']).toEqual(undefined);
-      expect(attr['data-scroll-bottom']).toEqual('');
-      expect(attr['data-scroll-left']).toEqual('');
+      expect(attr['data-scroll-top']).toBeUndefined();
+      expect(attr['data-scroll-right']).toBeUndefined();
+      expect(attr['data-scroll-bottom']).toBe('');
+      expect(attr['data-scroll-left']).toBe('');
 
       parentElement = wrapper.find('#parentElement');
       style = parentElement.attributes().style;
@@ -435,10 +435,10 @@ describe('Test the composable useScrollPossibilitiesClasses', () => {
       let exampleElement = wrapper.find('#exampleElement');
       let attr = exampleElement.attributes();
   
-      expect(attr['data-scroll-top']).toEqual(undefined);
-      expect(attr['data-scroll-right']).toEqual('');
-      expect(attr['data-scroll-bottom']).toEqual('');
-      expect(attr['data-scroll-left']).toEqual(undefined);
+      expect(attr['data-scroll-top']).toBeUndefined();
+      expect(attr['data-scroll-right']).toBe('');
+      expect(attr['data-scroll-bottom']).toBe('');
+      expect(attr['data-scroll-left']).toBeUndefined();
 
       let parentElement = wrapper.find('#parentElement');
       let style = parentElement.attributes().style;
@@ -447,11 +447,11 @@ describe('Test the composable useScrollPossibilitiesClasses', () => {
       expect(style).toContain('--scrollbar-height: 0px;');
 
       // update values by emulating resize observer change
-      jest.spyOn(exampleElement.element, 'scrollLeft', 'get')
-          .mockImplementation(() => 500);
+      vi.spyOn(exampleElement.element, 'scrollLeft', 'get')
+        .mockImplementation(() => 500);
       // @ts-expect-error
-      jest.spyOn(exampleElement.element, 'offsetWidth', 'get')
-          .mockImplementation(() => 750);
+      vi.spyOn(exampleElement.element, 'offsetWidth', 'get')
+        .mockImplementation(() => 750);
 
       resizeObserverCallbackFn()
       await wrapper.vm.$nextTick();
@@ -460,10 +460,10 @@ describe('Test the composable useScrollPossibilitiesClasses', () => {
       exampleElement = wrapper.find('#exampleElement');
       attr = exampleElement.attributes();
   
-      expect(attr['data-scroll-top']).toEqual(undefined);
-      expect(attr['data-scroll-right']).toEqual(undefined);
-      expect(attr['data-scroll-bottom']).toEqual('');
-      expect(attr['data-scroll-left']).toEqual('');
+      expect(attr['data-scroll-top']).toBeUndefined();
+      expect(attr['data-scroll-right']).toBeUndefined();
+      expect(attr['data-scroll-bottom']).toBe('');
+      expect(attr['data-scroll-left']).toBe('');
 
       parentElement = wrapper.find('#parentElement');
       style = parentElement.attributes().style;

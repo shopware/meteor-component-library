@@ -9,18 +9,18 @@ export function currency(
   additionalOptions: CurrencyOptions = {},
 ): string {
   const decimalOpts = decimalPlaces !== undefined ? {
-      minimumFractionDigits: decimalPlaces,
-      maximumFractionDigits: decimalPlaces,
+    minimumFractionDigits: decimalPlaces,
+    maximumFractionDigits: decimalPlaces,
   } : {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 20,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 20,
   };
 
   const opts = {
-      style: 'currency',
-      currency: sign,
-      ...decimalOpts,
-      ...additionalOptions,
+    style: 'currency',
+    currency: sign,
+    ...decimalOpts,
+    ...additionalOptions,
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-argument

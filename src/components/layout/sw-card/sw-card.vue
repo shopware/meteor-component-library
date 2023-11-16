@@ -1,208 +1,172 @@
 <template>
-  <sw-ignore-class ref="swIgnoreClass">
-    <!-- @slot This slot is @private and should not be used -->
-    <slot name="before-card" />
+  <!-- @slot This slot is @private and should not be used -->
+  <slot name="before-card" />
 
+  <div
+    class="sw-card"
+    :class="cardClasses()"
+    v-bind="$attrs"
+  >
     <div
-      class="sw-card"
-      :class="cardClasses()"
+      v-if="showHeader"
+      class="sw-card__header"
     >
       <div
-        v-if="showHeader"
-        class="sw-card__header"
+        class="sw-card__avatar"
       >
-        <div
-          v-if="hasAvatar"
-          class="sw-card__avatar"
-        >
-          <!-- @slot Slot for an avatar or logo -->
-          <slot name="avatar" />
-        </div>
-
-        <div class="sw-card__titles">
-          <!-- @slot Alternative slot to the title property -->
-          <slot name="title">
-            <div
-              v-if="title"
-              class="sw-card__title"
-            >
-              {{ title }}
-            </div>
-          </slot>
-
-          <!-- @slot Alternative slot to the subtitle property -->
-          <slot name="subtitle">
-            <div
-              v-if="subtitle"
-              class="sw-card__subtitle"
-            >
-              {{ subtitle }}
-            </div>
-          </slot>
-        </div>
-
-        <div class="sw-card__titles-right-slot">
-          <!-- @slot Slot for adding additional things on the right side of the card header -->
-          <slot name="headerRight" />
-        </div>
-
-        <div
-          v-if="!!$slots['context-actions'] || !!$scopedSlots['context-actions']"
-          class="sw-card__context-menu"
-        >
-          <sw-context-button>
-            <!-- @slot Slot for adding sw-context-menu-item components for rendering a context menu -->
-            <slot name="context-actions" />
-          </sw-context-button>
-        </div>
+        <!-- @slot Slot for an avatar or logo -->
+        <slot name="avatar" />
       </div>
 
-      <div class="sw-card__tabs">
-        <!-- @slot Slot for adding a tab bar. The content need to be changed manually and you can't use the content slot of the tab bar -->
-        <slot name="tabs" />
+      <div class="sw-card__titles">
+        <!-- @slot Alternative slot to the title property -->
+        <slot name="title">
+          <div
+            v-if="title"
+            class="sw-card__title"
+          >
+            {{ title }}
+          </div>
+        </slot>
+
+        <!-- @slot Alternative slot to the subtitle property -->
+        <slot name="subtitle">
+          <div
+            v-if="subtitle"
+            class="sw-card__subtitle"
+          >
+            {{ subtitle }}
+          </div>
+        </slot>
+      </div>
+
+      <div class="sw-card__titles-right-slot">
+        <!-- @slot Slot for adding additional things on the right side of the card header -->
+        <slot name="headerRight" />
       </div>
 
       <div
-        class="sw-card__toolbar"
+        v-if="!!$slots['context-actions'] || !!$slots['context-actions']"
+        class="sw-card__context-menu"
       >
-        <!-- @slot Slot for adding toolbar functionality like search-bar, buttons, etc. -->
-        <slot name="toolbar" />
-      </div>
-
-
-      <div class="sw-card__content">
-        <!-- @slot The default slot which renders the card content -->
-        <slot name="default" />
-
-        <!-- @slot The grid slot which allows rendering of a data grid -->
-        <slot
-          name="grid"
-          :title="title"
-        />
-
-        <sw-loader v-if="isLoading" />
-      </div>
-
-      <div class="sw-card__footer">
-        <!-- @slot The footer slot which allows rendering addintional things after the content -->
-        <slot name="footer" />
+        <sw-context-button>
+          <!-- @slot Slot for adding sw-context-menu-item components for rendering a context menu -->
+          <slot name="context-actions" />
+        </sw-context-button>
       </div>
     </div>
 
-    <!-- @slot This slot is @private and should not be used -->
-    <slot name="after-card" />
-  </sw-ignore-class>
+    <div class="sw-card__tabs">
+      <!-- @slot Slot for adding a tab bar. The content need to be changed manually and you can't use the content slot of the tab bar -->
+      <slot name="tabs" />
+    </div>
+
+    <div
+      class="sw-card__toolbar"
+    >
+      <!-- @slot Slot for adding toolbar functionality like search-bar, buttons, etc. -->
+      <slot name="toolbar" />
+    </div>
+
+
+    <div class="sw-card__content">
+      <!-- @slot The default slot which renders the card content -->
+      <slot name="default" />
+
+      <!-- @slot The grid slot which allows rendering of a data grid -->
+      <slot
+        name="grid"
+        :title="title"
+      />
+
+      <sw-loader v-if="isLoading" />
+    </div>
+
+    <div class="sw-card__footer">
+      <!-- @slot The footer slot which allows rendering addintional things after the content -->
+      <slot name="footer" />
+    </div>
+  </div>
+
+  <!-- @slot This slot is @private and should not be used -->
+  <slot name="after-card" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import SwIgnoreClass from '../../_internal/sw-ignore-class.vue'
 import SwContextButton from '../../context-menu/sw-context-button/sw-context-button.vue'
 import SwLoader from '../../feedback-indicator/sw-loader/sw-loader.vue'
 
 export default defineComponent({
   components: {
-    'sw-ignore-class': SwIgnoreClass,
     'sw-context-button': SwContextButton,
     'sw-loader': SwLoader
   },
 
   props: {
-        title: {
-            type: String,
-            required: false,
-            default: '',
-        },
-        subtitle: {
-            type: String,
-            required: false,
-            default: '',
-        },
-        /**
+    title: {
+      type: String,
+      required: false,
+      default: '',
+    },
+    subtitle: {
+      type: String,
+      required: false,
+      default: '',
+    },
+    /**
          * Renders the card as a hero card without styling
          */
-        hero: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
-        /**
+    hero: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    /**
          * Show a loading spinner overlay over the whole card.
          */
-        isLoading: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
-        /**
+    isLoading: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    /**
          * Render the card in a large size
          */
-        large: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
+    large: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
+  },
 
-    computed: {
-        showHeader(): boolean {
-            return !!this.title
+  computed: {
+    showHeader(): boolean {
+      return !!this.title
                 || !!this.$slots.title
-                || !!this.$scopedSlots.title
+                || !!this.$slots.title
                 || !!this.subtitle
                 || !!this.$slots.subtitle
-                || !!this.$scopedSlots.subtitle
+                || !!this.$slots.subtitle
                 || !!this.$slots.avatar
-                || !!this.$scopedSlots.avatar;
-        },
-
-        hasAvatar(): boolean {
-            return !!this.$slots.avatar || !!this.$scopedSlots.avatar;
-        },
+                || !!this.$slots.avatar;
     },
+  },
 
-    methods: {
-        cardClasses() {
-            const classes = {
-                'sw-card--tabs': !!this.$slots.tabs || !!this.$scopedSlots.tabs,
-                'sw-card--grid': !!this.$slots.grid || !!this.$scopedSlots.grid,
-                'sw-card--hero': !!this.hero,
-                'sw-card--large': this.large,
-                'has--header': !!this.showHeader,
-                'has--title': !!this.title || !!this.$slots.title || !!this.$scopedSlots.title,
-                'has--subtitle': !!this.subtitle || !!this.$slots.subtitle || !!this.$scopedSlots.subtitle,
-                'has--toolbar': !!this.$slots.toolbar || !!this.$scopedSlots.toolbar,
-                'has--footer': !!this.$slots.footer || !!this.$scopedSlots.footer,
-            };
-
-            if (!this.$refs.swIgnoreClass) {
-                this.$nextTick(() => {
-                    this.$forceUpdate();
-                });
-
-                return classes;
-            }
-
-            // @ts-expect-error - $el exists
-            const staticClasses = (this.$refs.swIgnoreClass.$el?._prevClass ?? '').split(' ');
-
-            // add attrs classes to main card
-            staticClasses.forEach((className: string) => {
-                this.$set(classes, className, true);
-            });
-
-            // remove classes from ignore class
-            this.$nextTick(() => {
-                // @ts-expect-error - $el exists on ref
-                if (this.$refs.swIgnoreClass?.$el?.className) {
-                    // @ts-expect-error - $el exists on ref
-                    this.$refs.swIgnoreClass.$el.className = '';
-                }
-            });
-
-            return classes;
-        },
+  methods: {
+    cardClasses() {
+      return {
+        'sw-card--grid': !!this.$slots.grid || !!this.$slots.grid,
+        'sw-card--hero': !!this.hero,
+        'sw-card--large': this.large,
+        'has--header': !!this.showHeader,
+        'has--title': !!this.title || !!this.$slots.title || !!this.$slots.title,
+        'has--subtitle': !!this.subtitle || !!this.$slots.subtitle || !!this.$slots.subtitle,
+        'has--toolbar': !!this.$slots.toolbar || !!this.$slots.toolbar,
+        'has--footer': !!this.$slots.footer || !!this.$slots.footer,
+      };
     },
+  },
 });
 </script>
 
@@ -297,6 +261,10 @@ export default defineComponent({
         }
     }
 
+    .sw-card__avatar:empty {
+      display: none;
+    }
+
     .sw-card__title,
     .sw-card__subtitle {
         color: $color-darkgray-200;
@@ -350,10 +318,8 @@ export default defineComponent({
         }
     }
 
-    &--tabs {
-        .sw-card__header {
-            border-bottom: none;
-        }
+    &:not(:has(.sw-card__tabs:empty)) .sw-card__header {
+      border-bottom: none;
     }
 
     &.has--header {

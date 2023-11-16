@@ -13,7 +13,7 @@
             :name="formFieldName || identification"
             :checked="inputState"
             :disabled="isDisabled"
-            @change="onChange"
+            @change.stop="onChange"
           >
           <div class="sw-field__switch-state">
             <div class="sw-field__switch-state-knob" />
@@ -61,8 +61,6 @@ export default defineComponent({
   },
 
   mixins: [SwFormFieldMixin],
-
-  inheritAttrs: false,
 
   props: {
     label: {
@@ -129,6 +127,15 @@ export default defineComponent({
       required: false,
       default: false,
     },
+
+    /**
+     * Name of the form field.
+     */
+    name: {
+      type: String,
+      required: false,
+      default: '',
+    },
   },
 
   data() {
@@ -176,8 +183,6 @@ export default defineComponent({
           'sw-field--switch-bordered': this.bordered,
           'sw-field--switch-no-margin-top': this.removeTopMargin,
           'sw-field--switch-no-margin-bottom': this.hasError,
-          // @ts-expect-error - classes exist on checkbox field
-          ...this.swCheckboxFieldClasses,
         },
       ];
     },

@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import { TranslateResult } from "vue-i18n";
+import type { TranslateResult } from "vue-i18n";
 import SwIcon from "../../icons-media/sw-icon/sw-icon.vue";
 
 export default defineComponent({

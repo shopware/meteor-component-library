@@ -1,50 +1,52 @@
-import { mount, Wrapper } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import SwFloatingUi from "./sw-floating-ui.vue";
+import flushPromises from "flush-promises";
 
 // mock resizeOvserver
 global.ResizeObserver = class ResizeObserver {
   observe() {
-      // do nothing
+    // do nothing
   }
   unobserve() {
-      // do nothing
+    // do nothing
   }
   disconnect() {
-      // do nothing
+    // do nothing
   }
 };
 
 function createWrapper() {
   return mount(SwFloatingUi, {
-    attachTo: document.getElementById("app")!,
+    attachTo: document.getElementById("appWrapper")!,
     slots: {
       trigger: `<div id="triggerSlotContent">Slot content for "trigger" slot</div>`,
       default: `<div id="defaultSlotContent">Slot content for "default" slot</div>`,
     },
-    propsData: {
+    props: {
       isOpened: false
     },
-    mocks: {}
   });
 }
 
 describe("sw-floating-ui", () => {
-  let wrapper: Wrapper<SwFloatingUi>;
+  let wrapper: undefined | ReturnType<typeof createWrapper>;
 
   // create app wrapper
-  const appWrapper = document.createElement("div");
+  let appWrapper = document.createElement("div");
   appWrapper.setAttribute("id", "appWrapper");
   document.body.appendChild(appWrapper);
 
-  beforeEach(() => {
-    appWrapper.innerHTML = '<div id="app"></div>';
-  });
-
-  afterEach(async () => {
+  beforeEach(async () => {
     if (wrapper) {
-      await wrapper.destroy();
+      await wrapper.unmount();
     }
-  })
+    await flushPromises();
+
+    document.body.innerHTML = '<div id="app"></div>';
+    appWrapper = document.createElement("div");
+    appWrapper.setAttribute("id", "appWrapper");
+    document.body.appendChild(appWrapper);
+  });
 
   it("should render the component", () => {
     wrapper = createWrapper();
@@ -56,7 +58,7 @@ describe("sw-floating-ui", () => {
     wrapper = createWrapper();
 
     const triggerSlot = wrapper.find("#triggerSlotContent");
-    expect(triggerSlot.exists()).toBe(true);
+    expect(triggerSlot.exists()).toBeTruthy();
     expect(triggerSlot.text()).toBe("Slot content for \"trigger\" slot");
   })
 
@@ -65,7 +67,7 @@ describe("sw-floating-ui", () => {
 
     const contentSlotContent = wrapper.find("#defaultSlotContent");
 
-    expect(contentSlotContent.exists()).toBe(false);
+    expect(contentSlotContent.exists()).toBeFalsy();
   });
 
   it("should render the content when floating UI gets opened", async () => {
@@ -76,7 +78,7 @@ describe("sw-floating-ui", () => {
     })
 
     const contentSlotContent = wrapper.find("#defaultSlotContent");
-    expect(contentSlotContent.exists()).toBe(true);
+    expect(contentSlotContent.exists()).toBeTruthy();
     expect(contentSlotContent.text()).toBe("Slot content for \"default\" slot");
   });
 
@@ -85,10 +87,10 @@ describe("sw-floating-ui", () => {
 
     const arrow = wrapper.find(".sw-floating-ui__arrow");
 
-    expect(arrow.exists()).toBe(false);
+    expect(arrow.exists()).toBeFalsy();
   });
 
-  it.only("should render the arrow when prop is set", async () => {
+  it("should render the arrow when prop is set", async () => {
     wrapper = createWrapper();
     
     await wrapper.setProps({
@@ -98,7 +100,7 @@ describe("sw-floating-ui", () => {
 
     const arrow = wrapper.find(".sw-floating-ui__arrow");
 
-    expect(arrow.exists()).toBe(true);
+    expect(arrow.exists()).toBeTruthy();
   });
 
   it("should mount the floating ui to the document body", async () => {
@@ -107,6 +109,8 @@ describe("sw-floating-ui", () => {
     await wrapper.setProps({
       isOpened: true
     });
+
+    await flushPromises();
 
     const floatingUi = document.querySelector(".sw-floating-ui");
     const floatingUiContent = document.querySelector(".sw-floating-ui__content");
@@ -117,13 +121,16 @@ describe("sw-floating-ui", () => {
   })
 
   it("should unmount the floating ui to the document body", async () => {
+    await wrapper?.unmount();
     wrapper = createWrapper();
 
     await wrapper.setProps({
       isOpened: true
     });
 
-    await wrapper.destroy();
+    await wrapper.unmount();
+
+    await flushPromises();
    
     const floatingUi = document.querySelector(".sw-floating-ui");
     const floatingUiContent = document.querySelector(".sw-floating-ui__content");

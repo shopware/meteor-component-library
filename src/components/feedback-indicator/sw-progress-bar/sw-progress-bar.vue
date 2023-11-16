@@ -2,7 +2,7 @@
   <sw-base-field
     class="sw-progress-bar"
     role="progressbar"
-    :aria-valuenow="value"
+    :aria-valuenow="modelValue"
     :aria-valuemax="maxValue"
     aria-label="Current progress"
     :has-focus="false"
@@ -52,7 +52,7 @@ export default defineComponent({
     /**
      * The current value which is used for showing the current progress.
      */
-    value: {
+    modelValue: {
       type: Number,
       default: 0,
     },
@@ -99,12 +99,12 @@ export default defineComponent({
         return this.styleWidth;
       }
 
-      return `${this.value} ${this.progressLabelType} / ${this.maxValue} ${this.progressLabelType}`;
+      return `${this.modelValue} ${this.progressLabelType} / ${this.maxValue} ${this.progressLabelType}`;
     },
 
     styleWidth(): string {
       // @ts-expect-error - vue can't detect value correctly
-      let percentage = parseInt(this.value / this.maxValue * 100);
+      let percentage = parseInt(this.modelValue / this.maxValue * 100);
 
       if (percentage > 100) {
         percentage = 100;
@@ -122,7 +122,7 @@ export default defineComponent({
       'sw-progress-bar__value--has-error': boolean,
     } {
       return {
-        'sw-progress-bar__value--no-transition': this.value < 1 || this.value >= this.maxValue,
+        'sw-progress-bar__value--no-transition': this.modelValue < 1 || this.modelValue >= this.maxValue,
         'sw-progress-bar__value--has-error': !!this.error,
       };
     },

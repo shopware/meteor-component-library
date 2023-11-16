@@ -12,10 +12,7 @@
     <div
       v-if="isOpened"
       ref="floatingUiContent"
-      v-click-outside="{
-        handler: onClickOutside,
-        events: ['click', 'mousedown', 'touchstart']
-      }"
+      v-on-click-outside="onClickOutside"
       class="sw-floating-ui__content"
       :data-show="isOpened"
       tabindex="0"
@@ -41,13 +38,14 @@ import type { PropType } from 'vue';
 import { defineComponent, ref, onBeforeUnmount, watch, nextTick } from 'vue';
 import type { AutoUpdateOptions, ComputePositionConfig} from '@floating-ui/dom';
 import {computePosition, autoUpdate, offset, arrow, flip} from '@floating-ui/dom';
-import vClickOutside from 'v-click-outside';
+import { vOnClickOutside } from '@vueuse/components'
+
 
 export default defineComponent({
   name: 'SwFloatingUi',
 
   directives: {
-    clickOutside: vClickOutside.directive,
+    onClickOutside: vOnClickOutside,
   },
 
   props: {
@@ -88,6 +86,7 @@ export default defineComponent({
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const bodyContainer = window.document.querySelector('body')!;
+    const originalParentContainer = floatingUiContent.value?.parentElement;
 
     const createFloatingUi = () => {      
       if (!floatingUiTrigger.value || !floatingUiContent.value) {
@@ -97,9 +96,8 @@ export default defineComponent({
       // move the popover to the body
       bodyContainer.appendChild(floatingUiContent.value);
 
-      // @ts-expect-error - classList is readonly when value exists
       // add given classes also to popover element
-      const givenClasses = [...floatingUi.value?.classList.values()].filter(c => c !== 'sw-floating-ui') as string[];
+      const givenClasses = [...floatingUi.value?.classList.values() ?? []].filter(c => c !== 'sw-floating-ui') as string[];
       floatingUiContent.value.classList.add(...givenClasses);
 
       cleanup = autoUpdate(floatingUiTrigger.value, floatingUiContent.value, () => {
@@ -172,9 +170,12 @@ export default defineComponent({
       }
 
       // remove the popover from the body
-      if (floatingUiContent.value && bodyContainer.contains(floatingUiContent.value)) {
-        // TODO: this needs to be refactored in Vue3 to use teleport
-        bodyContainer.removeChild(floatingUiContent.value);
+      if (
+        floatingUiContent.value &&
+        // floatingUiContent.value have to be direct child of bodyContainer
+        floatingUiContent.value.parentElement === bodyContainer
+      ) {
+        originalParentContainer?.appendChild(floatingUiContent.value);
       }
     };
 
@@ -203,6 +204,12 @@ export default defineComponent({
 
     onBeforeUnmount(() => {
       removeFloatingUi();
+
+      if (floatingUiContent?.value && originalParentContainer) {
+        originalParentContainer?.removeChild(floatingUiContent?.value);
+      } else {
+        floatingUiContent?.value?.remove();
+      }
     });
 
     return {

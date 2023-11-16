@@ -2,27 +2,30 @@ import type { StoryObj } from '@storybook/vue3';
 import { action } from '@storybook/addon-actions';
 import SwBanner from './sw-banner.vue';
 import type { SlottedMeta } from '@/_internal/story-helper';
+import { fn } from '@storybook/test';
 
-const meta: SlottedMeta<typeof SwBanner, 'default'> = {
+export type SwBannerMeta = SlottedMeta<typeof SwBanner, 'default' | 'close'>;
+
+const meta: SwBannerMeta = {
   title: 'Components/Feedback Indicator/sw-banner',
   component: SwBanner,
   args: {
     title: 'This is a banner',
     default: 'I am in the default slot of the banner',
     variant: 'neutral',
+    close: fn(action('close')),
   },
   render: (args) => ({
     components: { SwBanner },
     setup() {
       return {
         args,
-        onClose: action('close'),
       }
     },
     template: `
       <sw-banner
         v-bind="args"
-        @close="onClose"
+        @close="args.close"
       >
         <div v-html="args.default"></div>
       </sw-banner>`,
@@ -30,8 +33,8 @@ const meta: SlottedMeta<typeof SwBanner, 'default'> = {
 }
 
 export default meta;
-type Story = StoryObj<typeof SwBanner>;
+export type SwBannerStory = StoryObj<SwBannerMeta>;
 
-export const DefaultStory: Story = {
+export const DefaultStory: SwBannerStory = {
   name: 'sw-banner',
 };

@@ -51,10 +51,10 @@
         type="url"
         class="sw-url-input-field__input"
         :name="identification"
-        :value="currentValue|unicodeUri"
+        :value="unicodeUri(currentValue)"
         :placeholder="placeholder"
         :disabled="disabled"
-        @input="onInput"
+        @input.stop="onInput"
         @focus="setFocusClass"
         @blur="onBlur($event); removeFocusClass();"
       >
@@ -79,7 +79,7 @@
 import { defineComponent } from 'vue';
 import SwTextField from '../sw-text-field/sw-text-field.vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
-import UnicodeUriFilter from '../../../filters/unicode-uri.filter';
+import unicodeUriFilter from '../../../filters/unicode-uri.filter';
 
 const URL_REGEX = {
   PROTOCOL: /([a-zA-Z0-9]+:\/\/)+/,
@@ -93,10 +93,6 @@ export default defineComponent({
 
   components: {
     'sw-icon': SwIcon,
-  },
-
-  filters: {
-    unicodeUri: UnicodeUriFilter,
   },
 
   extends: SwTextField,
@@ -123,8 +119,7 @@ export default defineComponent({
   data() {
     return {
       sslActive: true,
-      // @ts-expect-error - value is defined in swTextField
-      currentValue: this.value || '',
+      currentValue: this.modelValue || '',
       errorUrl: null,
       currentDebounce: null,
     };
@@ -164,7 +159,7 @@ export default defineComponent({
 
   watch: {
     value() {
-      this.checkInput(this.value || '');
+      this.checkInput(this.modelValue || '');
     },
   },
 
@@ -175,6 +170,10 @@ export default defineComponent({
   methods: {
     createdComponent() {
       this.checkInput(this.currentValue);
+    },
+
+    unicodeUri(value: string) {
+      return unicodeUriFilter(value);
     },
 
     onBlur(event: Event) {
@@ -203,14 +202,14 @@ export default defineComponent({
       } else {
         this.currentValue = validated;
 
-        this.$emit('input', this.url);
+        this.$emit('update:modelValue', this.url);
       }
     },
 
     handleEmptyUrl() {
       this.currentValue = '';
 
-      this.$emit('input', '');
+      this.$emit('update:modelValue', '');
     },
 
     validateCurrentValue(value: string) {
@@ -237,8 +236,7 @@ export default defineComponent({
         .toString()
         .replace(URL_REGEX.PROTOCOL, '')
         .replace(removeTrailingSlash, '')
-        // @ts-expect-error - filters is defined in options
-        .replace(url.host, this.$options.filters.unicodeUri(url.host));
+        .replace(url.host, this.unicodeUri(url.host));
     },
 
     changeMode(disabled: boolean) {
@@ -247,7 +245,7 @@ export default defineComponent({
       }
 
       this.sslActive = !this.sslActive;
-      this.$emit('input', this.url);
+      this.$emit('update:modelValue', this.url);
     },
 
     getURLInstance(value: string) {

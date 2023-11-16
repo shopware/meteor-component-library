@@ -6,7 +6,7 @@
     :style="styles"
     :aria-hidden="decorative"
     :data-testid="'sw-icon__' + name"
-    v-on="$listeners"
+    v-bind="$attrs"
     v-html="iconSvgData"
   />
 </template>

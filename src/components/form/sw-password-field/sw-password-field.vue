@@ -34,11 +34,10 @@
           :disabled="disabled"
           :value="currentValue"
           :autocomplete="autocomplete"
-          @input="onInput"
-          @change="onChange"
+          @input.stop="onInput"
+          @change.stop="onChange"
           @focus="setFocusClass"
           @blur="removeFocusClass"
-          v-on="additionalListeners"
         >
         <span
           v-if="passwordToggleAble"
@@ -144,7 +143,6 @@ export default defineComponent({
       return this.showPassword
       || !this.placeholderIsPassword
         ? this.placeholder
-        // @ts-expect-error - placeholder is defined in parent component
         : '*'.repeat(this.placeholder.length ? this.placeholder.length : 6);
     },
   },

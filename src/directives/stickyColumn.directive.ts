@@ -4,18 +4,18 @@ import type { Directive } from "vue";
 const getPreviousSibling = function (el: Element|undefined, selector: string) {
   if (!el) return;
 
-	// Get the next sibling element
-	let sibling = el.previousElementSibling;
+  // Get the next sibling element
+  let sibling = el.previousElementSibling;
 
-	// If there's no selector, return the first sibling
-	if (!selector) return sibling;
+  // If there's no selector, return the first sibling
+  if (!selector) return sibling;
 
-	// If the sibling matches our selector, use it
-	// If not, jump to the next sibling and continue the loop
-	while (sibling) {
-		if (sibling.matches(selector)) return sibling;
-		sibling = sibling.previousElementSibling;
-	}
+  // If the sibling matches our selector, use it
+  // If not, jump to the next sibling and continue the loop
+  while (sibling) {
+    if (sibling.matches(selector)) return sibling;
+    sibling = sibling.previousElementSibling;
+  }
 
 };
 
@@ -36,10 +36,10 @@ const setLeftValue = (el: HTMLElement) => {
 let mutationObserver: MutationObserver|undefined;
 
 const stickyColumn: Directive = {
-  bind(el) {
+  beforeMount(el) {
     el.dataset.stickyColumn = "";
   },
-  inserted(el) {
+  mounted(el) {
     // Set the left value on load
     setLeftValue(el);
 
@@ -53,7 +53,7 @@ const stickyColumn: Directive = {
       subtree: true,
     });
   },
-  unbind() {
+  unmounted() {
     mutationObserver?.disconnect();
   }
 };

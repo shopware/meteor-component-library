@@ -46,6 +46,9 @@ import type { PropType } from 'vue';
 import { defineComponent } from 'vue';
 import SwPopoverDeprecated from '../../../../_internal/sw-popover-deprecated/sw-popover-deprecated.vue';
 import SwIcon from '../../../../icons-media/sw-icon/sw-icon.vue';
+import { provide } from 'vue';
+import { swSelectResultAddActiveItemListener, swSelectResultAddItemSelectByKeyboardListener, swSelectResultRemoveActiveItemListener, swSelectResultRemoveItemSelectByKeyboardListener } from '@/helper/provideInjectKeys';
+import { ref } from 'vue';
 
 export default defineComponent({
   name: 'SwSelectResultList',
@@ -70,10 +73,58 @@ export default defineComponent({
     'sw-icon': SwIcon,
   },
 
-  provide(): { setActiveItemIndex: (index: number) => void} {
+  provide() {
     return {
       setActiveItemIndex: this.setActiveItemIndex,
     };
+  },
+
+  setup() {
+    const activeItemIndex = ref(0);
+    const activeItemChangeListeners = ref<Array<(index: number) => void>>([]);
+    const itemSelectByKeyboardListeners = ref<Array<(index: number) => void>>([]);
+
+    const emitActiveItemIndex = () => {
+      activeItemChangeListeners.value.forEach((listener) => {
+        listener(activeItemIndex.value);
+      });
+    };
+
+    const setActiveItemIndex = (index: number) => {
+      activeItemIndex.value = index;
+      emitActiveItemIndex();
+    };
+
+    const addToActiveItemChangeListeners = (listener: (index: number) => void) => {
+      activeItemChangeListeners.value.push(listener);
+    };
+
+    const removeActiveItemChangeListener = (listener: (index: number) => void) => {
+      activeItemChangeListeners.value = activeItemChangeListeners.value.filter((l) => l !== listener);
+    };
+
+    const addToItemSelectByKeyboardListeners = (listener: (index: number) => void) => {
+      itemSelectByKeyboardListeners.value.push(listener);
+    };
+
+    const removeItemSelectByKeyboardListener = (listener: (index: number) => void) => {
+      itemSelectByKeyboardListeners.value = itemSelectByKeyboardListeners.value.filter((l) => l !== listener);
+    };
+
+    provide(swSelectResultAddActiveItemListener, addToActiveItemChangeListeners);
+    provide(swSelectResultRemoveActiveItemListener, removeActiveItemChangeListener);
+    provide(swSelectResultAddItemSelectByKeyboardListener, addToItemSelectByKeyboardListeners);
+    provide(swSelectResultRemoveItemSelectByKeyboardListener, removeItemSelectByKeyboardListener);
+
+    return {
+      activeItemIndex,
+      emitActiveItemIndex,
+      setActiveItemIndex,
+      addToActiveItemChangeListeners,
+      removeActiveItemChangeListener,
+      addToItemSelectByKeyboardListeners,
+      removeItemSelectByKeyboardListener,
+    }
   },
 
   props: {
@@ -92,7 +143,7 @@ export default defineComponent({
     },
 
     focusEl: {
-      type: [HTMLDocument, HTMLElement] as PropType<HTMLDocument|HTMLElement>,
+      type: [HTMLElement] as PropType<HTMLDocument|HTMLElement>,
       required: false,
       default() { return document; },
     },
@@ -119,17 +170,18 @@ export default defineComponent({
   },
 
   data(): {
-    activeItemIndex: number,
+    activeItemChangeListeners: Array<(index: number) => void>,
+    itemSelectByKeyboardListeners: Array<(index: number) => void>,
   } {
     return {
-      activeItemIndex: 0,
+      activeItemChangeListeners: [],
+      itemSelectByKeyboardListeners: [],
     };
   },
 
   computed: {
     emptyMessageText(): string {
-
-return this.emptyMessage || this.$tc('sw-select-result-list.messageNoResults');
+      return this.emptyMessage || this.$tc('sw-select-result-list.messageNoResults');
     },
 
     popoverClass(): string[] {
@@ -143,19 +195,14 @@ return this.emptyMessage || this.$tc('sw-select-result-list.messageNoResults');
 
   mounted(): void {
     // Set first item active
-      this.emitActiveItemIndex();
+    this.emitActiveItemIndex();
   },
 
-  beforeDestroy(): void {
+  beforeUnmount(): void {
     this.removeEventListeners();
   },
 
   methods: {
-    setActiveItemIndex(index: number) {
-      this.activeItemIndex = index;
-      this.emitActiveItemIndex();
-    },
-
     addEventListeners() {
       // @ts-expect-error - property "key" exists on this event
       this.focusEl.addEventListener('keydown', this.navigate);
@@ -168,10 +215,6 @@ return this.emptyMessage || this.$tc('sw-select-result-list.messageNoResults');
       document.removeEventListener('click', this.checkOutsideClick);
     },
 
-    emitActiveItemIndex() {
-      this.$emit('active-item-change', this.activeItemIndex);
-    },
-
     /**
      *
      * @param event {Event}
@@ -181,7 +224,6 @@ return this.emptyMessage || this.$tc('sw-select-result-list.messageNoResults');
 
       // @ts-expect-error - $refs is defined
       const popoverContentClicked = this.$refs.popoverContent.contains(event.target);
-      // @ts-expect-error - target exists
       const componentClicked = this.$el.contains(event.target);
       // @ts-expect-error - target exists
       const parentClicked = this.$parent.$el.contains(event.target);
@@ -267,6 +309,10 @@ return this.emptyMessage || this.$tc('sw-select-result-list.messageNoResults');
       // This emit is subscribed in the sw-result component. They can for example be disabled and need
       // choose on their own if they are selected
       this.$emit('item-select-by-keyboard', this.activeItemIndex);
+      
+      this.itemSelectByKeyboardListeners.forEach((listener) => {
+        listener(this.activeItemIndex);
+      });
     },
 
     onScroll(event: UIEvent) {

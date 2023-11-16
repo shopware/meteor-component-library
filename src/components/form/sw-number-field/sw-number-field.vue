@@ -1,5 +1,7 @@
 <template>
   <sw-base-field
+    class="sw-number-field"
+    :class="$attrs.class"
     :disabled="disabled"
     :required="required"
     :is-inherited="isInherited"
@@ -40,7 +42,6 @@
         @change="onChange"
         @focus="setFocusClass"
         @blur="removeFocusClass"
-        v-on="additionalListeners"
       >
 
       <div
@@ -98,8 +99,6 @@ export default defineComponent({
 
   extends: SwTextField,
 
-  inheritAttrs: false,
-
   props: {
     /**
      * Defines if the number should be a floating point number or integer.
@@ -143,8 +142,8 @@ export default defineComponent({
     /**
      * The value of the field.
      */
-    value: {
-      type: Number,
+    modelValue: {
+      type: Number as PropType<number|null>,
       required: false,
       default: null,
     },
@@ -194,7 +193,7 @@ export default defineComponent({
       upControlClasses: null,
       downControlClasses: null,
       upHandler: null,
-      downHandler: null
+      downHandler: null,
     };
   },
 
@@ -228,9 +227,8 @@ export default defineComponent({
       }
 
       return this.fillDigits && this.numberType !== 'int'
-      // @ts-expect-error - defined in parent
+        // @ts-expect-error - wrong type because of component extends
         ? this.currentValue.toFixed(this.digits)
-        // @ts-expect-error - defined in parent
         : this.currentValue.toString();
     },
 
@@ -246,15 +244,16 @@ export default defineComponent({
   },
 
   watch: {
-    value: {
+    modelValue: {
       handler() {
-        if (this.value === null || this.value === undefined) {
+        if (this.modelValue === null || this.modelValue === undefined) {
           // @ts-expect-error - defined in parent
           this.currentValue = null;
           return;
         }
 
-        this.computeValue(this.value.toString());
+        // @ts-expect-error - wrong type because of component extends
+        this.computeValue(this.modelValue.toString());
       },
       immediate: true,
     },
@@ -325,13 +324,13 @@ export default defineComponent({
         this.downControlClasses = {};
       }, 100);
 
+      // @ts-expect-error - wrong type because of component extends
       this.computeValue((this.currentValue - this.realStep).toString());
       this.$emit('change', this.currentValue);
     },
 
     computeValue(stringRepresentation: string) {
       const value = this.getNumberFromString(stringRepresentation);
-      // @ts-expect-error - defined in parent
       this.currentValue = this.parseValue(value);
     },
 

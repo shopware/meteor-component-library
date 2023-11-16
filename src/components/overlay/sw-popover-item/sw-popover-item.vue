@@ -96,7 +96,7 @@
 <script lang="ts">
 import type { PropType } from "vue";
 import { defineComponent, computed } from "vue";
-import { TranslateResult } from "vue-i18n";
+import type { TranslateResult } from "vue-i18n";
 import SwCheckbox from '../../form/sw-checkbox/sw-checkbox.vue';
 import SwSwitch from '../../form/sw-switch/sw-switch.vue';
 import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';

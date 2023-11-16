@@ -60,90 +60,90 @@ export default defineComponent({
      * @values neutral, info, attention, critical, positive, inherited
      */
     variant: {
-        type: String as PropType<BannerType>,
-        required: false,
-        default: 'neutral',
-        validator(value: string): boolean {
-            return ['neutral', 'info', 'attention', 'critical', 'positive', 'inherited'].includes(value);
-        },
+      type: String as PropType<BannerType>,
+      required: false,
+      default: 'neutral',
+      validator(value: string): boolean {
+        return ['neutral', 'info', 'attention', 'critical', 'positive', 'inherited'].includes(value);
+      },
     },
     /**
      * The general title of the banner
      */
     title: {
-        type: String,
-        required: false,
-        default: '',
+      type: String,
+      required: false,
+      default: '',
     },
     /**
      * Hide the icon if needed
      */
     hideIcon: {
-        type: Boolean,
-        required: false,
-        default: false,
+      type: Boolean,
+      required: false,
+      default: false,
     },
     /**
      * If set to true then you can close the banner directly
      */
     closable: {
-        type: Boolean,
-        required: false,
-        default: false,
+      type: Boolean,
+      required: false,
+      default: false,
     },
     /**
      * This index will get emitted when a user closes the banner.
      * It is needed for removing the correct banner
      */
     bannerIndex: {
-        type: String,
-        required: false,
-        default: null,
+      type: String,
+      required: false,
+      default: null,
     },
     /**
      * Change the default icon for the banner
      */
     icon: {
-        type: String,
-        required: false,
-        default: null,
+      type: String,
+      required: false,
+      default: null,
     },
   },
 
   computed: {
     bannerIcon(): string {
-        if (this.icon) {
-            return this.icon;
-        }
+      if (this.icon) {
+        return this.icon;
+      }
 
-        const iconConfig: Record<string, string> = {
-            neutral: 'regular-info-circle',
-            info: 'regular-info-circle',
-            attention: 'regular-exclamation-triangle',
-            critical: 'regular-exclamation-circle',
-            positive: 'regular-check-circle',
-            inherited: 'regular-link',
-        };
+      const iconConfig: Record<string, string> = {
+        neutral: 'regular-info-circle',
+        info: 'regular-info-circle',
+        attention: 'regular-exclamation-triangle',
+        critical: 'regular-exclamation-circle',
+        positive: 'regular-check-circle',
+        inherited: 'regular-link',
+      };
 
-        return iconConfig[this.variant] || 'regular-info-circle';
+      return iconConfig[this.variant] || 'regular-info-circle';
     },
 
     bannerClasses(): CssClasses {
-        return [
-            `sw-banner--${this.variant}`,
-            {
-                'sw-banner--icon': !this.hideIcon,
-                'sw-banner--no-icon': this.hideIcon,
-                'sw-banner--closable': this.closable,
-            },
-        ];
+      return [
+        `sw-banner--${this.variant}`,
+        {
+          'sw-banner--icon': !this.hideIcon,
+          'sw-banner--no-icon': this.hideIcon,
+          'sw-banner--closable': this.closable,
+        },
+      ];
     },
 
     bannerBodyClasses(): CssClasses {
-        return {
-            'sw-banner__body--icon': !this.hideIcon,
-            'sw-banner__body--closable': this.closable,
-        };
+      return {
+        'sw-banner__body--icon': !this.hideIcon,
+        'sw-banner__body--closable': this.closable,
+      };
     },
   }
 });

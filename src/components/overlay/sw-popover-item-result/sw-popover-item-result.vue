@@ -5,7 +5,7 @@
     <sw-search
       v-if="!hideSearch"
       size="small"
-      @input="$emit('search', $event)"
+      @update:modelValue="$emit('search', $event)"
     />
 
     <template

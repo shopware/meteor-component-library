@@ -15,7 +15,6 @@
     @select-expanded="onSelectExpanded"
     @select-collapsed="onSelectCollapsed"
     @clear="onClearSelection"
-    v-on="$listeners"
   >
     <template #sw-select-prefix>
       <slot name="prefix" />
@@ -171,7 +170,7 @@ export default defineComponent({
     /**
      * Dependent on multiSelection, either a single value or an array of values.
      */
-    value: {
+    modelValue: {
       type: [String, Number, Boolean, Array, null, undefined] as PropType<string|number|boolean|unknown[]|null|undefined>,
       required: false,
       default: null,
@@ -266,10 +265,10 @@ export default defineComponent({
       type: Function,
       required: false,
       default({ options, labelProperty, searchTerm }
-             :{ options: any, labelProperty: string, searchTerm: string })
+      :{ options: any, labelProperty: string, searchTerm: string })
       {
         return options.filter((option: any) => {
-          const label = this.getKey(option, labelProperty);
+          const label = get(option, labelProperty);
           if (!label) {
             return false;
           }
@@ -384,11 +383,11 @@ export default defineComponent({
 
     currentValue: {
       get(): string|number|boolean|unknown[]|null|undefined {
-        if (!this.value) {
+        if (!this.modelValue) {
           return [];
         }
 
-        return this.value;
+        return this.modelValue;
       },
       set(newValue: string|number|boolean|unknown[]|null|undefined) {
         this.$emit('change', newValue);

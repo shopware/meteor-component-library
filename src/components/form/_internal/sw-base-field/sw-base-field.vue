@@ -9,7 +9,7 @@
         :disabled="disableInheritanceToggle"
         class="sw-field__inheritance-icon"
         :is-inherited="isInherited"
-        v-on="$listeners"
+        v-bind="{ ...$attrs, class: '' }"
       />
 
       <label
@@ -79,6 +79,7 @@ import { defineComponent } from 'vue';
 import SwInheritanceSwitch from '../sw-inheritance-switch/sw-inheritance-switch.vue';
 import SwFieldCopyable from '../sw-field-copyable/sw-field-copyable.vue';
 import SwHelpText from '../../sw-help-text/sw-help-text.vue';
+import useEmptySlotCheck from '../../../../composables/useEmptySlotCheck';
 import SwValidationMixin from '../../../../mixins/validation.mixin';
 import SwFormFieldMixin from '../../../../mixins/form-field.mixin';
 import { createId } from '../../../../utils/uuid';
@@ -222,7 +223,7 @@ export default defineComponent({
 
     showLabel(): boolean {
       // @ts-expect-error - label exists on scopedSlots and if not we use optional chaining
-      return !!this.$slots.label || !!this.$scopedSlots.label?.();
+      return !!this.$slots.label || !!this.$slots.label?.();
     },
 
     swFieldLabelClasses(): { 'is--required': boolean } {
@@ -249,11 +250,17 @@ export default defineComponent({
     },
 
     hasError(): boolean {
-      // @ts-expect-error - error method exists on scopedSlots
-      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-      return this.$slots.error ?? !!(this.$scopedSlots.error && this.$scopedSlots.error());
+      return this.hasSlotContent(this.$slots.error);
     }
-  }
+  },
+
+  setup() {
+    const { hasSlotContent } = useEmptySlotCheck();
+
+    return {
+      hasSlotContent
+    };
+  },
 });
 </script>
 

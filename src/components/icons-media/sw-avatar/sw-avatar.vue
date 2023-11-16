@@ -22,8 +22,7 @@
 
 <script lang="ts">
 import cloneDeep from 'lodash-es/cloneDeep';
-import { defineComponent } from 'vue';
-import { StyleValue } from 'vue/types/jsx';
+import { defineComponent, type StyleValue } from 'vue';
 
 const colors = [
   '#FFD700',

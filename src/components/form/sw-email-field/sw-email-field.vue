@@ -15,7 +15,6 @@
     :is-inheritance-field="isInheritanceField"
     @inheritance-restore="$emit('inheritance-restore', $event)"
     @inheritance-remove="$emit('inheritance-remove', $event)"
-    v-on="$listeners"
   >
     <template #label>
       {{ label }}
@@ -36,11 +35,10 @@
         :disabled="disabled"
         :value="currentValue"
         :placeHolder="placeholder"
-        @input="onInput"
-        @change="onChange"
+        @input.stop="onInput"
+        @change.stop="onChange"
         @focus="setFocus"
         @blur="removeFocus"
-        v-on="additionalListeners"
       >
     </template>
 
@@ -91,7 +89,7 @@ export default defineComponent({
   },
 
   mounted() {
-    if (!this.value) {
+    if (!this.modelValue) {
       return;
     }
 

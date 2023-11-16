@@ -221,7 +221,7 @@ export default defineComponent({
     /**
      * The value of the colorpicker field.
      */
-    value: {
+    modelValue: {
       type: String,
       required: false,
       default: '',
@@ -245,7 +245,7 @@ export default defineComponent({
       default: null,
     },
 
-  /**
+    /**
    * Change the output value which gets emitted and shown in the field.
    * @values auto, hex, hsl, rgb
    */
@@ -366,7 +366,7 @@ export default defineComponent({
     hasFocus: boolean,
   } {
     return {
-      localValue: this.value,
+      localValue: this.modelValue,
       visible: false,
       isDragging: false,
       userInput: null,
@@ -525,7 +525,7 @@ export default defineComponent({
         green: string;
         blue: string;
         alpha?: string | undefined;
-    } {
+      } {
         if (this.alphaValue < 1) {
           return this.convertHSLtoHEX(
             this.hueValue,
@@ -613,7 +613,7 @@ export default defineComponent({
 
   watch: {
     value() {
-      this.colorValue = this.value;
+      this.colorValue = this.modelValue;
     },
 
     hslValue() {
@@ -666,7 +666,7 @@ export default defineComponent({
     },
   },
 
-  beforeDestroy(): void {
+  beforeUnmount(): void {
     window.removeEventListener('mousedown', this.outsideClick);
   },
 
@@ -677,7 +677,7 @@ export default defineComponent({
        * @property {string} this.colorValue the new color value
        */
       // @ts-expect-error - this context is wrong detected
-      this.$emit('input', this.colorValue);
+      this.$emit('update:modelValue', this.colorValue);
     }, 50),
 
     outsideClick(e: Event) {
@@ -887,7 +887,7 @@ export default defineComponent({
         green: string;
         blue: string;
         alpha?: string | undefined;
-    } {
+      } {
       const hsla = {
         hue: previousHue,
         saturation: previousSaturation,
@@ -905,13 +905,13 @@ export default defineComponent({
         saturation: number,
         luminance: number,
         alpha?: number|string
-    }): {
-      string: string;
-      red: string;
-      green: string;
-      blue: string;
-      alpha?: string;
-    }|string {
+      }): {
+        string: string;
+        red: string;
+        green: string;
+        blue: string;
+        alpha?: string;
+      }|string {
       const validModes = ['hex', 'rgb'];
       if (!validModes.includes(mode)) {
         return {

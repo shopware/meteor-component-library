@@ -13,17 +13,17 @@ jobs:
     # Job steps
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Required for the chromatic CLI to work
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
 
       - name: Retrieve the cached main "node_modules" directory (if present)
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: node-cache-main
         with:
           path: node_modules

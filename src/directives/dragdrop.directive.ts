@@ -1,6 +1,6 @@
 import isFunction from 'lodash-es/isFunction';
 import isObject from 'lodash-es/isObject';
-import type { DirectiveOptions } from 'vue';
+import type { Directive } from 'vue';
 
 export interface DragConfig<DATA = unknown> {
   delay: number,
@@ -143,7 +143,7 @@ function startDrag(el: HTMLElement, dragConfig: DragConfig, event: MouseEvent|To
     dragConfig.validateDragStart !== null
     &&
     !dragConfig.validateDragStart(dragConfig.data, el, event)
-    ) {
+  ) {
     return;
   }
  
@@ -471,8 +471,8 @@ interface DragHTMLElement extends HTMLElement {
  *
  * See the {DragConfig} for all possible config options.
  */
-export const draggable: DirectiveOptions = {
-  inserted(el: DragHTMLElement, binding) {
+export const draggable: Directive = {
+  mounted(el: DragHTMLElement, binding) {
     const dragConfig = mergeConfigs(defaultDragConfig, binding as { value: unknown }) as DragConfig;
     el.dragConfig = dragConfig;
     el.boundDragListener = onDrag.bind(this, el, el.dragConfig);
@@ -484,7 +484,7 @@ export const draggable: DirectiveOptions = {
     }
   },
 
-  update(el: DragHTMLElement, binding) {
+  updated(el: DragHTMLElement, binding) {
     const dragConfig = mergeConfigs(defaultDragConfig, binding as { value: unknown }) as DragConfig;
 
     if (el.dragConfig && el.dragConfig.disabled !== dragConfig.disabled) {
@@ -508,7 +508,7 @@ export const draggable: DirectiveOptions = {
     Object.assign(el.dragConfig, dragConfig);
   },
 
-  unbind(el: DragHTMLElement, binding) {
+  unmounted(el: DragHTMLElement, binding) {
     const dragConfig = mergeConfigs(defaultDragConfig, binding as { value: unknown }) as DragConfig;
 
     el.classList.remove(dragConfig.draggableCls);
@@ -528,8 +528,8 @@ export const draggable: DirectiveOptions = {
  *
  * See the {dropConfig} for all possible config options.
  */
-export const droppable: DirectiveOptions = {
-  inserted(el, binding) {
+export const droppable: Directive = {
+  mounted(el, binding) {
     const dropConfig = mergeConfigs(defaultDropConfig, binding as { value: unknown }) as DropConfig;
 
     dropZones.push({ el, dropConfig });
@@ -539,7 +539,7 @@ export const droppable: DirectiveOptions = {
     el.addEventListener('mouseleave', leaveDropZone.bind(this, el, dropConfig));
   },
 
-  unbind(el, binding) {
+  unmounted(el, binding) {
     const dropConfig = mergeConfigs(defaultDropConfig, binding as { value: unknown }) as DropConfig;
 
     dropZones.splice(dropZones.findIndex((zone) => zone.el === el), 1);
@@ -549,7 +549,7 @@ export const droppable: DirectiveOptions = {
     el.removeEventListener('mouseleave', leaveDropZone.bind(this, el, dropConfig));
   },
 
-  update: (el, binding) => {
+  updated: (el, binding) => {
     const dropZone = dropZones.find((zone) => zone.el === el);
 
     if (isObject(binding.value)) {

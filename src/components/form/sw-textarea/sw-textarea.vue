@@ -25,8 +25,8 @@
         :placeholder="placeholder"
         :disabled="disabled"
         :value="inputState"
-        @change="onChange"
-        @input="onInput"
+        @change.stop="onChange"
+        @input.stop="onInput"
         @focus="setFocus"
         @blur="removeFocus"
       />
@@ -66,7 +66,7 @@ export default defineComponent({
   inheritAttrs: false,
 
   props: {
-    value: {
+    modelValue: {
       type: String,
       required: false,
       default: null,
@@ -119,7 +119,7 @@ export default defineComponent({
 
   data() {
     return {
-      currentValue: this.value,
+      currentValue: this.modelValue,
       hasFocus: false,
     };
   },
@@ -150,13 +150,13 @@ export default defineComponent({
   },
 
   watch: {
-    value() { this.currentValue = this.value; },
+    modelValue() { this.currentValue = this.modelValue; },
   },
 
   methods: {
     onInput(event: Event) {
       // @ts-expect-error - target is defined
-      this.$emit('input', event.target.value);
+      this.$emit('update:modelValue', event.target.value);
     },
 
     onChange(event: Event) {

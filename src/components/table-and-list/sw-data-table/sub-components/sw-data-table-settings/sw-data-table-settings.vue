@@ -1,19 +1,19 @@
 <template>
   <sw-popover
     class="sw-data-table-settings"
-    :title="$t('sw-data-table-settings.title')"
+    :title="t('sw-data-table-settings.title')"
     :child-views="tableSettingsChildViews"
     width="large"
   >
     <template #trigger="{ toggleFloatingUi }">
       <sw-button
         v-tooltip="{
-          message: $t('sw-data-table-settings.tooltip'),
+          message: t('sw-data-table-settings.tooltip'),
           width: 'auto',
         }"
         variant="secondary"
         square
-        :aria-label="$t('sw-data-table-settings.aria-toggle-table-settings')"
+        :aria-label="t('sw-data-table-settings.aria-toggle-table-settings')"
         @click="toggleFloatingUi"
       >
         <sw-icon name="solid-cog-s" />
@@ -22,7 +22,7 @@
 
     <template #popover-items__base="{ changeView }">
       <sw-popover-item 
-        :label="$t('sw-data-table-settings.columnOrder.title')"
+        :label="t('sw-data-table-settings.columnOrder.title')"
         border-bottom
         show-options
         :on-label-click="() => changeView('columnOrder')"
@@ -31,7 +31,7 @@
       />
 
       <sw-popover-item
-        :label="$t('sw-data-table-settings.showNumberedColumn')"
+        :label="t('sw-data-table-settings.showNumberedColumn')"
         show-switch
         :switch-value="enableRowNumbering"
         icon="solid-hashtag"
@@ -39,7 +39,7 @@
       />
 
       <sw-popover-item
-        :label="$t('sw-data-table-settings.showStripedRows')"
+        :label="t('sw-data-table-settings.showStripedRows')"
         show-switch
         :switch-value="showStripes"
         icon="solid-bars"
@@ -48,7 +48,7 @@
 
       <!-- TODO: the icon in figma solid-grip-lines was rotated and is not available -->
       <sw-popover-item
-        :label="$t('sw-data-table-settings.showOutlines')"
+        :label="t('sw-data-table-settings.showOutlines')"
         show-switch
         :switch-value="showOutlines"
         icon="solid-table"
@@ -56,8 +56,8 @@
       />
 
       <sw-popover-item
-        :label="$t('sw-data-table-settings.frameOutlines')"
-        :meta-copy="$t('sw-data-table-settings.frameOutlinesMetaCopy')"
+        :label="t('sw-data-table-settings.frameOutlines')"
+        :meta-copy="t('sw-data-table-settings.frameOutlinesMetaCopy')"
         show-switch
         :switch-value="enableOutlineFraming"
         icon="solid-highlight"
@@ -70,7 +70,7 @@
       -->
 
       <sw-popover-item
-        :label="$t('sw-data-table-settings.resetAllChanges')"
+        :label="t('sw-data-table-settings.resetAllChanges')"
         border-top
         icon="solid-undo"
         :on-label-click="resetAllChanges"
@@ -94,7 +94,7 @@
 
 <script lang="ts">
 import type { PropType } from "vue";
-import { getCurrentInstance, defineComponent, computed } from "vue";
+import { defineComponent, computed } from "vue";
 import SwButton from "../../../../form/sw-button/sw-button.vue";
 import SwIcon from "../../../../icons-media/sw-icon/sw-icon.vue";
 import SwPopover from '../../../../overlay/sw-popover/sw-popover.vue';
@@ -103,6 +103,7 @@ import SwPopoverItemResult from '../../../../overlay/sw-popover-item-result/sw-p
 import SwTooltipDirective from '../../../../../directives/tooltip.directive';
 import type { ColumnDefinition } from '../../sw-data-table.vue';
 import type { Option as ItemResultOption } from '../../../../overlay/sw-popover-item-result/sw-popover-item-result.vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'SwDataTableSettings',
@@ -200,8 +201,7 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
-    const $t = getCurrentInstance()?.proxy.$t.bind(getCurrentInstance()?.proxy)!;
+    const { t } = useI18n();
 
     /***
      * Table settings
@@ -210,7 +210,7 @@ export default defineComponent({
       return [
         {
           name: 'columnOrder',
-          title: $t('sw-data-table-settings.columnOrder.title'),
+          title: t('sw-data-table-settings.columnOrder.title'),
         },
       ]
     });
@@ -222,13 +222,13 @@ export default defineComponent({
       return [
         {
           id: 'visible',
-          label: $t('sw-data-table-settings.columnOrder.columnGroups.labelShown') as string,
-          actionLabel: $t('sw-data-table-settings.columnOrder.columnGroups.actionLabelShown') as string,
+          label: t('sw-data-table-settings.columnOrder.columnGroups.labelShown') as string,
+          actionLabel: t('sw-data-table-settings.columnOrder.columnGroups.actionLabelShown') as string,
         },
         {
           id: 'hidden',
-          label: $t('sw-data-table-settings.columnOrder.columnGroups.labelHidden') as string,
-          actionLabel: $t('sw-data-table-settings.columnOrder.columnGroups.actionLabelHidden') as string,
+          label: t('sw-data-table-settings.columnOrder.columnGroups.labelHidden') as string,
+          actionLabel: t('sw-data-table-settings.columnOrder.columnGroups.actionLabelHidden') as string,
         }
       ]
     })
@@ -297,6 +297,7 @@ export default defineComponent({
       onColumnClickGroupAction,
       onColumnChangeOrder,
       isPrimaryColumn,
+      t,
     };
   },
 });

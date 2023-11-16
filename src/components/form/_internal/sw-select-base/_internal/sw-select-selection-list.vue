@@ -116,7 +116,7 @@ export default defineComponent({
       default: 0,
     },
     size: {
-      type: String,
+      type: String as PropType<'small'|'medium'|'default'>,
       required: false,
       default: null,
     },
@@ -175,8 +175,8 @@ export default defineComponent({
 
     showPlaceholder(): string {
       return (this.alwaysShowPlaceholder || (this.selections.length === 0 && this.hideLabels))
-          ? this.placeholder
-          : '';
+        ? this.placeholder
+        : '';
     },
   },
 

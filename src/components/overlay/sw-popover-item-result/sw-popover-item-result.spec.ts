@@ -2,10 +2,10 @@ import { mount } from "@vue/test-utils";
 import SwPopoverItemResult from "./sw-popover-item-result.vue";
 
 function createWrapper({ propsData = {}}: {
-    propsData?: Record<string, any>;
+  propsData?: Record<string, any>;
 } = {}) {
   return mount(SwPopoverItemResult, {
-    propsData: {
+    props: {
       groups: [
         {
           id: 'visible',
@@ -72,8 +72,8 @@ function createWrapper({ propsData = {}}: {
           parentGroup: 'hidden',
           isSortable: true,
           isHidable: true,
-         },
-         {
+        },
+        {
           id: 'release_date',
           label: 'Release date',
           position: 6,
@@ -81,12 +81,14 @@ function createWrapper({ propsData = {}}: {
           parentGroup: undefined,
           isSortable: true,
           isHidable: true,
-         }
+        }
       ],
       ...propsData
     },
-    mocks: {
-      $t: (key: string) => key
+    global: {
+      mocks: {
+        $t: (key: string) => key
+      }
     }
   });
 }
@@ -117,7 +119,7 @@ describe("sw-popover-item-result", () => {
   it("should render the groups", async () => {
     const wrapper = createWrapper();
 
-    expect(wrapper.findAll(".sw-popover-item-result__group-header").length).toBe(2);
+    expect(wrapper.findAll(".sw-popover-item-result__group-header")).toHaveLength(2);
   });
 
   it("should render the group title", async () => {
@@ -125,8 +127,8 @@ describe("sw-popover-item-result", () => {
 
     const groupHeaders = wrapper.findAll(".sw-popover-item-result__group-header");
 
-    expect(groupHeaders.at(0).text()).toContain("Shown in table");
-    expect(groupHeaders.at(1).text()).toContain("Hidden in table");
+    expect(groupHeaders.at(0)!.text()).toContain("Shown in table");
+    expect(groupHeaders.at(1)!.text()).toContain("Hidden in table");
   })
 
   it("should render the group action labels", async () => {
@@ -134,8 +136,8 @@ describe("sw-popover-item-result", () => {
 
     const groupHeaders = wrapper.findAll(".sw-popover-item-result__group-header");
 
-    expect(groupHeaders.at(0).text()).toContain("Hide all");
-    expect(groupHeaders.at(1).text()).toContain("Show all");
+    expect(groupHeaders.at(0)!.text()).toContain("Hide all");
+    expect(groupHeaders.at(1)!.text()).toContain("Show all");
   })
 
   it("should emit 'click-group-action' when clicking on action label", async () => {
@@ -146,8 +148,8 @@ describe("sw-popover-item-result", () => {
     /** When user clicks on "Hide all" action then the id of the group header should be emitted.
     * Here "visible", because the "visible" group header contains "Hide all" action label.
     */
-    expect(groupActions.at(0).text()).toContain("Hide all");
-    await groupActions.at(0).trigger("click");
+    expect(groupActions.at(0)!.text()).toContain("Hide all");
+    await groupActions.at(0)!.trigger("click");
 
     expect(wrapper.emitted("click-group-action")).toBeTruthy();
     expect(wrapper.emitted("click-group-action")![0]).toEqual(["visible"]);
@@ -155,8 +157,8 @@ describe("sw-popover-item-result", () => {
     /** When user clicks on "Show all" action then the id of the group header should be emitted.
     * Here "hidden", because the "hidden" group header contains "Show all" action label.
     */
-    expect(groupActions.at(1).text()).toContain("Show all");
-    await groupActions.at(1).trigger("click");
+    expect(groupActions.at(1)!.text()).toContain("Show all");
+    await groupActions.at(1)!.trigger("click");
 
     expect(wrapper.emitted("click-group-action")![1]).toEqual(["hidden"]);
   })
@@ -166,15 +168,15 @@ describe("sw-popover-item-result", () => {
 
     // shown in table options
     const shownInTableGroup = wrapper.findAll("[aria-label^='Shown in table:']");
-    expect(shownInTableGroup.length).toBe(4);
+    expect(shownInTableGroup).toHaveLength(4);
 
     // hidden in table options
     const hiddenInTableGroup = wrapper.findAll("[aria-label^='Hidden in table:']");
-    expect(hiddenInTableGroup.length).toBe(2);
+    expect(hiddenInTableGroup).toHaveLength(2);
 
     // no group options
     const noGroup = wrapper.findAll("[aria-label^='No group:']");
-    expect(noGroup.length).toBe(1);
+    expect(noGroup).toHaveLength(1);
   });
 
   it("should not be an draggable option if prop 'draggable' is set to false", async () => {
@@ -186,7 +188,7 @@ describe("sw-popover-item-result", () => {
 
     const allOptions = wrapper.findAll('.sw-popover-item-result__option');
 
-    allOptions.wrappers.forEach((option) => {
+    allOptions.forEach((option) => {
       // check if class is set correctly to popover-item
       expect(option.find('.sw-popover-item').classes()).not.toContain('is--draggable')
 
@@ -210,7 +212,7 @@ describe("sw-popover-item-result", () => {
 
     const allOptions = wrapper.findAll('.sw-popover-item-result__option');
 
-    allOptions.wrappers.forEach((option) => {
+    allOptions.forEach((option) => {
       // check if class is set correctly to popover-item
       expect(option.find('.sw-popover-item').classes()).toContain('is--draggable')
 
@@ -232,10 +234,10 @@ describe("sw-popover-item-result", () => {
 
     const allPopoverItems = wrapper.findAllComponents({ name: 'SwPopoverItem' });
 
-    allPopoverItems.wrappers.forEach((popoverItem) => {
-      expect(popoverItem.props('showCheckbox')).toBe(true);
-      expect(popoverItem.props('checkboxPartial')).toBe(false);
-      expect(popoverItem.props('checkboxChecked')).toBe(false);
+    allPopoverItems.forEach((popoverItem) => {
+      expect(popoverItem.props('showCheckbox')).toBeTruthy();
+      expect(popoverItem.props('checkboxPartial')).toBeFalsy();
+      expect(popoverItem.props('checkboxChecked')).toBeFalsy();
     });
   })
 
@@ -248,10 +250,10 @@ describe("sw-popover-item-result", () => {
 
     const allPopoverItems = wrapper.findAllComponents({ name: 'SwPopoverItem' });
 
-    allPopoverItems.wrappers.forEach((popoverItem) => {
-      expect(popoverItem.props('showCheckbox')).toBe(false);
-      expect(popoverItem.props('checkboxPartial')).toBe(false);
-      expect(popoverItem.props('checkboxChecked')).toBe(false);
+    allPopoverItems.forEach((popoverItem) => {
+      expect(popoverItem.props('showCheckbox')).toBeFalsy();
+      expect(popoverItem.props('checkboxPartial')).toBeFalsy();
+      expect(popoverItem.props('checkboxChecked')).toBeFalsy();
     });
   })
 
@@ -264,12 +266,13 @@ describe("sw-popover-item-result", () => {
 
     const allPopoverItems = wrapper.findAllComponents({ name: 'SwPopoverItem' });
 
-    allPopoverItems.wrappers.forEach((popoverItem) => {
+    allPopoverItems.forEach((popoverItem) => {
+      // eslint-disable-next-line vitest/no-conditional-tests, vitest/no-conditional-in-test
       if (popoverItem.props('label') === 'Name') {
         return;
       }
 
-      expect(popoverItem.props('showVisibility')).toBe(true);
+      expect(popoverItem.props('showVisibility')).toBeTruthy();
     });
   })
 
@@ -282,8 +285,8 @@ describe("sw-popover-item-result", () => {
 
     const allPopoverItems = wrapper.findAllComponents({ name: 'SwPopoverItem' });
 
-    allPopoverItems.wrappers.forEach((popoverItem) => {
-      expect(popoverItem.props('showVisibility')).toBe(false);
+    allPopoverItems.forEach((popoverItem) => {
+      expect(popoverItem.props('showVisibility')).toBeFalsy();
     });
   })
 
@@ -311,12 +314,12 @@ describe("sw-popover-item-result", () => {
 
     let firstPopoverItem = wrapper.findComponent({ name: 'SwPopoverItem' });
     
-    expect(firstPopoverItem.props('showCheckbox')).toBe(true);
-    expect(firstPopoverItem.props('checkboxPartial')).toBe(false);
-    expect(firstPopoverItem.props('checkboxChecked')).toBe(true);
+    expect(firstPopoverItem.props('showCheckbox')).toBeTruthy();
+    expect(firstPopoverItem.props('checkboxPartial')).toBeFalsy();
+    expect(firstPopoverItem.props('checkboxChecked')).toBeTruthy();
 
-    expect(firstPopoverItem.props('showVisibility')).toBe(true);
-    expect(firstPopoverItem.props('visible')).toBe(true);
+    expect(firstPopoverItem.props('showVisibility')).toBeTruthy();
+    expect(firstPopoverItem.props('visible')).toBeTruthy();
 
     expect(firstPopoverItem.props('label')).toBe('My example label');
     expect(firstPopoverItem.props('metaCopy')).toBe('My example meta copy');
@@ -340,12 +343,12 @@ describe("sw-popover-item-result", () => {
 
     firstPopoverItem = wrapper.findComponent({ name: 'SwPopoverItem' });
 
-    expect(firstPopoverItem.props('showCheckbox')).toBe(true);
-    expect(firstPopoverItem.props('checkboxPartial')).toBe(false);
-    expect(firstPopoverItem.props('checkboxChecked')).toBe(false);
+    expect(firstPopoverItem.props('showCheckbox')).toBeTruthy();
+    expect(firstPopoverItem.props('checkboxPartial')).toBeFalsy();
+    expect(firstPopoverItem.props('checkboxChecked')).toBeFalsy();
 
-    expect(firstPopoverItem.props('showVisibility')).toBe(false);
-    expect(firstPopoverItem.props('visible')).toBe(false);
+    expect(firstPopoverItem.props('showVisibility')).toBeFalsy();
+    expect(firstPopoverItem.props('visible')).toBeFalsy();
 
     expect(firstPopoverItem.props('label')).toBe('My changed example label');
     expect(firstPopoverItem.props('metaCopy')).toBe('My changed example meta copy');
@@ -365,12 +368,12 @@ describe("sw-popover-item-result", () => {
     // @ts-expect-error
     wrapper.vm.dragConfig.onDragStart();
 
-    expect(document.body.classList.contains('is-popover-item-result-dragging')).toBe(true);
+    expect(document.body.classList.contains('is-popover-item-result-dragging')).toBeTruthy();
 
     // @ts-expect-error
     wrapper.vm.dragConfig.onDrop();
 
-    expect(document.body.classList.contains('is-popover-item-result-dragging')).toBe(false);
+    expect(document.body.classList.contains('is-popover-item-result-dragging')).toBeFalsy();
   });
 
   it("should emit 'change-order' event when option is dragged", async () => {

@@ -1,6 +1,5 @@
 <template>
   <sw-base-field
-    class="sw-select"
     :class="swFieldClasses"
     v-bind="$attrs"
     :disabled="disabled"
@@ -8,7 +7,6 @@
     :is-inherited="isInherited"
     :is-inheritance-field="isInheritanceField"
     :disable-inheritance-toggle="disableInheritanceToggle"
-    v-on="$listeners"
   >
     <template #label>
       {{ label }}

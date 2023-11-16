@@ -109,10 +109,10 @@ export default defineComponent({
 
   computed: {
     labelClasses(): (string | {
-        [x: string]: boolean;
-        'sw-label--dismissable': boolean;
-        'sw-label--ghost': boolean;
-        'sw-label--caps': boolean;
+      [x: string]: boolean;
+      'sw-label--dismissable': boolean;
+      'sw-label--ghost': boolean;
+      'sw-label--caps': boolean;
     })[] {
       return [
         `sw-label--appearance-${this.appearance}`,
@@ -126,7 +126,7 @@ export default defineComponent({
       ];
     },
     showDismissable(): boolean {
-      return !!this.$listeners.dismiss && this.dismissable;
+      return !!this.$attrs.onDismiss && this.dismissable;
     },
   },
 });

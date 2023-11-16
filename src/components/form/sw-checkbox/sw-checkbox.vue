@@ -13,7 +13,7 @@
             :checked="inputState"
             :disabled="isDisabled"
             :indeterminate.prop="partial"
-            @change="onChange"
+            @change.stop="onChange"
           >
           <div class="sw-field__checkbox-state">
             <sw-icon
@@ -65,8 +65,6 @@ export default defineComponent({
   mixins: [
     SwFormFieldMixin,
   ],
-
-  inheritAttrs: false,
 
   props: {
     /**

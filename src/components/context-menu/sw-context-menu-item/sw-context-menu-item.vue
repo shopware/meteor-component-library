@@ -14,7 +14,7 @@
 import SwPopoverItem from '../../overlay/sw-popover-item/sw-popover-item.vue';
 import type { PropType } from 'vue';
 import { defineComponent } from 'vue';
-import { TranslateResult } from 'vue-i18n';
+import { type TranslateResult } from 'vue-i18n';
 
 export default defineComponent({
   name: 'SwContextMenuItem',

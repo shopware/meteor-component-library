@@ -1,21 +1,14 @@
 import type { StoryObj } from '@storybook/vue3';
 import { action } from '@storybook/addon-actions';
+import { fn } from '@storybook/test';
 import SwButton from './sw-button.vue';
 import type { SlottedMeta } from '@/_internal/story-helper';
 
-const meta: SlottedMeta<typeof SwButton, 'default'> = {
+export type SwButtonMeta = SlottedMeta<typeof SwButton, 'default' | 'click'>;
+
+export default {
   title: 'Components/Form/sw-button',
   component: SwButton,
-  render: (args) => ({
-    components: { SwButton },
-    setup() {
-      return {
-        args,
-        onClick: action('click'),
-      }
-    },
-    template: `<sw-button @click="onClick" v-bind="args">{{ args.default}}</sw-button>`,
-  }),
   args: {
     default: 'Button',
     variant: 'primary',
@@ -26,12 +19,22 @@ const meta: SlottedMeta<typeof SwButton, 'default'> = {
     isLoading: false,
     ghost: false,
     link: undefined,
-  }
-};
+    click: fn(action('click')),
+  },
+  render: (args) => ({
+    components: { SwButton },
+    setup() {
+      return {
+        args,
+      }
+    },
+    template: `<sw-button @click="args.click" v-bind="args">{{ args.default}}</sw-button>`,
+  }),
+  
+} as SwButtonMeta;
 
-export default meta;
-type Story = StoryObj<typeof SwButton>;
+export type SwButtonStory = StoryObj<SwButtonMeta>;
 
-export const DefaultStory: Story = {
+export const DefaultStory: SwButtonStory = {
   name: 'sw-button',
 };

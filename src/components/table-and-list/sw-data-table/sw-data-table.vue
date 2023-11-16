@@ -3,7 +3,6 @@
   <sw-card
     class="sw-data-table"
     :class="swDataTableClasses"
-    style="height: 100%"
     :title="title"
     :subtitle="subtitle"
   >
@@ -11,7 +10,7 @@
       <sw-search
         v-if="disableSearch !== true"
         size="small"
-        :value="searchValue"
+        :model-value="searchValue"
         @change="emitSearchValueChange"
       />
       <slot name="toolbar" />
@@ -415,7 +414,7 @@
           small
           hide-clearable-button
           :options="paginationOptionsConverted"
-          :value="paginationLimit"
+          :model-value="paginationLimit"
           @change="emitPaginationLimitChange"
         />
         <span class="sw-data-table__pagination-info-text">
@@ -483,6 +482,7 @@ import SwTooltipDirective from '../../../directives/tooltip.directive';
 import SwEmptyState from '../../layout/sw-empty-state/sw-empty-state.vue';
 import StickyColumn from '../../../directives/stickyColumn.directive';
 import { throttle } from 'lodash-es';
+import { reactive } from "vue";
 
 export interface BaseColumnDefinition {
   label: string; // the label for the column
@@ -496,9 +496,9 @@ export interface BaseColumnDefinition {
 }
 
 export type ColumnDefinition = BadgeColumnDefinition |
-                               TextColumnDefinition |
-                               NumberColumnDefinition |
-                               PriceColumnDefinition;
+TextColumnDefinition |
+NumberColumnDefinition |
+PriceColumnDefinition;
 
 export interface ColumnChanges {
   property?: ColumnDefinition["property"];
@@ -589,7 +589,7 @@ export default defineComponent({
     columnChanges: {
       type: Object as PropType<Record<string, ColumnChanges>>,
       required: false,
-      default: () => ({}),
+      default: () => (reactive({})),
     },
     /**
      * Define the title of the table.
@@ -728,21 +728,21 @@ export default defineComponent({
     /**
      * Add more custom bulk edit actions
      */
-     bulkEditMoreActions: {
+    bulkEditMoreActions: {
       type: Array as PropType<{
         id: string,
         label: string,
         onClick: () => void,
-        icon: 'default'|'critical'|'active',
-        type: SwPopoverItemType,
-        metaCopy: string,
-        contextualDetail: string,
+        icon?: 'default'|'critical'|'active'|string,
+        type?: SwPopoverItemType,
+        metaCopy?: string,
+        contextualDetail?: string,
       }[]>,
       required: false,
       default: () => [],
-     },
+    },
 
-     /***
+    /***
       * Enable numbered rows
       */
     enableRowNumbering: {
@@ -754,56 +754,56 @@ export default defineComponent({
     /**
      * Enable or disable the stripe design for the table.
      */
-     showStripes: {
+    showStripes: {
       type: Boolean,
       required: false,
       default: true,
-     },
+    },
 
-     /**
+    /**
       * Enable or disable outlines for the table.
       */
-     showOutlines: {
+    showOutlines: {
       type: Boolean,
       required: false,
       default: true,
-     },
+    },
 
-     /**
+    /**
       * Enable or disable outline framing on hover
       */
-     enableOutlineFraming: {
+    enableOutlineFraming: {
       type: Boolean,
       required: false,
       default: false,
-     },
+    },
 
-     /**
+    /**
       * Disable the possibility to delete items
       */
-     disableDelete: {
+    disableDelete: {
       type: Boolean,
       required: false,
       default: false,
-     },
+    },
 
-      /**
+    /**
       * Disable the possibility to edit items
       */
-     disableEdit: {
+    disableEdit: {
       type: Boolean,
       required: false,
       default: false,
-     },
+    },
 
-     /**
+    /**
       * Caption for accessibility
       */
-     caption: {
+    caption: {
       type: String,
       required: false,
       default: 'Data table',
-     },
+    },
   },
   emits: [
     "reload",
@@ -970,21 +970,22 @@ export default defineComponent({
 
     const addToColumnChanges = (columnProperty: string, columnChanges: ColumnChanges) => {
       if (!props.columnChanges[columnProperty]) {
-          // eslint-disable-next-line vue/no-mutating-props
-          props.columnChanges[columnProperty] = {};
-        }
-
-        // save new width to columnChanges to make changes permanent
         // eslint-disable-next-line vue/no-mutating-props
-        props.columnChanges[columnProperty] = {
-          ...props.columnChanges[columnProperty],
-          ...columnChanges,
-        };
+        props.columnChanges[columnProperty] = {};
+      }
+
+      // save new width to columnChanges to make changes permanent
+      // eslint-disable-next-line vue/no-mutating-props
+      props.columnChanges[columnProperty] = {
+        ...props.columnChanges[columnProperty],
+        ...columnChanges,
+      };
     }
 
     const columnsWithChanges = computed(() => {
       return props.columns.map((column) => {
         const columnChanges = props.columnChanges[column.property];
+
         if (!columnChanges) {
           return column;
         }

@@ -1,6 +1,7 @@
 <template>
   <a
-    v-if="$attrs.hasOwnProperty('href') && !!$attrs.href"
+    v-if="!!href"
+    :href="href"
     v-bind="$attrs"
     target="_blank"
     :rel="rel"
@@ -78,6 +79,12 @@ export default defineComponent({
           'opener',
         ].includes(value)
       }
+    },
+
+    href: {
+      type: String,
+      required: false,
+      default: undefined,
     },
   },
 

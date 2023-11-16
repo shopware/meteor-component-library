@@ -40,7 +40,7 @@ export default defineComponent({
     /**
      * The value of the search field.
      */
-     value: {
+    modelValue: {
       type: String,
       required: false,
       default: '',
@@ -49,7 +49,7 @@ export default defineComponent({
     /**
      * A placeholder text being displayed if no value is set.
      */
-     placeholder: {
+    placeholder: {
       type: String,
       required: false,
       default: '',
@@ -92,12 +92,12 @@ export default defineComponent({
       },
     },
   },
-  emits: ['change', 'input'],
+  emits: ['change', 'update:modelValue'],
   setup(props, { emit }) {
     const hasFocus = ref(false);
-    const currentValue = ref(props.value);
+    const currentValue = ref(props.modelValue);
 
-    watch(() => props.value, (value) => {
+    watch(() => props.modelValue, (value) => {
       currentValue.value = value;
     });
 
@@ -108,7 +108,7 @@ export default defineComponent({
 
     const onInput = (event: Event) => {
       // @ts-expect-error - target is defined
-      emit('input', event.target.value);
+      emit('update:modelValue', event.target.value);
     }
 
     const setFocusClass = () => {

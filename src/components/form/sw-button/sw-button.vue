@@ -20,7 +20,6 @@
     :class="buttonClasses"
     :disabled="disabled || isLoading"
     v-bind="$attrs"
-    v-on="disabled ? null : $listeners"
   >
     <sw-loader
       v-if="isLoading"

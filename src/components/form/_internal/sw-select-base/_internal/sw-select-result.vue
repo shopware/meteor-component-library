@@ -33,6 +33,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import SwIcon from '../../../../icons-media/sw-icon/sw-icon.vue';
+import { inject } from 'vue';
+import { swSelectResultAddActiveItemListener, swSelectResultAddItemSelectByKeyboardListener, swSelectResultRemoveActiveItemListener, swSelectResultRemoveItemSelectByKeyboardListener } from '@/helper/provideInjectKeys';
 
 export default defineComponent({
 
@@ -40,7 +42,9 @@ export default defineComponent({
     'sw-icon': SwIcon,
   },
 
-  inject: ['setActiveItemIndex'],
+  inject: [
+    'setActiveItemIndex',
+  ],
 
   props: {
     index: {
@@ -78,12 +82,12 @@ export default defineComponent({
   },
 
   computed: {
-     resultClasses(): (string | {
-        [className: string]: boolean;
-        'is--active': boolean;
-        'is--disabled': boolean;
-        'has--description': boolean;
-      })[] {
+    resultClasses(): (string | {
+      [className: string]: boolean;
+      'is--active': boolean;
+      'is--disabled': boolean;
+      'has--description': boolean;
+    })[] {
       return [
         {
           'is--active': this.active,
@@ -96,22 +100,42 @@ export default defineComponent({
     },
 
     hasDescriptionSlot(): boolean {
-      return !!this.$slots.description || !!this.$scopedSlots.description;
+      return !!this.$slots.description || !!this.$slots.description;
     },
   },
 
-  created() {
-    // @ts-expect-error - parent.parent should be defined
-    this.$parent.$parent.$on('active-item-change', this.checkIfActive);
-    // @ts-expect-error - parent.parent should be defined
-    this.$parent.$parent.$on('item-select-by-keyboard', this.checkIfSelected);
+  setup() {
+    const addActiveItemListener = inject(swSelectResultAddActiveItemListener);
+    const removeActiveItemListener = inject(swSelectResultRemoveActiveItemListener);
+    const addItemSelectByKeyboardListener = inject(swSelectResultAddItemSelectByKeyboardListener)
+    const removeItemSelectByKeyboardListener = inject(swSelectResultRemoveItemSelectByKeyboardListener)
+
+    return {
+      addActiveItemListener,
+      removeActiveItemListener,
+      addItemSelectByKeyboardListener,
+      removeItemSelectByKeyboardListener,
+    }
   },
 
-  destroyed() {
-    // @ts-expect-error - parent.parent should be defined
-    this.$parent.$parent.$off('active-item-change', this.checkIfActive);
-    // @ts-expect-error - parent.parent should be defined
-    this.$parent.$parent.$off('item-select-by-keyboard', this.checkIfSelected);
+  created() {
+    if (this.addActiveItemListener) {
+      this.addActiveItemListener(this.checkIfActive);
+    }
+
+    if (this.addItemSelectByKeyboardListener) {
+      this.addItemSelectByKeyboardListener(this.checkIfSelected);
+    }
+  },
+
+  unmounted() {
+    if (this.removeActiveItemListener) {
+      this.removeActiveItemListener(this.checkIfActive);
+    }
+
+    if (this.removeItemSelectByKeyboardListener) {
+      this.removeItemSelectByKeyboardListener(this.checkIfSelected);
+    }
   },
 
   methods: {

@@ -18,6 +18,7 @@
 
     <div
       ref="SwPopover"
+      role="dialog"
       class="sw-popover__content"
     >
       <div
@@ -70,8 +71,8 @@ import SwPopoverItem from '../sw-popover-item/sw-popover-item.vue';
 import SwButton from '../../form/sw-button/sw-button.vue';
 import SwSmoothReflow from '../../_internal/sw-smooth-reflow.vue';
 import SwFloatingUi from '../../_internal/sw-floating-ui/sw-floating-ui.vue';
-import { TranslateResult } from 'vue-i18n';
-import { View } from './sw-popover.interfaces';
+import type { TranslateResult } from 'vue-i18n';
+import type { View } from './sw-popover.interfaces';
 
 export default defineComponent({
   components: {
