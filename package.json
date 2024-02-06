@@ -90,7 +90,7 @@
     "vite": "^4.4.9",
     "vite-plugin-dts": "^3.6.0",
     "vite-plugin-svgstring": "^1.0.0",
-    "vue": "^2.7.10",
+    "vue": "2.7.10",
     "vue-apexcharts": "^1.6.2",
     "vue-class-component": "^7.2.3",
     "vue-i18n": "^8.26.8",
