@@ -1,3 +1,0 @@
-import{S as o}from"./sw-icon-0ed83457.js";import"./iframe-1d646de1.js";import"../sb-preview/runtime.js";import"./vue.esm-bundler-4ed8bc95.js";import"./_plugin-vue_export-helper-c27b6911.js";const n={title:"Components/Icons & Media/sw-icon",component:o,render:a=>({components:{SwIcon:o},template:'<sw-icon v-bind="args"></sw-icon>',setup:()=>({args:a})}),args:{name:"regular-products",color:"#3498db",decorative:!1}},u=n,e={name:"sw-icon"};var r,t,s;e.parameters={...e.parameters,docs:{...(r=e.parameters)==null?void 0:r.docs,source:{originalSource:`{
-  name: "sw-icon"
-}`,...(s=(t=e.parameters)==null?void 0:t.docs)==null?void 0:s.source}}};const l=["Default"];export{e as Default,l as __namedExportsOrder,u as default};
