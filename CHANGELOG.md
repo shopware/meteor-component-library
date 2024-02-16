@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.0] - 16.02.2024
+
+- Updated Vue version from 2 to 3
+- Updated Storybook build from Webpack to Vite
+- Changed Jest to Vitest
+
 ## [2.2.0] - 17.10.2023
 
 - Added SwPagination and DeviceHelperPlugin to public API

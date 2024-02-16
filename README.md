@@ -9,7 +9,7 @@ The meteor component library is a Vue component library developed by Shopware. I
 
 ## Requirements
 
-You need a working **Vue 2 application** with the **i18n plugin** for the translations. The main translations (English and German) are bundled in the components. For other languages you need to add the snippets for the correct paths.
+You need a working **Vue 3 application** with the **i18n plugin** for the translations. The main translations (English and German) are bundled in the components. For other languages you need to add the snippets for the correct paths.
 
 ## Installation
 
