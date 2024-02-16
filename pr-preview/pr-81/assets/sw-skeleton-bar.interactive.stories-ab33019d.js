@@ -1,3 +1,0 @@
-import{S as a}from"./sw-skeleton-bar-73ec7d19.js";import s from"./sw-skeleton-bar.stories-71d2060b.js";import"./vue.esm-bundler-f31f98e0.js";import"./_plugin-vue_export-helper-c27b6911.js";const l={...s,title:"Interaction Tests/Feedback Indicator/sw-skeleton-bar",component:a},e={name:"Render the skeleton bar"};var t,r,o;e.parameters={...e.parameters,docs:{...(t=e.parameters)==null?void 0:t.docs,source:{originalSource:`{
-  name: "Render the skeleton bar"
-}`,...(o=(r=e.parameters)==null?void 0:r.docs)==null?void 0:o.source}}};const p=["VisualTestSkeletonBar"];export{e as VisualTestSkeletonBar,p as __namedExportsOrder,l as default};
