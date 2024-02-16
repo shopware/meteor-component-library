@@ -2,7 +2,7 @@ import { mount } from "@vue/test-utils";
 import SwDataTable, { type ColumnDefinition } from "./sw-data-table.vue";
 import SwDataTableFixtures from "./sw-data-table.fixtures.json";
 import flushPromises from "flush-promises";
-import { get } from 'lodash-es';
+import { get } from "lodash-es";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useI18n } from "vue-i18n";
 
@@ -11,7 +11,7 @@ vi.mock("vue-i18n", () => ({
     return {
       t: (tKey: string) => tKey,
     };
-  })
+  }),
 }));
 
 const columnsFixture: ColumnDefinition[] = [
@@ -36,14 +36,16 @@ const columnsFixture: ColumnDefinition[] = [
       renderItemBadge: (data, columnDefinition) => {
         const value = get(data, columnDefinition.property);
 
-        return value ? {
-          variant: 'positive',
-          label: 'Active',
-        } : {
-          variant: 'critical',
-          label: 'Inactive',
-        };
-      }
+        return value
+          ? {
+            variant: "positive",
+            label: "Active",
+          }
+          : {
+            variant: "critical",
+            label: "Inactive",
+          };
+      },
     },
     position: 200,
     width: 123,
@@ -55,10 +57,10 @@ const columnsFixture: ColumnDefinition[] = [
     renderer: "price",
     position: 300,
     rendererOptions: {
-      currencyId: 'b7d2554b0ce847cd82f3ac9bd1c0dfca',
-      currencyISOCode: 'EUR',
-      source: 'net',
-    }
+      currencyId: "b7d2554b0ce847cd82f3ac9bd1c0dfca",
+      currencyISOCode: "EUR",
+      source: "net",
+    },
   },
   {
     label: "Stock",
@@ -76,7 +78,7 @@ const columnsFixture: ColumnDefinition[] = [
   },
 ];
 
-const DEFAULT_MIN_WIDTH = '100px';
+const DEFAULT_MIN_WIDTH = "100px";
 
 // mock resizeOvserver
 global.ResizeObserver = class ResizeObserver {
@@ -97,20 +99,20 @@ function createWrapper() {
     props: {
       dataSource: SwDataTableFixtures,
       columns: columnsFixture,
-      title: 'Data table',
-      subtitle: 'This is the subline',
+      title: "Data table",
+      subtitle: "This is the subline",
       currentPage: 1,
       paginationTotalItems: 182,
-      paginationLimit: 25
+      paginationLimit: 25,
     },
     global: {
       mocks: {
         $t: (v: string) => v,
       },
       stubs: {
-        'sw-icon': true,
+        "sw-icon": true,
       },
-    }
+    },
   });
 }
 
@@ -123,7 +125,7 @@ describe("sw-data-table", () => {
     }
 
     // reset global styling
-    document.body.style.cursor = '';
+    document.body.style.cursor = "";
 
     // @ts-expect-error
     if (window.removeEventListener.mockReset) {
@@ -134,7 +136,7 @@ describe("sw-data-table", () => {
 
   afterEach(async () => {
     await flushPromises();
-  })
+  });
 
   it("should render the component", () => {
     const wrapper = createWrapper();
@@ -164,7 +166,7 @@ describe("sw-data-table", () => {
 
       // @ts-expect-error - mock was set from jest
       expect(console.warn.mock.calls[0][0]).toContain(
-        `Invalid prop: custom validator check failed for prop "columns"`
+        `Invalid prop: custom validator check failed for prop "columns"`,
       );
     });
 
@@ -187,10 +189,9 @@ describe("sw-data-table", () => {
         ],
       });
 
-      
       // @ts-expect-error - mock was set from jest
       expect(console.warn.mock.calls[0][0]).toContain(
-        `Invalid prop: custom validator check failed for prop "columns"`
+        `Invalid prop: custom validator check failed for prop "columns"`,
       );
     });
 
@@ -213,10 +214,9 @@ describe("sw-data-table", () => {
         ],
       });
 
-      
       // @ts-expect-error - mock was set from jest
       expect(console.warn.mock.calls[0][0]).toContain(
-        `Invalid prop: custom validator check failed for prop "columns"`
+        `Invalid prop: custom validator check failed for prop "columns"`,
       );
     });
 
@@ -239,10 +239,9 @@ describe("sw-data-table", () => {
         ],
       });
 
-      
       // @ts-expect-error - mock was set from jest
       expect(console.warn.mock.calls[0][0]).toContain(
-        `Invalid prop: custom validator check failed for prop "columns"`
+        `Invalid prop: custom validator check failed for prop "columns"`,
       );
     });
 
@@ -266,10 +265,9 @@ describe("sw-data-table", () => {
         ],
       });
 
-      
       // @ts-expect-error - mock was set from jest
       expect(console.warn.mock.calls[0][0]).toContain(
-        `Invalid prop: custom validator check failed for prop "columns"`
+        `Invalid prop: custom validator check failed for prop "columns"`,
       );
     });
 
@@ -293,10 +291,9 @@ describe("sw-data-table", () => {
         ],
       });
 
-      
       // @ts-expect-error - mock was set from jest
       expect(console.warn.mock.calls[0][0]).toContain(
-        `Invalid prop: custom validator check failed for prop "columns"`
+        `Invalid prop: custom validator check failed for prop "columns"`,
       );
     });
 
@@ -320,10 +317,9 @@ describe("sw-data-table", () => {
         ],
       });
 
-      
       // @ts-expect-error - mock was set from jest
       expect(console.warn.mock.calls[0][0]).toContain(
-        `Invalid prop: custom validator check failed for prop "columns"`
+        `Invalid prop: custom validator check failed for prop "columns"`,
       );
     });
 
@@ -347,10 +343,9 @@ describe("sw-data-table", () => {
         ],
       });
 
-      
       // @ts-expect-error - mock was set from jest
       expect(console.warn.mock.calls[0][0]).toContain(
-        `Invalid prop: custom validator check failed for prop "columns"`
+        `Invalid prop: custom validator check failed for prop "columns"`,
       );
     });
   });
@@ -372,8 +367,8 @@ describe("sw-data-table", () => {
         ],
       });
 
-      const firstColumnHeader = wrapper.findAll('th').at(0);
-      expect(firstColumnHeader?.attributes().style).toContain('max-width: fit-content');
+      const firstColumnHeader = wrapper.findAll("th").at(0);
+      expect(firstColumnHeader?.attributes().style).toContain("max-width: fit-content");
     });
     it("should render table header cells with default minimum column width and auto main width when given width is undefined", async () => {
       const wrapper = createWrapper();
@@ -390,9 +385,9 @@ describe("sw-data-table", () => {
         ],
       });
 
-      const firstColumnHeader = wrapper.findAll('th').at(0);
+      const firstColumnHeader = wrapper.findAll("th").at(0);
       expect(firstColumnHeader?.attributes().style).toContain(`min-width: ${DEFAULT_MIN_WIDTH}`);
-      expect(firstColumnHeader?.attributes().style).toContain('width: auto');
+      expect(firstColumnHeader?.attributes().style).toContain("width: auto");
     });
     it("should render table header cells with defined column width when width is defined", async () => {
       const wrapper = createWrapper();
@@ -405,14 +400,14 @@ describe("sw-data-table", () => {
             property: "name",
             renderer: "text",
             position: 0,
-            width: 789
+            width: 789,
           },
         ],
       });
 
-      const firstColumnHeader = wrapper.findAll('th').at(0);
-      expect(firstColumnHeader?.attributes().style).toContain('min-width: 789px');
-      expect(firstColumnHeader?.attributes().style).toContain('width: 789px');
+      const firstColumnHeader = wrapper.findAll("th").at(0);
+      expect(firstColumnHeader?.attributes().style).toContain("min-width: 789px");
+      expect(firstColumnHeader?.attributes().style).toContain("width: 789px");
     });
   });
 
@@ -429,13 +424,13 @@ describe("sw-data-table", () => {
             renderer: "text",
             position: 0,
             width: 789,
-            cellWrap: 'normal'
+            cellWrap: "normal",
           },
         ],
       });
 
-      const firstColumnData = wrapper.findAll('td').at(0);
-      expect(firstColumnData?.attributes().style).toContain('max-width: auto');
+      const firstColumnData = wrapper.findAll("td").at(0);
+      expect(firstColumnData?.attributes().style).toContain("max-width: auto");
     });
     it("should render table data cells with 'max-width' to 'XXXpx' when 'cellWrap' is 'nowrap' and 'width' is defined", async () => {
       const wrapper = createWrapper();
@@ -453,8 +448,8 @@ describe("sw-data-table", () => {
         ],
       });
 
-      const firstColumnData = wrapper.findAll('td').at(0);
-      expect(firstColumnData?.attributes().style).toContain('max-width: 789px');
+      const firstColumnData = wrapper.findAll("td").at(0);
+      expect(firstColumnData?.attributes().style).toContain("max-width: 789px");
     });
     it("should render table data cells with 'max-width' to fallback width when 'cellWrap' is 'nowrap' and 'width' is undefined", async () => {
       const wrapper = createWrapper();
@@ -466,12 +461,12 @@ describe("sw-data-table", () => {
             label: "Name",
             property: "name",
             renderer: "text",
-            position: 0
+            position: 0,
           },
         ],
       });
 
-      const firstColumnData = wrapper.findAll('td').at(0);
+      const firstColumnData = wrapper.findAll("td").at(0);
       expect(firstColumnData?.attributes().style).toContain(`max-width: ${DEFAULT_MIN_WIDTH}`);
     });
     it("should render table data cells with nowrap white-space when cellWrap is undefined", async () => {
@@ -484,13 +479,13 @@ describe("sw-data-table", () => {
             label: "Name",
             property: "name",
             renderer: "text",
-            position: 0
+            position: 0,
           },
         ],
       });
 
-      const firstColumnData = wrapper.findAll('td').at(0);
-      expect(firstColumnData?.attributes().style).toContain('white-space: nowrap');
+      const firstColumnData = wrapper.findAll("td").at(0);
+      expect(firstColumnData?.attributes().style).toContain("white-space: nowrap");
     });
     it("should render table data cells with 'normal' white-space when cellWrap is 'normal'", async () => {
       const wrapper = createWrapper();
@@ -503,13 +498,13 @@ describe("sw-data-table", () => {
             property: "name",
             renderer: "text",
             position: 0,
-            cellWrap: 'normal'
+            cellWrap: "normal",
           },
         ],
       });
 
-      const firstColumnData = wrapper.findAll('td').at(0);
-      expect(firstColumnData?.attributes().style).toContain('white-space: normal');
+      const firstColumnData = wrapper.findAll("td").at(0);
+      expect(firstColumnData?.attributes().style).toContain("white-space: normal");
     });
     it("should render table data cells with default minimum column width when width is undefined", async () => {
       const wrapper = createWrapper();
@@ -521,12 +516,12 @@ describe("sw-data-table", () => {
             label: "Name",
             property: "name",
             renderer: "text",
-            position: 0
+            position: 0,
           },
         ],
       });
 
-      const firstColumnData = wrapper.findAll('td').at(0);
+      const firstColumnData = wrapper.findAll("td").at(0);
       expect(firstColumnData?.attributes().style).toContain(`min-width: ${DEFAULT_MIN_WIDTH}`);
     });
     it("should render table data cells with defined column width when width is defined", async () => {
@@ -540,62 +535,62 @@ describe("sw-data-table", () => {
             property: "name",
             renderer: "text",
             position: 0,
-            width: 789
+            width: 789,
           },
         ],
       });
 
-      const firstColumnData = wrapper.findAll('td').at(0);
-      expect(firstColumnData?.attributes().style).toContain('min-width: 789px');
+      const firstColumnData = wrapper.findAll("td").at(0);
+      expect(firstColumnData?.attributes().style).toContain("min-width: 789px");
     });
   });
 
   describe("should render the card props correctly", () => {
-    it('should render the title', () => {
+    it("should render the title", () => {
       const wrapper = createWrapper();
 
-      const title = wrapper.find('.sw-card__title');
-      
+      const title = wrapper.find(".sw-card__title");
+
       expect(title.exists()).toBeTruthy();
-      expect(title.text()).toBe('Data table');
+      expect(title.text()).toBe("Data table");
     });
 
-    it('should render the subtitle', () => {
+    it("should render the subtitle", () => {
       const wrapper = createWrapper();
 
-      const subtitle = wrapper.find('.sw-card__subtitle');
+      const subtitle = wrapper.find(".sw-card__subtitle");
 
       expect(subtitle.exists()).toBeTruthy();
-      expect(subtitle.text()).toBe('This is the subline');
+      expect(subtitle.text()).toBe("This is the subline");
     });
 
-    it('should not render the title', async () => {
+    it("should not render the title", async () => {
       const wrapper = createWrapper();
       await wrapper.setProps({
         ...wrapper.props(),
-        title: undefined
-      })
+        title: undefined,
+      });
 
-      const title = wrapper.find('.sw-card__title');
-      
+      const title = wrapper.find(".sw-card__title");
+
       expect(title.exists()).toBeFalsy();
     });
 
-    it('should not render the subtitle', async () => {
+    it("should not render the subtitle", async () => {
       const wrapper = createWrapper();
       await wrapper.setProps({
         ...wrapper.props(),
-        subtitle: undefined
-      })
+        subtitle: undefined,
+      });
 
-      const subtitle = wrapper.find('.sw-card__subtitle');
+      const subtitle = wrapper.find(".sw-card__subtitle");
 
       expect(subtitle.exists()).toBeFalsy();
     });
   });
 
   describe("should render the general props correctly", () => {
-    it('should not render the reload button', async () => {
+    it("should not render the reload button", async () => {
       const wrapper = createWrapper();
 
       const reloadButton = wrapper.find('.sw-button[aria-label="reload-data"]');
@@ -603,12 +598,12 @@ describe("sw-data-table", () => {
       expect(reloadButton.exists()).toBeFalsy();
     });
 
-    it('should render the reload button', async () => {
+    it("should render the reload button", async () => {
       const wrapper = createWrapper();
       await wrapper.setProps({
         ...wrapper.props(),
-        enableReload: true
-      })
+        enableReload: true,
+      });
 
       const reloadButton = wrapper.find('.sw-button[aria-label="reload-data"]');
 
@@ -617,74 +612,100 @@ describe("sw-data-table", () => {
   });
 
   describe("should execute the functionalities correctly", () => {
-    it('should emit the reload on event on clicking the reload button', async () => {
+    it("should emit the reload on event on clicking the reload button", async () => {
       const wrapper = createWrapper();
       await wrapper.setProps({
         ...wrapper.props(),
-        enableReload: true
-      })
+        enableReload: true,
+      });
 
       const reloadButton = wrapper.find('.sw-button[aria-label="reload-data"]');
 
-      expect(wrapper.emitted().reload).toBeFalsy()
+      expect(wrapper.emitted().reload).toBeFalsy();
 
-      await reloadButton.trigger('click');
+      await reloadButton.trigger("click");
 
-      expect(wrapper.emitted().reload).toBeTruthy()
+      expect(wrapper.emitted().reload).toBeTruthy();
     });
   });
 
-  describe('should have a correct column resizing behaviour', () => {
-    it('should render the resizable div', async () => {
+  describe("should have a correct column resizing behaviour", () => {
+    it("should render the resizable div", async () => {
       const wrapper = createWrapper();
 
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const tableHeadCellManufacturer = wrapper.find('[data-header-column-property="manufacturer.name"]');
+      const tableHeadCellManufacturer = wrapper.find(
+        '[data-header-column-property="manufacturer.name"]',
+      );
       const tableHeadCellPrice = wrapper.find('[data-header-column-property="price"]');
 
-      expect(tableHeadCellName.find('.sw-data-table__table-head-resizable-after').exists()).toBeTruthy();
-      expect(tableHeadCellManufacturer.find('.sw-data-table__table-head-resizable-after').exists()).toBeTruthy();
-      expect(tableHeadCellPrice.find('.sw-data-table__table-head-resizable-after').exists()).toBeTruthy();
-    })
+      expect(
+        tableHeadCellName.find(".sw-data-table__table-head-resizable-after").exists(),
+      ).toBeTruthy();
+      expect(
+        tableHeadCellManufacturer.find(".sw-data-table__table-head-resizable-after").exists(),
+      ).toBeTruthy();
+      expect(
+        tableHeadCellPrice.find(".sw-data-table__table-head-resizable-after").exists(),
+      ).toBeTruthy();
+    });
 
-    it('should not render the resizable div when allowedResize is set to false', async () => {
+    it("should not render the resizable div when allowedResize is set to false", async () => {
       const wrapper = createWrapper();
 
       const tableHeadCellActive = wrapper.find('[data-header-column-property="active"]');
 
-      expect(tableHeadCellActive.find('.sw-data-table__table-head-resizable-after').exists()).toBeFalsy();
-    })
+      expect(
+        tableHeadCellActive.find(".sw-data-table__table-head-resizable-after").exists(),
+      ).toBeFalsy();
+    });
 
-    it('should make all columns fixed width when start resizing', async () => {
+    it("should make all columns fixed width when start resizing", async () => {
       const wrapper = createWrapper();
 
       // these columns should have fixed width later
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const tableHeadCellManufacturer = wrapper.find('[data-header-column-property="manufacturer.name"]');
+      const tableHeadCellManufacturer = wrapper.find(
+        '[data-header-column-property="manufacturer.name"]',
+      );
 
       // this column should not change their width
       const tableHeadCellActive = wrapper.find('[data-header-column-property="active"]');
 
       // check header columns before resizing
-      expect(tableHeadCellName.attributes().style).toContain('width: 200px; min-width: 200px; max-width: fit-content;');
-      expect(tableHeadCellManufacturer.attributes().style).toContain(`width: auto; min-width: ${DEFAULT_MIN_WIDTH}; max-width: fit-content;`);
-      expect(tableHeadCellActive.attributes().style).toContain('width: 123px; min-width: 123px; max-width: fit-content;');
+      expect(tableHeadCellName.attributes().style).toContain(
+        "width: 200px; min-width: 200px; max-width: fit-content;",
+      );
+      expect(tableHeadCellManufacturer.attributes().style).toContain(
+        `width: auto; min-width: ${DEFAULT_MIN_WIDTH}; max-width: fit-content;`,
+      );
+      expect(tableHeadCellActive.attributes().style).toContain(
+        "width: 123px; min-width: 123px; max-width: fit-content;",
+      );
 
       // check data cell columns before resizing
       const dataCellName = wrapper.findAllComponents('[data-cell-column-property="name"]');
-      const dataCellManufacturer = wrapper.findAll('[data-cell-column-property="manufacturer.name"]');
+      const dataCellManufacturer = wrapper.findAll(
+        '[data-cell-column-property="manufacturer.name"]',
+      );
       const dataCellActive = wrapper.findAll('[data-cell-column-property="active"]');
 
       dataCellName.forEach((dataCell) => {
-        expect(dataCell.attributes().style).toContain('width: 200px; min-width: 200px; max-width: 200px;');
+        expect(dataCell.attributes().style).toContain(
+          "width: 200px; min-width: 200px; max-width: 200px;",
+        );
       });
 
       dataCellManufacturer.forEach((dataCell) => {
-        expect(dataCell.attributes().style).toContain('width: auto; min-width: 100px; max-width: 100px;');
+        expect(dataCell.attributes().style).toContain(
+          "width: auto; min-width: 100px; max-width: 100px;",
+        );
       });
 
       dataCellActive.forEach((dataCell) => {
-        expect(dataCell.attributes().style).toContain('width: 123px; min-width: 123px; max-width: 123px;');
+        expect(dataCell.attributes().style).toContain(
+          "width: 123px; min-width: 123px; max-width: 123px;",
+        );
       });
 
       // TRIGGER RESIZING
@@ -696,70 +717,75 @@ describe("sw-data-table", () => {
       // @ts-expect-error - only needed values are set
       tableHeadCellActive.element.getBoundingClientRect = () => ({ width: 123 });
 
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
-      resizableDiv.trigger('mousedown');
+      const resizableDiv = tableHeadCellName.find(".sw-data-table__table-head-resizable-after");
+      resizableDiv.trigger("mousedown");
 
       // check header columns after resizing
-      expect(tableHeadCellName.attributes().style).toContain('width: 200px; min-width: 200px; max-width: fit-content;');
+      expect(tableHeadCellName.attributes().style).toContain(
+        "width: 200px; min-width: 200px; max-width: fit-content;",
+      );
 
       // should now be fixed width and not auto
-      expect(tableHeadCellManufacturer.attributes().style).toContain('width: 100px; min-width: 100px; max-width: fit-content;');
-      expect(tableHeadCellActive.attributes().style).toContain('width: 123px; min-width: 123px; max-width: fit-content;');
+      expect(tableHeadCellManufacturer.attributes().style).toContain(
+        "width: 100px; min-width: 100px; max-width: fit-content;",
+      );
+      expect(tableHeadCellActive.attributes().style).toContain(
+        "width: 123px; min-width: 123px; max-width: fit-content;",
+      );
     });
 
-    it('should set the cursor globally to col-resize when start resizing', async () => {
+    it("should set the cursor globally to col-resize when start resizing", async () => {
       const wrapper = createWrapper();
 
       // check cursor before resizing
-      expect(document.body.style.cursor).toBe('');
-
+      expect(document.body.style.cursor).toBe("");
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
+      const resizableDiv = tableHeadCellName.find(".sw-data-table__table-head-resizable-after");
 
       // TRIGGER RESIZING
-      await resizableDiv.trigger('mousedown');
+      await resizableDiv.trigger("mousedown");
 
       // check cursor after resizing
-      expect(document.body.style.cursor).toBe('col-resize');
+      expect(document.body.style.cursor).toBe("col-resize");
     });
 
-    it('should remove the global col-resize cursor when stopping resizing', async () => {
+    it("should remove the global col-resize cursor when stopping resizing", async () => {
       const wrapper = createWrapper();
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
+      const resizableDiv = tableHeadCellName.find(".sw-data-table__table-head-resizable-after");
 
       // TRIGGER RESIZING
-      await resizableDiv.trigger('mousedown');
+      await resizableDiv.trigger("mousedown");
 
       // check cursor after resizing
-      expect(document.body.style.cursor).toBe('col-resize');
+      expect(document.body.style.cursor).toBe("col-resize");
 
       // TRIGGER STOP RESIZING
-      await window.dispatchEvent(new Event('mouseup'));
+      await window.dispatchEvent(new Event("mouseup"));
 
       // check cursor after resizing
-      expect(document.body.style.cursor).toBe('');
+      expect(document.body.style.cursor).toBe("");
     });
 
     it('should add class "--no-transition" to table when resizing', async () => {
       const wrapper = createWrapper();
 
       // check if class not exists before resizing
-      expect(wrapper.find('table').classes()).not.toContain('--no-transition');
+      expect(wrapper.find("table").classes()).not.toContain("--no-transition");
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
+      const resizableDiv = tableHeadCellName.find(".sw-data-table__table-head-resizable-after");
 
       // TRIGGER RESIZING
-      await resizableDiv.trigger('mousedown');
+      await resizableDiv.trigger("mousedown");
 
       // check class after resizing
-      expect(wrapper.find('table').classes()).toContain('--no-transition');
+      expect(wrapper.find("table").classes()).toContain("--no-transition");
     });
 
     it('should remove class "--no-transition" to table when finishing resizing', async () => {
@@ -767,38 +793,38 @@ describe("sw-data-table", () => {
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
+      const resizableDiv = tableHeadCellName.find(".sw-data-table__table-head-resizable-after");
 
       // check if class not exists before resizing
-      expect(wrapper.find('table').classes()).not.toContain('--no-transition');
+      expect(wrapper.find("table").classes()).not.toContain("--no-transition");
 
       // TRIGGER RESIZING
-      await resizableDiv.trigger('mousedown');
+      await resizableDiv.trigger("mousedown");
 
       // check class after resizing
-      expect(wrapper.find('table').classes()).toContain('--no-transition');
+      expect(wrapper.find("table").classes()).toContain("--no-transition");
 
       // TRIGGER STOP RESIZING
-      await window.dispatchEvent(new Event('mouseup'));
+      await window.dispatchEvent(new Event("mouseup"));
 
       // check class after resizing
-      expect(wrapper.find('table').classes()).not.toContain('--no-transition');
+      expect(wrapper.find("table").classes()).not.toContain("--no-transition");
     });
 
-    it('should stop and prevent default event behaviour like propagation and preventDefault in mouseMove handler', async () => {
+    it("should stop and prevent default event behaviour like propagation and preventDefault in mouseMove handler", async () => {
       const wrapper = createWrapper();
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
+      const resizableDiv = tableHeadCellName.find(".sw-data-table__table-head-resizable-after");
 
       // TRIGGER RESIZING
-      await resizableDiv.trigger('mousedown');
+      await resizableDiv.trigger("mousedown");
 
       // TRIGGER MOUSE MOVE EVENT
-      const mouseMoveEvent = new Event('mousemove');
-      vi.spyOn(mouseMoveEvent, 'preventDefault').mockImplementation(() => {});
-      vi.spyOn(mouseMoveEvent, 'stopPropagation').mockImplementation(() => {});
+      const mouseMoveEvent = new Event("mousemove");
+      vi.spyOn(mouseMoveEvent, "preventDefault").mockImplementation(() => {});
+      vi.spyOn(mouseMoveEvent, "stopPropagation").mockImplementation(() => {});
       await window.dispatchEvent(mouseMoveEvent);
 
       // check if preventDefault and stopPropagation was called
@@ -806,150 +832,164 @@ describe("sw-data-table", () => {
       expect(mouseMoveEvent.stopPropagation).toHaveBeenCalledWith();
     });
 
-    it('should set the correct widths for the current column cells when the mouse is moving', async () => {
+    it("should set the correct widths for the current column cells when the mouse is moving", async () => {
       const wrapper = createWrapper();
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
+      const resizableDiv = tableHeadCellName.find(".sw-data-table__table-head-resizable-after");
 
       // @ts-expect-error - only needed values are set
       tableHeadCellName.element.getBoundingClientRect = () => ({ left: 75 });
 
       // check if width and height are set before resizing
-      expect(tableHeadCellName.attributes().style).toContain('width: 200px; min-width: 200px; max-width: fit-content;');
+      expect(tableHeadCellName.attributes().style).toContain(
+        "width: 200px; min-width: 200px; max-width: fit-content;",
+      );
 
       // TRIGGER RESIZING
-      await resizableDiv.trigger('mousedown');
+      await resizableDiv.trigger("mousedown");
 
       // TRIGGER MOUSE MOVE EVENT
-      const mouseMoveEvent = new Event('mousemove');
+      const mouseMoveEvent = new Event("mousemove");
       // @ts-expect-error - only needed values are set
       mouseMoveEvent.pageX = 230;
       await window.dispatchEvent(mouseMoveEvent);
 
       // check if width and height are set correctly
-      expect(tableHeadCellName.attributes().style).toContain('width: 155px; min-width: 155px; max-width: fit-content;');
+      expect(tableHeadCellName.attributes().style).toContain(
+        "width: 155px; min-width: 155px; max-width: fit-content;",
+      );
       const dataCellName = wrapper.findAllComponents('[data-cell-column-property="name"]');
       dataCellName.forEach((dataCell) => {
-        expect(dataCell.attributes().style).toContain('width: 155px; min-width: 155px; max-width: 155px;');
+        expect(dataCell.attributes().style).toContain(
+          "width: 155px; min-width: 155px; max-width: 155px;",
+        );
       });
     });
 
-    it('should add the correct padding for the current column cells when shrinking the column more than at the beginning', async () => {
+    it("should add the correct padding for the current column cells when shrinking the column more than at the beginning", async () => {
       const wrapper = createWrapper();
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
+      const resizableDiv = tableHeadCellName.find(".sw-data-table__table-head-resizable-after");
 
       // @ts-expect-error - only needed values are set
       tableHeadCellName.element.getBoundingClientRect = () => ({ width: 200, left: 75 });
 
       // check if width and height are set before resizing
-      expect(tableHeadCellName.attributes().style).toContain('width: 200px; min-width: 200px; max-width: fit-content;');
+      expect(tableHeadCellName.attributes().style).toContain(
+        "width: 200px; min-width: 200px; max-width: fit-content;",
+      );
 
       // TRIGGER RESIZING
-      await resizableDiv.trigger('mousedown');
+      await resizableDiv.trigger("mousedown");
 
       // TRIGGER MOUSE MOVE EVENT
-      const mouseMoveEvent = new Event('mousemove');
+      const mouseMoveEvent = new Event("mousemove");
       // @ts-expect-error - only needed values are set
       mouseMoveEvent.pageX = 230;
       await window.dispatchEvent(mouseMoveEvent);
 
       // check if padding is set correctly to dataTable
-      expect(wrapper.find('table').attributes().style).toContain('padding-right: 45px;');
+      expect(wrapper.find("table").attributes().style).toContain("padding-right: 45px;");
     });
 
-    it('should add no padding for the current column cells when enlarging the column more than at the beginning', async () => {
+    it("should add no padding for the current column cells when enlarging the column more than at the beginning", async () => {
       const wrapper = createWrapper();
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
+      const resizableDiv = tableHeadCellName.find(".sw-data-table__table-head-resizable-after");
 
       // @ts-expect-error - only needed values are set
       tableHeadCellName.element.getBoundingClientRect = () => ({ width: 200, left: 75 });
 
       // check if width and height are set before resizing
-      expect(tableHeadCellName.attributes().style).toContain('width: 200px; min-width: 200px; max-width: fit-content;');
+      expect(tableHeadCellName.attributes().style).toContain(
+        "width: 200px; min-width: 200px; max-width: fit-content;",
+      );
 
       // TRIGGER RESIZING
-      await resizableDiv.trigger('mousedown');
+      await resizableDiv.trigger("mousedown");
 
       // TRIGGER MOUSE MOVE EVENT
-      const mouseMoveEvent = new Event('mousemove');
+      const mouseMoveEvent = new Event("mousemove");
       // @ts-expect-error - only needed values are set
       mouseMoveEvent.pageX = 630;
       await window.dispatchEvent(mouseMoveEvent);
 
       // check if no padding was set because the column gets enlarged
-      expect(wrapper.find('table').attributes().style).toBeUndefined();
+      expect(wrapper.find("table").attributes().style).toBeUndefined();
     });
 
-    it('should remove the padding when stopping resizing', async () => {
+    it("should remove the padding when stopping resizing", async () => {
       const wrapper = createWrapper();
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
+      const resizableDiv = tableHeadCellName.find(".sw-data-table__table-head-resizable-after");
 
       // @ts-expect-error - only needed values are set
       tableHeadCellName.element.getBoundingClientRect = () => ({ width: 200, left: 75 });
 
       // check if width and height are set before resizing
-      expect(tableHeadCellName.attributes().style).toContain('width: 200px; min-width: 200px; max-width: fit-content;');
+      expect(tableHeadCellName.attributes().style).toContain(
+        "width: 200px; min-width: 200px; max-width: fit-content;",
+      );
 
       // TRIGGER RESIZING
-      await resizableDiv.trigger('mousedown');
+      await resizableDiv.trigger("mousedown");
 
       // TRIGGER MOUSE MOVE EVENT
-      const mouseMoveEvent = new Event('mousemove');
+      const mouseMoveEvent = new Event("mousemove");
       // @ts-expect-error - only needed values are set
       mouseMoveEvent.pageX = 230;
       await window.dispatchEvent(mouseMoveEvent);
 
       // check if padding is set correctly to dataTable
-      expect(wrapper.find('table').attributes().style).toContain('padding-right: 45px;');
+      expect(wrapper.find("table").attributes().style).toContain("padding-right: 45px;");
 
       // TRIGGER STOP RESIZING
-      await window.dispatchEvent(new Event('mouseup'));
+      await window.dispatchEvent(new Event("mouseup"));
 
       // check if padding was removed correctly
-      expect(wrapper.find('table').attributes().style).toBe('');
+      expect(wrapper.find("table").attributes().style).toBe("");
     });
 
-    it('should save the new width to the property columnChanges', async () => {
+    it("should save the new width to the property columnChanges", async () => {
       const wrapper = createWrapper();
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
+      const resizableDiv = tableHeadCellName.find(".sw-data-table__table-head-resizable-after");
 
       // @ts-expect-error - only needed values are set
       tableHeadCellName.element.getBoundingClientRect = () => ({ left: 75 });
 
       // check if width and height are set before resizing
-      expect(tableHeadCellName.attributes().style).toContain('width: 200px; min-width: 200px; max-width: fit-content;');
+      expect(tableHeadCellName.attributes().style).toContain(
+        "width: 200px; min-width: 200px; max-width: fit-content;",
+      );
 
       // TRIGGER RESIZING
-      await resizableDiv.trigger('mousedown');
+      await resizableDiv.trigger("mousedown");
 
       // TRIGGER MOUSE MOVE EVENT
-      const mouseMoveEvent = new Event('mousemove');
+      const mouseMoveEvent = new Event("mousemove");
       // @ts-expect-error - only needed values are set
       mouseMoveEvent.pageX = 230;
       await window.dispatchEvent(mouseMoveEvent);
 
       // TRIGGER STOP RESIZING
-      await window.dispatchEvent(new Event('mouseup'));
+      await window.dispatchEvent(new Event("mouseup"));
 
       // check if columnChanges prop was updated correctly
       expect(wrapper.props().columnChanges).toStrictEqual({ name: { width: 155 } });
     });
 
-    it('should load the new widths from the property columnChanges when they were defined beforehand', async () => {
+    it("should load the new widths from the property columnChanges when they were defined beforehand", async () => {
       const wrapper = createWrapper();
 
       await wrapper.setProps({
@@ -963,90 +1003,94 @@ describe("sw-data-table", () => {
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
 
       // check if width and height are set before resizing
-      expect(tableHeadCellName.attributes().style).toContain('width: 179px; min-width: 179px; max-width: fit-content;');
+      expect(tableHeadCellName.attributes().style).toContain(
+        "width: 179px; min-width: 179px; max-width: fit-content;",
+      );
     });
 
-    it('should remove all handlers when stopping resizing', async () => {
-      const removeEventListenerSpy = vi.spyOn(window, 'removeEventListener');
+    it("should remove all handlers when stopping resizing", async () => {
+      const removeEventListenerSpy = vi.spyOn(window, "removeEventListener");
       const wrapper = createWrapper();
 
       // get the resizable div
       const tableHeadCellName = wrapper.find('[data-header-column-property="name"]');
-      const resizableDiv = tableHeadCellName.find('.sw-data-table__table-head-resizable-after');
+      const resizableDiv = tableHeadCellName.find(".sw-data-table__table-head-resizable-after");
 
       // @ts-expect-error - only needed values are set
       tableHeadCellName.element.getBoundingClientRect = () => ({ left: 75 });
 
       // check if width and height are set before resizing
-      expect(tableHeadCellName.attributes().style).toContain('width: 200px; min-width: 200px; max-width: fit-content;');
+      expect(tableHeadCellName.attributes().style).toContain(
+        "width: 200px; min-width: 200px; max-width: fit-content;",
+      );
 
       // TRIGGER RESIZING
-      await resizableDiv.trigger('mousedown');
+      await resizableDiv.trigger("mousedown");
 
       // TRIGGER MOUSE MOVE EVENT
-      const mouseMoveEvent = new Event('mousemove');
+      const mouseMoveEvent = new Event("mousemove");
       // @ts-expect-error - only needed values are set
       mouseMoveEvent.pageX = 230;
       await window.dispatchEvent(mouseMoveEvent);
 
       // TRIGGER STOP RESIZING
-      await window.dispatchEvent(new Event('mouseup'));
+      await window.dispatchEvent(new Event("mouseup"));
 
       // check if all handlers were removed
       expect(removeEventListenerSpy).toHaveBeenCalledTimes(2);
-      expect(removeEventListenerSpy).toHaveBeenCalledWith('mousemove', expect.any(Function));
-      expect(removeEventListenerSpy).toHaveBeenCalledWith('mouseup', expect.any(Function));
+      expect(removeEventListenerSpy).toHaveBeenCalledWith("mousemove", expect.any(Function));
+      expect(removeEventListenerSpy).toHaveBeenCalledWith("mouseup", expect.any(Function));
     });
   });
 
-  describe('should have correct search funcitonalitities', () => {
-    it('should have a search input field', () => {
+  describe("should have correct search funcitonalitities", () => {
+    it("should have a search input field", () => {
       const wrapper = createWrapper();
 
-      expect(wrapper.find('.sw-search').exists()).toBeTruthy();
+      expect(wrapper.find(".sw-search").exists()).toBeTruthy();
     });
 
-    it('should not render the search input field', async () => {
+    it("should not render the search input field", async () => {
       const wrapper = createWrapper();
 
       await wrapper.setProps({
         ...wrapper.props(),
         disableSearch: true,
-      })
+      });
 
-      expect(wrapper.find('.sw-search').exists()).toBeFalsy();
+      expect(wrapper.find(".sw-search").exists()).toBeFalsy();
     });
 
-    it('should use the search value from prop', async () => {
+    it("should use the search value from prop", async () => {
       const wrapper = createWrapper();
 
       await wrapper.setProps({
         ...wrapper.props(),
-        searchValue: 'My initital search value',
-      })
+        searchValue: "My initital search value",
+      });
 
-      const searchInput = wrapper.find('.sw-search input');
+      const searchInput = wrapper.find(".sw-search input");
 
       // @ts-expect-error - inputElement has value
-      expect(searchInput.element.value).toBe('My initital search value');
+      expect(searchInput.element.value).toBe("My initital search value");
     });
 
-    it('should emit the search value', async () => {
+    it("should emit the search value", async () => {
       const wrapper = createWrapper();
 
-      const searchInput = wrapper.find('.sw-search input');
+      const searchInput = wrapper.find(".sw-search input");
 
-      await searchInput.setValue('My new search value');
-      await searchInput.trigger('change');
+      await searchInput.setValue("My new search value");
+      await searchInput.trigger("change");
 
-      expect(wrapper.emitted()['search-value-change']).toBeTruthy();
+      expect(wrapper.emitted()["search-value-change"]).toBeTruthy();
       // @ts-expect-error - only needed values are set
-      expect(wrapper.emitted()['search-value-change'][0][0]).toBe('My new search value');
+      expect(wrapper.emitted()["search-value-change"][0][0]).toBe("My new search value");
     });
-  })
+  });
 
-  describe('should handle the sw-data-table-settings events correctly', () => {
-    it('should reset all changes', async () => {
+  describe("should handle the sw-data-table-settings events correctly", () => {
+    it("should reset all changes", async () => {
       const wrapper = createWrapper();
 
       // simulate some column changes
@@ -1063,8 +1107,8 @@ describe("sw-data-table", () => {
         available: { width: 987 },
       });
 
-      const SwDataTableSettings = wrapper.findComponent({ name: 'SwDataTableSettings' });
-      await SwDataTableSettings.vm.$emit('reset-all-changes');
+      const SwDataTableSettings = wrapper.findComponent({ name: "SwDataTableSettings" });
+      await SwDataTableSettings.vm.$emit("reset-all-changes");
       await wrapper.vm.$nextTick();
 
       // check if all changes were resetted
@@ -1074,16 +1118,16 @@ describe("sw-data-table", () => {
       });
     });
 
-    it('should change the column order', async () => {
+    it("should change the column order", async () => {
       const wrapper = createWrapper();
 
       expect(wrapper.props().columnChanges).toStrictEqual({});
 
-      const SwDataTableSettings = wrapper.findComponent({ name: 'SwDataTableSettings' });
-      await SwDataTableSettings.vm.$emit('change-column-order', {
-        itemId: 'price',
-        dropId: 'name',
-        dropZone: 'after'
+      const SwDataTableSettings = wrapper.findComponent({ name: "SwDataTableSettings" });
+      await SwDataTableSettings.vm.$emit("change-column-order", {
+        itemId: "price",
+        dropId: "name",
+        dropZone: "after",
       });
       await wrapper.vm.$nextTick();
 
@@ -1091,26 +1135,26 @@ describe("sw-data-table", () => {
       expect(wrapper.props().columnChanges).toStrictEqual({
         name: { position: 0 },
         price: { position: 100 },
-        'manufacturer.name': { position: 200 },
+        "manufacturer.name": { position: 200 },
         active: { position: 300 },
         stock: { position: 400 },
-        available: { position: 500 }
+        available: { position: 500 },
       });
     });
 
-    it('should change the column visibility', async () => {
+    it("should change the column visibility", async () => {
       const wrapper = createWrapper();
 
       expect(wrapper.props().columnChanges).toStrictEqual({});
 
-      const SwDataTableSettings = wrapper.findComponent({ name: 'SwDataTableSettings' });
-      await SwDataTableSettings.vm.$emit('change-column-visibility', 'active', false);
+      const SwDataTableSettings = wrapper.findComponent({ name: "SwDataTableSettings" });
+      await SwDataTableSettings.vm.$emit("change-column-visibility", "active", false);
       await wrapper.vm.$nextTick();
 
       // check if order was updated correctly
       expect(wrapper.props().columnChanges).toStrictEqual({
-        active: { visible: false }
+        active: { visible: false },
       });
     });
-  })
+  });
 });

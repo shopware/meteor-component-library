@@ -14,37 +14,32 @@
     </span>
 
     <transition name="sw-select-result-appear">
-      <sw-icon
-        v-if="selected"
-        name="regular-checkmark-xs"
-        size="16px"
-      />
+      <sw-icon v-if="selected" name="regular-checkmark-xs" size="16px" />
     </transition>
 
-    <span
-      v-if="hasDescriptionSlot"
-      class="sw-select-result__result-item-description"
-    >
+    <span v-if="hasDescriptionSlot" class="sw-select-result__result-item-description">
       <slot name="description" />
     </span>
   </li>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import SwIcon from '../../../../icons-media/sw-icon/sw-icon.vue';
-import { inject } from 'vue';
-import { swSelectResultAddActiveItemListener, swSelectResultAddItemSelectByKeyboardListener, swSelectResultRemoveActiveItemListener, swSelectResultRemoveItemSelectByKeyboardListener } from '@/helper/provideInjectKeys';
+import { defineComponent } from "vue";
+import SwIcon from "../../../../icons-media/sw-icon/sw-icon.vue";
+import { inject } from "vue";
+import {
+  swSelectResultAddActiveItemListener,
+  swSelectResultAddItemSelectByKeyboardListener,
+  swSelectResultRemoveActiveItemListener,
+  swSelectResultRemoveItemSelectByKeyboardListener,
+} from "@/helper/provideInjectKeys";
 
 export default defineComponent({
-
   components: {
-    'sw-icon': SwIcon,
+    "sw-icon": SwIcon,
   },
 
-  inject: [
-    'setActiveItemIndex',
-  ],
+  inject: ["setActiveItemIndex"],
 
   props: {
     index: {
@@ -68,9 +63,9 @@ export default defineComponent({
     descriptionPosition: {
       type: String,
       required: false,
-      default: 'right',
+      default: "right",
       validator(value: string) {
-        return ['bottom', 'right'].includes(value);
+        return ["bottom", "right"].includes(value);
       },
     },
   },
@@ -82,17 +77,20 @@ export default defineComponent({
   },
 
   computed: {
-    resultClasses(): (string | {
-      [className: string]: boolean;
-      'is--active': boolean;
-      'is--disabled': boolean;
-      'has--description': boolean;
-    })[] {
+    resultClasses(): (
+      | string
+      | {
+        [className: string]: boolean;
+        "is--active": boolean;
+        "is--disabled": boolean;
+        "has--description": boolean;
+      }
+    )[] {
       return [
         {
-          'is--active': this.active,
-          'is--disabled': this.disabled,
-          'has--description': this.hasDescriptionSlot,
+          "is--active": this.active,
+          "is--disabled": this.disabled,
+          "has--description": this.hasDescriptionSlot,
           [`is--description-${this.descriptionPosition}`]: this.hasDescriptionSlot,
         },
         `sw-select-option--${this.index}`,
@@ -107,15 +105,17 @@ export default defineComponent({
   setup() {
     const addActiveItemListener = inject(swSelectResultAddActiveItemListener);
     const removeActiveItemListener = inject(swSelectResultRemoveActiveItemListener);
-    const addItemSelectByKeyboardListener = inject(swSelectResultAddItemSelectByKeyboardListener)
-    const removeItemSelectByKeyboardListener = inject(swSelectResultRemoveItemSelectByKeyboardListener)
+    const addItemSelectByKeyboardListener = inject(swSelectResultAddItemSelectByKeyboardListener);
+    const removeItemSelectByKeyboardListener = inject(
+      swSelectResultRemoveItemSelectByKeyboardListener,
+    );
 
     return {
       addActiveItemListener,
       removeActiveItemListener,
       addItemSelectByKeyboardListener,
       removeItemSelectByKeyboardListener,
-    }
+    };
   },
 
   created() {
@@ -153,7 +153,7 @@ export default defineComponent({
       }
 
       // @ts-expect-error - parent.parent should be defined
-      this.$parent.$parent.$emit('item-select', this.item);
+      this.$parent.$parent.$emit("item-select", this.item);
     },
 
     onMouseEnter() {

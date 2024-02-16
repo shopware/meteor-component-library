@@ -22,7 +22,7 @@
         :name="identification"
         :disabled="disabled"
         :placeholder="placeholder"
-      >
+      />
       <sw-icon
         v-if="!required && timezoneFormattedValue && !disabled"
         data-testid="sw-datepicker-clear-button"
@@ -32,13 +32,8 @@
       />
     </template>
 
-    <template
-      v-if="showTimeZoneHint"
-      #field-hint
-    >
-      <sw-icon
-        name="solid-clock"
-      />
+    <template v-if="showTimeZoneHint" #field-hint>
+      <sw-icon name="solid-clock" />
       {{ timeZone }}
     </template>
 
@@ -49,43 +44,40 @@
 </template>
 
 <script lang="ts">
-import Flatpickr from 'flatpickr';
-import 'flatpickr/dist/l10n';
-import { zonedTimeToUtc, utcToZonedTime } from 'date-fns-tz';
-import 'flatpickr/dist/flatpickr.css';
+import Flatpickr from "flatpickr";
+import "flatpickr/dist/l10n";
+import { zonedTimeToUtc, utcToZonedTime } from "date-fns-tz";
+import "flatpickr/dist/flatpickr.css";
 import SwBaseField from "../_internal/sw-base-field/sw-base-field.vue";
-import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
-import SwFormFieldMixin from '../../../mixins/form-field.mixin';
-import { defineComponent } from 'vue';
-import type { Instance as FlatpickrInstance } from 'flatpickr/dist/types/instance';
+import SwIcon from "../../icons-media/sw-icon/sw-icon.vue";
+import SwFormFieldMixin from "../../../mixins/form-field.mixin";
+import { defineComponent } from "vue";
+import type { Instance as FlatpickrInstance } from "flatpickr/dist/types/instance";
 
 const allEvents = [
-  'onChange',
-  'onClose',
-  'onDestroy',
-  'onMonthChange',
-  'onOpen',
-  'onYearChange',
-  'onValueUpdate',
-  'onDayCreate',
-  'onParseConfig',
-  'onReady',
-  'onPreCalendarPosition',
-  'onKeyDown',
+  "onChange",
+  "onClose",
+  "onDestroy",
+  "onMonthChange",
+  "onOpen",
+  "onYearChange",
+  "onValueUpdate",
+  "onDayCreate",
+  "onParseConfig",
+  "onReady",
+  "onPreCalendarPosition",
+  "onKeyDown",
 ];
 
 export default defineComponent({
-  name: 'SwDatepicker',
+  name: "SwDatepicker",
 
   components: {
-    'sw-base-field': SwBaseField,
-    'sw-icon': SwIcon,
+    "sw-base-field": SwBaseField,
+    "sw-icon": SwIcon,
   },
 
-  mixins: [
-    SwFormFieldMixin,
-  ],
-
+  mixins: [SwFormFieldMixin],
 
   props: {
     /**
@@ -103,7 +95,7 @@ export default defineComponent({
     locale: {
       type: String,
       required: false,
-      default: 'en',
+      default: "en",
     },
 
     /**
@@ -112,7 +104,7 @@ export default defineComponent({
     timeZone: {
       type: String,
       required: false,
-      default: 'UTC',
+      default: "UTC",
     },
 
     /**
@@ -140,10 +132,10 @@ export default defineComponent({
      */
     dateType: {
       type: String,
-      default: 'date',
-      validValues: ['time', 'date', 'datetime'],
+      default: "date",
+      validValues: ["time", "date", "datetime"],
       validator(value: string) {
-        return ['time', 'date', 'datetime'].includes(value);
+        return ["time", "date", "datetime"].includes(value);
       },
     },
 
@@ -152,7 +144,7 @@ export default defineComponent({
      */
     placeholderText: {
       type: String,
-      default: '',
+      default: "",
       required: false,
     },
 
@@ -181,13 +173,13 @@ export default defineComponent({
       type: Boolean,
       default: false,
       required: false,
-    }
+    },
   },
 
   data(): {
-    flatpickrInstance: FlatpickrInstance | null,
-    isDatepickerOpen: boolean,
-    defaultConfig: Record<string, any>,
+    flatpickrInstance: FlatpickrInstance | null;
+    isDatepickerOpen: boolean;
+    defaultConfig: Record<string, any>;
   } {
     return {
       flatpickrInstance: null,
@@ -222,11 +214,11 @@ export default defineComponent({
     },
 
     noCalendar() {
-      return this.dateType === 'time';
+      return this.dateType === "time";
     },
 
     enableTime() {
-      return this.noCalendar || this.dateType === 'datetime';
+      return this.noCalendar || this.dateType === "datetime";
     },
 
     additionalEventListeners() {
@@ -241,11 +233,11 @@ export default defineComponent({
        */
       Object.entries(this.$attrs).forEach(([key, value]) => {
         // Just look for listeners
-        if (typeof value !== 'function') {
+        if (typeof value !== "function") {
           return;
         }
 
-        if (!['change', 'update:modelValue'].includes(key)) {
+        if (!["change", "update:modelValue"].includes(key)) {
           // @ts-expect-error
           listeners[key] = this.$attrs[key];
         }
@@ -260,7 +252,7 @@ export default defineComponent({
           return null;
         }
 
-        if (['time', 'date'].includes(this.dateType)) {
+        if (["time", "date"].includes(this.dateType)) {
           return this.modelValue;
         }
 
@@ -272,12 +264,12 @@ export default defineComponent({
       },
       set(newValue: string | null) {
         if (newValue === null) {
-          this.$emit('update:modelValue', null);
+          this.$emit("update:modelValue", null);
           return;
         }
 
-        if (['time', 'date'].includes(this.dateType)) {
-          this.$emit('update:modelValue', newValue);
+        if (["time", "date"].includes(this.dateType)) {
+          this.$emit("update:modelValue", newValue);
           return;
         }
 
@@ -285,12 +277,12 @@ export default defineComponent({
         const utcDate = zonedTimeToUtc(new Date(newValue), this.timeZone);
 
         // emit the UTC time so that the v-model value always work in UTC time (which is needed for the server)
-        this.$emit('update:modelValue', utcDate.toISOString());
+        this.$emit("update:modelValue", utcDate.toISOString());
       },
     },
 
     showTimeZoneHint() {
-      return this.dateType === 'datetime' && !this.hideHint;
+      return this.dateType === "datetime" && !this.hideHint;
     },
   },
 
@@ -393,19 +385,18 @@ export default defineComponent({
     getMergedConfig(newConfig: any) {
       if (newConfig.mode !== undefined) {
         console.warn(
-          '[sw-datepicker] The only allowed mode is the default \'single\' mode '
-          + '(the specified mode will be ignored!). '
-          + 'The modes \'multiple\' or \'range\' are currently not supported',
+          "[sw-datepicker] The only allowed mode is the default 'single' mode " +
+            "(the specified mode will be ignored!). " +
+            "The modes 'multiple' or 'range' are currently not supported",
         );
       }
 
       return {
-
         ...this.defaultConfig,
         enableTime: this.enableTime,
         noCalendar: this.noCalendar,
         ...newConfig,
-        mode: 'single',
+        mode: "single",
       };
     },
 
@@ -419,9 +410,11 @@ export default defineComponent({
 
       const mergedConfig = this.getMergedConfig(this.config);
 
-      if (mergedConfig.enableTime !== undefined
+      if (
+        mergedConfig.enableTime !== undefined &&
         // @ts-expect-error
-        && mergedConfig.enableTime !== this.currentFlatpickrConfig.enableTime) {
+        mergedConfig.enableTime !== this.currentFlatpickrConfig.enableTime
+      ) {
         // The instance must be recreated for some config options to take effect like 'enableTime' changes.
         // See https://github.com/flatpickr/flatpickr/issues/1108 for details.
         // @ts-expect-error
@@ -440,8 +433,8 @@ export default defineComponent({
       this.flatpickrInstance.set(mergedConfig);
 
       // Workaround: Allow to change locale dynamically
-      ['locale', 'showMonths'].forEach((name) => {
-        if (typeof mergedConfig[name] !== 'undefined') {
+      ["locale", "showMonths"].forEach((name) => {
+        if (typeof mergedConfig[name] !== "undefined") {
           // @ts-expect-error
           this.flatpickrInstance.set(name, mergedConfig[name]);
         }
@@ -469,7 +462,11 @@ export default defineComponent({
 
       // @ts-expect-error
       // Init flatpickr only if it is not already loaded.
-      this.flatpickrInstance = new Flatpickr(this.flatpickrInputRef, mergedConfig) as unknown as FlatpickrInstance;
+      this.flatpickrInstance = new Flatpickr(
+        // @ts-expect-error
+        this.flatpickrInputRef,
+        mergedConfig,
+      ) as unknown as FlatpickrInstance;
       this.flatpickrInstance.config.onOpen.push(() => {
         this.isDatepickerOpen = true;
       });
@@ -483,7 +480,9 @@ export default defineComponent({
       });
 
       // Set the right datepicker value from the property.
-      const initialValue = this.timezoneFormattedValue ? this.timezoneFormattedValue : new Date().toISOString();
+      const initialValue = this.timezoneFormattedValue
+        ? this.timezoneFormattedValue
+        : new Date().toISOString();
       this.setDatepickerValue(initialValue);
     },
 
@@ -497,8 +496,8 @@ export default defineComponent({
      */
     getEventNames() {
       const events: {
-        kebabCase: string,
-        camelCase: string,
+        kebabCase: string;
+        camelCase: string;
       }[] = [];
 
       Object.keys(this.additionalEventListeners).forEach((event) => {
@@ -539,7 +538,7 @@ export default defineComponent({
 
     emitValue(value: string | null) {
       // Prevent emitting an empty date, to reset a date, null should be emitted
-      if (value === '') {
+      if (value === "") {
         value = null;
       }
 
@@ -552,16 +551,16 @@ export default defineComponent({
     },
 
     createConfig() {
-      let dateFormat = 'Y-m-dTH:i:S';
-      let altFormat = 'Y-m-d H:i';
+      let dateFormat = "Y-m-dTH:i:S";
+      let altFormat = "Y-m-d H:i";
 
-      if (this.dateType === 'time') {
-        dateFormat = 'H:i:S';
-        altFormat = 'H:i';
+      if (this.dateType === "time") {
+        dateFormat = "H:i:S";
+        altFormat = "H:i";
       }
 
-      if (this.dateType === 'date') {
-        altFormat = 'Y-m-d';
+      if (this.dateType === "date") {
+        altFormat = "Y-m-d";
       }
 
       this.defaultConfig = {

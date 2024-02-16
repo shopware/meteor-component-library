@@ -1,26 +1,29 @@
-import { mount } from '@vue/test-utils';
-import SwTabs from './sw-tabs.vue';
+import { mount } from "@vue/test-utils";
+import SwTabs from "./sw-tabs.vue";
 
 async function createWrapper(customOptions = {}, props = {}) {
   return mount(SwTabs, {
     props: {
-      items: [{
-        name: 'foo',
-        label: 'Foo'
-      }, {
-        name: 'bar',
-        label: 'Bar'
-      }],
+      items: [
+        {
+          name: "foo",
+          label: "Foo",
+        },
+        {
+          name: "bar",
+          label: "Bar",
+        },
+      ],
       ...props,
     },
     global: {
       stubs: {
-        'sw-icon': true,
+        "sw-icon": true,
       },
       mocks: {
         $device: {
           onResize: () => {},
-          removeResizeListener: () => {}
+          removeResizeListener: () => {},
         },
       },
     },
@@ -28,8 +31,7 @@ async function createWrapper(customOptions = {}, props = {}) {
   });
 }
 
-
-describe('src/app/component/navigation/sw-tabs', () => {
+describe("src/app/component/navigation/sw-tabs", () => {
   let wrapper: undefined | Awaited<ReturnType<typeof createWrapper>>;
 
   afterEach(() => {
@@ -38,26 +40,26 @@ describe('src/app/component/navigation/sw-tabs', () => {
     }
   });
 
-  it('should be a Vue.JS component', async () => {
+  it("should be a Vue.JS component", async () => {
     wrapper = await createWrapper();
     expect(wrapper.vm).toBeTruthy();
   });
 
-  it('should emit on clicked tab', async () => {
+  it("should emit on clicked tab", async () => {
     wrapper = await createWrapper();
 
-    await wrapper.find('.sw-tabs--item[data-item-name=bar]').trigger('click');
+    await wrapper.find(".sw-tabs--item[data-item-name=bar]").trigger("click");
 
-    expect(wrapper.emitted('new-item-active')?.[0]).toStrictEqual(['bar']);
+    expect(wrapper.emitted("new-item-active")?.[0]).toStrictEqual(["bar"]);
   });
 
-  it('should emit on clicked vertical tab', async () => {
+  it("should emit on clicked vertical tab", async () => {
     wrapper = await createWrapper(undefined, {
-      vertical: true
+      vertical: true,
     });
 
-    await wrapper.find('.sw-tabs--item[data-item-name=bar]').trigger('click');
+    await wrapper.find(".sw-tabs--item[data-item-name=bar]").trigger("click");
 
-    expect(wrapper.emitted('new-item-active')?.[0]).toStrictEqual(['bar']);
+    expect(wrapper.emitted("new-item-active")?.[0]).toStrictEqual(["bar"]);
   });
 });

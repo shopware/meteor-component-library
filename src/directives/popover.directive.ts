@@ -18,10 +18,10 @@ const virtualScrollingElements = new Map();
 
 // set class name for each border
 const outsideClasses = {
-  top: '--placement-top-outside',
-  right: '--placement-right-outside',
-  bottom: '--placement-bottom-outside',
-  left: '--placement-left-outside',
+  top: "--placement-top-outside",
+  right: "--placement-right-outside",
+  bottom: "--placement-bottom-outside",
+  left: "--placement-left-outside",
 };
 
 interface PopoverConfig {
@@ -33,12 +33,12 @@ interface PopoverConfig {
 
 const defaultConfig = {
   active: false,
-  targetSelector: '',
+  targetSelector: "",
   resizeWidth: false,
   style: {},
 };
 
-const customStylingBlacklist = ['width', 'position', 'top', 'left', 'right', 'bottom'];
+const customStylingBlacklist = ["width", "position", "top", "left", "right", "bottom"];
 
 /**
  * Helper functions
@@ -53,8 +53,7 @@ function calculateOutsideEdges(el: HTMLElement, vnode: ComponentPublicInstance) 
 
   // get position
   const boundingClientRect = orientationElement.getBoundingClientRect();
-  const windowHeight =
-      window.innerHeight || document.documentElement.clientHeight;
+  const windowHeight = window.innerHeight || document.documentElement.clientHeight;
   const windowWidth = window.innerWidth || document.documentElement.clientWidth;
 
   // calculate which edges are in viewport
@@ -62,7 +61,7 @@ function calculateOutsideEdges(el: HTMLElement, vnode: ComponentPublicInstance) 
     topSpace: boundingClientRect.top,
     rightSpace: windowWidth - boundingClientRect.right,
     bottomSpace: windowHeight - boundingClientRect.bottom,
-    leftSpace: boundingClientRect.left
+    leftSpace: boundingClientRect.left,
   };
 
   // remove all existing placement classes
@@ -71,20 +70,24 @@ function calculateOutsideEdges(el: HTMLElement, vnode: ComponentPublicInstance) 
   // get new classes for placement
   const placementClasses = [
     visibleEdges.bottomSpace < visibleEdges.topSpace ? outsideClasses.bottom : outsideClasses.top,
-    visibleEdges.rightSpace > visibleEdges.leftSpace ? outsideClasses.left : outsideClasses.right
-  ]
+    visibleEdges.rightSpace > visibleEdges.leftSpace ? outsideClasses.left : outsideClasses.right,
+  ];
   // add new classes to element
   el.classList.add(...placementClasses);
 }
 
-function setElementPosition(element: HTMLElement, refElement: Element|undefined, config: PopoverConfig) {
+function setElementPosition(
+  element: HTMLElement,
+  refElement: Element | undefined,
+  config: PopoverConfig,
+) {
   const originElement = refElement ? refElement : element;
   const elementPosition = originElement.getBoundingClientRect();
 
   let targetElement = originElement;
   let targetPosition = {
     top: 0,
-    left: 0
+    left: 0,
   };
 
   if (config.targetSelector && config.targetSelector.length > 0) {
@@ -103,21 +106,21 @@ function setElementPosition(element: HTMLElement, refElement: Element|undefined,
   });
 
   // add inline styling
-  element.style.position = 'absolute';
-  element.style.top = `${(elementPosition.top - targetPosition.top) + originElement.clientHeight}px`;
+  element.style.position = "absolute";
+  element.style.top = `${elementPosition.top - targetPosition.top + originElement.clientHeight}px`;
   element.style.left = `${elementPosition.left - targetPosition.left}px`;
 }
 
 /*
-* Virtual Scrolling
-*/
+ * Virtual Scrolling
+ */
 
 function startVirtualScrolling() {
-  window.addEventListener('scroll', virtualScrollingHandler, true);
+  window.addEventListener("scroll", virtualScrollingHandler, true);
 }
 
 function stopVirtualScrolling() {
-  window.removeEventListener('scroll', virtualScrollingHandler, true);
+  window.removeEventListener("scroll", virtualScrollingHandler, true);
 }
 
 function virtualScrollingHandler() {
@@ -131,7 +134,11 @@ function virtualScrollingHandler() {
   });
 }
 
-function registerVirtualScrollingElement(modifiedElement: HTMLElement, vnodeContext: VNode|undefined, config: PopoverConfig) {
+function registerVirtualScrollingElement(
+  modifiedElement: HTMLElement,
+  vnodeContext: VNode | undefined,
+  config: PopoverConfig,
+) {
   // @ts-expect-error - _uid exists on the context but is private
   const uid = vnodeContext?._uid;
 
@@ -147,7 +154,7 @@ function registerVirtualScrollingElement(modifiedElement: HTMLElement, vnodeCont
     el: modifiedElement,
     // @ts-expect-error - $el exists on the context but is private
     ref: vnodeContext.$el,
-    config
+    config,
   });
 }
 

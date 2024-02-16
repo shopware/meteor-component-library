@@ -1,10 +1,10 @@
-import { fileURLToPath, URL } from 'node:url'
+import { fileURLToPath, URL } from "node:url";
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 // @ts-expect-error - not typed
-import svg from 'vite-plugin-svgstring';
-import dts from 'vite-plugin-dts';
+import svg from "vite-plugin-svgstring";
+import dts from "vite-plugin-dts";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -12,23 +12,23 @@ export default defineConfig({
     vue({}),
     svg(),
     dts({
-      outDir: ['dist/esm', 'dist/common'],
+      outDir: ["dist/esm", "dist/common"],
       cleanVueFileName: true,
       compilerOptions: {
-        moduleResolution: 99
-      }
+        moduleResolution: 99,
+      },
     }),
   ],
   resolve: {
     alias: [
       {
-        find: '@',
-        replacement: fileURLToPath(new URL('./src', import.meta.url))
+        find: "@",
+        replacement: fileURLToPath(new URL("./src", import.meta.url)),
       },
       {
         // this is required for the SCSS modules
         find: /^~(.*)$/,
-        replacement: '$1',
+        replacement: "$1",
       },
     ],
   },
@@ -36,13 +36,12 @@ export default defineConfig({
     sourcemap: true,
     cssMinify: false,
     lib: {
-      entry: 'src/index.ts',
-      formats: ['es', 'cjs'],
-      fileName: (format, entryName) =>
-        `${{ es: 'esm', cjs: 'common' }[format]}/${entryName}.js`,
+      entry: "src/index.ts",
+      formats: ["es", "cjs"],
+      fileName: (format, entryName) => `${{ es: "esm", cjs: "common" }[format]}/${entryName}.js`,
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ["vue"],
     },
   },
-})
+});

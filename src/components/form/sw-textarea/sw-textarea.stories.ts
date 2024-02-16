@@ -1,15 +1,25 @@
-import SwTextarea from './sw-textarea.vue';
+import SwTextarea from "./sw-textarea.vue";
 import type { StoryObj } from "@storybook/vue3";
 import type { SlottedMeta } from "@/_internal/story-helper";
 
-export type SwTextareaMeta = SlottedMeta<typeof SwTextarea, "default" | 'change' | 'hint' | 'label' | 'placeholder' | 'error' | 'inheritanceRestore' | 'inheritanceRemove' | 'isInherited'>;
+export type SwTextareaMeta = SlottedMeta<
+  typeof SwTextarea,
+| "default"
+| "change"
+| "hint"
+| "label"
+| "placeholder"
+| "error"
+| "inheritanceRestore"
+| "inheritanceRemove"
+| "isInherited"
+>;
 
 export default {
-  title: 'Components/Form/sw-textarea',
+  title: "Components/Form/sw-textarea",
   component: SwTextarea,
   render: (args) => ({
-    template:
-            `
+    template: `
             <div>
               <sw-textarea
                 v-bind="args"
@@ -26,11 +36,11 @@ export default {
     components: { SwTextarea },
     data() {
       return {
-        currentValue: ''
+        currentValue: "",
       };
     },
     watch: {
-      'args.modelValue'(v) {
+      "args.modelValue"(v) {
         this.currentValue = v;
       },
     },
@@ -41,50 +51,50 @@ export default {
       onChange(value: string) {
         args.change(value);
         this.currentValue = value;
-      }
+      },
     },
     setup: () => {
       return {
         args,
-      }
-    }
+      };
+    },
   }),
   args: {
-    label: 'Textareafield',
+    label: "Textareafield",
   },
   argTypes: {
     updateModelValue: {
-      action: 'updateModelValue',
+      action: "updateModelValue",
       table: {
-        category: 'Events',
+        category: "Events",
       },
     },
     change: {
-      action: 'change',
+      action: "change",
       table: {
-        category: 'Events',
+        category: "Events",
       },
     },
     inheritanceRestore: {
-      action: 'inheritance-restore',
+      action: "inheritance-restore",
       table: {
-        category: 'Events',
+        category: "Events",
       },
     },
     inheritanceRemove: {
-      action: 'inheritance-remove',
+      action: "inheritance-remove",
       table: {
-        category: 'Events',
+        category: "Events",
       },
     },
     hint: {
-      control: { type: 'text' },
+      control: { type: "text" },
     },
   },
 } as SwTextareaMeta;
 
 export type SwTextareaStory = StoryObj<SwTextareaMeta>;
 
-export const DefaultStory: SwTextareaStory =  {
-  name: 'sw-textarea',
+export const DefaultStory: SwTextareaStory = {
+  name: "sw-textarea",
 };

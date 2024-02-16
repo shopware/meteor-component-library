@@ -1,44 +1,45 @@
-import SwCard from './sw-card.vue';
-import SwButton from '../../form/sw-button/sw-button.vue';
-import SwContextMenuItem from '../../context-menu/sw-context-menu-item/sw-context-menu-item.vue';
-import SwTabs from '../../navigation/sw-tabs/sw-tabs.vue';
-import SwAvatar from '../../icons-media/sw-avatar/sw-avatar.vue';
-import type { SlottedMeta } from '@/_internal/story-helper';
-import type { StoryObj } from '@storybook/vue3';
+import SwCard from "./sw-card.vue";
+import SwButton from "../../form/sw-button/sw-button.vue";
+import SwContextMenuItem from "../../context-menu/sw-context-menu-item/sw-context-menu-item.vue";
+import SwTabs from "../../navigation/sw-tabs/sw-tabs.vue";
+import SwAvatar from "../../icons-media/sw-avatar/sw-avatar.vue";
+import type { SlottedMeta } from "@/_internal/story-helper";
+import type { StoryObj } from "@storybook/vue3";
 
-type SwCardSlots = 'default' |
-'toolbar' |
-'footer' |
-'headerRight' |
-'avatar' |
-'title' |
-'subtitle' |
-'context-actions'|
-'grid' |
-'tabs' |
-'before-card' |
-'after-card';
+type SwCardSlots =
+  | "default"
+  | "toolbar"
+  | "footer"
+  | "headerRight"
+  | "avatar"
+  | "title"
+  | "subtitle"
+  | "context-actions"
+  | "grid"
+  | "tabs"
+  | "before-card"
+  | "after-card";
 
 export type SwCardMeta = SlottedMeta<typeof SwCard, SwCardSlots>;
 export type SwCardStory = StoryObj<SwCardMeta>;
 
 const meta: SwCardMeta = {
-  title: 'Components/Layout/sw-card',
+  title: "Components/Layout/sw-card",
   component: SwCard,
   argTypes: {
     title: {
-      control: { type: 'text' },
+      control: { type: "text" },
       table: {
-        category: 'props',
+        category: "props",
       },
     },
     subtitle: {
-      control: { type: 'text' },
+      control: { type: "text" },
       table: {
-        category: 'props',
+        category: "props",
       },
     },
-    'context-actions': {
+    "context-actions": {
       control: { type: null },
     },
     grid: {
@@ -50,10 +51,10 @@ const meta: SwCardMeta = {
     avatar: {
       control: { type: null },
     },
-    'before-card': {
+    "before-card": {
       control: { type: null },
     },
-    'after-card': {
+    "after-card": {
       control: { type: null },
     },
   },
@@ -62,7 +63,7 @@ const meta: SwCardMeta = {
 export default meta;
 
 export const MinimalStory: StoryObj<SwCardMeta> = {
-  name: 'Minimal',
+  name: "Minimal",
   render: (args) => ({
     components: { SwCard, SwContextMenuItem, SwTabs, SwAvatar, SwButton },
     setup() {
@@ -80,8 +81,8 @@ export const MinimalStory: StoryObj<SwCardMeta> = {
     <p>Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>
     <br>
     `,
-    title: 'Title',
-    subtitle: 'Subtitle',
+    title: "Title",
+    subtitle: "Subtitle",
     toolbar: null,
     footer: null,
     headerRight: null,
@@ -94,7 +95,7 @@ export const MinimalStory: StoryObj<SwCardMeta> = {
 };
 
 export const ExtendedStory: StoryObj<SwCardMeta> = {
-  name: 'Extended',
+  name: "Extended",
   render: (args) => ({
     components: { SwCard, SwContextMenuItem, SwTabs, SwAvatar, SwButton },
     setup() {
@@ -146,11 +147,11 @@ export const ExtendedStory: StoryObj<SwCardMeta> = {
     </sw-card>`,
     data() {
       return {
-        activeTab: 'tabA',
+        activeTab: "tabA",
         tabItems: [
-          { label: 'Tab A', name: 'tabA' },
-          { label: 'Tab B', name: 'tabB' },
-          { label: 'Tab C', name: 'tabC' },
+          { label: "Tab A", name: "tabA" },
+          { label: "Tab B", name: "tabB" },
+          { label: "Tab C", name: "tabC" },
         ],
       };
     },
@@ -168,16 +169,16 @@ export const ExtendedStory: StoryObj<SwCardMeta> = {
     <br>
     `,
     toolbar: `<p>Toolbar</p>`,
-    footer: '<p><strong>Footer</strong></p>',
-    title: 'Title',
-    subtitle: 'Subtitle',
-    headerRight: 'Header right',
+    footer: "<p><strong>Footer</strong></p>",
+    title: "Title",
+    subtitle: "Subtitle",
+    headerRight: "Header right",
     hero: false,
     isLoading: false,
     large: false,
-    avatar: 'AVTR',
+    avatar: "AVTR",
     tabs: true,
-    'context-actions': true,
+    "context-actions": true,
   },
   ...meta,
 };

@@ -1,13 +1,13 @@
-import { action } from '@storybook/addon-actions';
-import SwExternalLink from './sw-external-link.vue';
+import { action } from "@storybook/addon-actions";
+import SwExternalLink from "./sw-external-link.vue";
 import type { StoryObj } from "@storybook/vue3";
 import type { SlottedMeta } from "@/_internal/story-helper";
-import { fn } from '@storybook/test';
+import { fn } from "@storybook/test";
 
-export type SwExternalLinkMeta = SlottedMeta<typeof SwExternalLink, 'default' | 'click'>;
+export type SwExternalLinkMeta = SlottedMeta<typeof SwExternalLink, "default" | "click">;
 
 export default {
-  title: 'Components/Form/sw-external-link',
+  title: "Components/Form/sw-external-link",
   component: SwExternalLink,
   render: (args) => ({
     components: { SwExternalLink },
@@ -21,20 +21,20 @@ export default {
     setup: () => {
       return {
         args,
-      }
-    }
+      };
+    },
   }),
   args: {
     small: false,
-    rel: 'noopener',
-    href: 'https://www.shopware.com',
+    rel: "noopener",
+    href: "https://www.shopware.com",
     disabled: false,
-    click: fn(action('click'))
+    click: fn(action("click")),
   },
 } as SwExternalLinkMeta;
 
 export type SwExternalLinkStory = StoryObj<SwExternalLinkMeta>;
 
-export const DefaultStory: SwExternalLinkStory =  {
-  name: 'sw-external-link',
+export const DefaultStory: SwExternalLinkStory = {
+  name: "sw-external-link",
 };

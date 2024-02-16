@@ -17,7 +17,7 @@
     </template>
 
     <!-- eslint-disable-next-line vue/no-template-shadow,vue/no-unused-vars -->
-    <template #element="{identification, helpText, error, disabled }">
+    <template #element="{ identification, helpText, error, disabled }">
       <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
       <textarea
         :id="identification"
@@ -33,10 +33,7 @@
     </template>
 
     <template #error>
-      <sw-field-error
-        v-if="error"
-        :error="error"
-      />
+      <sw-field-error v-if="error" :error="error" />
     </template>
 
     <template #field-hint>
@@ -46,22 +43,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import SwFormFieldMixin from '../../../mixins/form-field.mixin';
-import SwBaseField from '../_internal/sw-base-field/sw-base-field.vue';
+import { defineComponent } from "vue";
+import SwFormFieldMixin from "../../../mixins/form-field.mixin";
+import SwBaseField from "../_internal/sw-base-field/sw-base-field.vue";
 import SwFieldError from "../_internal/sw-field-error/sw-field-error.vue";
 
 export default defineComponent({
-  name: 'SwTextarea',
+  name: "SwTextarea",
 
   components: {
-    'sw-base-field': SwBaseField,
-    'sw-field-error': SwFieldError,
+    "sw-base-field": SwBaseField,
+    "sw-field-error": SwFieldError,
   },
 
-  mixins: [
-    SwFormFieldMixin,
-  ],
+  mixins: [SwFormFieldMixin],
 
   inheritAttrs: false,
 
@@ -114,7 +109,7 @@ export default defineComponent({
       type: Object,
       required: false,
       default: null,
-    }
+    },
   },
 
   data() {
@@ -130,7 +125,7 @@ export default defineComponent({
         return this.inheritedValue;
       }
 
-      return this.currentValue || '';
+      return this.currentValue || "";
     },
 
     isInheritanceField(): boolean {
@@ -150,18 +145,20 @@ export default defineComponent({
   },
 
   watch: {
-    modelValue() { this.currentValue = this.modelValue; },
+    modelValue() {
+      this.currentValue = this.modelValue;
+    },
   },
 
   methods: {
     onInput(event: Event) {
       // @ts-expect-error - target is defined
-      this.$emit('update:modelValue', event.target.value);
+      this.$emit("update:modelValue", event.target.value);
     },
 
     onChange(event: Event) {
       // @ts-expect-error - target is defined
-      this.$emit('change', event.target.value);
+      this.$emit("change", event.target.value);
     },
 
     setFocus() {

@@ -1,12 +1,6 @@
 <template>
-  <div
-    ref="floatingUi"
-    class="sw-floating-ui"
-  >
-    <div
-      ref="floatingUiTrigger"
-      class="sw-floating-ui__trigger"
-    >
+  <div ref="floatingUi" class="sw-floating-ui">
+    <div ref="floatingUiTrigger" class="sw-floating-ui__trigger">
       <slot name="trigger" />
     </div>
     <div
@@ -17,12 +11,7 @@
       :data-show="isOpened"
       tabindex="0"
     >
-      <div
-        v-if="showArrow"
-        ref="floatingUiArrow"
-        class="sw-floating-ui__arrow"
-        data-popper-arrow
-      />
+      <div v-if="showArrow" ref="floatingUiArrow" class="sw-floating-ui__arrow" data-popper-arrow />
 
       <transition name="popoverTransition">
         <template v-if="isOpened">
@@ -34,15 +23,14 @@
 </template>
 
 <script lang="ts">
-import type { PropType } from 'vue';
-import { defineComponent, ref, onBeforeUnmount, watch, nextTick } from 'vue';
-import type { AutoUpdateOptions, ComputePositionConfig} from '@floating-ui/dom';
-import {computePosition, autoUpdate, offset, arrow, flip} from '@floating-ui/dom';
-import { vOnClickOutside } from '@vueuse/components'
-
+import type { PropType } from "vue";
+import { defineComponent, ref, onBeforeUnmount, watch, nextTick } from "vue";
+import type { AutoUpdateOptions, ComputePositionConfig } from "@floating-ui/dom";
+import { computePosition, autoUpdate, offset, arrow, flip } from "@floating-ui/dom";
+import { vOnClickOutside } from "@vueuse/components";
 
 export default defineComponent({
-  name: 'SwFloatingUi',
+  name: "SwFloatingUi",
 
   directives: {
     onClickOutside: vOnClickOutside,
@@ -72,23 +60,23 @@ export default defineComponent({
       type: Object as PropType<Partial<AutoUpdateOptions>>,
       default: () => ({}),
       required: false,
-    }
+    },
   },
 
-  emits: ['close'],
+  emits: ["close"],
 
   setup: (props, { emit }) => {
-    let floatingUiContent = ref<HTMLElement|null>(null);
-    const floatingUiTrigger = ref<HTMLElement|null>(null);
-    const floatingUiArrow = ref<HTMLElement|null>(null);
-    const floatingUi = ref<HTMLElement|null>(null);
+    let floatingUiContent = ref<HTMLElement | null>(null);
+    const floatingUiTrigger = ref<HTMLElement | null>(null);
+    const floatingUiArrow = ref<HTMLElement | null>(null);
+    const floatingUi = ref<HTMLElement | null>(null);
     let cleanup: () => void;
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const bodyContainer = window.document.querySelector('body')!;
+    const bodyContainer = window.document.querySelector("body")!;
     const originalParentContainer = floatingUiContent.value?.parentElement;
 
-    const createFloatingUi = () => {      
+    const createFloatingUi = () => {
       if (!floatingUiTrigger.value || !floatingUiContent.value) {
         return;
       }
@@ -97,70 +85,76 @@ export default defineComponent({
       bodyContainer.appendChild(floatingUiContent.value);
 
       // add given classes also to popover element
-      const givenClasses = [...floatingUi.value?.classList.values() ?? []].filter(c => c !== 'sw-floating-ui') as string[];
+      const givenClasses = [...(floatingUi.value?.classList.values() ?? [])].filter(
+        (c) => c !== "sw-floating-ui",
+      ) as string[];
       floatingUiContent.value.classList.add(...givenClasses);
 
-      cleanup = autoUpdate(floatingUiTrigger.value, floatingUiContent.value, () => {
-        if (!floatingUiTrigger.value || !floatingUiContent.value) {
-          return;
-        }
-
-        computePosition(floatingUiTrigger.value, floatingUiContent.value, {
-          placement: 'bottom-start',
-          strategy: 'fixed',
-          middleware: [
-            offset(props.offset),
-            ...(() => {
-              if (props.showArrow && floatingUiArrow.value) {
-                return [arrow({ element: floatingUiArrow.value })];
-              }
-              return [];
-            })(),
-            flip(),
-            ...(props.floatingUiOptions.middleware ?? []),
-          ],
-          ...props.floatingUiOptions,
-        }).then(({ x, y, middlewareData, placement }) => {
-          if (!floatingUiContent.value) {
+      cleanup = autoUpdate(
+        floatingUiTrigger.value,
+        floatingUiContent.value,
+        () => {
+          if (!floatingUiTrigger.value || !floatingUiContent.value) {
             return;
           }
 
-          const staticSide = {
-            top: 'bottom',
-            right: 'left',
-            bottom: 'top',
-            left: 'right',
-          }[placement.split('-')[0]] as 'top' | 'right' | 'bottom' | 'left';
+          computePosition(floatingUiTrigger.value, floatingUiContent.value, {
+            placement: "bottom-start",
+            strategy: "fixed",
+            middleware: [
+              offset(props.offset),
+              ...(() => {
+                if (props.showArrow && floatingUiArrow.value) {
+                  return [arrow({ element: floatingUiArrow.value })];
+                }
+                return [];
+              })(),
+              flip(),
+              ...(props.floatingUiOptions.middleware ?? []),
+            ],
+            ...props.floatingUiOptions,
+          }).then(({ x, y, middlewareData, placement }) => {
+            if (!floatingUiContent.value) {
+              return;
+            }
 
-          if (props.showArrow && floatingUiArrow.value && middlewareData.arrow) {
-            Object.assign(floatingUiArrow.value.style, {
-              left: middlewareData.arrow.x != null ? `${middlewareData.arrow.x}px` : '',
-              top: middlewareData.arrow.y != null ? `${middlewareData.arrow.y}px` : '',
-              right: '',
-              bottom: '',
-              [staticSide]: '-2px',
-            })
-          }
-  
-          Object.assign(floatingUiContent.value.style, {
-            left: `${x}px`,
-            top: `${y}px`,
+            const staticSide = {
+              top: "bottom",
+              right: "left",
+              bottom: "top",
+              left: "right",
+            }[placement.split("-")[0]] as "top" | "right" | "bottom" | "left";
+
+            if (props.showArrow && floatingUiArrow.value && middlewareData.arrow) {
+              Object.assign(floatingUiArrow.value.style, {
+                left: middlewareData.arrow.x != null ? `${middlewareData.arrow.x}px` : "",
+                top: middlewareData.arrow.y != null ? `${middlewareData.arrow.y}px` : "",
+                right: "",
+                bottom: "",
+                [staticSide]: "-2px",
+              });
+            }
+
+            Object.assign(floatingUiContent.value.style, {
+              left: `${x}px`,
+              top: `${y}px`,
+            });
+
+            // remove all staticSide classes
+            ["top", "right", "bottom", "left"].forEach((side) => {
+              floatingUiContent.value?.classList.remove(`sw-floating-ui--${side}`);
+            });
+
+            // add staticSide class
+            floatingUiContent.value.classList.add(`sw-floating-ui--${staticSide}`);
           });
-
-          // remove all staticSide classes
-          ['top', 'right', 'bottom', 'left'].forEach(side => {
-            floatingUiContent.value?.classList.remove(`sw-floating-ui--${side}`);
-          });
-
-
-          // add staticSide class
-          floatingUiContent.value.classList.add(`sw-floating-ui--${staticSide}`);
-        });
-      }, {
-        // fixes endless compute loop in rare situations (e.g. data-table)
-        layoutShift: false,
-        ...props.autoUpdateOptions,
-      })
+        },
+        {
+          // fixes endless compute loop in rare situations (e.g. data-table)
+          layoutShift: false,
+          ...props.autoUpdateOptions,
+        },
+      );
     };
 
     const removeFloatingUi = () => {
@@ -190,7 +184,7 @@ export default defineComponent({
           removeFloatingUi();
         }
       },
-      { immediate: true }
+      { immediate: true },
     );
 
     const onClickOutside = (event: Event) => {
@@ -199,7 +193,7 @@ export default defineComponent({
         return;
       }
 
-      emit('close');
+      emit("close");
     };
 
     onBeforeUnmount(() => {
@@ -217,7 +211,7 @@ export default defineComponent({
       floatingUiTrigger,
       floatingUiArrow,
       floatingUi,
-      onClickOutside
+      onClickOutside,
     };
   },
 });
@@ -273,8 +267,11 @@ export default defineComponent({
   }
 }
 
-.popoverTransition-enter-active, .popoverTransition-leave-active {
-  transition: transform .15s, opacity .15s;
+.popoverTransition-enter-active,
+.popoverTransition-leave-active {
+  transition:
+    transform 0.15s,
+    opacity 0.15s;
 }
 
 .popoverTransition-enter, .popoverTransition-leave-to /* .fade-leave-active below version 2.1.8 */ {

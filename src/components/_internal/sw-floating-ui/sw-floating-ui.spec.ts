@@ -23,7 +23,7 @@ function createWrapper() {
       default: `<div id="defaultSlotContent">Slot content for "default" slot</div>`,
     },
     props: {
-      isOpened: false
+      isOpened: false,
     },
   });
 }
@@ -59,8 +59,8 @@ describe("sw-floating-ui", () => {
 
     const triggerSlot = wrapper.find("#triggerSlotContent");
     expect(triggerSlot.exists()).toBeTruthy();
-    expect(triggerSlot.text()).toBe("Slot content for \"trigger\" slot");
-  })
+    expect(triggerSlot.text()).toBe('Slot content for "trigger" slot');
+  });
 
   it("should not render the content when floating UI is closed", () => {
     wrapper = createWrapper();
@@ -74,12 +74,12 @@ describe("sw-floating-ui", () => {
     wrapper = createWrapper();
 
     await wrapper.setProps({
-      isOpened: true
-    })
+      isOpened: true,
+    });
 
     const contentSlotContent = wrapper.find("#defaultSlotContent");
     expect(contentSlotContent.exists()).toBeTruthy();
-    expect(contentSlotContent.text()).toBe("Slot content for \"default\" slot");
+    expect(contentSlotContent.text()).toBe('Slot content for "default" slot');
   });
 
   it("should not render the arrow when prop is not set", () => {
@@ -92,7 +92,7 @@ describe("sw-floating-ui", () => {
 
   it("should render the arrow when prop is set", async () => {
     wrapper = createWrapper();
-    
+
     await wrapper.setProps({
       showArrow: true,
       isOpened: true,
@@ -107,7 +107,7 @@ describe("sw-floating-ui", () => {
     wrapper = createWrapper();
 
     await wrapper.setProps({
-      isOpened: true
+      isOpened: true,
     });
 
     await flushPromises();
@@ -115,27 +115,27 @@ describe("sw-floating-ui", () => {
     const floatingUi = document.querySelector(".sw-floating-ui");
     const floatingUiContent = document.querySelector(".sw-floating-ui__content");
 
-    expect(document.querySelector('#appWrapper')!.contains(floatingUi)).toBeTruthy();
-    expect(document.querySelector('#appWrapper')!.contains(floatingUiContent)).toBeFalsy();
+    expect(document.querySelector("#appWrapper")!.contains(floatingUi)).toBeTruthy();
+    expect(document.querySelector("#appWrapper")!.contains(floatingUiContent)).toBeFalsy();
     expect(floatingUiContent!.parentElement!.tagName).toBe("BODY");
-  })
+  });
 
   it("should unmount the floating ui to the document body", async () => {
     await wrapper?.unmount();
     wrapper = createWrapper();
 
     await wrapper.setProps({
-      isOpened: true
+      isOpened: true,
     });
 
     await wrapper.unmount();
 
     await flushPromises();
-   
+
     const floatingUi = document.querySelector(".sw-floating-ui");
     const floatingUiContent = document.querySelector(".sw-floating-ui__content");
 
     expect(floatingUi).toBeNull();
     expect(floatingUiContent).toBeNull();
-  })
+  });
 });

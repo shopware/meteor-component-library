@@ -2,15 +2,17 @@ import SwSwitch from "./sw-switch.vue";
 import type { StoryObj } from "@storybook/vue3";
 import type { SlottedMeta } from "@/_internal/story-helper";
 
-export type SwSwitchMeta = SlottedMeta<typeof SwSwitch, "default" | 'error' | 'inheritanceRemove' | 'change' | 'label'>;
+export type SwSwitchMeta = SlottedMeta<
+  typeof SwSwitch,
+"default" | "error" | "inheritanceRemove" | "change" | "label"
+>;
 
 export default {
   title: "Components/Form/sw-switch",
   component: SwSwitch,
   render: (args) => ({
     components: { SwSwitch },
-    template:
-      `
+    template: `
       <sw-switch
         v-bind="args"
         @change="args.change"

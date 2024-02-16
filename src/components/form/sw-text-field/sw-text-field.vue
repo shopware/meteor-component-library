@@ -19,13 +19,11 @@
       {{ label }}
     </template>
 
-    <template
-      #field-prefix
-    >
+    <template #field-prefix>
       <slot name="prefix" />
     </template>
 
-    <template #element="{identification}">
+    <template #element="{ identification }">
       <input
         :id="createInputId(identification)"
         type="text"
@@ -37,20 +35,15 @@
         @change="onChange"
         @focus="setFocusClass"
         @blur="removeFocusClass"
-      >
+      />
     </template>
 
-    <template
-      #field-suffix
-    >
+    <template #field-suffix>
       <slot name="suffix" />
     </template>
 
     <template #error>
-      <sw-field-error
-        v-if="error"
-        :error="error"
-      />
+      <sw-field-error v-if="error" :error="error" />
     </template>
 
     <template #field-hint>
@@ -60,16 +53,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 import SwBaseField from "../_internal/sw-base-field/sw-base-field.vue";
 import SwFieldError from "../_internal/sw-field-error/sw-field-error.vue";
 
 export default defineComponent({
-  name: 'SwTextField',
+  name: "SwTextField",
 
   components: {
-    'sw-field-error': SwFieldError,
-    'sw-base-field': SwBaseField
+    "sw-field-error": SwFieldError,
+    "sw-base-field": SwBaseField,
   },
 
   inheritAttrs: false,
@@ -81,7 +74,7 @@ export default defineComponent({
     modelValue: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
 
     /**
@@ -90,7 +83,7 @@ export default defineComponent({
     placeholder: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
 
     /**
@@ -119,9 +112,9 @@ export default defineComponent({
     size: {
       type: String,
       required: false,
-      default: 'default',
+      default: "default",
       validator(value: string) {
-        return ['small', 'default'].includes(value);
+        return ["small", "default"].includes(value);
       },
     },
 
@@ -205,7 +198,7 @@ export default defineComponent({
     idSuffix: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
 
     /**
@@ -245,16 +238,16 @@ export default defineComponent({
   methods: {
     onChange(event: Event): void {
       // @ts-expect-error - target is defined
-      this.$emit('change', event.target.value || '');
+      this.$emit("change", event.target.value || "");
     },
 
     onInput(event: Event): void {
       // @ts-expect-error - target is defined
-      this.$emit('update:modelValue', event.target.value);
+      this.$emit("update:modelValue", event.target.value);
     },
 
     restoreInheritance(): void {
-      this.$emit('update:modelValue', null);
+      this.$emit("update:modelValue", null);
     },
 
     createInputId(identification: string): string {

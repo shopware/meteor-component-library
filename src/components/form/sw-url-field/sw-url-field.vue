@@ -28,23 +28,15 @@
         role="button"
         @click="changeMode(disabled)"
       >
-        <sw-icon
-          v-if="sslActive"
-          name="regular-lock"
-          :small="true"
-        />
-        <sw-icon
-          v-else
-          name="regular-lock-open"
-          :small="true"
-        />
+        <sw-icon v-if="sslActive" name="regular-lock" :small="true" />
+        <sw-icon v-else name="regular-lock-open" :small="true" />
         <span aria-describedby="url-prefix">
           {{ urlPrefix }}
         </span>
       </span>
     </template>
 
-    <template #element="{identification}">
+    <template #element="{ identification }">
       <!-- @vue-ignore -->
       <input
         :id="identification"
@@ -56,30 +48,28 @@
         :disabled="disabled"
         @input.stop="onInput"
         @focus="setFocusClass"
-        @blur="onBlur($event); removeFocusClass();"
-      >
+        @blur="
+          onBlur($event);
+          removeFocusClass();
+        "
+      />
     </template>
 
-    <template
-      #field-suffix
-    >
+    <template #field-suffix>
       <slot name="suffix" />
     </template>
 
     <template #error>
-      <sw-field-error
-        v-if="error"
-        :error="error"
-      />
+      <sw-field-error v-if="error" :error="error" />
     </template>
   </sw-base-field>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import SwTextField from '../sw-text-field/sw-text-field.vue';
-import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
-import unicodeUriFilter from '../../../filters/unicode-uri.filter';
+import { defineComponent } from "vue";
+import SwTextField from "../sw-text-field/sw-text-field.vue";
+import SwIcon from "../../icons-media/sw-icon/sw-icon.vue";
+import unicodeUriFilter from "../../../filters/unicode-uri.filter";
 
 const URL_REGEX = {
   PROTOCOL: /([a-zA-Z0-9]+:\/\/)+/,
@@ -89,10 +79,10 @@ const URL_REGEX = {
 };
 
 export default defineComponent({
-  name: 'SwUrlField',
+  name: "SwUrlField",
 
   components: {
-    'sw-icon': SwIcon,
+    "sw-icon": SwIcon,
   },
 
   extends: SwTextField,
@@ -119,7 +109,7 @@ export default defineComponent({
   data() {
     return {
       sslActive: true,
-      currentValue: this.modelValue || '',
+      currentValue: this.modelValue || "",
       errorUrl: null,
       currentDebounce: null,
     };
@@ -128,24 +118,24 @@ export default defineComponent({
   computed: {
     prefixClass(): string {
       if (this.sslActive) {
-        return 'is--ssl';
+        return "is--ssl";
       }
 
-      return '';
+      return "";
     },
 
     urlPrefix(): string {
       if (this.sslActive) {
-        return 'https://';
+        return "https://";
       }
 
-      return 'http://';
+      return "http://";
     },
 
     url(): string {
       const trimmedValue = this.currentValue.trim();
-      if (trimmedValue === '') {
-        return '';
+      if (trimmedValue === "") {
+        return "";
       }
 
       return `${this.urlPrefix}${trimmedValue}`;
@@ -159,7 +149,7 @@ export default defineComponent({
 
   watch: {
     value() {
-      this.checkInput(this.modelValue || '');
+      this.checkInput(this.modelValue || "");
     },
   },
 
@@ -202,14 +192,14 @@ export default defineComponent({
       } else {
         this.currentValue = validated;
 
-        this.$emit('update:modelValue', this.url);
+        this.$emit("update:modelValue", this.url);
       }
     },
 
     handleEmptyUrl() {
-      this.currentValue = '';
+      this.currentValue = "";
 
-      this.$emit('update:modelValue', '');
+      this.$emit("update:modelValue", "");
     },
 
     validateCurrentValue(value: string) {
@@ -221,21 +211,22 @@ export default defineComponent({
       }
 
       if (this.omitUrlSearch) {
-        url.search = '';
+        url.search = "";
       }
 
       if (this.omitUrlHash) {
-        url.hash = '';
+        url.hash = "";
       }
 
       // when a hash or search query is provided we want to allow trailing slash, eg a vue route `admin#/`
-      const removeTrailingSlash = url.hash === '' && url.search === '' ? URL_REGEX.TRAILING_SLASH : '';
+      const removeTrailingSlash =
+        url.hash === "" && url.search === "" ? URL_REGEX.TRAILING_SLASH : "";
 
       // build URL via native URL.toString() function instead by hand @see NEXT-15747
       return url
         .toString()
-        .replace(URL_REGEX.PROTOCOL, '')
-        .replace(removeTrailingSlash, '')
+        .replace(URL_REGEX.PROTOCOL, "")
+        .replace(removeTrailingSlash, "")
         .replace(url.host, this.unicodeUri(url.host));
     },
 
@@ -245,7 +236,7 @@ export default defineComponent({
       }
 
       this.sslActive = !this.sslActive;
-      this.$emit('update:modelValue', this.url);
+      this.$emit("update:modelValue", this.url);
     },
 
     getURLInstance(value: string) {
@@ -267,7 +258,7 @@ export default defineComponent({
     },
 
     setInvalidUrlError() {
-      console.error({ code: 'INVALID_URL' })
+      console.error({ code: "INVALID_URL" });
     },
   },
 });

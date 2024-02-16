@@ -1,5 +1,5 @@
-import { defineComponent } from 'vue';
-import validationService from '../services/validation.service';
+import { defineComponent } from "vue";
+import validationService from "../services/validation.service";
 
 export default defineComponent({
   props: {
@@ -24,12 +24,12 @@ export default defineComponent({
       let { validation } = this;
       let valid = true;
 
-      if (typeof validation === 'boolean') {
+      if (typeof validation === "boolean") {
         return validation;
       }
 
-      if (typeof validation === 'string') {
-        const validationList = validation.split(',');
+      if (typeof validation === "string") {
+        const validationList = validation.split(",");
 
         if (validationList.length > 1) {
           validation = validationList;
@@ -41,7 +41,7 @@ export default defineComponent({
 
       if (Array.isArray(validation)) {
         valid = validation.every((validationRule) => {
-          if (typeof validationRule === 'boolean') {
+          if (typeof validationRule === "boolean") {
             return validationRule;
           }
 
@@ -54,7 +54,7 @@ export default defineComponent({
 
     validateRule(value: unknown, rule: string): boolean {
       // @ts-expect-error
-      if (typeof validationService[rule] === 'undefined') {
+      if (typeof validationService[rule] === "undefined") {
         return false;
       }
 

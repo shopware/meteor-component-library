@@ -1,131 +1,131 @@
-import { within, userEvent } from '@storybook/testing-library';
-import { expect } from '@storybook/jest';
+import { within, userEvent } from "@storybook/testing-library";
+import { expect } from "@storybook/jest";
 
-import meta, { type SwNumberFieldMeta, type SwNumberFieldStory } from './sw-number-field.stories';
+import meta, { type SwNumberFieldMeta, type SwNumberFieldStory } from "./sw-number-field.stories";
 
 export default {
   ...meta,
-  title: 'Interaction Tests/Form/sw-number-field',
+  title: "Interaction Tests/Form/sw-number-field",
 } as SwNumberFieldMeta;
 
 export const TestInputValue: SwNumberFieldStory = {
-  name: 'Should keep input value',
+  name: "Should keep input value",
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.click(canvas.getByRole('textbox'));
-    await userEvent.type(canvas.getByRole('textbox'), '42');
-    await userEvent.click(canvas.getByText('hidden'));
+    await userEvent.click(canvas.getByRole("textbox"));
+    await userEvent.type(canvas.getByRole("textbox"), "42");
+    await userEvent.click(canvas.getByText("hidden"));
 
     // Notice that the value is of type string and the value of the event is of type number
-    expect((canvas.getByRole('textbox') as HTMLInputElement).value).toBe('42');
+    expect((canvas.getByRole("textbox") as HTMLInputElement).value).toBe("42");
 
     expect(args.change).toHaveBeenCalledWith(42);
   },
 };
 
 export const TestIncreaseByKeyStroke: SwNumberFieldStory = {
-  name: 'Should increase value by key stroke',
+  name: "Should increase value by key stroke",
   args: {
     modelValue: 10,
   },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.click(canvas.getByRole('textbox'));
-    await userEvent.type(canvas.getByRole('textbox'), '{arrowup}');
+    await userEvent.click(canvas.getByRole("textbox"));
+    await userEvent.type(canvas.getByRole("textbox"), "{arrowup}");
 
-    await userEvent.click(canvas.getByText('hidden'));
+    await userEvent.click(canvas.getByText("hidden"));
 
     // Notice that the value is of type string and the value of the event is of type number
-    expect((canvas.getByRole('textbox') as HTMLInputElement).value).toBe('11');
+    expect((canvas.getByRole("textbox") as HTMLInputElement).value).toBe("11");
 
     expect(args.change).toHaveBeenCalledWith(11);
   },
 };
 
 export const TestIncreaseByControl: SwNumberFieldStory = {
-  name: 'Should increase value by control',
+  name: "Should increase value by control",
   args: {
     modelValue: 10,
   },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.click(canvas.getByTestId('sw-number-field-increase-button'));
-    await userEvent.click(canvas.getByText('hidden'));
+    await userEvent.click(canvas.getByTestId("sw-number-field-increase-button"));
+    await userEvent.click(canvas.getByText("hidden"));
 
     // Notice that the value is of type string and the value of the event is of type number
-    expect((canvas.getByRole('textbox') as HTMLInputElement).value).toBe('11');
+    expect((canvas.getByRole("textbox") as HTMLInputElement).value).toBe("11");
 
     expect(args.change).toHaveBeenCalledWith(11);
   },
 };
 
 export const TestDecreaseByKeyStroke: SwNumberFieldStory = {
-  name: 'Should decrease value by key stroke',
+  name: "Should decrease value by key stroke",
   args: {
     modelValue: 10,
   },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.click(canvas.getByRole('textbox'));
-    await userEvent.type(canvas.getByRole('textbox'), '{arrowdown}');
+    await userEvent.click(canvas.getByRole("textbox"));
+    await userEvent.type(canvas.getByRole("textbox"), "{arrowdown}");
 
-    await userEvent.click(canvas.getByText('hidden'));
+    await userEvent.click(canvas.getByText("hidden"));
 
     // Notice that the value is of type string and the value of the event is of type number
-    expect((canvas.getByRole('textbox') as HTMLInputElement).value).toBe('9');
+    expect((canvas.getByRole("textbox") as HTMLInputElement).value).toBe("9");
 
     expect(args.change).toHaveBeenCalledWith(9);
   },
 };
 
 export const TestDecreaseByControl: SwNumberFieldStory = {
-  name: 'Should decrease value by control',
+  name: "Should decrease value by control",
   args: {
     modelValue: 10,
   },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.click(canvas.getByTestId('sw-number-field-decrease-button'));
+    await userEvent.click(canvas.getByTestId("sw-number-field-decrease-button"));
 
-    await userEvent.click(canvas.getByText('hidden'));
+    await userEvent.click(canvas.getByText("hidden"));
 
     // Notice that the value is of type string and the value of the event is of type number
-    expect((canvas.getByRole('textbox') as HTMLInputElement).value).toBe('9');
+    expect((canvas.getByRole("textbox") as HTMLInputElement).value).toBe("9");
 
     expect(args.change).toHaveBeenCalledWith(9);
   },
 };
 
 export const TestStepIncrease: SwNumberFieldStory = {
-  name: 'Should increase float step',
+  name: "Should increase float step",
   args: {
     modelValue: 10,
     step: 0.7,
-    numberType: 'float',
+    numberType: "float",
     fillDigits: true,
   },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.click(canvas.getByTestId('sw-number-field-increase-button'));
-    await userEvent.type(canvas.getByRole('textbox'), '{arrowup}');
+    await userEvent.click(canvas.getByTestId("sw-number-field-increase-button"));
+    await userEvent.type(canvas.getByRole("textbox"), "{arrowup}");
 
-    await userEvent.click(canvas.getByText('hidden'));
+    await userEvent.click(canvas.getByText("hidden"));
 
     // Notice that the value is of type string and the value of the event is of type number
-    expect((canvas.getByRole('textbox') as HTMLInputElement).value).toBe('11.40');
+    expect((canvas.getByRole("textbox") as HTMLInputElement).value).toBe("11.40");
 
     expect(args.change).toHaveBeenCalledWith(11.4);
   },
 };
 
 export const TestDecreaseConsidersMin: SwNumberFieldStory = {
-  name: 'Should not decrease below min',
+  name: "Should not decrease below min",
   args: {
     modelValue: 11,
     min: 10,
@@ -133,20 +133,20 @@ export const TestDecreaseConsidersMin: SwNumberFieldStory = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.click(canvas.getByTestId('sw-number-field-decrease-button'));
-    await userEvent.type(canvas.getByRole('textbox'), '{arrowdown}');
+    await userEvent.click(canvas.getByTestId("sw-number-field-decrease-button"));
+    await userEvent.type(canvas.getByRole("textbox"), "{arrowdown}");
 
-    await userEvent.click(canvas.getByText('hidden'));
+    await userEvent.click(canvas.getByText("hidden"));
 
     // Notice that the value is of type string and the value of the event is of type number
-    expect((canvas.getByRole('textbox') as HTMLInputElement).value).toBe('10');
+    expect((canvas.getByRole("textbox") as HTMLInputElement).value).toBe("10");
 
     expect(args.change).toHaveBeenCalledWith(10);
   },
 };
 
 export const TestIncreaseConsiderMax: SwNumberFieldStory = {
-  name: 'Should not increase above max',
+  name: "Should not increase above max",
   args: {
     modelValue: 9,
     max: 10,
@@ -154,22 +154,22 @@ export const TestIncreaseConsiderMax: SwNumberFieldStory = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.click(canvas.getByTestId('sw-number-field-increase-button'));
-    await userEvent.type(canvas.getByRole('textbox'), '{arrowup}');
+    await userEvent.click(canvas.getByTestId("sw-number-field-increase-button"));
+    await userEvent.type(canvas.getByRole("textbox"), "{arrowup}");
 
-    await userEvent.click(canvas.getByText('hidden'));
+    await userEvent.click(canvas.getByText("hidden"));
 
     // Notice that the value is of type string and the value of the event is of type number
-    expect((canvas.getByRole('textbox') as HTMLInputElement).value).toBe('10');
+    expect((canvas.getByRole("textbox") as HTMLInputElement).value).toBe("10");
 
     expect(args.change).toHaveBeenCalledWith(10);
   },
 };
 
 export const VisualTestPrefix: SwNumberFieldStory = {
-  name: 'Should display prefix',
+  name: "Should display prefix",
   args: {
-    prefix: 'prefix',
+    prefix: "prefix",
   },
   play: ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
@@ -179,9 +179,9 @@ export const VisualTestPrefix: SwNumberFieldStory = {
 };
 
 export const VisualTestSuffix: SwNumberFieldStory = {
-  name: 'Should display suffix',
+  name: "Should display suffix",
   args: {
-    suffix: 'suffix',
+    suffix: "suffix",
   },
   play: ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
@@ -191,9 +191,9 @@ export const VisualTestSuffix: SwNumberFieldStory = {
 };
 
 export const VisualTestHint: SwNumberFieldStory = {
-  name: 'Should display hint',
+  name: "Should display hint",
   args: {
-    hint: 'hint',
+    hint: "hint",
   },
   play: ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
@@ -203,7 +203,7 @@ export const VisualTestHint: SwNumberFieldStory = {
 };
 
 export const VisualTestDisabled: SwNumberFieldStory = {
-  name: 'Should disable',
+  name: "Should disable",
   args: {
     disabled: true,
     modelValue: 44,
@@ -211,18 +211,18 @@ export const VisualTestDisabled: SwNumberFieldStory = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.type(canvas.getByRole('textbox'), '1337');
+    await userEvent.type(canvas.getByRole("textbox"), "1337");
 
-    expect((canvas.getByRole('textbox') as HTMLInputElement).value).toBe('44');
+    expect((canvas.getByRole("textbox") as HTMLInputElement).value).toBe("44");
   },
 };
 
 export const VisualTestError: SwNumberFieldStory = {
-  name: 'Should display error',
+  name: "Should display error",
   args: {
     error: {
       code: 500,
-      detail: 'Error while saving!',
+      detail: "Error while saving!",
     },
   },
   play: ({ canvasElement, args }) => {
@@ -233,7 +233,7 @@ export const VisualTestError: SwNumberFieldStory = {
 };
 
 export const VisualTestInheritance: SwNumberFieldStory = {
-  name: 'Should remove and restore inheritance',
+  name: "Should remove and restore inheritance",
   args: {
     isInheritanceField: true,
     isInherited: false,
@@ -241,16 +241,16 @@ export const VisualTestInheritance: SwNumberFieldStory = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.click(canvas.getByTestId('sw-icon__regular-lock-open-s'));
+    await userEvent.click(canvas.getByTestId("sw-icon__regular-lock-open-s"));
 
     expect(args.inheritanceRestore).toBeCalled();
 
-    expect(canvas.getByTestId('sw-inheritance-switch-icon')).toBeDefined();
+    expect(canvas.getByTestId("sw-inheritance-switch-icon")).toBeDefined();
 
-    await userEvent.click(canvas.getByTestId('sw-inheritance-switch-icon'));
+    await userEvent.click(canvas.getByTestId("sw-inheritance-switch-icon"));
 
     expect(args.inheritanceRemove).toBeCalled();
 
-    expect(canvas.getByTestId('sw-icon__regular-lock-open-s')).toBeDefined();
+    expect(canvas.getByTestId("sw-icon__regular-lock-open-s")).toBeDefined();
   },
 };

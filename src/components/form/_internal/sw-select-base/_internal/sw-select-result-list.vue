@@ -9,17 +9,16 @@
       <div
         ref="popoverContent"
         class="sw-select-result-list__content"
-        :class="{ 'sw-select-result-list__content_empty': isLoading && (!options || options.length <= 0) }"
+        :class="{
+          'sw-select-result-list__content_empty': isLoading && (!options || options.length <= 0),
+        }"
         @scroll="onScroll"
       >
         <slot name="before-item-list" />
 
         <ul class="sw-select-result-list__item-list">
           <template v-for="(item, index) in options">
-            <slot
-              name="result-item"
-              v-bind="{ item, index }"
-            />
+            <slot name="result-item" v-bind="{ item, index }" />
           </template>
         </ul>
 
@@ -29,10 +28,7 @@
           v-if="!isLoading && options && options.length < 1"
           class="sw-select-result-list__empty"
         >
-          <sw-icon
-            name="default-action-search"
-            size="20px"
-          />
+          <sw-icon name="default-action-search" size="20px" />
           {{ emptyMessageText }}
         </div>
       </div>
@@ -41,36 +37,41 @@
 </template>
 
 <script lang="ts">
-import type { PropType } from 'vue';
+import type { PropType } from "vue";
 
-import { defineComponent } from 'vue';
-import SwPopoverDeprecated from '../../../../_internal/sw-popover-deprecated/sw-popover-deprecated.vue';
-import SwIcon from '../../../../icons-media/sw-icon/sw-icon.vue';
-import { provide } from 'vue';
-import { swSelectResultAddActiveItemListener, swSelectResultAddItemSelectByKeyboardListener, swSelectResultRemoveActiveItemListener, swSelectResultRemoveItemSelectByKeyboardListener } from '@/helper/provideInjectKeys';
-import { ref } from 'vue';
+import { defineComponent } from "vue";
+import SwPopoverDeprecated from "../../../../_internal/sw-popover-deprecated/sw-popover-deprecated.vue";
+import SwIcon from "../../../../icons-media/sw-icon/sw-icon.vue";
+import { provide } from "vue";
+import {
+  swSelectResultAddActiveItemListener,
+  swSelectResultAddItemSelectByKeyboardListener,
+  swSelectResultRemoveActiveItemListener,
+  swSelectResultRemoveItemSelectByKeyboardListener,
+} from "@/helper/provideInjectKeys";
+import { ref } from "vue";
 
 export default defineComponent({
-  name: 'SwSelectResultList',
+  name: "SwSelectResultList",
 
   i18n: {
     messages: {
       en: {
-        'sw-select-result-list': {
-          messageNoResults: 'No results found.',
-        }
+        "sw-select-result-list": {
+          messageNoResults: "No results found.",
+        },
       },
       de: {
-        'sw-select-result-list': {
-          messageNoResults: 'Es wurden keine Ergebnisse gefunden.',
-        }
-      }
+        "sw-select-result-list": {
+          messageNoResults: "Es wurden keine Ergebnisse gefunden.",
+        },
+      },
     },
   },
 
   components: {
-    'sw-popover-deprecated': SwPopoverDeprecated,
-    'sw-icon': SwIcon,
+    "sw-popover-deprecated": SwPopoverDeprecated,
+    "sw-icon": SwIcon,
   },
 
   provide() {
@@ -100,7 +101,9 @@ export default defineComponent({
     };
 
     const removeActiveItemChangeListener = (listener: (index: number) => void) => {
-      activeItemChangeListeners.value = activeItemChangeListeners.value.filter((l) => l !== listener);
+      activeItemChangeListeners.value = activeItemChangeListeners.value.filter(
+        (l) => l !== listener,
+      );
     };
 
     const addToItemSelectByKeyboardListeners = (listener: (index: number) => void) => {
@@ -108,7 +111,9 @@ export default defineComponent({
     };
 
     const removeItemSelectByKeyboardListener = (listener: (index: number) => void) => {
-      itemSelectByKeyboardListeners.value = itemSelectByKeyboardListeners.value.filter((l) => l !== listener);
+      itemSelectByKeyboardListeners.value = itemSelectByKeyboardListeners.value.filter(
+        (l) => l !== listener,
+      );
     };
 
     provide(swSelectResultAddActiveItemListener, addToActiveItemChangeListeners);
@@ -124,7 +129,7 @@ export default defineComponent({
       removeActiveItemChangeListener,
       addToItemSelectByKeyboardListeners,
       removeItemSelectByKeyboardListener,
-    }
+    };
   },
 
   props: {
@@ -143,9 +148,11 @@ export default defineComponent({
     },
 
     focusEl: {
-      type: [HTMLElement] as PropType<HTMLDocument|HTMLElement>,
+      type: [HTMLElement] as PropType<HTMLDocument | HTMLElement>,
       required: false,
-      default() { return document; },
+      default() {
+        return document;
+      },
     },
 
     isLoading: {
@@ -170,8 +177,8 @@ export default defineComponent({
   },
 
   data(): {
-    activeItemChangeListeners: Array<(index: number) => void>,
-    itemSelectByKeyboardListeners: Array<(index: number) => void>,
+    activeItemChangeListeners: Array<(index: number) => void>;
+    itemSelectByKeyboardListeners: Array<(index: number) => void>;
   } {
     return {
       activeItemChangeListeners: [],
@@ -181,11 +188,11 @@ export default defineComponent({
 
   computed: {
     emptyMessageText(): string {
-      return this.emptyMessage || this.$tc('sw-select-result-list.messageNoResults');
+      return this.emptyMessage || this.$tc("sw-select-result-list.messageNoResults");
     },
 
     popoverClass(): string[] {
-      return [...this.popoverClasses, 'sw-select-result-list-popover-wrapper'];
+      return [...this.popoverClasses, "sw-select-result-list-popover-wrapper"];
     },
   },
 
@@ -205,14 +212,14 @@ export default defineComponent({
   methods: {
     addEventListeners() {
       // @ts-expect-error - property "key" exists on this event
-      this.focusEl.addEventListener('keydown', this.navigate);
-      document.addEventListener('click', this.checkOutsideClick);
+      this.focusEl.addEventListener("keydown", this.navigate);
+      document.addEventListener("click", this.checkOutsideClick);
     },
 
     removeEventListeners() {
       // @ts-expect-error - property "key" exists on this event
-      this.focusEl.removeEventListener('keydown', this.navigate);
-      document.removeEventListener('click', this.checkOutsideClick);
+      this.focusEl.removeEventListener("keydown", this.navigate);
+      document.removeEventListener("click", this.checkOutsideClick);
     },
 
     /**
@@ -232,29 +239,29 @@ export default defineComponent({
         return;
       }
 
-      this.$emit('outside-click');
+      this.$emit("outside-click");
     },
 
     navigate({ key }: { key: string }) {
       key = key.toUpperCase();
-      if (key === 'ARROWDOWN') {
+      if (key === "ARROWDOWN") {
         this.navigateNext();
         return;
       }
 
-      if (key === 'ARROWUP') {
+      if (key === "ARROWUP") {
         this.navigatePrevious();
         return;
       }
 
-      if (key === 'ENTER') {
+      if (key === "ENTER") {
         this.emitClicked();
       }
     },
 
     navigateNext() {
       if (this.activeItemIndex >= this.options.length - 1) {
-        this.$emit('paginate');
+        this.$emit("paginate");
         return;
       }
 
@@ -276,9 +283,9 @@ export default defineComponent({
     updateScrollPosition() {
       // wait until the new active item is rendered and has the active class
       this.$nextTick(() => {
-        const resultContainer = document.querySelector('.sw-select-result-list__content');
+        const resultContainer = document.querySelector(".sw-select-result-list__content");
         // @ts-expect-error - resultContainer is defined
-        const activeItem = resultContainer.querySelector('.is--active');
+        const activeItem = resultContainer.querySelector(".is--active");
         // @ts-expect-error - activeItem is defined
         const itemHeight = activeItem.offsetHeight;
         // @ts-expect-error - activeItem is defined
@@ -308,8 +315,8 @@ export default defineComponent({
     emitClicked() {
       // This emit is subscribed in the sw-result component. They can for example be disabled and need
       // choose on their own if they are selected
-      this.$emit('item-select-by-keyboard', this.activeItemIndex);
-      
+      this.$emit("item-select-by-keyboard", this.activeItemIndex);
+
       this.itemSelectByKeyboardListeners.forEach((listener) => {
         listener(this.activeItemIndex);
       });
@@ -321,7 +328,7 @@ export default defineComponent({
         return;
       }
 
-      this.$emit('paginate');
+      this.$emit("paginate");
     },
 
     getBottomDistance(element: Element) {

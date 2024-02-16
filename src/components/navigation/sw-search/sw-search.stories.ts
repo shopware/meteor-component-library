@@ -1,19 +1,19 @@
-import SwSearch from './sw-search.vue';
-import { action } from '@storybook/addon-actions';
+import SwSearch from "./sw-search.vue";
+import { action } from "@storybook/addon-actions";
 import type { StoryObj } from "@storybook/vue3";
 import { ref } from "vue";
 import type { SlottedMeta } from "@/_internal/story-helper";
-import { fn } from '@storybook/test';
+import { fn } from "@storybook/test";
 
-export type SwSearchMeta = SlottedMeta<typeof SwSearch, 'default' | 'change' | 'updateModelValue'>;
+export type SwSearchMeta = SlottedMeta<typeof SwSearch, "default" | "change" | "updateModelValue">;
 
 const meta: SwSearchMeta = {
-  title: 'Components/Navigation/sw-search',
+  title: "Components/Navigation/sw-search",
   component: SwSearch,
   args: {
-    modelValue: '',
-    size: 'default',
-    placeholder: '',
+    modelValue: "",
+    size: "default",
+    placeholder: "",
     disabled: false,
   },
   render: (args) => ({
@@ -35,8 +35,7 @@ const meta: SwSearchMeta = {
         immediate: true,
       },
     },
-    methods: {
-    },
+    methods: {},
     template: `
   <div>
     <sw-search
@@ -56,14 +55,14 @@ const meta: SwSearchMeta = {
       const currentValue = ref();
 
       function changeHandler(value: string) {
-        fn(action('change'))(value);
+        fn(action("change"))(value);
         if (args.change) args.change(value);
 
         currentValue.value = value;
       }
 
       function onModelValueHandler(value: string) {
-        fn(action('updateModelValue'))(value);
+        fn(action("updateModelValue"))(value);
 
         currentValue.value = value;
       }
@@ -73,14 +72,14 @@ const meta: SwSearchMeta = {
         onModelValueHandler,
         changeHandler,
         currentValue,
-      }
-    }
+      };
+    },
   }),
 };
 
 export default meta;
 export type SwSearchStory = StoryObj<SwSearchMeta>;
 
-export const Default: SwSearchStory =  {
-  name: 'sw-search',
+export const Default: SwSearchStory = {
+  name: "sw-search",
 };

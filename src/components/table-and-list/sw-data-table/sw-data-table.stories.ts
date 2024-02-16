@@ -38,7 +38,7 @@ export type SwDataTableMeta = SlottedMeta<
 | "change-enable-row-numbering"
 | "changeEnableRowNumbering"
 | "_remove_primary_toolbar_button_"
-> 
+>;
 export default {
   title: "Components/Table and list/sw-data-table",
   component: SwDataTable,
@@ -307,297 +307,292 @@ export default {
     _storybook_internal_show_experimental_warning_: false,
     _remove_primary_toolbar_button_: false,
   },
-  render: (args) => (defineComponent({
-    components: { SwDataTable, SwButton, SwBanner },
-    data(): {
-      paginationLimitValue: number;
-      currentPageValue: number;
-      searchValueValue: string;
-      sortByValue: string;
-      sortDirectionValue: string;
-      isLoadingValue: boolean;
-      selectedRowsValue: string[];
-      showOutlinesValue: boolean;
-      showStripesValue: boolean;
-      enableOutlineFramingValue: boolean;
-      enableRowNumberingValue: boolean;
-    } {
-      return {
-        paginationLimitValue: 0,
-        currentPageValue: 0,
-        searchValueValue: "",
-        sortByValue: "",
-        sortDirectionValue: "",
-        isLoadingValue: true,
-        selectedRowsValue: [],
-        showOutlinesValue: true,
-        showStripesValue: true,
-        enableOutlineFramingValue: true,
-        enableRowNumberingValue: true,
-      };
-    },
-    computed: {
-      dataSourceValue(): {
-        [key: string]: unknown;
-        id: string;
-      }[] {
-        /**
-         * Mock server data handling
-         */
-        const returnValue = args.dataSource
-          .sort((aData, bData) => {
-            const a = aData[this.sortByValue];
-            const b = bData[this.sortByValue];
-            let result = 0;
+  render: (args) =>
+    defineComponent({
+      components: { SwDataTable, SwButton, SwBanner },
+      data(): {
+        paginationLimitValue: number;
+        currentPageValue: number;
+        searchValueValue: string;
+        sortByValue: string;
+        sortDirectionValue: string;
+        isLoadingValue: boolean;
+        selectedRowsValue: string[];
+        showOutlinesValue: boolean;
+        showStripesValue: boolean;
+        enableOutlineFramingValue: boolean;
+        enableRowNumberingValue: boolean;
+      } {
+        return {
+          paginationLimitValue: 0,
+          currentPageValue: 0,
+          searchValueValue: "",
+          sortByValue: "",
+          sortDirectionValue: "",
+          isLoadingValue: true,
+          selectedRowsValue: [],
+          showOutlinesValue: true,
+          showStripesValue: true,
+          enableOutlineFramingValue: true,
+          enableRowNumberingValue: true,
+        };
+      },
+      computed: {
+        dataSourceValue(): {
+          [key: string]: unknown;
+          id: string;
+        }[] {
+          /**
+           * Mock server data handling
+           */
+          const returnValue = args.dataSource
+            .sort((aData, bData) => {
+              const a = aData[this.sortByValue];
+              const b = bData[this.sortByValue];
+              let result = 0;
 
-            // @ts-expect-error
-            if (a < b) {
-              result = -1;
-            // @ts-expect-error
-            } else if (a > b) {
-              result = 1;
+              // @ts-expect-error
+              if (a < b) {
+                result = -1;
+                // @ts-expect-error
+              } else if (a > b) {
+                result = 1;
+              }
+
+              if (this.sortDirectionValue === "DESC") {
+                result *= -1;
+              }
+
+              return result;
+            })
+            .slice(
+              (this.currentPageValue - 1) * this.paginationLimitValue,
+              this.currentPageValue * this.paginationLimitValue,
+            );
+
+          return returnValue;
+        },
+        paginationTotalItemsValue(): number {
+          return args.dataSource.length;
+        },
+      },
+      watch: {
+        "args.paginationLimit": {
+          handler(v) {
+            if (this.paginationLimitValue === v) {
+              return;
             }
 
-            if (this.sortDirectionValue === "DESC") {
-              result *= -1;
+            this.paginationLimitValue = v;
+          },
+          immediate: true,
+        },
+        "args.currentPage": {
+          handler(v) {
+            if (this.currentPageValue === v) {
+              return;
             }
 
-            return result;
-          })
-          .slice(
-            (this.currentPageValue - 1) * this.paginationLimitValue,
-            this.currentPageValue * this.paginationLimitValue
-          );
-
-        return returnValue;
-      },
-      paginationTotalItemsValue(): number {
-        return args.dataSource.length;
-      },
-    },
-    watch: {
-      'args.paginationLimit': {
-        handler(v) {
-          if (this.paginationLimitValue === v) {
-            return;
-          }
-
-          this.paginationLimitValue = v;
+            this.currentPageValue = v;
+          },
+          immediate: true,
         },
-        immediate: true,
-      },
-      'args.currentPage': {
-        handler(v) {
-          if (this.currentPageValue === v) {
-            return;
-          }
+        "args.sortBy": {
+          handler(v) {
+            if (this.sortByValue === v) {
+              return;
+            }
 
-          this.currentPageValue = v;
+            this.sortByValue = v;
+          },
+          immediate: true,
         },
-        immediate: true,
-      },
-      'args.sortBy': {
-        handler(v) {
-          if (this.sortByValue === v) {
-            return;
-          }
+        "args.sortDirection": {
+          handler(v) {
+            if (this.sortDirectionValue === v) {
+              return;
+            }
 
-          this.sortByValue = v;
+            this.sortDirectionValue = v;
+          },
+          immediate: true,
         },
-        immediate: true,
-      },
-      'args.sortDirection': {
-        handler(v) {
-          if (this.sortDirectionValue === v) {
-            return;
-          }
+        "args.searchValue": {
+          handler(v) {
+            if (this.searchValueValue === v) {
+              return;
+            }
 
-          this.sortDirectionValue = v;
+            this.searchValueValue = v;
+          },
+          immediate: true,
         },
-        immediate: true,
-      },
-      'args.searchValue': {
-        handler(v) {
-          if (this.searchValueValue === v) {
-            return;
-          }
+        "args.isLoading": {
+          handler(v) {
+            if (this.isLoadingValue === v) {
+              return;
+            }
 
-          this.searchValueValue = v;
+            this.isLoadingValue = v;
+          },
+          immediate: false,
         },
-        immediate: true,
-      },
-      'args.isLoading': {
-        handler(v) {
-          if (this.isLoadingValue === v) {
-            return;
-          }
+        "args.selectedRows": {
+          handler(v) {
+            if (this.selectedRowsValue === v) {
+              return;
+            }
 
-          this.isLoadingValue = v;
+            this.selectedRowsValue = v;
+          },
+          immediate: true,
         },
-        immediate: false,
-      },
-      'args.selectedRows': {
-        handler(v) {
-          if (this.selectedRowsValue === v) {
-            return;
-          }
+        "args.showOutlines": {
+          handler(v) {
+            if (this.showOutlinesValue === v) {
+              return;
+            }
 
-          this.selectedRowsValue = v;
+            this.showOutlinesValue = v;
+          },
+          immediate: true,
         },
-        immediate: true,
-      },
-      'args.showOutlines': {
-        handler(v) {
-          if (this.showOutlinesValue === v) {
-            return;
-          }
+        "args.showStripes": {
+          handler(v) {
+            if (this.showStripesValue === v) {
+              return;
+            }
 
-          this.showOutlinesValue = v;
+            this.showStripesValue = v;
+          },
+          immediate: true,
         },
-        immediate: true,
-      },
-      'args.showStripes': {
-        handler(v) {
-          if (this.showStripesValue === v) {
-            return;
-          }
+        "args.enableOutlineFraming": {
+          handler(v) {
+            if (this.enableOutlineFramingValue === v) {
+              return;
+            }
 
-          this.showStripesValue = v;
+            this.enableOutlineFramingValue = v;
+          },
+          immediate: true,
         },
-        immediate: true,
-      },
-      'args.enableOutlineFraming': {
-        handler(v) {
-          if (this.enableOutlineFramingValue === v) {
-            return;
-          }
+        "args.enableRowNumbering": {
+          handler(v) {
+            if (this.enableRowNumberingValue === v) {
+              return;
+            }
 
-          this.enableOutlineFramingValue = v;
+            this.enableRowNumberingValue = v;
+          },
+          immediate: true,
         },
-        immediate: true,
       },
-      'args.enableRowNumbering': {
-        handler(v) {
-          if (this.enableRowNumberingValue === v) {
-            return;
-          }
-
-          this.enableRowNumberingValue = v;
-        },
-        immediate: true,
-      },
-    },
-    created() {
-      if (!args.isLoading) {
-        this.simulateLoading();
-      }
-    },
-    methods: {
-      simulateLoading() {
-        // random loading time between 300 and 600ms
-        const loadingTime = Math.floor(Math.random() * 300) + 300;
-        this.isLoadingValue = true;
-
-        window.setTimeout(() => {
-          this.isLoadingValue = false;
-        }, loadingTime);
-      },
-      paginationLimitChangeHandler(event: number) {
-        args.paginationLimitChange(event);
-        this.paginationLimitValue = event;
-
-        this.simulateLoading();
-      },
-      paginationCurrentPageChangeHandler(event: number) {
-        args.paginationCurrentPageChange(event);
-        this.currentPageValue = event;
-
-        this.simulateLoading();
-      },
-      searchValueChangeHandler(event: string) {
-        args.searchValueChange(event);
-        this.searchValueValue = event;
-
-        this.simulateLoading();
-      },
-      sortChangeValueHandler(property: string, direction: string) {
-        args.sortChange(property, direction);
-
-        this.sortByValue = property;
-        this.sortDirectionValue = direction;
-
-        this.simulateLoading();
-      },
-
-      reloadHandler(event: number) {
-        args.reload(event);
-
-        this.simulateLoading();
-      },
-
-      selectionChangeHandler(event: {
-        id: string;
-        value: boolean;
-      }) {
-        args.selectionChange(event);
-
-        const id = event.id;
-        const value = event.value;
-
-        if (value) {
-          this.selectedRowsValue.push(id);
-        } else {
-          this.selectedRowsValue.splice(this.selectedRowsValue.indexOf(id), 1);
+      created() {
+        if (!args.isLoading) {
+          this.simulateLoading();
         }
       },
+      methods: {
+        simulateLoading() {
+          // random loading time between 300 and 600ms
+          const loadingTime = Math.floor(Math.random() * 300) + 300;
+          this.isLoadingValue = true;
 
-      multipleSelectionChangeHandler(event: {
-        selections: string[];
-        value: boolean;
-      }) {
-        args.multipleSelectionChange(event);
+          window.setTimeout(() => {
+            this.isLoadingValue = false;
+          }, loadingTime);
+        },
+        paginationLimitChangeHandler(event: number) {
+          args.paginationLimitChange(event);
+          this.paginationLimitValue = event;
 
-        const selections = event.selections;
-        const value = event.value;
+          this.simulateLoading();
+        },
+        paginationCurrentPageChangeHandler(event: number) {
+          args.paginationCurrentPageChange(event);
+          this.currentPageValue = event;
 
-        if (value) {
-          selections.forEach((selection) => {
-            if (this.selectedRowsValue.indexOf(selection) === -1) {
-              this.selectedRowsValue.push(selection);
-            }
-          });
-        } else {
-          this.selectedRowsValue = this.selectedRowsValue.filter((row) => {
-            return selections.indexOf(row) === -1;
-          });
-        }
+          this.simulateLoading();
+        },
+        searchValueChangeHandler(event: string) {
+          args.searchValueChange(event);
+          this.searchValueValue = event;
+
+          this.simulateLoading();
+        },
+        sortChangeValueHandler(property: string, direction: string) {
+          args.sortChange(property, direction);
+
+          this.sortByValue = property;
+          this.sortDirectionValue = direction;
+
+          this.simulateLoading();
+        },
+
+        reloadHandler(event: number) {
+          args.reload(event);
+
+          this.simulateLoading();
+        },
+
+        selectionChangeHandler(event: { id: string; value: boolean }) {
+          args.selectionChange(event);
+
+          const id = event.id;
+          const value = event.value;
+
+          if (value) {
+            this.selectedRowsValue.push(id);
+          } else {
+            this.selectedRowsValue.splice(this.selectedRowsValue.indexOf(id), 1);
+          }
+        },
+
+        multipleSelectionChangeHandler(event: { selections: string[]; value: boolean }) {
+          args.multipleSelectionChange(event);
+
+          const selections = event.selections;
+          const value = event.value;
+
+          if (value) {
+            selections.forEach((selection) => {
+              if (this.selectedRowsValue.indexOf(selection) === -1) {
+                this.selectedRowsValue.push(selection);
+              }
+            });
+          } else {
+            this.selectedRowsValue = this.selectedRowsValue.filter((row) => {
+              return selections.indexOf(row) === -1;
+            });
+          }
+        },
+
+        changeShowOutlinesHandler(event: boolean) {
+          args.changeShowOutlines(event);
+
+          this.showOutlinesValue = event;
+        },
+
+        changeShowStripesHandler(event: boolean) {
+          args.changeShowStripes(event);
+
+          this.showStripesValue = event;
+        },
+
+        changeOutlineFramingHandler(event: boolean) {
+          args.changeOutlineFraming(event);
+
+          this.enableOutlineFramingValue = event;
+        },
+
+        changeEnableRowNumberingHandler(event: boolean) {
+          args.changeEnableRowNumbering(event);
+
+          this.enableRowNumberingValue = event;
+        },
       },
-
-      changeShowOutlinesHandler(event: boolean) {
-        args.changeShowOutlines(event);
-
-        this.showOutlinesValue = event;
-      },
-
-      changeShowStripesHandler(event: boolean) {
-        args.changeShowStripes(event);
-
-        this.showStripesValue = event;
-      },
-
-      changeOutlineFramingHandler(event: boolean) {
-        args.changeOutlineFraming(event);
-
-        this.enableOutlineFramingValue = event;
-      },
-
-      changeEnableRowNumberingHandler(event: boolean) {
-        args.changeEnableRowNumbering(event);
-
-        this.enableRowNumberingValue = event;
-      },
-    },
-    template: `
+      template: `
       <div
           style="
       margin: 0 auto;
@@ -668,12 +663,12 @@ export default {
         </sw-data-table>
       </div>
     `,
-    setup: () => {
-      return {
-        args,
-      };
-    },
-  })),
+      setup: () => {
+        return {
+          args,
+        };
+      },
+    }),
 } as SwDataTableMeta;
 
 export type SwDataTableStory = StoryObj<SwDataTableMeta>;
@@ -681,7 +676,7 @@ export type SwDataTableStory = StoryObj<SwDataTableMeta>;
 export const Default: SwDataTableStory = {
   args: {
     _storybook_internal_show_experimental_warning_: true,
-  }
+  },
 };
 
 export const Full = {

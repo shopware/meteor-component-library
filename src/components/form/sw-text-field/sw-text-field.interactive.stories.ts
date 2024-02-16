@@ -1,31 +1,31 @@
-import { within, userEvent } from '@storybook/testing-library';
-import { expect } from '@storybook/jest';
+import { within, userEvent } from "@storybook/testing-library";
+import { expect } from "@storybook/jest";
 
-import meta, { type SwTextFieldMeta, type SwTextFieldStory } from './sw-text-field.stories';
+import meta, { type SwTextFieldMeta, type SwTextFieldStory } from "./sw-text-field.stories";
 
 export default {
   ...meta,
-  title: 'Interaction Tests/Form/sw-text-field',
+  title: "Interaction Tests/Form/sw-text-field",
 } as SwTextFieldMeta;
 
 export const TestInputValue: SwTextFieldStory = {
-  name: 'Should keep input value',
+  name: "Should keep input value",
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.type(canvas.getByRole('textbox'), 'Shopware');
-    await userEvent.click(canvas.getByText('hidden'));
+    await userEvent.type(canvas.getByRole("textbox"), "Shopware");
+    await userEvent.click(canvas.getByText("hidden"));
 
-    expect((canvas.getByRole('textbox') as HTMLInputElement).value).toBe('Shopware');
+    expect((canvas.getByRole("textbox") as HTMLInputElement).value).toBe("Shopware");
 
-    expect(args.change).toHaveBeenCalledWith('Shopware');
+    expect(args.change).toHaveBeenCalledWith("Shopware");
   },
 };
 
 export const VisualTestPrefix: SwTextFieldStory = {
-  name: 'Should display prefix',
+  name: "Should display prefix",
   args: {
-    prefix: 'prefix',
+    prefix: "prefix",
   },
   play: ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
@@ -35,9 +35,9 @@ export const VisualTestPrefix: SwTextFieldStory = {
 };
 
 export const VisualTestSuffix: SwTextFieldStory = {
-  name: 'Should display suffix',
+  name: "Should display suffix",
   args: {
-    suffix: 'suffix',
+    suffix: "suffix",
   },
   play: ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
@@ -47,9 +47,9 @@ export const VisualTestSuffix: SwTextFieldStory = {
 };
 
 export const VisualTestHint: SwTextFieldStory = {
-  name: 'Should display hint',
+  name: "Should display hint",
   args: {
-    hint: 'hint',
+    hint: "hint",
   },
   play: ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
@@ -59,9 +59,9 @@ export const VisualTestHint: SwTextFieldStory = {
 };
 
 export const TestLabel: SwTextFieldStory = {
-  name: 'Should display label',
+  name: "Should display label",
   args: {
-    label: 'label',
+    label: "label",
   },
   play: ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
@@ -71,24 +71,24 @@ export const TestLabel: SwTextFieldStory = {
 };
 
 export const VisualTestDisabled: SwTextFieldStory = {
-  name: 'Should disable',
+  name: "Should disable",
   args: {
     disabled: true,
-    modelValue: 'Shopware',
+    modelValue: "Shopware",
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.type(canvas.getByRole('textbox'), '1337');
+    await userEvent.type(canvas.getByRole("textbox"), "1337");
 
-    expect((canvas.getByRole('textbox') as HTMLInputElement).value).toBe('Shopware');
+    expect((canvas.getByRole("textbox") as HTMLInputElement).value).toBe("Shopware");
   },
 };
 
 export const TestPlaceholder: SwTextFieldStory = {
-  name: 'Should display placeholder',
+  name: "Should display placeholder",
   args: {
-    placeholder: 'Placeholder',
+    placeholder: "Placeholder",
   },
   play: ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
@@ -98,11 +98,11 @@ export const TestPlaceholder: SwTextFieldStory = {
 };
 
 export const VisualTestError: SwTextFieldStory = {
-  name: 'Should display error',
+  name: "Should display error",
   args: {
     error: {
       code: 500,
-      detail: 'Error while saving!',
+      detail: "Error while saving!",
     },
   },
   play: ({ canvasElement, args }) => {
@@ -113,7 +113,7 @@ export const VisualTestError: SwTextFieldStory = {
 };
 
 export const TestCopyable: SwTextFieldStory = {
-  name: 'Should be able to copy',
+  name: "Should be able to copy",
   args: {
     copyable: true,
   },
@@ -124,7 +124,7 @@ export const TestCopyable: SwTextFieldStory = {
 };
 
 export const VisualTestInheritance: SwTextFieldStory = {
-  name: 'Should remove and restore inheritance',
+  name: "Should remove and restore inheritance",
   args: {
     isInheritanceField: true,
     isInherited: false,
@@ -132,22 +132,22 @@ export const VisualTestInheritance: SwTextFieldStory = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.click(canvas.getByTestId('sw-icon__regular-lock-open-s'));
+    await userEvent.click(canvas.getByTestId("sw-icon__regular-lock-open-s"));
 
     expect(args.inheritanceRestore).toBeCalled();
 
-    expect(canvas.getByTestId('sw-inheritance-switch-icon')).toBeDefined();
+    expect(canvas.getByTestId("sw-inheritance-switch-icon")).toBeDefined();
 
-    await userEvent.click(canvas.getByTestId('sw-inheritance-switch-icon'));
+    await userEvent.click(canvas.getByTestId("sw-inheritance-switch-icon"));
 
     expect(args.inheritanceRemove).toBeCalled();
 
-    expect(canvas.getByTestId('sw-icon__regular-lock-open-s')).toBeDefined();
+    expect(canvas.getByTestId("sw-icon__regular-lock-open-s")).toBeDefined();
   },
 };
 
 export const VisualTestInheritanceActive: SwTextFieldStory = {
-  name: 'Should show inheritance',
+  name: "Should show inheritance",
   args: {
     isInheritanceField: true,
     isInherited: true,

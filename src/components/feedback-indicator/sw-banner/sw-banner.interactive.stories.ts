@@ -1,61 +1,61 @@
-import { within, userEvent } from '@storybook/testing-library';
-import { expect } from '@storybook/jest';
+import { within, userEvent } from "@storybook/testing-library";
+import { expect } from "@storybook/jest";
 
-import meta, { type SwBannerMeta, type SwBannerStory } from './sw-banner.stories';
+import meta, { type SwBannerMeta, type SwBannerStory } from "./sw-banner.stories";
 
 export default {
   ...meta,
-  title: 'Interaction Tests/Feedback Indicator/sw-banner',
+  title: "Interaction Tests/Feedback Indicator/sw-banner",
 } as SwBannerMeta;
 
 export const VisualTestBannerNeutral: SwBannerStory = {
-  name: 'Banner neutral',
+  name: "Banner neutral",
 };
 
 export const VisualTestBannerInfo: SwBannerStory = {
-  name: 'Banner info',
+  name: "Banner info",
   args: {
-    variant: 'info',
+    variant: "info",
   },
 };
 
 export const VisualTestBannerAttention: SwBannerStory = {
-  name: 'Banner attention',
+  name: "Banner attention",
   args: {
-    variant: 'attention',
+    variant: "attention",
   },
 };
 
 export const VisualTestBannerCritical: SwBannerStory = {
-  name: 'Banner critical',
+  name: "Banner critical",
   args: {
-    variant: 'critical',
+    variant: "critical",
   },
 };
 
 export const VisualTestBannerPositive: SwBannerStory = {
-  name: 'Banner positive',
+  name: "Banner positive",
   args: {
-    variant: 'positive',
+    variant: "positive",
   },
 };
 
 export const VisualTestBannerInherited: SwBannerStory = {
-  name: 'Banner inherited',
+  name: "Banner inherited",
   args: {
-    variant: 'inherited',
+    variant: "inherited",
   },
 };
 
 export const VisualTestRenderWithoutIcon: SwBannerStory = {
-  name: 'Render banner without icon',
+  name: "Render banner without icon",
   args: {
     hideIcon: true,
   },
 };
 
 export const VisualTestCloseBannerBox: SwBannerStory = {
-  name: 'Close the banner',
+  name: "Close the banner",
   args: {
     closable: true,
   },
@@ -64,7 +64,7 @@ export const VisualTestCloseBannerBox: SwBannerStory = {
 
     expect(args.close).not.toHaveBeenCalled();
 
-    await userEvent.click(canvas.getByRole('button'));
+    await userEvent.click(canvas.getByRole("button"));
 
     expect(args.close).toHaveBeenCalledWith(null);
   },

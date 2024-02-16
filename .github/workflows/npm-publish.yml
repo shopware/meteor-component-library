@@ -1,6 +1,6 @@
 name: Publish to NPM
 
-on:  
+on:
   push:
     branches:
       - main
@@ -15,7 +15,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: "18"
       - name: Retrieve the cached "node_modules" directory (if present)
         uses: actions/cache@v4
         id: node-cache

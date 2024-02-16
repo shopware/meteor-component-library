@@ -3,7 +3,20 @@ import baseFieldArgTypes from "../_internal/sw-base-field/arg-types";
 import type { StoryObj } from "@storybook/vue3";
 import type { SlottedMeta } from "@/_internal/story-helper";
 
-export type SwTextFieldMeta = SlottedMeta<typeof SwTextField, "default" | 'change' | 'prefix' | 'suffix' | 'hint' | 'label' | 'placeholder' | 'error' | 'inheritanceRestore' | 'inheritanceRemove' | 'isInherited'>;
+export type SwTextFieldMeta = SlottedMeta<
+  typeof SwTextField,
+| "default"
+| "change"
+| "prefix"
+| "suffix"
+| "hint"
+| "label"
+| "placeholder"
+| "error"
+| "inheritanceRestore"
+| "inheritanceRemove"
+| "isInherited"
+>;
 
 export default {
   title: "Components/Form/sw-text-field",
@@ -41,7 +54,7 @@ export default {
       return { currentValue: "" };
     },
     watch: {
-      'args.modelValue'(v) {
+      "args.modelValue"(v) {
         if (this.currentValue === v) {
           return;
         }
@@ -66,7 +79,7 @@ export default {
       onChange(value: string) {
         args.change(value);
         this.currentValue = value;
-      }
+      },
     },
     setup: () => {
       return {

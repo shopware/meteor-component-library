@@ -27,25 +27,22 @@
     </template>
 
     <template #error>
-      <sw-field-error
-        v-if="error"
-        :error="error"
-      />
+      <sw-field-error v-if="error" :error="error" />
     </template>
   </sw-base-field>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 import SwBaseField from "../../form/_internal/sw-base-field/sw-base-field.vue";
 import SwFieldError from "../../form/_internal/sw-field-error/sw-field-error.vue";
 
 export default defineComponent({
-  name: 'SwProgressBar',
+  name: "SwProgressBar",
 
   components: {
-    'sw-base-field': SwBaseField,
-    'sw-field-error': SwFieldError,
+    "sw-base-field": SwBaseField,
+    "sw-field-error": SwFieldError,
   },
 
   props: {
@@ -79,7 +76,7 @@ export default defineComponent({
     progressLabelType: {
       type: String,
       required: false,
-      default: 'percent'
+      default: "percent",
     },
     /**
      * An error in your business logic related to this field.
@@ -95,7 +92,7 @@ export default defineComponent({
 
   computed: {
     progressLabel(): string {
-      if (!this.progressLabelType || this.progressLabelType === 'percent') {
+      if (!this.progressLabelType || this.progressLabelType === "percent") {
         return this.styleWidth;
       }
 
@@ -104,7 +101,7 @@ export default defineComponent({
 
     styleWidth(): string {
       // @ts-expect-error - vue can't detect value correctly
-      let percentage = parseInt(this.modelValue / this.maxValue * 100);
+      let percentage = parseInt((this.modelValue / this.maxValue) * 100);
 
       if (percentage > 100) {
         percentage = 100;
@@ -118,12 +115,13 @@ export default defineComponent({
     },
 
     progressClasses(): {
-      'sw-progress-bar__value--no-transition': boolean,
-      'sw-progress-bar__value--has-error': boolean,
+      "sw-progress-bar__value--no-transition": boolean;
+      "sw-progress-bar__value--has-error": boolean;
     } {
       return {
-        'sw-progress-bar__value--no-transition': this.modelValue < 1 || this.modelValue >= this.maxValue,
-        'sw-progress-bar__value--has-error': !!this.error,
+        "sw-progress-bar__value--no-transition":
+          this.modelValue < 1 || this.modelValue >= this.maxValue,
+        "sw-progress-bar__value--has-error": !!this.error,
       };
     },
   },

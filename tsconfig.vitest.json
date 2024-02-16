@@ -5,5 +5,5 @@
     "composite": true,
     "lib": [],
     "types": ["node", "jsdom", "vitest/globals"]
-  },
+  }
 }

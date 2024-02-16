@@ -4,21 +4,21 @@ export default defineComponent({
   i18n: {
     messages: {
       en: {
-        'notification': {
-          success: 'Success',
-          info: 'Info',
-          warning: 'Warning',
-          error: 'Error',
-        }
+        notification: {
+          success: "Success",
+          info: "Info",
+          warning: "Warning",
+          error: "Error",
+        },
       },
       de: {
-        'notification': {
-          success: 'Erfolg',
-          info: 'Info',
-          warning: 'Warnung',
-          error: 'Fehler',
-        }
-      }
+        notification: {
+          success: "Erfolg",
+          info: "Info",
+          warning: "Warnung",
+          error: "Fehler",
+        },
+      },
     },
   },
 
@@ -26,14 +26,13 @@ export default defineComponent({
     // eslint-disable-next-line no-unused-vars
     createNotification() {
       // TODO: Implement a general notification system
-
       // return Shopware.State.dispatch('notification/createNotification', notification);
     },
 
     createNotificationSuccess(config: any) {
       const notification = {
-        variant: 'success',
-        title: this.$tc('global.default.success'),
+        variant: "success",
+        title: this.$tc("global.default.success"),
         ...config,
       };
 
@@ -43,8 +42,8 @@ export default defineComponent({
 
     createNotificationInfo(config: any) {
       const notification = {
-        variant: 'info',
-        title: this.$tc('global.default.info'),
+        variant: "info",
+        title: this.$tc("global.default.info"),
         ...config,
       };
 
@@ -54,8 +53,8 @@ export default defineComponent({
 
     createNotificationWarning(config: any) {
       const notification = {
-        variant: 'warning',
-        title: this.$tc('global.default.warning'),
+        variant: "warning",
+        title: this.$tc("global.default.warning"),
         ...config,
       };
 
@@ -65,8 +64,8 @@ export default defineComponent({
 
     createNotificationError(config: any) {
       const notification = {
-        variant: 'error',
-        title: this.$tc('global.default.error'),
+        variant: "error",
+        title: this.$tc("global.default.error"),
         ...config,
       };
 
@@ -76,7 +75,7 @@ export default defineComponent({
 
     createSystemNotificationSuccess(config: any) {
       const notification = {
-        variant: 'success',
+        variant: "success",
         system: true,
         ...config,
       };
@@ -87,7 +86,7 @@ export default defineComponent({
 
     createSystemNotificationInfo(config: any) {
       const notification = {
-        variant: 'info',
+        variant: "info",
         system: true,
         ...config,
       };
@@ -98,7 +97,7 @@ export default defineComponent({
 
     createSystemNotificationWarning(config: any) {
       const notification = {
-        variant: 'warning',
+        variant: "warning",
         system: true,
         ...config,
       };
@@ -109,7 +108,7 @@ export default defineComponent({
 
     createSystemNotificationError(config: any) {
       const notification = {
-        variant: 'error',
+        variant: "error",
         system: true,
         ...config,
       };

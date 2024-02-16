@@ -1,12 +1,24 @@
-import SwUrlField from './sw-url-field.vue';
-import baseFieldArgTypes from '../_internal/sw-base-field/arg-types';
+import SwUrlField from "./sw-url-field.vue";
+import baseFieldArgTypes from "../_internal/sw-base-field/arg-types";
 import type { StoryObj } from "@storybook/vue3";
 import type { SlottedMeta } from "@/_internal/story-helper";
 
-export type SwUrlFieldMeta = SlottedMeta<typeof SwUrlField, "default" | 'change' | 'hint' | 'label' | 'placeholder' | 'error' | 'inheritanceRestore' | 'inheritanceRemove' | 'isInherited' | 'updateModelValue'>;
+export type SwUrlFieldMeta = SlottedMeta<
+  typeof SwUrlField,
+| "default"
+| "change"
+| "hint"
+| "label"
+| "placeholder"
+| "error"
+| "inheritanceRestore"
+| "inheritanceRemove"
+| "isInherited"
+| "updateModelValue"
+>;
 
 export default {
-  title: 'Components/Form/sw-url-field',
+  title: "Components/Form/sw-url-field",
   component: SwUrlField,
   render: (args) => ({
     components: { SwUrlField },
@@ -38,10 +50,10 @@ export default {
         <h4 style="display: none;">hidden</h4>
       </div>`,
     data() {
-      return { currentValue: '' };
+      return { currentValue: "" };
     },
     watch: {
-      'args.modelValue'(v) {
+      "args.modelValue"(v) {
         this.currentValue = v;
       },
     },
@@ -62,26 +74,25 @@ export default {
       onChange(value: string) {
         args.change(value);
         this.currentValue = value;
-      }
+      },
     },
     setup: () => {
       return {
         args,
-      }
-    }
+      };
+    },
   }),
   args: {
-    label: 'Url field',
-    size: 'default',
+    label: "Url field",
+    size: "default",
   },
   argTypes: {
     ...baseFieldArgTypes,
   },
 } as SwUrlFieldMeta;
 
-
 export type SwUrlFieldStory = StoryObj<SwUrlFieldMeta>;
 
-export const DefaultStory: SwUrlFieldStory =  {
-  name: 'sw-url-field',
+export const DefaultStory: SwUrlFieldStory = {
+  name: "sw-url-field",
 };

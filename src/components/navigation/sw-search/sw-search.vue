@@ -1,11 +1,6 @@
 <template>
-  <sw-base-field
-    class="sw-search"
-    :disabled="disabled"
-    :has-focus="hasFocus"
-    :size="size"
-  >
-    <template #element="{identification}">
+  <sw-base-field class="sw-search" :disabled="disabled" :has-focus="hasFocus" :size="size">
+    <template #element="{ identification }">
       <sw-icon name="regular-search-s" />
 
       <input
@@ -15,25 +10,29 @@
         :name="identification"
         :disabled="disabled"
         :value="currentValue"
-        :placeholder="$t(placeholder) ? $t(placeholder).toString() : $t('sw-search.searchPlaceholder').toString()"
+        :placeholder="
+          $t(placeholder)
+            ? $t(placeholder).toString()
+            : $t('sw-search.searchPlaceholder').toString()
+        "
         @input="onInput"
         @change="onChange"
         @focus="setFocusClass"
         @blur="removeFocusClass"
-      >
+      />
     </template>
   </sw-base-field>
 </template>
 
 <script lang="ts">
-import SwBaseField from '../../form/_internal/sw-base-field/sw-base-field.vue';
-import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
-import { defineComponent, ref, watch } from 'vue';
+import SwBaseField from "../../form/_internal/sw-base-field/sw-base-field.vue";
+import SwIcon from "../../icons-media/sw-icon/sw-icon.vue";
+import { defineComponent, ref, watch } from "vue";
 
 export default defineComponent({
   components: {
-    'sw-base-field': SwBaseField,
-    'sw-icon': SwIcon,
+    "sw-base-field": SwBaseField,
+    "sw-icon": SwIcon,
   },
 
   props: {
@@ -43,7 +42,7 @@ export default defineComponent({
     modelValue: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
 
     /**
@@ -52,7 +51,7 @@ export default defineComponent({
     placeholder: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
 
     /**
@@ -92,32 +91,35 @@ export default defineComponent({
       },
     },
   },
-  emits: ['change', 'update:modelValue'],
+  emits: ["change", "update:modelValue"],
   setup(props, { emit }) {
     const hasFocus = ref(false);
     const currentValue = ref(props.modelValue);
 
-    watch(() => props.modelValue, (value) => {
-      currentValue.value = value;
-    });
+    watch(
+      () => props.modelValue,
+      (value) => {
+        currentValue.value = value;
+      },
+    );
 
     const onChange = (event: Event) => {
       // @ts-expect-error - target is defined
-      emit('change', event.target.value || '');
-    }
+      emit("change", event.target.value || "");
+    };
 
     const onInput = (event: Event) => {
       // @ts-expect-error - target is defined
-      emit('update:modelValue', event.target.value);
-    }
+      emit("update:modelValue", event.target.value);
+    };
 
     const setFocusClass = () => {
       hasFocus.value = true;
-    }
+    };
 
     const removeFocusClass = () => {
       hasFocus.value = false;
-    }
+    };
 
     return {
       hasFocus,
@@ -125,7 +127,7 @@ export default defineComponent({
       removeFocusClass,
       onChange,
       onInput,
-      currentValue
+      currentValue,
     };
   },
 });

@@ -1,12 +1,24 @@
-import SwNumberField from './sw-number-field.vue';
-import baseFieldArgTypes from '../_internal/sw-base-field/arg-types';
+import SwNumberField from "./sw-number-field.vue";
+import baseFieldArgTypes from "../_internal/sw-base-field/arg-types";
 import type { StoryObj } from "@storybook/vue3";
 import type { SlottedMeta } from "@/_internal/story-helper";
 
-export type SwNumberFieldMeta = SlottedMeta<typeof SwNumberField, 'default' | 'inheritanceRemove' | 'inheritanceRestore' | 'isInherited' | 'change' | 'modelValue' | 'hint' | 'suffix' | 'prefix' | 'error'>;
+export type SwNumberFieldMeta = SlottedMeta<
+  typeof SwNumberField,
+| "default"
+| "inheritanceRemove"
+| "inheritanceRestore"
+| "isInherited"
+| "change"
+| "modelValue"
+| "hint"
+| "suffix"
+| "prefix"
+| "error"
+>;
 
 export default {
-  title: 'Components/Form/sw-number-field',
+  title: "Components/Form/sw-number-field",
   component: SwNumberField,
   render: (args) => ({
     template: `
@@ -39,11 +51,11 @@ export default {
     components: { SwNumberField },
     data() {
       return {
-        currentValue: '',
+        currentValue: "",
       };
     },
     watch: {
-      'args.modelValue'(v) {
+      "args.modelValue"(v) {
         if (this.currentValue === v) {
           return;
         }
@@ -68,13 +80,13 @@ export default {
     setup: () => {
       return {
         args,
-      }
-    }
+      };
+    },
   }),
   args: {
-    label: 'Numberfield',
+    label: "Numberfield",
     step: 1,
-    numberType: 'int',
+    numberType: "int",
   },
   argTypes: {
     ...baseFieldArgTypes,
@@ -83,6 +95,6 @@ export default {
 
 export type SwNumberFieldStory = StoryObj<SwNumberFieldMeta>;
 
-export const DefaultStory: SwNumberFieldStory =  {
-  name: 'sw-number-field',
+export const DefaultStory: SwNumberFieldStory = {
+  name: "sw-number-field",
 };

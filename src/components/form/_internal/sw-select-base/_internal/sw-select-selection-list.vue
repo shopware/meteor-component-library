@@ -1,13 +1,14 @@
 <template>
   <ul class="sw-select-selection-list">
     <!-- eslint-disable vue/no-use-v-if-with-v-for -->
-    <template
-      v-for="(selection, index) in selections"
-      :key="selection[valueProperty]"
-    >
+    <template v-for="(selection, index) in selections" :key="selection[valueProperty]">
       <li
         v-if="!hideLabels"
-        :class="['sw-select-selection-list__item-holder--' + index, 'sw-select-selection-list__item-holder', classBindings]"
+        :class="[
+          'sw-select-selection-list__item-holder--' + index,
+          'sw-select-selection-list__item-holder',
+          classBindings,
+        ]"
         :data-id="selection[valueProperty]"
       >
         <slot
@@ -19,10 +20,7 @@
             :size="size"
             @dismiss="onClickDismiss(selection)"
           >
-            <span
-              class="sw-select-selection-list__item"
-              :title="selection[labelProperty]"
-            >
+            <span class="sw-select-selection-list__item" :title="selection[labelProperty]">
               <slot
                 name="label-property"
                 v-bind="{ item: selection, index, labelProperty, valueProperty }"
@@ -35,14 +33,8 @@
       </li>
     </template>
 
-    <li
-      v-if="invisibleCount > 0 && !hideLabels"
-      class="sw-select-selection-list__load-more"
-    >
-      <slot
-        name="invisible-count"
-        v-bind="{ invisibleCount, onClickInvisibleCount }"
-      >
+    <li v-if="invisibleCount > 0 && !hideLabels" class="sw-select-selection-list__load-more">
+      <slot name="invisible-count" v-bind="{ invisibleCount, onClickInvisibleCount }">
         <sw-button
           class="sw-select-selection-list__load-more-button"
           @click.stop="onClickInvisibleCount"
@@ -53,10 +45,7 @@
     </li>
 
     <li v-if="!disableInput">
-      <slot
-        name="input"
-        v-bind="{ placeholder, searchTerm, onSearchTermChange, onKeyDownDelete }"
-      >
+      <slot name="input" v-bind="{ placeholder, searchTerm, onSearchTermChange, onKeyDownDelete }">
         <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
         <input
           ref="swSelectInput"
@@ -68,25 +57,25 @@
           :value="searchTerm"
           @input="onSearchTermChange"
           @keydown.delete="onKeyDownDelete"
-        >
+        />
       </slot>
     </li>
   </ul>
 </template>
 
 <script lang="ts">
-import type { PropType } from 'vue';
+import type { PropType } from "vue";
 
-import { defineComponent } from 'vue';
-import SwLabel from '../../../../_internal/sw-label.vue';
-import SwButton from '../../../sw-button/sw-button.vue';
+import { defineComponent } from "vue";
+import SwLabel from "../../../../_internal/sw-label.vue";
+import SwButton from "../../../sw-button/sw-button.vue";
 
 export default defineComponent({
-  name: 'SwSelectSelectionList',
+  name: "SwSelectSelectionList",
 
   components: {
-    'sw-label': SwLabel,
-    'sw-button': SwButton,
+    "sw-label": SwLabel,
+    "sw-button": SwButton,
   },
 
   props: {
@@ -98,12 +87,12 @@ export default defineComponent({
     labelProperty: {
       type: String,
       required: false,
-      default: 'label',
+      default: "label",
     },
     valueProperty: {
       type: String,
       required: false,
-      default: 'value',
+      default: "value",
     },
     enableSearch: {
       type: Boolean,
@@ -116,7 +105,7 @@ export default defineComponent({
       default: 0,
     },
     size: {
-      type: String as PropType<'small'|'medium'|'default'>,
+      type: String as PropType<"small" | "medium" | "default">,
       required: false,
       default: null,
     },
@@ -128,7 +117,7 @@ export default defineComponent({
     placeholder: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     isLoading: {
       type: Boolean,
@@ -138,7 +127,7 @@ export default defineComponent({
     searchTerm: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     disabled: {
       type: Boolean,
@@ -162,21 +151,21 @@ export default defineComponent({
     disableInput: {
       type: Boolean,
       required: false,
-      default: false
-    }
+      default: false,
+    },
   },
 
   computed: {
-    classBindings(): { 'sw-select-selection-list--single': boolean } {
+    classBindings(): { "sw-select-selection-list--single": boolean } {
       return {
-        'sw-select-selection-list--single': !this.multiSelection,
+        "sw-select-selection-list--single": !this.multiSelection,
       };
     },
 
     showPlaceholder(): string {
-      return (this.alwaysShowPlaceholder || (this.selections.length === 0 && this.hideLabels))
+      return this.alwaysShowPlaceholder || (this.selections.length === 0 && this.hideLabels)
         ? this.placeholder
-        : '';
+        : "";
     },
   },
 
@@ -190,7 +179,7 @@ export default defineComponent({
         return true;
       }
 
-      if (typeof this.selectionDisablingMethod !== 'function') {
+      if (typeof this.selectionDisablingMethod !== "function") {
         return false;
       }
 
@@ -198,23 +187,23 @@ export default defineComponent({
     },
 
     onClickInvisibleCount() {
-      this.$emit('total-count-click');
+      this.$emit("total-count-click");
     },
 
     onSearchTermChange(event: Event) {
       // @ts-expect-error - target value is defined
-      this.$emit('search-term-change', event.target.value, event);
+      this.$emit("search-term-change", event.target.value, event);
     },
 
     onKeyDownDelete() {
       if (this.searchTerm.length < 1) {
-        this.$emit('last-item-delete');
+        this.$emit("last-item-delete");
       }
     },
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onClickDismiss(item: any) {
-      this.$emit('item-remove', item);
+      this.$emit("item-remove", item);
     },
 
     focus() {

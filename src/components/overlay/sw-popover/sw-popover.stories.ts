@@ -1,219 +1,229 @@
-import SwPopover from './sw-popover.vue';
-import SwPopoverItem from '../sw-popover-item/sw-popover-item.vue';
-import SwPopoverItemResult from '../sw-popover-item-result/sw-popover-item-result.vue';
-import SwFloatingUi from '../../_internal/sw-floating-ui/sw-floating-ui.vue';
-import SwButton from '../../form/sw-button/sw-button.vue';
+import SwPopover from "./sw-popover.vue";
+import SwPopoverItem from "../sw-popover-item/sw-popover-item.vue";
+import SwPopoverItemResult from "../sw-popover-item-result/sw-popover-item-result.vue";
+import SwFloatingUi from "../../_internal/sw-floating-ui/sw-floating-ui.vue";
+import SwButton from "../../form/sw-button/sw-button.vue";
 import type { SlottedMeta } from "@/_internal/story-helper";
-import { defineComponent } from 'vue';
-import type { StoryObj } from '@storybook/vue3';
+import { defineComponent } from "vue";
+import type { StoryObj } from "@storybook/vue3";
 
-export type SwPopoverMeta = SlottedMeta<typeof SwPopover, 'default' | 'go-back' | 'goBack' | 'click-options' | 'clickOptions'>;
+export type SwPopoverMeta = SlottedMeta<
+  typeof SwPopover,
+"default" | "go-back" | "goBack" | "click-options" | "clickOptions"
+>;
 
 export default {
-  title: 'Components/Overlay/sw-popover',
+  title: "Components/Overlay/sw-popover",
   component: SwPopover,
   argTypes: {
-    'go-back': {
-      action: 'go-back',
+    "go-back": {
+      action: "go-back",
       table: {
         disable: true,
       },
     },
     goBack: {
-      action: 'go-back',
+      action: "go-back",
       table: {
-        category: 'Events',
+        category: "Events",
       },
     },
-    'click-options': {
+    "click-options": {
       table: {
         disable: true,
       },
     },
     clickOptions: {
-      action: 'click-options',
+      action: "click-options",
       table: {
-        category: 'Events',
+        category: "Events",
       },
     },
   },
   args: {
-    title: 'Popover example',
+    title: "Popover example",
     disableFloat: false,
     childViews: [
-      { name: 'columnOrder', title: 'Columns' },
+      { name: "columnOrder", title: "Columns" },
       {
-        name: 'complex',
-        title: 'Complex example',
+        name: "complex",
+        title: "Complex example",
         childViews: [
           {
-            name: 'simple',
-            childViews: [{
-              name: 'child_of_simple'
-            }],
+            name: "simple",
+            childViews: [
+              {
+                name: "child_of_simple",
+              },
+            ],
           },
         ],
       },
     ],
   },
-  render: (args) => defineComponent({
-    components: {
-      SwPopover,
-      SwPopoverItem,
-      SwPopoverItemResult,
-      SwFloatingUi,
-      SwButton,
-    },
-    data() {
-      return {
-        itemVisible: true,
-        itemSwitchValue: false,
-        columnGroups: [
-          {
-            id: 'visible',
-            label: 'Shown in table',
-            actionLabel: 'Hide all',
-          },
-          {
-            id: 'hidden',
-            label: 'Hidden in table',
-            actionLabel: 'Show all',
-          },
-        ],
-        columnOrderOptions: [
-          {
-            id: 'name',
-            label: 'Name',
-            position: 0,
-            isVisible: true,
-            parentGroup: 'visible',
-            isSortable: false,
-            isHidable: false,
-          },
-          {
-            id: 'manufacturer',
-            label: 'Manufacturer',
-            position: 1,
-            isVisible: true,
-            parentGroup: 'visible',
-            isSortable: true,
-            isHidable: true,
-          },
-          {
-            id: 'active',
-            label: 'Active',
-            position: 2,
-            isVisible: true,
-            parentGroup: 'visible',
-            isSortable: true,
-            isHidable: true,
-          },
-          {
-            id: 'price',
-            label: 'Price',
-            position: 3,
-            isVisible: true,
-            parentGroup: 'visible',
-            isSortable: true,
-            isHidable: true,
-          },
-          {
-            id: 'stock',
-            label: 'Stock',
-            position: 4,
-            isVisible: false,
-            parentGroup: 'hidden',
-            isSortable: true,
-            isHidable: true,
-          },
-          {
-            id: 'available',
-            label: 'Available',
-            position: 5,
-            isVisible: false,
-            parentGroup: 'hidden',
-            isSortable: true,
-            isHidable: true,
-          },
-        ],
-        numberedColumn: false,
-        showStripes: false,
-        showOutlines: false,
-        frameOutlines: false,
-        openContentInPeekMode: false,
-      };
-    },
-    watch: {},
-    computed: {
-      console() {
-        return console;
+  render: (args) =>
+    defineComponent({
+      components: {
+        SwPopover,
+        SwPopoverItem,
+        SwPopoverItemResult,
+        SwFloatingUi,
+        SwButton,
       },
-    },
-    methods: {
-      onColumnChangeVisibility(itemId: string) {
-        const item = this.columnOrderOptions.find((i) => i.id === itemId);
+      data() {
+        return {
+          itemVisible: true,
+          itemSwitchValue: false,
+          columnGroups: [
+            {
+              id: "visible",
+              label: "Shown in table",
+              actionLabel: "Hide all",
+            },
+            {
+              id: "hidden",
+              label: "Hidden in table",
+              actionLabel: "Show all",
+            },
+          ],
+          columnOrderOptions: [
+            {
+              id: "name",
+              label: "Name",
+              position: 0,
+              isVisible: true,
+              parentGroup: "visible",
+              isSortable: false,
+              isHidable: false,
+            },
+            {
+              id: "manufacturer",
+              label: "Manufacturer",
+              position: 1,
+              isVisible: true,
+              parentGroup: "visible",
+              isSortable: true,
+              isHidable: true,
+            },
+            {
+              id: "active",
+              label: "Active",
+              position: 2,
+              isVisible: true,
+              parentGroup: "visible",
+              isSortable: true,
+              isHidable: true,
+            },
+            {
+              id: "price",
+              label: "Price",
+              position: 3,
+              isVisible: true,
+              parentGroup: "visible",
+              isSortable: true,
+              isHidable: true,
+            },
+            {
+              id: "stock",
+              label: "Stock",
+              position: 4,
+              isVisible: false,
+              parentGroup: "hidden",
+              isSortable: true,
+              isHidable: true,
+            },
+            {
+              id: "available",
+              label: "Available",
+              position: 5,
+              isVisible: false,
+              parentGroup: "hidden",
+              isSortable: true,
+              isHidable: true,
+            },
+          ],
+          numberedColumn: false,
+          showStripes: false,
+          showOutlines: false,
+          frameOutlines: false,
+          openContentInPeekMode: false,
+        };
+      },
+      watch: {},
+      computed: {
+        console() {
+          return console;
+        },
+      },
+      methods: {
+        onColumnChangeVisibility(itemId: string) {
+          const item = this.columnOrderOptions.find((i) => i.id === itemId);
 
-        if (item) {
-          item.isVisible = !item.isVisible;
-          item.parentGroup = item.isVisible ? 'visible' : 'hidden';
-        }
-      },
-      onColumnClickGroupAction(groupId: string) {
-        this.columnOrderOptions.forEach((item) => {
-          if (groupId === 'visible') {
-            item.isVisible = false;
-            item.parentGroup = 'hidden';
+          if (item) {
+            item.isVisible = !item.isVisible;
+            item.parentGroup = item.isVisible ? "visible" : "hidden";
           }
+        },
+        onColumnClickGroupAction(groupId: string) {
+          this.columnOrderOptions.forEach((item) => {
+            if (groupId === "visible") {
+              item.isVisible = false;
+              item.parentGroup = "hidden";
+            }
 
-          if (groupId === 'hidden') {
-            item.isVisible = true;
-            item.parentGroup = 'visible';
+            if (groupId === "hidden") {
+              item.isVisible = true;
+              item.parentGroup = "visible";
+            }
+          });
+        },
+        onColumnChangeOrder({
+          itemId,
+          dropZone,
+          dropId,
+        }: {
+          itemId: string;
+          dropZone: "before" | "after";
+          dropId: string;
+        }) {
+          const item = this.columnOrderOptions.find((i) => i.id === itemId);
+          const dropItem = this.columnOrderOptions.find((i) => i.id === dropId);
+
+          if (item && dropItem) {
+            item.parentGroup = dropItem.parentGroup;
+            item.isVisible = dropItem.isVisible;
+
+            this.columnOrderOptions = [...this.columnOrderOptions]
+              .sort((optionA, optionB) => {
+                return optionA.position - optionB.position;
+              })
+              .sort((optionA, optionB) => {
+                // The logic for inserting the column before or after the target column
+                if (optionB.id === itemId) {
+                  if (dropZone === "after") {
+                    return optionA.position <= dropItem.position ? -1 : 1;
+                  } else {
+                    return optionA.position < dropItem.position ? -1 : 1;
+                  }
+                }
+
+                if (optionA.id === itemId) {
+                  if (dropZone === "after") {
+                    return optionB.position > dropItem.position ? -1 : 1;
+                  } else {
+                    return optionB.position >= dropItem.position ? -1 : 1;
+                  }
+                }
+
+                return 0;
+              })
+              .map((option, index) => {
+                return { ...option, position: index * 100 };
+              });
           }
-        });
+        },
       },
-      onColumnChangeOrder({ itemId, dropZone, dropId }: {
-        itemId: string;
-        dropZone: 'before' | 'after';
-        dropId: string;
-      }) {
-        const item = this.columnOrderOptions.find((i) => i.id === itemId);
-        const dropItem = this.columnOrderOptions.find((i) => i.id === dropId);
-
-        if (item && dropItem) {
-          item.parentGroup = dropItem.parentGroup;
-          item.isVisible = dropItem.isVisible;
-
-          this.columnOrderOptions = [...this.columnOrderOptions]
-            .sort((optionA, optionB) => {
-              return optionA.position - optionB.position;
-            })
-            .sort((optionA, optionB) => {
-              // The logic for inserting the column before or after the target column
-              if (optionB.id === itemId) {
-                if (dropZone === 'after') {
-                  return optionA.position <= dropItem.position ? -1 : 1;
-                } else {
-                  return optionA.position < dropItem.position ? -1 : 1;
-                }
-              }
-
-              if (optionA.id === itemId) {
-                if (dropZone === 'after') {
-                  return optionB.position > dropItem.position ? -1 : 1;
-                } else {
-                  return optionB.position >= dropItem.position ? -1 : 1;
-                }
-              }
-
-              return 0;
-            })
-            .map((option, index) => {
-              return { ...option, position: index * 100 };
-            });
-        }
-      },
-    },
-    template: `
+      template: `
       <div style="max-width: 1000px; max-height: 350px; height: 350px; margin: 0 auto;">
         <sw-popover v-bind="args">
           <template #trigger="{ toggleFloatingUi }">
@@ -333,17 +343,16 @@ export default {
         </sw-popover>
       </div>
     `,
-    setup: () => {
-      return {
-        args,
-      }
-    }
-  }),
+      setup: () => {
+        return {
+          args,
+        };
+      },
+    }),
 } as SwPopoverMeta;
-
 
 export type SwPopoverStory = StoryObj<SwPopoverMeta>;
 
-export const DefaultStory: SwPopoverStory =  {
-  name: 'sw-popover',
+export const DefaultStory: SwPopoverStory = {
+  name: "sw-popover",
 };

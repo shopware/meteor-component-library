@@ -1,26 +1,26 @@
 import type { Preview } from "@storybook/vue3";
-import '~/src/components/assets/scss/all.scss';
-import { darkTheme, lightTheme } from './shopwareTheme';
+import "~/src/components/assets/scss/all.scss";
+import { darkTheme, lightTheme } from "./shopwareTheme";
 import { setup } from "@storybook/vue3";
-import { createI18n } from 'vue-i18n'
-import DeviceHelperPlugin from './../src/plugin/device-helper.plugin';
+import { createI18n } from "vue-i18n";
+import DeviceHelperPlugin from "./../src/plugin/device-helper.plugin";
 
 const i18n = createI18n({
   // something vue-i18n options here ...
   globalInjection: true,
-  locale: 'en',
-  fallbackLocale: 'en',
+  locale: "en",
+  fallbackLocale: "en",
   messages: {
     en: {},
     de: {},
   },
   allowComposition: true,
-})
+});
 
 setup((app) => {
-  app.use(i18n)
+  app.use(i18n);
   app.use(DeviceHelperPlugin);
-})
+});
 
 const preview: Preview = {
   parameters: {
@@ -36,7 +36,7 @@ const preview: Preview = {
     darkMode: {
       dark: { ...darkTheme },
       light: { ...lightTheme },
-    }
+    },
   },
 };
 

@@ -1,40 +1,35 @@
-import meta, { type SwDataTableMeta, type SwDataTableStory }  from './sw-data-table.stories';
-import SwDataTableFixtures from './sw-data-table.fixtures.json';
-import { waitUntilRendered } from '../../../_internal/test-helper';
-import {
-  within,
-  userEvent,
-  waitFor,
-  fireEvent,
-} from '@storybook/testing-library';
-import { expect } from '@storybook/jest';
+import meta, { type SwDataTableMeta, type SwDataTableStory } from "./sw-data-table.stories";
+import SwDataTableFixtures from "./sw-data-table.fixtures.json";
+import { waitUntilRendered } from "../../../_internal/test-helper";
+import { within, userEvent, waitFor, fireEvent } from "@storybook/testing-library";
+import { expect } from "@storybook/jest";
 
 export default {
   ...meta,
-  title: 'Interaction Tests/Table and list/sw-data-table',
+  title: "Interaction Tests/Table and list/sw-data-table",
 } as SwDataTableMeta;
 
 export const VisualTestRenderTable: SwDataTableStory = {
-  name: 'Should render the Table',
+  name: "Should render the Table",
 };
 
 export const VisualTestRenderFullTable: SwDataTableStory = {
-  name: 'Should render the full Table',
+  name: "Should render the full Table",
   args: {
-    layout: 'full',
+    layout: "full",
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await waitUntilRendered(() => {
-      return document.querySelector('.sw-data-table-text-renderer');
+      return document.querySelector(".sw-data-table-text-renderer");
     });
 
-    await expect(canvas.getByText('Awesome Concrete Chair')).toBeInTheDocument();
-  } 
+    await expect(canvas.getByText("Awesome Concrete Chair")).toBeInTheDocument();
+  },
 };
 
 export const VisualTestRenderEmptyState: SwDataTableStory = {
-  name: 'Should render the empty state',
+  name: "Should render the empty state",
   args: {
     dataSource: [],
   },
@@ -42,43 +37,39 @@ export const VisualTestRenderEmptyState: SwDataTableStory = {
     const canvas = within(canvasElement);
 
     await waitUntilRendered(() => {
-      return document.querySelector('.sw-empty-state');
+      return document.querySelector(".sw-empty-state");
     });
-    
-    await expect(canvas.getByText('Add your first item')).toBeInTheDocument();
+
+    await expect(canvas.getByText("Add your first item")).toBeInTheDocument();
   },
 };
 
 export const VisualTestRenderTableStickyHeader: SwDataTableStory = {
-  name: 'Should render the Table with sticky header',
+  name: "Should render the Table with sticky header",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    await waitUntilRendered(() =>
-      document.body.textContent?.includes('Gorgeous Wooden Ball'),
-    );
-    await waitUntilRendered(() =>
-      document.body.textContent?.includes('Available'),
-    );
+    await waitUntilRendered(() => document.body.textContent?.includes("Gorgeous Wooden Ball"));
+    await waitUntilRendered(() => document.body.textContent?.includes("Available"));
 
     // wait 1 second so that everything is correctly rendered
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // scroll to bottom
-    const swDataTable = document.querySelector('.sw-data-table__table-wrapper');
+    const swDataTable = document.querySelector(".sw-data-table__table-wrapper");
 
     if (!swDataTable) {
-      throw new Error('swDataTable not found');
+      throw new Error("swDataTable not found");
     }
 
     swDataTable.scrollTop = swDataTable.scrollHeight;
 
-    await expect(canvas.getByText('Gorgeous Wooden Ball')).toBeInTheDocument();
+    await expect(canvas.getByText("Gorgeous Wooden Ball")).toBeInTheDocument();
   },
 };
 
 export const VisualTestRenderTableWithoutCardHeader: SwDataTableStory = {
-  name: 'Should render the Table without card header',
+  name: "Should render the Table without card header",
   args: {
     title: undefined,
     subtitle: undefined,
@@ -88,38 +79,32 @@ export const VisualTestRenderTableWithoutCardHeader: SwDataTableStory = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    await waitUntilRendered(() =>
-      document.body.textContent?.includes('Awesome Concrete Chair'),
-    );
-    await waitUntilRendered(() =>
-      document.body.textContent?.includes('Available'),
-    );
+    await waitUntilRendered(() => document.body.textContent?.includes("Awesome Concrete Chair"));
+    await waitUntilRendered(() => document.body.textContent?.includes("Available"));
 
     // wait 1 second so that everything is correctly rendered
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    await expect(
-      canvas.getAllByText('Awesome Concrete Chair')[0],
-    ).toBeInTheDocument();
+    await expect(canvas.getAllByText("Awesome Concrete Chair")[0]).toBeInTheDocument();
   },
 };
 
 export const VisualTestRenderTableWithScrollShadows: SwDataTableStory = {
-  name: 'Should render the Table with scroll shadows',
+  name: "Should render the Table with scroll shadows",
   args: {
     dataSource: [
       {
-        id: 'bbf41666-d40f-44d1-8d31-49daab4fdc87',
+        id: "bbf41666-d40f-44d1-8d31-49daab4fdc87",
         active: false,
-        name: 'Aa Render scroll shadows',
+        name: "Aa Render scroll shadows",
         manufacturer: {
-          name: 'Last manufacturer',
+          name: "Last manufacturer",
           translated: {
-            name: 'Last manufacturer',
+            name: "Last manufacturer",
           },
         },
         translated: {
-          name: 'Aa Render scroll shadows',
+          name: "Aa Render scroll shadows",
         },
         price: [
           {
@@ -145,112 +130,86 @@ export const VisualTestRenderTableWithScrollShadows: SwDataTableStory = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
-    await waitUntilRendered(() =>
-      document.body.textContent?.includes('Aa Render scroll shadows'),
-    );
+    await waitUntilRendered(() => document.body.textContent?.includes("Aa Render scroll shadows"));
 
     // scroll to middle horizontally and vertically
-    const swDataTable = document.querySelector('.sw-data-table__table-wrapper');
+    const swDataTable = document.querySelector(".sw-data-table__table-wrapper");
 
     if (!swDataTable) {
-      throw new Error('swDataTable not found');
+      throw new Error("swDataTable not found");
     }
 
-    swDataTable.scrollTop =
-        swDataTable.scrollHeight / 2 - swDataTable.clientHeight / 2;
-    swDataTable.scrollLeft =
-        swDataTable.scrollWidth / 2 - swDataTable.clientWidth / 2;
+    swDataTable.scrollTop = swDataTable.scrollHeight / 2 - swDataTable.clientHeight / 2;
+    swDataTable.scrollLeft = swDataTable.scrollWidth / 2 - swDataTable.clientWidth / 2;
 
     // wait 1 second so that everything is correctly rendered
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    await expect(canvas.getByText('Aa Render scroll shadows')).toBeInTheDocument();
+    await expect(canvas.getByText("Aa Render scroll shadows")).toBeInTheDocument();
   },
 };
 
 export const VisualTestEmitReloadEventOnClickingReload: SwDataTableStory = {
-  name: 'Emit reload event on clicking reload',
+  name: "Emit reload event on clicking reload",
   args: {
     enableReload: true,
   },
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-button[aria-label="reload-data"]'),
-    );
+    await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
 
-    const reloadButton = canvas.getByLabelText('reload-data');
+    const reloadButton = canvas.getByLabelText("reload-data");
 
     await userEvent.click(reloadButton);
 
     // wait 1 second so that everything is correctly rendered
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
     await expect(args.reload).toHaveBeenCalled();
   },
 };
 
 export const VisualTestOpenSettingsMenu: SwDataTableStory = {
-  name: 'Open settings menu with correct popover items inside',
+  name: "Open settings menu with correct popover items inside",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-button[aria-label="reload-data"]'),
-    );
+    await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
 
-    const toggleTableSettingsButton = canvas.getByLabelText(
-      'Toggle view settings',
-    );
+    const toggleTableSettingsButton = canvas.getByLabelText("Toggle view settings");
 
     await userEvent.click(toggleTableSettingsButton);
 
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-floating-ui__content'),
-    );
+    await waitUntilRendered(() => document.querySelector(".sw-floating-ui__content"));
 
     const popover = within(
       document.querySelector('.sw-floating-ui__content[data-show="true"]') as HTMLElement,
     );
-    await expect(popover.getByText('Settings')).toBeInTheDocument();
-    await expect(popover.getByText('Columns')).toBeInTheDocument();
+    await expect(popover.getByText("Settings")).toBeInTheDocument();
+    await expect(popover.getByText("Columns")).toBeInTheDocument();
 
-    await waitUntilRendered(
-      () => !document.querySelector('[class*="popoverTransition"]'),
-    );
+    await waitUntilRendered(() => !document.querySelector('[class*="popoverTransition"]'));
 
-    await expect(popover.getByText('Reset all changes')).toBeInTheDocument();
+    await expect(popover.getByText("Reset all changes")).toBeInTheDocument();
   },
 };
 
 export const VisualTestOpenColumnSettingsMenu: SwDataTableStory = {
-  name: 'Open column settings menu',
+  name: "Open column settings menu",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-button[aria-label="reload-data"]'),
-    );
+    await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
 
-    const toggleTableSettingsButton = canvas.getByRole('button', {
-      name: 'Toggle view settings',
+    const toggleTableSettingsButton = canvas.getByRole("button", {
+      name: "Toggle view settings",
     });
 
     await userEvent.click(toggleTableSettingsButton);
@@ -262,9 +221,9 @@ export const VisualTestOpenColumnSettingsMenu: SwDataTableStory = {
     let popover = within(
       document.querySelector('.sw-floating-ui__content[data-show="true"]') as HTMLElement,
     );
-    await expect(popover.getByText('Settings')).toBeInTheDocument();
+    await expect(popover.getByText("Settings")).toBeInTheDocument();
 
-    const columnSettingsPopoverItem = popover.getByText('Columns');
+    const columnSettingsPopoverItem = popover.getByText("Columns");
 
     await userEvent.click(columnSettingsPopoverItem);
 
@@ -272,83 +231,67 @@ export const VisualTestOpenColumnSettingsMenu: SwDataTableStory = {
       document.querySelector('.sw-floating-ui__content[data-show="true"]') as HTMLElement,
     );
 
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-popover-item-result__group-label'),
-    );
+    await waitUntilRendered(() => document.querySelector(".sw-popover-item-result__group-label"));
 
     // check if correct items are visible
-    await expect(popover.getByText('Shown in table')).toBeInTheDocument();
-    await expect(popover.getByText('Hidden in table')).toBeInTheDocument();
+    await expect(popover.getByText("Shown in table")).toBeInTheDocument();
+    await expect(popover.getByText("Hidden in table")).toBeInTheDocument();
 
-    await expect(popover.getAllByText('Columns')[0]).toBeInTheDocument();
+    await expect(popover.getAllByText("Columns")[0]).toBeInTheDocument();
 
-    await expect(popover.getByText('Hide all')).toBeInTheDocument();
-    await expect(popover.getByText('Show all')).toBeInTheDocument();
+    await expect(popover.getByText("Hide all")).toBeInTheDocument();
+    await expect(popover.getByText("Show all")).toBeInTheDocument();
 
-    await expect(popover.getByText('Name')).toBeInTheDocument();
-    await expect(popover.getByText('Manufacturer')).toBeInTheDocument();
-    await expect(popover.getByText('Active')).toBeInTheDocument();
-    await expect(popover.getByText('Price')).toBeInTheDocument();
-    await expect(popover.getByText('Available')).toBeInTheDocument();
-    await expect(popover.getByText('Stock')).toBeInTheDocument();
+    await expect(popover.getByText("Name")).toBeInTheDocument();
+    await expect(popover.getByText("Manufacturer")).toBeInTheDocument();
+    await expect(popover.getByText("Active")).toBeInTheDocument();
+    await expect(popover.getByText("Price")).toBeInTheDocument();
+    await expect(popover.getByText("Available")).toBeInTheDocument();
+    await expect(popover.getByText("Stock")).toBeInTheDocument();
   },
 };
 
 export const VisualTestColumnDragBar: SwDataTableStory = {
-  name: 'Show the column drag bar on hover',
+  name: "Show the column drag bar on hover",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-button[aria-label="reload-data"]'),
-    );
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-data-table__table-head-dragzone'),
-    );
+    await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+    await waitUntilRendered(() => document.querySelector(".sw-data-table__table-head-dragzone"));
 
     const manufacturerColumnDragBar = await canvas.getByTestId(
-      'column-dragzone__manufacturer.name',
+      "column-dragzone__manufacturer.name",
     );
     // simulate hover because real css hover is not possible in interaction tests
-    await manufacturerColumnDragBar.classList.add('simHover');
+    await manufacturerColumnDragBar.classList.add("simHover");
 
     const manufacturerDragzoneBar = await canvas.getByTestId(
-      'column-dragzone-bar__manufacturer.name',
+      "column-dragzone-bar__manufacturer.name",
     );
     // check if scale was set back to 1:1
     await waitFor(async () => {
       await expect(getComputedStyle(manufacturerDragzoneBar)).toHaveProperty(
-        'transform',
-        'matrix(1, 0, 0, 1, 0, 0)',
+        "transform",
+        "matrix(1, 0, 0, 1, 0, 0)",
       );
     });
   },
 };
 
 export const VisualTestColumnDragDropOrdering: SwDataTableStory = {
-  name: 'Order the columns by drag and drop',
+  name: "Order the columns by drag and drop",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-button[aria-label="reload-data"]'),
-    );
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-data-table__table-head-dragzone'),
-    );
+    await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+    await waitUntilRendered(() => document.querySelector(".sw-data-table__table-head-dragzone"));
 
     const manufacturerColumnDragzone = await canvas.getByTestId(
-      'column-dragzone__manufacturer.name',
+      "column-dragzone__manufacturer.name",
     );
-    const priceColumnDropzoneAfter = await canvas.getByTestId(
-      'column-dropzone-after__price',
-    );
+    const priceColumnDropzoneAfter = await canvas.getByTestId("column-dropzone-after__price");
 
     // drag the "manufacturer" column right to the "price" column
     fireEvent.mouseDown(manufacturerColumnDragzone, {
@@ -369,264 +312,193 @@ export const VisualTestColumnDragDropOrdering: SwDataTableStory = {
 };
 
 export const VisualTestColumnSettingsPopover: SwDataTableStory = {
-  name: 'Show the column settings on click',
+  name: "Show the column settings on click",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-button[aria-label="reload-data"]'),
-    );
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-data-table__table-head-dragzone'),
-    );
+    await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+    await waitUntilRendered(() => document.querySelector(".sw-data-table__table-head-dragzone"));
 
-    const nameColumnSettingsTrigger = await canvas.getByTestId(
-      'column-settings-trigger__name',
-    );
+    const nameColumnSettingsTrigger = await canvas.getByTestId("column-settings-trigger__name");
     await userEvent.click(nameColumnSettingsTrigger);
 
     await waitUntilRendered(() =>
-      document.querySelector(
-        '.sw-data-table__table-head-column-settings[data-show="true"]',
-      ),
+      document.querySelector('.sw-data-table__table-head-column-settings[data-show="true"]'),
     );
 
     const columnSettingsPopover = within(
       document.querySelector(
         '.sw-data-table__table-head-column-settings[data-show="true"]',
-      ) as HTMLElement
+      ) as HTMLElement,
     );
-    await expect(columnSettingsPopover.getByText('Name')).toBeInTheDocument();
-    await expect(
-      columnSettingsPopover.getByText('Sort ascending'),
-    ).toBeInTheDocument();
-    await expect(
-      columnSettingsPopover.getByText('Sort descending'),
-    ).toBeInTheDocument();
+    await expect(columnSettingsPopover.getByText("Name")).toBeInTheDocument();
+    await expect(columnSettingsPopover.getByText("Sort ascending")).toBeInTheDocument();
+    await expect(columnSettingsPopover.getByText("Sort descending")).toBeInTheDocument();
   },
 };
 
 export const VisualTestColumnSettingsPopoverWithoutSort: SwDataTableStory = {
-  name: 'Show the column settings without sort on click',
+  name: "Show the column settings without sort on click",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-button[aria-label="reload-data"]'),
-    );
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-data-table__table-head-dragzone'),
-    );
+    await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+    await waitUntilRendered(() => document.querySelector(".sw-data-table__table-head-dragzone"));
 
-    const activeColumnSettingsTrigger = await canvas.getByTestId(
-      'column-settings-trigger__active',
-    );
+    const activeColumnSettingsTrigger = await canvas.getByTestId("column-settings-trigger__active");
     await userEvent.click(activeColumnSettingsTrigger);
 
     await waitUntilRendered(() =>
-      document.querySelector(
-        '.sw-data-table__table-head-column-settings[data-show="true"]',
-      ),
+      document.querySelector('.sw-data-table__table-head-column-settings[data-show="true"]'),
     );
 
     const columnSettingsPopover = within(
       document.querySelector(
         '.sw-data-table__table-head-column-settings[data-show="true"]',
-      ) as HTMLElement
+      ) as HTMLElement,
     );
-    await expect(columnSettingsPopover.getByText('Active')).toBeInTheDocument();
+    await expect(columnSettingsPopover.getByText("Active")).toBeInTheDocument();
   },
 };
 
 export const VisualTestDataSortingInColumnSettings: SwDataTableStory = {
-  name: 'Sort the data by clicking on the column settings',
+  name: "Sort the data by clicking on the column settings",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-button[aria-label="reload-data"]'),
-    );
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-data-table__table-head-dragzone'),
-    );
+    await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+    await waitUntilRendered(() => document.querySelector(".sw-data-table__table-head-dragzone"));
 
-    const nameColumnSettingsTrigger = await canvas.getByTestId(
-      'column-settings-trigger__name',
-    );
+    const nameColumnSettingsTrigger = await canvas.getByTestId("column-settings-trigger__name");
     await userEvent.click(nameColumnSettingsTrigger);
 
     await waitUntilRendered(() =>
-      document.querySelector(
-        '.sw-data-table__table-head-column-settings[data-show="true"]',
-      ),
+      document.querySelector('.sw-data-table__table-head-column-settings[data-show="true"]'),
     );
 
     const columnSettingsPopover = within(
       document.querySelector(
         '.sw-data-table__table-head-column-settings[data-show="true"]',
-      ) as HTMLElement
+      ) as HTMLElement,
     );
-    await expect(columnSettingsPopover.getByText('Name')).toBeInTheDocument();
-    await expect(
-      columnSettingsPopover.getByText('Sort ascending'),
-    ).toBeInTheDocument();
-    await expect(
-      columnSettingsPopover.getByText('Sort descending'),
-    ).toBeInTheDocument();
+    await expect(columnSettingsPopover.getByText("Name")).toBeInTheDocument();
+    await expect(columnSettingsPopover.getByText("Sort ascending")).toBeInTheDocument();
+    await expect(columnSettingsPopover.getByText("Sort descending")).toBeInTheDocument();
 
-    const sortDescendingButton =
-        await columnSettingsPopover.getByText('Sort descending');
+    const sortDescendingButton = await columnSettingsPopover.getByText("Sort descending");
     await userEvent.click(sortDescendingButton);
 
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
-    const rowContentName = await canvas.getAllByText('Unbranded Steel Bike');
+    const rowContentName = await canvas.getAllByText("Unbranded Steel Bike");
     await expect(rowContentName.length).toBeGreaterThan(0);
   },
 };
 
 // visual testing for loading state with skeleton bars
 export const VisualTestRenderSkeleton: SwDataTableStory = {
-  name: 'Should render the Table with skeleton bars',
+  name: "Should render the Table with skeleton bars",
   args: {
     isLoading: true,
   },
   play: async () => {
-    await waitUntilRendered(() => document.querySelector('.sw-skeleton-bar'));
+    await waitUntilRendered(() => document.querySelector(".sw-skeleton-bar"));
   },
 };
 
 export const VisualTestAddColumnIndicator: SwDataTableStory = {
-  name: 'Render the add column indicator',
+  name: "Render the add column indicator",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-button[aria-label="reload-data"]'),
-    );
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-data-table__table-head-dragzone'),
-    );
+    await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+    await waitUntilRendered(() => document.querySelector(".sw-data-table__table-head-dragzone"));
 
     const tableHeadResizableAfter = await canvas.getByTestId(
-      'sw-data-table__table-head-resizable-before__manufacturer.name',
+      "sw-data-table__table-head-resizable-before__manufacturer.name",
     );
     await userEvent.hover(tableHeadResizableAfter);
 
     await waitUntilRendered(() =>
       document.querySelector(
-        '.sw-floating-ui__content.sw-data-table__table-head-add-column-indicator',
+        ".sw-floating-ui__content.sw-data-table__table-head-add-column-indicator",
       ),
     );
   },
 };
 
 export const VisualTestAddColumnIndicatorPopover: SwDataTableStory = {
-  name: 'Render the add column indicator popover',
+  name: "Render the add column indicator popover",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-button[aria-label="reload-data"]'),
-    );
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-data-table__table-head-dragzone'),
-    );
+    await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+    await waitUntilRendered(() => document.querySelector(".sw-data-table__table-head-dragzone"));
 
     const tableHeadResizableAfter = await canvas.getByTestId(
-      'sw-data-table__table-head-resizable-before__manufacturer.name',
+      "sw-data-table__table-head-resizable-before__manufacturer.name",
     );
     await userEvent.hover(tableHeadResizableAfter);
 
     await waitUntilRendered(() =>
       document.querySelector(
-        '.sw-floating-ui__content.sw-data-table__table-head-add-column-indicator',
+        ".sw-floating-ui__content.sw-data-table__table-head-add-column-indicator",
       ),
     );
 
     const popover = within(
       document.querySelector('.sw-floating-ui__content[data-show="true"]') as HTMLElement,
     );
-    const addColumnIndicatorIcon = await popover.getByTestId(
-      'add-column-indicator-icon__name',
-    );
+    const addColumnIndicatorIcon = await popover.getByTestId("add-column-indicator-icon__name");
 
     await userEvent.click(addColumnIndicatorIcon);
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-popover-item-result__option'),
-    );
+    await waitUntilRendered(() => document.querySelector(".sw-popover-item-result__option"));
   },
 };
 export const VisualTestAddNewColumn: SwDataTableStory = {
-  name: 'Add new column with add column indicator popover',
+  name: "Add new column with add column indicator popover",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-button[aria-label="reload-data"]'),
-    );
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-data-table__table-head-dragzone'),
-    );
+    await waitUntilRendered(() => document.querySelector('.sw-button[aria-label="reload-data"]'));
+    await waitUntilRendered(() => document.querySelector(".sw-data-table__table-head-dragzone"));
 
     const tableHeadResizableAfter = await canvas.getByTestId(
-      'sw-data-table__table-head-resizable-before__manufacturer.name',
+      "sw-data-table__table-head-resizable-before__manufacturer.name",
     );
     await userEvent.hover(tableHeadResizableAfter);
 
     await waitUntilRendered(() =>
       document.querySelector(
-        '.sw-floating-ui__content.sw-data-table__table-head-add-column-indicator',
+        ".sw-floating-ui__content.sw-data-table__table-head-add-column-indicator",
       ),
     );
 
     let popover = within(
       document.querySelector('.sw-floating-ui__content[data-show="true"]') as HTMLElement,
     );
-    const addColumnIndicatorIcon = await popover.getByTestId(
-      'add-column-indicator-icon__name',
-    );
+    const addColumnIndicatorIcon = await popover.getByTestId("add-column-indicator-icon__name");
 
     await userEvent.click(addColumnIndicatorIcon);
-    await waitUntilRendered(() =>
-      document.querySelector('.sw-popover-item-result__option'),
-    );
+    await waitUntilRendered(() => document.querySelector(".sw-popover-item-result__option"));
 
-    popover = within(
-      document.querySelector('.sw-floating-ui__content.sw-popover') as HTMLElement,
-    );
-    const stockOption = await popover.getByText('Stock');
+    popover = within(document.querySelector(".sw-floating-ui__content.sw-popover") as HTMLElement);
+    const stockOption = await popover.getByText("Stock");
 
     await userEvent.click(stockOption);
 
-    const columnSettingsTriggerStock = await canvas.getByTestId(
-      'column-settings-trigger__stock',
-    );
+    const columnSettingsTriggerStock = await canvas.getByTestId("column-settings-trigger__stock");
 
     await waitUntilRendered(
       () =>
         document.querySelectorAll(
-          '.sw-floating-ui__content.sw-data-table__table-head-add-column-indicator',
+          ".sw-floating-ui__content.sw-data-table__table-head-add-column-indicator",
         ).length === 0,
     );
     await expect(columnSettingsTriggerStock).toBeInTheDocument();
@@ -634,62 +506,54 @@ export const VisualTestAddNewColumn: SwDataTableStory = {
 };
 
 export const VisualTestHideOutlines: SwDataTableStory = {
-  name: 'Should render the Table without outlines',
+  name: "Should render the Table without outlines",
   args: {
     showOutlines: false,
   },
   async play({ canvasElement }) {
     const canvas = within(canvasElement);
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
-    await expect(canvas.getByText('Awesome Concrete Chair')).toBeInTheDocument();
+    await expect(canvas.getByText("Awesome Concrete Chair")).toBeInTheDocument();
   },
 };
 
 export const VisualTestHideStripes: SwDataTableStory = {
-  name: 'Should render the Table without stripes',
+  name: "Should render the Table without stripes",
   args: {
     showStripes: false,
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
-    await expect(canvas.getByText('Awesome Concrete Chair')).toBeInTheDocument();
+    await expect(canvas.getByText("Awesome Concrete Chair")).toBeInTheDocument();
   },
 };
 
 export const VisualTestBlankTable: SwDataTableStory = {
-  name: 'Should render the Table without stripes and outlines',
+  name: "Should render the Table without stripes and outlines",
   args: {
     showOutlines: false,
     showStripes: false,
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
-    await expect(canvas.getByText('Awesome Concrete Chair')).toBeInTheDocument();
+    await expect(canvas.getByText("Awesome Concrete Chair")).toBeInTheDocument();
   },
 };
 
 export const VisualTestEnableRowNumbering: SwDataTableStory = {
-  name: 'Should render the Table with row numbering',
+  name: "Should render the Table with row numbering",
   args: {
     enableRowNumbering: true,
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitUntilRendered(
-      () => document.querySelectorAll('.sw-skeleton-bar').length === 0,
-    );
+    await waitUntilRendered(() => document.querySelectorAll(".sw-skeleton-bar").length === 0);
 
-    await expect(canvas.getByText('Awesome Concrete Chair')).toBeInTheDocument();
+    await expect(canvas.getByText("Awesome Concrete Chair")).toBeInTheDocument();
   },
 };

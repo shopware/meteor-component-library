@@ -1,11 +1,11 @@
-import SwSkeletonBar from './sw-skeleton-bar.vue';
+import SwSkeletonBar from "./sw-skeleton-bar.vue";
 import type { StoryObj } from "@storybook/vue3";
 import type { SlottedMeta } from "@/_internal/story-helper";
 
-export type SwSkeletonBarMeta = SlottedMeta<typeof SwSkeletonBar, 'default'>;
+export type SwSkeletonBarMeta = SlottedMeta<typeof SwSkeletonBar, "default">;
 
 export default {
-  title: 'Components/Feedback Indicator/sw-skeleton-bar',
+  title: "Components/Feedback Indicator/sw-skeleton-bar",
   component: SwSkeletonBar,
   render: (args) => ({
     components: { SwSkeletonBar },
@@ -17,13 +17,13 @@ export default {
     setup: () => {
       return {
         args,
-      }
-    }
+      };
+    },
   }),
 } as SwSkeletonBarMeta;
 
 export type SwSkeletonBarStory = StoryObj<SwSkeletonBarMeta>;
 
-export const Default: SwSkeletonBarStory =  {
-  name: 'sw-skeleton-bar',
+export const Default: SwSkeletonBarStory = {
+  name: "sw-skeleton-bar",
 };

@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: "18"
       - name: Retrieve the cached "node_modules" directory (if present)
         uses: actions/cache@v4
         id: node-cache
@@ -42,7 +42,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: "18"
       - name: Retrieve the cached "node_modules" directory (if present)
         uses: actions/cache@v4
         id: node-cache
@@ -59,32 +59,32 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-    - name: Retrieve the cached "node_modules" directory (if present)
-      uses: actions/cache@v4
-      id: node-cache
-      with:
-        path: node_modules
-        key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-    - name: Install dependencies (if the cached directory was not found)
-      if: steps.node-cache.outputs.cache-hit != 'true'
-      run: npm ci
-    - name: Install Playwright
-      run: npx playwright install
-    - name: Create the static pages directory locally in CI
-      run: npm run build-storybook
-    - name: Run Tests
-      id: storybookTests
-      run: |
-        npx concurrently --kill-others --success first --names "SB,TEST"  --hide "SB" --prefix-colors "magenta,blue" \
-        "http-server storybook-static -a 127.0.0.1 --port 6006" \
-        "wait-on http://127.0.0.1:6006 && npm run test-storybook"
-    - name: Archive visual test diffs
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: visual-test-diffs
-        path: __snapshots__
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+      - name: Retrieve the cached "node_modules" directory (if present)
+        uses: actions/cache@v4
+        id: node-cache
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - name: Install dependencies (if the cached directory was not found)
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Install Playwright
+        run: npx playwright install
+      - name: Create the static pages directory locally in CI
+        run: npm run build-storybook
+      - name: Run Tests
+        id: storybookTests
+        run: |
+          npx concurrently --kill-others --success first --names "SB,TEST"  --hide "SB" --prefix-colors "magenta,blue" \
+          "http-server storybook-static -a 127.0.0.1 --port 6006" \
+          "wait-on http://127.0.0.1:6006 && npm run test-storybook"
+      - name: Archive visual test diffs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: visual-test-diffs
+          path: __snapshots__

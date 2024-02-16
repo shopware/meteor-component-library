@@ -5,16 +5,23 @@ import { defineComponent } from "vue";
 
 const meta: SlottedMeta<
   typeof SwIcon,
-'message' | 'width' | 'showDelay' | 'hideDelay' | 'disabled' | 'appearance' | 'showOnDisabledElements'
+| "message"
+| "width"
+| "showDelay"
+| "hideDelay"
+| "disabled"
+| "appearance"
+| "showOnDisabledElements"
 > = {
   title: "Directives/Tooltip",
   component: SwIcon,
-  render: (args) => (defineComponent({
-    components: { SwIcon },
-    directives: {
-      tooltip: TooltipDirective,
-    },
-    template: `<div>
+  render: (args) =>
+    defineComponent({
+      components: { SwIcon },
+      directives: {
+        tooltip: TooltipDirective,
+      },
+      template: `<div>
       <sw-icon
         name="regular-question-circle"
           v-tooltip="{
@@ -22,12 +29,12 @@ const meta: SlottedMeta<
         }">
       </sw-icon>
     </div>`,
-    setup: () => {
-      return {
-        args,
-      };
-    },
-  })),
+      setup: () => {
+        return {
+          args,
+        };
+      },
+    }),
   args: {
     message: "Help text",
     width: 200,
@@ -69,6 +76,6 @@ const meta: SlottedMeta<
 
 export default meta;
 
-export const Default =  {
+export const Default = {
   name: "Tooltip",
 };

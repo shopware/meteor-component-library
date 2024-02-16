@@ -7,10 +7,7 @@
     role="img"
   >
     <slot>
-      <span
-        v-if="showInitials"
-        class="sw-avatar__initials"
-      >
+      <span v-if="showInitials" class="sw-avatar__initials">
         {{ avatarInitials }}
       </span>
       <span v-if="showPlaceholder">
@@ -21,32 +18,32 @@
 </template>
 
 <script lang="ts">
-import cloneDeep from 'lodash-es/cloneDeep';
-import { defineComponent, type StyleValue } from 'vue';
+import cloneDeep from "lodash-es/cloneDeep";
+import { defineComponent, type StyleValue } from "vue";
 
 const colors = [
-  '#FFD700',
-  '#FFC700',
-  '#F88962',
-  '#F56C46',
-  '#FF85C2',
-  '#FF68AC',
-  '#6AD6F0',
-  '#4DC6E9',
-  '#A092F0',
-  '#8475E9',
-  '#57D9A3',
-  '#3CCA88',
+  "#FFD700",
+  "#FFC700",
+  "#F88962",
+  "#F56C46",
+  "#FF85C2",
+  "#FF68AC",
+  "#6AD6F0",
+  "#4DC6E9",
+  "#A092F0",
+  "#8475E9",
+  "#57D9A3",
+  "#3CCA88",
 ];
 
 export default defineComponent({
-  name: 'SwAvatar',
+  name: "SwAvatar",
 
   props: {
     color: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     size: {
       type: String,
@@ -56,12 +53,12 @@ export default defineComponent({
     firstName: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     lastName: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     imageUrl: {
       type: String,
@@ -81,8 +78,8 @@ export default defineComponent({
     variant: {
       type: String,
       required: false,
-      default: 'circle',
-      validator: (value: string) => ['circle', 'square'].includes(value),
+      default: "circle",
+      validator: (value: string) => ["circle", "square"].includes(value),
     },
   },
 
@@ -95,8 +92,8 @@ export default defineComponent({
 
   computed: {
     avatarSize(): {
-      width: string,
-      height: string,
+      width: string;
+      height: string;
     } {
       return {
         width: this.size,
@@ -105,27 +102,29 @@ export default defineComponent({
     },
 
     avatarInitials(): string {
-      const firstNameLetter = this.firstName ? this.firstName[0] : '';
-      const lastNameLetter = this.lastName ? this.lastName[0] : '';
+      const firstNameLetter = this.firstName ? this.firstName[0] : "";
+      const lastNameLetter = this.lastName ? this.lastName[0] : "";
 
       return firstNameLetter + lastNameLetter;
     },
 
     avatarInitialsSize(): {
-      'font-size': string,
-      'line-height': string
+      "font-size": string;
+      "line-height": string;
     } {
       return {
-        'font-size': `${this.fontSize}px`,
-        'line-height': `${this.lineHeight}px`,
+        "font-size": `${this.fontSize}px`,
+        "line-height": `${this.lineHeight}px`,
       };
     },
 
-    avatarImage(): {
-      'background-image': string,
-    } | StyleValue {
+    avatarImage():
+    | {
+      "background-image": string;
+    }
+    | StyleValue {
       if (this.imageUrl) {
-        return { 'background-image': `url('${this.imageUrl}')` };
+        return { "background-image": `url('${this.imageUrl}')` };
       }
 
       if (!this.sourceContext?.avatarMedia?.url) {
@@ -137,15 +136,15 @@ export default defineComponent({
       const thumbnailImage = avatarMedia.thumbnails.sort((a, b) => a.width - b.width)[0];
       const previewImageUrl = thumbnailImage ? thumbnailImage.url : avatarMedia.url;
 
-      return { 'background-image': `url('${previewImageUrl}')` };
+      return { "background-image": `url('${previewImageUrl}')` };
     },
 
     avatarColor(): {
-      'background-color': string,
+      "background-color": string;
     } {
       if (this.color.length) {
         return {
-          'background-color': this.color,
+          "background-color": this.color,
         };
       }
 
@@ -156,13 +155,13 @@ export default defineComponent({
       const color = colors[nameLength % colors.length];
 
       return {
-        'background-color': color,
+        "background-color": color,
       };
     },
 
     hasAvatarImage(): boolean {
       // @ts-expect-error - background-image exists in avatarImage
-      return !!this.avatarImage && !!this.avatarImage['background-image'];
+      return !!this.avatarImage && !!this.avatarImage["background-image"];
     },
 
     showPlaceholder(): boolean {

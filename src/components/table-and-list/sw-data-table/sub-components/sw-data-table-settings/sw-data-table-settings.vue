@@ -21,7 +21,7 @@
     </template>
 
     <template #popover-items__base="{ changeView }">
-      <sw-popover-item 
+      <sw-popover-item
         :label="t('sw-data-table-settings.columnOrder.title')"
         border-bottom
         show-options
@@ -97,25 +97,25 @@ import type { PropType } from "vue";
 import { defineComponent, computed } from "vue";
 import SwButton from "../../../../form/sw-button/sw-button.vue";
 import SwIcon from "../../../../icons-media/sw-icon/sw-icon.vue";
-import SwPopover from '../../../../overlay/sw-popover/sw-popover.vue';
-import SwPopoverItem from '../../../../overlay/sw-popover-item/sw-popover-item.vue';
-import SwPopoverItemResult from '../../../../overlay/sw-popover-item-result/sw-popover-item-result.vue';
-import SwTooltipDirective from '../../../../../directives/tooltip.directive';
-import type { ColumnDefinition } from '../../sw-data-table.vue';
-import type { Option as ItemResultOption } from '../../../../overlay/sw-popover-item-result/sw-popover-item-result.vue';
-import { useI18n } from 'vue-i18n';
+import SwPopover from "../../../../overlay/sw-popover/sw-popover.vue";
+import SwPopoverItem from "../../../../overlay/sw-popover-item/sw-popover-item.vue";
+import SwPopoverItemResult from "../../../../overlay/sw-popover-item-result/sw-popover-item-result.vue";
+import SwTooltipDirective from "../../../../../directives/tooltip.directive";
+import type { ColumnDefinition } from "../../sw-data-table.vue";
+import type { Option as ItemResultOption } from "../../../../overlay/sw-popover-item-result/sw-popover-item-result.vue";
+import { useI18n } from "vue-i18n";
 
 export default defineComponent({
-  name: 'SwDataTableSettings',
+  name: "SwDataTableSettings",
   components: {
     "sw-button": SwButton,
     "sw-icon": SwIcon,
-    'sw-popover': SwPopover,
-    'sw-popover-item': SwPopoverItem,
-    'sw-popover-item-result': SwPopoverItemResult,
+    "sw-popover": SwPopover,
+    "sw-popover-item": SwPopoverItem,
+    "sw-popover-item-result": SwPopoverItemResult,
   },
   directives: {
-    'tooltip': SwTooltipDirective,
+    tooltip: SwTooltipDirective,
   },
   props: {
     columns: {
@@ -144,13 +144,13 @@ export default defineComponent({
     },
   },
   emits: [
-    'reset-all-changes',
-    'change-column-order',
-    'change-column-visibility',
-    'change-show-outlines',
-    'change-show-stripes',
-    'change-outline-framing',
-    'change-enable-row-numbering'
+    "reset-all-changes",
+    "change-column-order",
+    "change-column-visibility",
+    "change-show-outlines",
+    "change-show-stripes",
+    "change-outline-framing",
+    "change-enable-row-numbering",
   ],
   i18n: {
     messages: {
@@ -159,21 +159,21 @@ export default defineComponent({
           title: "Settings",
           resetAllChanges: "Reset all changes",
           columnOrder: {
-            title: 'Columns',
+            title: "Columns",
             columnGroups: {
-              labelShown: 'Shown in table',
-              actionLabelShown: 'Hide all',
-              labelHidden: 'Hidden in table',
-              actionLabelHidden: 'Show all',
-            }
+              labelShown: "Shown in table",
+              actionLabelShown: "Hide all",
+              labelHidden: "Hidden in table",
+              actionLabelHidden: "Show all",
+            },
           },
-          showNumberedColumn: 'Show numbered column',
-          showStripedRows: 'Show striped rows',
-          showOutlines: 'Show outlines',
-          frameOutlines: 'Frame outlines',
-          frameOutlinesMetaCopy: 'Highlight column and row outlines on mouse hover',
+          showNumberedColumn: "Show numbered column",
+          showStripedRows: "Show striped rows",
+          showOutlines: "Show outlines",
+          frameOutlines: "Frame outlines",
+          frameOutlinesMetaCopy: "Highlight column and row outlines on mouse hover",
           tooltip: "View settings",
-          'aria-toggle-table-settings': 'Toggle view settings',
+          "aria-toggle-table-settings": "Toggle view settings",
         },
       },
       de: {
@@ -181,21 +181,22 @@ export default defineComponent({
           title: "Einstellungen",
           resetAllChanges: "Alle Änderungen zurücksetzen",
           columnOrder: {
-            title: 'Spalten',
+            title: "Spalten",
             columnGroups: {
-              labelShown: 'In Tabelle sichtbar',
-              actionLabelShown: 'Alle ausblenden',
-              labelHidden: 'In Tabelle ausgeblendet',
-              actionLabelHidden: 'Alle einblenden',
-            }
+              labelShown: "In Tabelle sichtbar",
+              actionLabelShown: "Alle ausblenden",
+              labelHidden: "In Tabelle ausgeblendet",
+              actionLabelHidden: "Alle einblenden",
+            },
           },
-          showNumberedColumn: 'Zeige nummerierte Spalte an',
-          showStripedRows: 'Zeige gestreifte Zeilen an',
-          showOutlines: 'Zeige Umrisse an',
-          frameOutlines: 'Hebe Umrisse vor',
-          frameOutlinesMetaCopy: 'Hervorhebung von Spalten- und Zeilenumrissen bei Mausüberlagerung',
+          showNumberedColumn: "Zeige nummerierte Spalte an",
+          showStripedRows: "Zeige gestreifte Zeilen an",
+          showOutlines: "Zeige Umrisse an",
+          frameOutlines: "Hebe Umrisse vor",
+          frameOutlinesMetaCopy:
+            "Hervorhebung von Spalten- und Zeilenumrissen bei Mausüberlagerung",
           tooltip: "Tabelleneinstellungen",
-          'aria-toggle-table-settings': 'Tabelleneinstellungen umschalten',
+          "aria-toggle-table-settings": "Tabelleneinstellungen umschalten",
         },
       },
     },
@@ -209,47 +210,51 @@ export default defineComponent({
     const tableSettingsChildViews = computed(() => {
       return [
         {
-          name: 'columnOrder',
-          title: t('sw-data-table-settings.columnOrder.title'),
+          name: "columnOrder",
+          title: t("sw-data-table-settings.columnOrder.title"),
         },
-      ]
+      ];
     });
 
     /**
-    * Column order view 
-    */
+     * Column order view
+     */
     const columnGroups = computed(() => {
       return [
         {
-          id: 'visible',
-          label: t('sw-data-table-settings.columnOrder.columnGroups.labelShown') as string,
-          actionLabel: t('sw-data-table-settings.columnOrder.columnGroups.actionLabelShown') as string,
+          id: "visible",
+          label: t("sw-data-table-settings.columnOrder.columnGroups.labelShown") as string,
+          actionLabel: t(
+            "sw-data-table-settings.columnOrder.columnGroups.actionLabelShown",
+          ) as string,
         },
         {
-          id: 'hidden',
-          label: t('sw-data-table-settings.columnOrder.columnGroups.labelHidden') as string,
-          actionLabel: t('sw-data-table-settings.columnOrder.columnGroups.actionLabelHidden') as string,
-        }
-      ]
-    })
+          id: "hidden",
+          label: t("sw-data-table-settings.columnOrder.columnGroups.labelHidden") as string,
+          actionLabel: t(
+            "sw-data-table-settings.columnOrder.columnGroups.actionLabelHidden",
+          ) as string,
+        },
+      ];
+    });
 
     const columnOrderOptions = computed<ItemResultOption[]>(() => {
       return props.columns.map((column) => {
         return {
           id: column.property,
           label: column.label,
-          parentGroup: (column.visible ?? true) ? 'visible' : 'hidden',
+          parentGroup: column.visible ?? true ? "visible" : "hidden",
           position: column.position,
           isVisible: column.visible ?? true,
           isHidable: isPrimaryColumn(column) ? false : true,
           isSortable: isPrimaryColumn(column) ? false : true,
-        }
+        };
       });
-    })
+    });
 
     const onColumnChangeVisibility = (columnProperty: string, visibility: boolean) => {
-      emit('change-column-visibility', columnProperty, visibility);
-    }
+      emit("change-column-visibility", columnProperty, visibility);
+    };
 
     const onColumnClickGroupAction = (groupId: string) => {
       props.columns.forEach((column) => {
@@ -257,14 +262,18 @@ export default defineComponent({
           return;
         }
 
-        onColumnChangeVisibility(column.property, groupId === 'visible' ? false : true);
-      })
-    }
+        onColumnChangeVisibility(column.property, groupId === "visible" ? false : true);
+      });
+    };
 
-    const onColumnChangeOrder = ({ itemId, dropZone, dropId }: {
-      itemId?: string,
-      dropZone: 'before' | 'after',
-      dropId?: string,
+    const onColumnChangeOrder = ({
+      itemId,
+      dropZone,
+      dropId,
+    }: {
+      itemId?: string;
+      dropZone: "before" | "after";
+      dropId?: string;
     }) => {
       const targetColumn = props.columns.find((column) => column.property === dropId);
 
@@ -272,17 +281,17 @@ export default defineComponent({
         return;
       }
 
-      onColumnChangeVisibility(itemId, (targetColumn?.visible ?? true));
-      emit('change-column-order', { itemId, dropZone, dropId });
+      onColumnChangeVisibility(itemId, targetColumn?.visible ?? true);
+      emit("change-column-order", { itemId, dropZone, dropId });
     };
 
     /**
-    * Base view
-    */
+     * Base view
+     */
 
     const resetAllChanges = () => {
-      emit('reset-all-changes')
-    }
+      emit("reset-all-changes");
+    };
 
     const isPrimaryColumn = (column: ColumnDefinition) => {
       return props.columns[0].property === column.property;
@@ -307,6 +316,5 @@ export default defineComponent({
 @import "../../../../assets/scss/variables.scss";
 
 .sw-data-table-settings {
-
 }
 </style>

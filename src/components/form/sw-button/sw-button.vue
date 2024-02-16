@@ -21,30 +21,23 @@
     :disabled="disabled || isLoading"
     v-bind="$attrs"
   >
-    <sw-loader
-      v-if="isLoading"
-      size="16px"
-      class="sw-button__loader"
-    />
-    <span
-      class="sw-button__content"
-      :class="contentVisibilityClass"
-    >
+    <sw-loader v-if="isLoading" size="16px" class="sw-button__loader" />
+    <span class="sw-button__content" :class="contentVisibilityClass">
       <slot />
     </span>
   </button>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import swLoader from '../../feedback-indicator/sw-loader/sw-loader.vue';
-import type { PropType } from 'vue';
+import { defineComponent } from "vue";
+import swLoader from "../../feedback-indicator/sw-loader/sw-loader.vue";
+import type { PropType } from "vue";
 
 export default defineComponent({
-  name: 'SwButton',
+  name: "SwButton",
 
   components: {
-    'sw-loader': swLoader,
+    "sw-loader": swLoader,
   },
 
   props: {
@@ -62,14 +55,14 @@ export default defineComponent({
      * @values primary, secondary, critical, action
      */
     variant: {
-      type: String as PropType<'primary' | 'secondary' | 'critical' | 'action'>,
+      type: String as PropType<"primary" | "secondary" | "critical" | "action">,
       required: false,
-      default: '',
+      default: "",
       validator(value: string) {
         if (!value.length) {
           return true;
         }
-        return ['primary', 'secondary', 'critical', 'action'].includes(value);
+        return ["primary", "secondary", "critical", "action"].includes(value);
       },
     },
     ghost: {
@@ -84,12 +77,12 @@ export default defineComponent({
     size: {
       type: String,
       required: false,
-      default: 'small',
+      default: "small",
       validator(value: string) {
         if (!value.length) {
           return true;
         }
-        return ['small', 'default', 'large'].includes(value);
+        return ["small", "default", "large"].includes(value);
       },
     },
     /**
@@ -134,15 +127,15 @@ export default defineComponent({
         [`sw-button--${this.variant}`]: !!this.variant,
         [`sw-button--${this.variant}-ghost`]: !!this.ghost,
         [`sw-button--${this.size}`]: !!this.size,
-        'sw-button--block': this.block,
-        'sw-button--disabled': this.disabled,
-        'sw-button--square': this.square,
+        "sw-button--block": this.block,
+        "sw-button--disabled": this.disabled,
+        "sw-button--square": this.square,
       };
     },
 
-    contentVisibilityClass(): { 'is--hidden': boolean } {
+    contentVisibilityClass(): { "is--hidden": boolean } {
       return {
-        'is--hidden': this.isLoading,
+        "is--hidden": this.isLoading,
       };
     },
   },
@@ -150,7 +143,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables.scss';
+@import "../../assets/scss/variables.scss";
 
 $sw-button-transition: all 0.15s ease-out;
 
@@ -290,7 +283,7 @@ $sw-button-transition: all 0.15s ease-out;
 
     &:disabled,
     &.sw-button--disabled {
-      background: #F4F7FA;
+      background: #f4f7fa;
       border: 1px solid $color-gray-200;
       color: $color-gray-500;
     }

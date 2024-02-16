@@ -1,7 +1,7 @@
 import { throttle } from "lodash-es";
 import type { Directive } from "vue";
 
-const getPreviousSibling = function (el: Element|undefined, selector: string) {
+const getPreviousSibling = function (el: Element | undefined, selector: string) {
   if (!el) return;
 
   // Get the next sibling element
@@ -16,7 +16,6 @@ const getPreviousSibling = function (el: Element|undefined, selector: string) {
     if (sibling.matches(selector)) return sibling;
     sibling = sibling.previousElementSibling;
   }
-
 };
 
 const setLeftValue = (el: HTMLElement) => {
@@ -31,9 +30,9 @@ const setLeftValue = (el: HTMLElement) => {
   // Set the left position of the column to the difference between the table and column x positions
   el.style.left = `${width - 0.5}px`;
   el.dataset.stickyColumnRight = `${width + el.getBoundingClientRect().width - 0.5}`;
-}
+};
 
-let mutationObserver: MutationObserver|undefined;
+let mutationObserver: MutationObserver | undefined;
 
 const stickyColumn: Directive = {
   beforeMount(el) {
@@ -44,9 +43,11 @@ const stickyColumn: Directive = {
     setLeftValue(el);
 
     // Set the left value on mutation
-    mutationObserver = new MutationObserver(throttle(() => {
-      setLeftValue(el);
-    }, 60));
+    mutationObserver = new MutationObserver(
+      throttle(() => {
+        setLeftValue(el);
+      }, 60),
+    );
 
     mutationObserver.observe(el.parentElement as Element, {
       childList: true,
@@ -55,7 +56,7 @@ const stickyColumn: Directive = {
   },
   unmounted() {
     mutationObserver?.disconnect();
-  }
+  },
 };
 
 export default stickyColumn;

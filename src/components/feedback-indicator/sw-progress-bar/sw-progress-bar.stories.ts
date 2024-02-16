@@ -1,17 +1,17 @@
-import SwProgressBar from './sw-progress-bar.vue';
+import SwProgressBar from "./sw-progress-bar.vue";
 import type { StoryObj } from "@storybook/vue3";
 import type { SlottedMeta } from "@/_internal/story-helper";
 
-export type SwProgressBarMeta = SlottedMeta<typeof SwProgressBar, 'error'>;
+export type SwProgressBarMeta = SlottedMeta<typeof SwProgressBar, "error">;
 
 export default {
-  title: 'Components/Feedback Indicator/sw-progress-bar',
+  title: "Components/Feedback Indicator/sw-progress-bar",
   component: SwProgressBar,
   render: (args) => ({
     setup() {
       return {
         args,
-      }
+      };
     },
     components: { SwProgressBar },
     template: '<sw-progress-bar v-bind="args"></sw-progress-bar>',
@@ -19,16 +19,16 @@ export default {
   args: {
     modelValue: 121,
     maxValue: 356,
-    label: 'Example progress bar',
+    label: "Example progress bar",
     error: undefined,
-    progressLabelType: '',
+    progressLabelType: "",
   },
 } as SwProgressBarMeta;
 
 export type SwProgressBarStory = StoryObj<SwProgressBarMeta>;
 
-export const Default: SwProgressBarStory =  {
-  name: 'Minimal',
+export const Default: SwProgressBarStory = {
+  name: "Minimal",
 };
 
 export const Extended: SwProgressBarStory = {
@@ -36,8 +36,8 @@ export const Extended: SwProgressBarStory = {
     modelValue: 277,
     error: {
       code: 500,
-      detail: 'Error while loading',
+      detail: "Error while loading",
     },
-    progressLabelType: 'kb',
+    progressLabelType: "kb",
   },
 };

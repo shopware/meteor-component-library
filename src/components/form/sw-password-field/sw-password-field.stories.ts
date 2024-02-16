@@ -1,14 +1,26 @@
-import { action } from '@storybook/addon-actions';
-import SwPasswordField from './sw-password-field.vue';
-import baseFieldArgTypes from '../_internal/sw-base-field/arg-types';
+import { action } from "@storybook/addon-actions";
+import SwPasswordField from "./sw-password-field.vue";
+import baseFieldArgTypes from "../_internal/sw-base-field/arg-types";
 import type { StoryObj } from "@storybook/vue3";
 import type { SlottedMeta } from "@/_internal/story-helper";
-import { fn } from '@storybook/test';
+import { fn } from "@storybook/test";
 
-export type SwPasswordFieldMeta = SlottedMeta<typeof SwPasswordField, 'default' | 'inheritanceRemove' | 'inheritanceRestore' | 'isInherited' | 'change' | 'value' | 'hint' | 'suffix' | 'prefix' | 'error'>;
+export type SwPasswordFieldMeta = SlottedMeta<
+  typeof SwPasswordField,
+| "default"
+| "inheritanceRemove"
+| "inheritanceRestore"
+| "isInherited"
+| "change"
+| "value"
+| "hint"
+| "suffix"
+| "prefix"
+| "error"
+>;
 
 export default {
-  title: 'Components/Form/sw-password-field',
+  title: "Components/Form/sw-password-field",
   component: SwPasswordField,
   render: (args) => ({
     template: `
@@ -40,10 +52,10 @@ export default {
       </div>`,
     components: { SwPasswordField },
     data() {
-      return { currentValue: '' };
+      return { currentValue: "" };
     },
     watch: {
-      'args.modelValue'(v) {
+      "args.modelValue"(v) {
         if (this.currentValue === v) {
           return;
         }
@@ -72,13 +84,13 @@ export default {
     setup: () => {
       return {
         args,
-      }
-    }
+      };
+    },
   }),
   args: {
-    label: 'Passwordfield',
-    change: fn(action('change')),
-    updateModelValue: fn(action('updateModelValue')),
+    label: "Passwordfield",
+    change: fn(action("change")),
+    updateModelValue: fn(action("updateModelValue")),
   },
   argTypes: {
     ...baseFieldArgTypes,
@@ -87,6 +99,6 @@ export default {
 
 export type SwPasswordFieldStory = StoryObj<SwPasswordFieldMeta>;
 
-export const DefaultStory: SwPasswordFieldStory =  {
-  name: 'sw-password-field',
+export const DefaultStory: SwPasswordFieldStory = {
+  name: "sw-password-field",
 };

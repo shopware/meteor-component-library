@@ -1,14 +1,48 @@
-import SwSelect from './sw-select.vue';
+import SwSelect from "./sw-select.vue";
 import type { StoryObj } from "@storybook/vue3";
 import type { SlottedMeta } from "@/_internal/story-helper";
 
 export type SwSelectMeta = SlottedMeta<
   typeof SwSelect,
-'default' | 'change' | 'itemAdd' | 'item-add' | 'itemRemove' | 'item-remove' | 'paginate' | 'displayValuesExpand' | 'searchTermChange' | 'inheritanceRestore' | 'inheritanceRemove' | 'inheritance-restore' | 'inheritance-remove' | 'v-model' | 'prefix' | 'suffix' | 'hint' | 'beforeItemList' | 'selectionLabelProperty' | 'resultItem' | 'resultLabelProperty' | 'afterItemList' | 'after-item-list' | 'before-item-list' | 'selection-label-property' | 'result-item' | 'result-label-property' | 'item-add' | 'item-remove' | 'search-term-change' | 'inheritance-remove' | 'inheritance-restore' | 'display-values-expand' | 'error' | 'isInherited'
+| "default"
+| "change"
+| "itemAdd"
+| "item-add"
+| "itemRemove"
+| "item-remove"
+| "paginate"
+| "displayValuesExpand"
+| "searchTermChange"
+| "inheritanceRestore"
+| "inheritanceRemove"
+| "inheritance-restore"
+| "inheritance-remove"
+| "v-model"
+| "prefix"
+| "suffix"
+| "hint"
+| "beforeItemList"
+| "selectionLabelProperty"
+| "resultItem"
+| "resultLabelProperty"
+| "afterItemList"
+| "after-item-list"
+| "before-item-list"
+| "selection-label-property"
+| "result-item"
+| "result-label-property"
+| "item-add"
+| "item-remove"
+| "search-term-change"
+| "inheritance-remove"
+| "inheritance-restore"
+| "display-values-expand"
+| "error"
+| "isInherited"
 >;
 
 export default {
-  title: 'Components/Form/sw-select',
+  title: "Components/Form/sw-select",
   component: SwSelect,
   render: (args) => ({
     template: `
@@ -83,7 +117,7 @@ export default {
       return { currentValue: [] };
     },
     watch: {
-      'args.modelValue'(v) {
+      "args.modelValue"(v) {
         if (this.currentValue === v) {
           return;
         }
@@ -113,210 +147,210 @@ export default {
     setup: () => {
       return {
         args,
-      }
-    }
+      };
+    },
   }),
   args: {
-    label: 'Select',
-    modelValue: 'b',
+    label: "Select",
+    modelValue: "b",
     options: [
       {
         id: 1,
-        label: 'Option A',
-        value: 'a',
+        label: "Option A",
+        value: "a",
       },
       {
         id: 2,
-        label: 'Option B',
-        value: 'b',
+        label: "Option B",
+        value: "b",
       },
       {
         id: 3,
-        label: 'Option C',
-        value: 'c',
+        label: "Option C",
+        value: "c",
       },
       {
         id: 4,
-        label: 'Option D',
-        value: 'd',
+        label: "Option D",
+        value: "d",
       },
       {
         id: 5,
-        label: 'Option E',
-        value: 'e',
+        label: "Option E",
+        value: "e",
       },
       {
         id: 6,
-        label: 'Option F',
-        value: 'f',
+        label: "Option F",
+        value: "f",
       },
       {
         id: 7,
-        label: 'Option FF',
-        value: 'ff',
+        label: "Option FF",
+        value: "ff",
       },
       {
         id: 8,
-        label: 'Option long text',
-        value: 'Longer value text',
+        label: "Option long text",
+        value: "Longer value text",
       },
     ],
   },
   argTypes: {
     change: {
-      action: 'change',
+      action: "change",
       table: {
-        category: 'Events',
+        category: "Events",
       },
     },
     itemAdd: {
-      action: 'item-add',
+      action: "item-add",
       table: {
-        category: 'Events',
+        category: "Events",
       },
     },
     itemRemove: {
-      action: 'item-remove',
+      action: "item-remove",
       table: {
-        category: 'Events',
+        category: "Events",
       },
     },
     searchTermChange: {
-      action: 'search-term-change',
+      action: "search-term-change",
       table: {
-        category: 'Events',
+        category: "Events",
       },
     },
     paginate: {
-      action: 'paginate',
+      action: "paginate",
       table: {
-        category: 'Events',
+        category: "Events",
       },
     },
     displayValuesExpand: {
-      action: 'display-values-expand',
+      action: "display-values-expand",
       table: {
-        category: 'Events',
+        category: "Events",
       },
     },
     inheritanceRemove: {
-      action: 'inheritance-remove',
+      action: "inheritance-remove",
       table: {
-        category: 'Events',
+        category: "Events",
       },
     },
     inheritanceRestore: {
-      action: 'inheritance-restore',
+      action: "inheritance-restore",
       table: {
-        category: 'Events',
+        category: "Events",
       },
     },
     prefix: {
-      control: { type: 'text' },
+      control: { type: "text" },
       table: {
-        category: 'Slots',
+        category: "Slots",
       },
     },
     suffix: {
-      control: { type: 'text' },
+      control: { type: "text" },
       table: {
-        category: 'Slots',
+        category: "Slots",
       },
     },
     hint: {
-      control: { type: 'text' },
+      control: { type: "text" },
       table: {
-        category: 'Slots',
+        category: "Slots",
       },
     },
     beforeItemList: {
-      control: { type: 'text' },
+      control: { type: "text" },
       table: {
-        category: 'Slots',
+        category: "Slots",
       },
     },
     selectionLabelProperty: {
-      control: { type: 'text' },
+      control: { type: "text" },
       table: {
-        category: 'Slots',
+        category: "Slots",
       },
     },
     resultItem: {
-      control: { type: 'text' },
+      control: { type: "text" },
       table: {
-        category: 'Slots',
+        category: "Slots",
       },
     },
     resultLabelProperty: {
-      control: { type: 'text' },
+      control: { type: "text" },
       table: {
-        category: 'Slots',
+        category: "Slots",
       },
     },
     afterItemList: {
-      control: { type: 'text' },
+      control: { type: "text" },
       table: {
-        category: 'Slots',
+        category: "Slots",
       },
     },
 
-    'after-item-list': {
+    "after-item-list": {
       table: {
         disable: true,
       },
     },
-    'before-item-list': {
+    "before-item-list": {
       table: {
         disable: true,
       },
     },
-    'selection-label-property': {
+    "selection-label-property": {
       table: {
         disable: true,
       },
     },
-    'result-item': {
+    "result-item": {
       table: {
         disable: true,
       },
     },
-    'result-label-property': {
+    "result-label-property": {
       table: {
         disable: true,
       },
     },
 
-    'item-add': {
+    "item-add": {
       table: {
         disable: true,
       },
     },
-    'item-remove': {
+    "item-remove": {
       table: {
         disable: true,
       },
     },
-    'search-term-change': {
+    "search-term-change": {
       table: {
         disable: true,
       },
     },
-    'inheritance-remove': {
+    "inheritance-remove": {
       table: {
         disable: true,
       },
     },
-    'inheritance-restore': {
+    "inheritance-restore": {
       table: {
         disable: true,
       },
     },
-    'display-values-expand': {
+    "display-values-expand": {
       table: {
         disable: true,
       },
     },
-    'v-model': {
+    "v-model": {
       table: {
         disable: true,
       },
@@ -326,6 +360,6 @@ export default {
 
 export type SwSelectStory = StoryObj<SwSelectMeta>;
 
-export const DefaultStory: SwSelectStory =  {
-  name: 'sw-select',
+export const DefaultStory: SwSelectStory = {
+  name: "sw-select",
 };

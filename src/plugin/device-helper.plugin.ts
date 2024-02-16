@@ -1,6 +1,6 @@
-import type { Plugin } from 'vue';
+import type { Plugin } from "vue";
 // @ts-expect-error
-import DeviceHelper from '../helper/device.helper';
+import DeviceHelper from "../helper/device.helper";
 
 const DeviceHelperPlugin: Plugin = {
   install(app) {

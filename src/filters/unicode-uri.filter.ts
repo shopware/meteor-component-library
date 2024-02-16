@@ -1,8 +1,8 @@
-import punycode from 'punycode/';
+import punycode from "punycode/";
 
 export default function (value: string) {
   if (!value) {
-    return '';
+    return "";
   }
 
   const unicode = punycode.toUnicode(value);

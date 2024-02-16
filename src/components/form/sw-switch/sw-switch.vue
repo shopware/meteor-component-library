@@ -1,9 +1,6 @@
 <template>
   <div class="sw-field--switch__container">
-    <div
-      class="sw-field--switch"
-      :class="swSwitchFieldClasses"
-    >
+    <div class="sw-field--switch" :class="swSwitchFieldClasses">
       <div class="sw-field--switch__content">
         <div class="sw-field--switch__input">
           <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
@@ -14,7 +11,7 @@
             :checked="inputState"
             :disabled="isDisabled"
             @change.stop="onChange"
-          >
+          />
           <div class="sw-field__switch-state">
             <div class="sw-field__switch-state-knob" />
           </div>
@@ -38,26 +35,23 @@
         </sw-base-field>
       </div>
     </div>
-    <sw-field-error
-      :error="error"
-      :class="errorClasses"
-    />
+    <sw-field-error :error="error" :class="errorClasses" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import SwBaseField from '../_internal/sw-base-field/sw-base-field.vue';
-import SwFieldError from '../_internal/sw-field-error/sw-field-error.vue';
-import SwFormFieldMixin from '../../../mixins/form-field.mixin';
-import { createId } from '../../../utils/uuid';
+import { defineComponent } from "vue";
+import SwBaseField from "../_internal/sw-base-field/sw-base-field.vue";
+import SwFieldError from "../_internal/sw-field-error/sw-field-error.vue";
+import SwFormFieldMixin from "../../../mixins/form-field.mixin";
+import { createId } from "../../../utils/uuid";
 
 export default defineComponent({
-  name: 'SwSwitch',
+  name: "SwSwitch",
 
   components: {
-    'sw-base-field': SwBaseField,
-    'sw-field-error': SwFieldError,
+    "sw-base-field": SwBaseField,
+    "sw-field-error": SwFieldError,
   },
 
   mixins: [SwFormFieldMixin],
@@ -66,7 +60,7 @@ export default defineComponent({
     label: {
       type: String,
       required: false,
-      default: ''
+      default: "",
     },
     required: {
       type: Boolean,
@@ -134,7 +128,7 @@ export default defineComponent({
     name: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
   },
 
@@ -179,20 +173,20 @@ export default defineComponent({
     swSwitchFieldClasses(): Record<string, boolean>[] {
       return [
         {
-          'has--error': this.hasError,
-          'sw-field--switch-bordered': this.bordered,
-          'sw-field--switch-no-margin-top': this.removeTopMargin,
-          'sw-field--switch-no-margin-bottom': this.hasError,
+          "has--error": this.hasError,
+          "sw-field--switch-bordered": this.bordered,
+          "sw-field--switch-no-margin-top": this.removeTopMargin,
+          "sw-field--switch-no-margin-bottom": this.hasError,
         },
       ];
     },
 
     errorClasses(): {
-      'sw-field__error--move-up': boolean;
+      "sw-field__error--move-up": boolean;
     }[] {
       return [
         {
-          'sw-field__error--move-up': !this.bordered,
+          "sw-field__error--move-up": !this.bordered,
         },
       ];
     },
@@ -203,17 +197,19 @@ export default defineComponent({
   },
 
   watch: {
-    checked() { this.currentValue = this.checked; },
+    checked() {
+      this.currentValue = this.checked;
+    },
   },
 
   methods: {
     onChange(changeEvent: Event) {
       // @ts-expect-error - target exists on event
-      this.$emit('change', changeEvent.target.checked);
+      this.$emit("change", changeEvent.target.checked);
     },
 
     onInheritanceRestore(event: Event) {
-      this.$emit('inheritance-restore', event);
+      this.$emit("inheritance-restore", event);
     },
   },
 });

@@ -4,9 +4,9 @@ import SwPopoverItem from "./sw-popover-item.vue";
 function createWrapper() {
   return mount(SwPopoverItem, {
     propsData: {
-      label: 'Test label',
+      label: "Test label",
     },
-    mocks: {}
+    mocks: {},
   });
 }
 
@@ -20,27 +20,27 @@ describe("sw-popover-item", () => {
   it("should render the component with default styling", async () => {
     const wrapper = createWrapper();
 
-    expect(wrapper.classes()).toContain('sw-popover-item--default');
-    expect(wrapper.classes()).not.toContain('sw-popover-item--critical');
+    expect(wrapper.classes()).toContain("sw-popover-item--default");
+    expect(wrapper.classes()).not.toContain("sw-popover-item--critical");
   });
 
   it("should render the component with critical styling", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      type: 'critical'
+      type: "critical",
     });
 
-    expect(wrapper.classes()).not.toContain('sw-popover-item--default');
-    expect(wrapper.classes()).toContain('sw-popover-item--critical');
+    expect(wrapper.classes()).not.toContain("sw-popover-item--default");
+    expect(wrapper.classes()).toContain("sw-popover-item--critical");
   });
 
   it("should show the checkbox", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      showCheckbox: true
-    })
+      showCheckbox: true,
+    });
 
     const checkbox = wrapper.find(".sw-popover-item__checkbox");
 
@@ -52,8 +52,8 @@ describe("sw-popover-item", () => {
 
     await wrapper.setProps({
       showCheckbox: true,
-      checkboxChecked: true
-    })
+      checkboxChecked: true,
+    });
 
     const checkbox = wrapper.find(".sw-popover-item__checkbox input");
 
@@ -66,8 +66,8 @@ describe("sw-popover-item", () => {
 
     await wrapper.setProps({
       showCheckbox: true,
-      checkboxChecked: false
-    })
+      checkboxChecked: false,
+    });
 
     const checkbox = wrapper.find(".sw-popover-item__checkbox input");
 
@@ -80,11 +80,11 @@ describe("sw-popover-item", () => {
 
     await wrapper.setProps({
       showCheckbox: true,
-      checkboxPartial: true
-    })
+      checkboxPartial: true,
+    });
 
     const checkbox = wrapper.find(".sw-field--checkbox");
-    expect(checkbox.classes()).toContain('is--partly-checked');
+    expect(checkbox.classes()).toContain("is--partly-checked");
 
     const partialChecked = wrapper.find(".icon--regular-minus-xxs");
     const fullChecked = wrapper.find(".icon--regular-checkmark-xxs");
@@ -98,8 +98,8 @@ describe("sw-popover-item", () => {
 
     await wrapper.setProps({
       showCheckbox: true,
-      checkboxPartial: false
-    })
+      checkboxPartial: false,
+    });
 
     const partialChecked = wrapper.find(".icon--solid-minus-xxs");
     const fullChecked = wrapper.find(".icon--regular-checkmark-xxs");
@@ -113,30 +113,30 @@ describe("sw-popover-item", () => {
 
     await wrapper.setProps({
       showCheckbox: true,
-      checkboxChecked: false
-    })
+      checkboxChecked: false,
+    });
 
     const checkbox = wrapper.find(".sw-popover-item__checkbox input");
 
     await checkbox.setValue(true);
 
-    expect(wrapper.emitted('change-checkbox')).toStrictEqual([[true]]);
-  })
+    expect(wrapper.emitted("change-checkbox")).toStrictEqual([[true]]);
+  });
 
   it("should emit change-checkbox with false value when clicking on the checkbox", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
       showCheckbox: true,
-      checkboxChecked: true
-    })
+      checkboxChecked: true,
+    });
 
     const checkbox = wrapper.find(".sw-popover-item__checkbox input");
 
     await checkbox.setValue(false);
 
-    expect(wrapper.emitted('change-checkbox')).toStrictEqual([[false]]);
-  })
+    expect(wrapper.emitted("change-checkbox")).toStrictEqual([[false]]);
+  });
 
   it("should render no icon", async () => {
     const wrapper = createWrapper();
@@ -150,8 +150,8 @@ describe("sw-popover-item", () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      icon: 'solid-sidebar-overlay'
-    })
+      icon: "solid-sidebar-overlay",
+    });
 
     const icon = wrapper.find(".sw-popover-item__icon");
 
@@ -163,19 +163,19 @@ describe("sw-popover-item", () => {
 
     const label = wrapper.find(".sw-popover-item__label");
 
-    expect(label.text()).toBe('Test label');
+    expect(label.text()).toBe("Test label");
   });
 
   it("should render the label with different text", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      label: 'Another test label'
-    })
+      label: "Another test label",
+    });
 
     const label = wrapper.find(".sw-popover-item__label");
 
-    expect(label.text()).toBe('Another test label');
+    expect(label.text()).toBe("Another test label");
   });
 
   it("should execute the method in property onLabelClick when user clicks on label", async () => {
@@ -184,12 +184,12 @@ describe("sw-popover-item", () => {
     const onLabelClick = vi.fn();
 
     await wrapper.setProps({
-      onLabelClick
-    })
+      onLabelClick,
+    });
 
     const label = wrapper.find(".sw-popover-item__label");
 
-    await label.trigger('click');
+    await label.trigger("click");
 
     expect(onLabelClick).toHaveBeenCalledWith();
   });
@@ -198,81 +198,81 @@ describe("sw-popover-item", () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      metaCopy: 'Test metaCopy'
-    })
+      metaCopy: "Test metaCopy",
+    });
 
     const metaCopy = wrapper.find(".sw-popover-item__meta-copy");
 
-    expect(metaCopy.text()).toBe('Test metaCopy');
+    expect(metaCopy.text()).toBe("Test metaCopy");
   });
 
   it("should render the metaCopy with different text", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      metaCopy: 'Another test metaCopy'
-    })
+      metaCopy: "Another test metaCopy",
+    });
 
     const metaCopy = wrapper.find(".sw-popover-item__meta-copy");
 
-    expect(metaCopy.text()).toBe('Another test metaCopy');
+    expect(metaCopy.text()).toBe("Another test metaCopy");
   });
 
   it("should render the contextual detail", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      contextualDetail: 'Test contextualDetail'
-    })
+      contextualDetail: "Test contextualDetail",
+    });
 
     const contextualDetail = wrapper.find(".sw-popover-item__contextual-detail");
 
-    expect(contextualDetail.text()).toBe('Test contextualDetail');
+    expect(contextualDetail.text()).toBe("Test contextualDetail");
   });
 
   it("should render the contextual detail with different text", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      contextualDetail: 'Another test contextualDetail'
-    })
+      contextualDetail: "Another test contextualDetail",
+    });
 
     const contextualDetail = wrapper.find(".sw-popover-item__contextual-detail");
 
-    expect(contextualDetail.text()).toBe('Another test contextualDetail');
+    expect(contextualDetail.text()).toBe("Another test contextualDetail");
   });
 
   it("should render the shortcut text", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      shortcut: 'Test shortcut'
-    })
+      shortcut: "Test shortcut",
+    });
 
     const shortcut = wrapper.find(".sw-popover-item__shortcut");
 
-    expect(shortcut.text()).toBe('Test shortcut');
-  })
+    expect(shortcut.text()).toBe("Test shortcut");
+  });
 
   it("should show the switch", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      showSwitch: true
-    })
+      showSwitch: true,
+    });
 
     const switchElement = wrapper.find(".sw-popover-item__switch");
 
     expect(switchElement.exists()).toBeTruthy();
-  })
+  });
 
   it("should show the switch with checked value", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
       showSwitch: true,
-      switchValue: true
-    })
+      switchValue: true,
+    });
 
     const switchElement = wrapper.find(".sw-popover-item__switch input");
 
@@ -285,8 +285,8 @@ describe("sw-popover-item", () => {
 
     await wrapper.setProps({
       showSwitch: true,
-      switchValue: false
-    })
+      switchValue: false,
+    });
 
     const switchElement = wrapper.find(".sw-popover-item__switch input");
 
@@ -307,14 +307,14 @@ describe("sw-popover-item", () => {
 
     await wrapper.setProps({
       showSwitch: true,
-      switchValue: false
-    })
+      switchValue: false,
+    });
 
     const switchElement = wrapper.find(".sw-popover-item__switch input");
 
     await switchElement.setValue(true);
 
-    expect(wrapper.emitted('change-switch')).toStrictEqual([[true]]);
+    expect(wrapper.emitted("change-switch")).toStrictEqual([[true]]);
   });
 
   it("should emit change-switch with false value when clicking on the switch input", async () => {
@@ -322,48 +322,48 @@ describe("sw-popover-item", () => {
 
     await wrapper.setProps({
       showSwitch: true,
-      switchValue: true
-    })
+      switchValue: true,
+    });
 
     const switchElement = wrapper.find(".sw-popover-item__switch input");
 
     await switchElement.setValue(false);
 
-    expect(wrapper.emitted('change-switch')).toStrictEqual([[false]]);
+    expect(wrapper.emitted("change-switch")).toStrictEqual([[false]]);
   });
 
-  it("should show visibility", async() => {
+  it("should show visibility", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      showVisibility: true
-    })
+      showVisibility: true,
+    });
 
     const visibility = wrapper.find(".sw-popover-item__visibility");
 
     expect(visibility.exists()).toBeTruthy();
   });
 
-  it("should not show visibility", async() => {
+  it("should not show visibility", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      showVisibility: false
-    })
+      showVisibility: false,
+    });
 
     const visibility = wrapper.find(".sw-popover-item__visibility");
 
     expect(visibility.exists()).toBeFalsy();
   });
 
-  it("should show visibility with visible status", async() => {
+  it("should show visibility with visible status", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
       ...wrapper.props(),
       showVisibility: true,
-      visible: true
-    })
+      visible: true,
+    });
 
     const visibleEyeIcon = wrapper.find(".sw-popover-item__visibility.icon--solid-eye");
     const hiddenEyeIcon = wrapper.find(".sw-popover-item__visibility.icon--solid-eye-slash");
@@ -372,13 +372,13 @@ describe("sw-popover-item", () => {
     expect(hiddenEyeIcon.exists()).toBeFalsy();
   });
 
-  it("should show visibility with invisible status", async() => {
+  it("should show visibility with invisible status", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
       showVisibility: true,
-      visible: false
-    })
+      visible: false,
+    });
 
     const visibleEyeIcon = wrapper.find(".sw-popover-item__visibility.icon--solid-eye");
     const hiddenEyeIcon = wrapper.find(".sw-popover-item__visibility.icon--solid-eye-slash");
@@ -392,14 +392,14 @@ describe("sw-popover-item", () => {
 
     await wrapper.setProps({
       showVisibility: true,
-      visible: false
-    })
+      visible: false,
+    });
 
     const visibility = wrapper.find(".sw-popover-item__visibility");
 
-    await visibility.trigger('click');
+    await visibility.trigger("click");
 
-    expect(wrapper.emitted('change-visibility')).toStrictEqual([[true]]);
+    expect(wrapper.emitted("change-visibility")).toStrictEqual([[true]]);
   });
 
   it("should emit change-visibility with false value when clicking on the visibility", async () => {
@@ -407,34 +407,34 @@ describe("sw-popover-item", () => {
 
     await wrapper.setProps({
       showVisibility: true,
-      visible: true
-    })
+      visible: true,
+    });
 
     const visibility = wrapper.find(".sw-popover-item__visibility");
 
-    await visibility.trigger('click');
+    await visibility.trigger("click");
 
-    expect(wrapper.emitted('change-visibility')).toStrictEqual([[false]]);
+    expect(wrapper.emitted("change-visibility")).toStrictEqual([[false]]);
   });
 
   it("should show options", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      showOptions: true
-    })
+      showOptions: true,
+    });
 
     const options = wrapper.find(".sw-popover-item__options");
 
     expect(options.exists()).toBeTruthy();
-  })
+  });
 
   it("should not show options", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      showOptions: false
-    })
+      showOptions: false,
+    });
 
     const options = wrapper.find(".sw-popover-item__options");
 
@@ -445,8 +445,8 @@ describe("sw-popover-item", () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      showOptions: true
-    })
+      showOptions: true,
+    });
 
     const optionsCount = wrapper.find(".sw-popover-item__options-count");
 
@@ -458,13 +458,13 @@ describe("sw-popover-item", () => {
 
     await wrapper.setProps({
       showOptions: true,
-      optionsCount: 5
-    })
+      optionsCount: 5,
+    });
 
     const optionsCount = wrapper.find(".sw-popover-item__options-count");
 
     expect(optionsCount.exists()).toBeTruthy();
-    expect(optionsCount.text()).toBe('5');
+    expect(optionsCount.text()).toBe("5");
   });
 
   it("should show the correct options count with different value", async () => {
@@ -472,49 +472,49 @@ describe("sw-popover-item", () => {
 
     await wrapper.setProps({
       showOptions: true,
-      optionsCount: 42
-    })
+      optionsCount: 42,
+    });
 
     const optionsCount = wrapper.find(".sw-popover-item__options-count");
 
     expect(optionsCount.exists()).toBeTruthy();
-    expect(optionsCount.text()).toBe('42');
+    expect(optionsCount.text()).toBe("42");
   });
 
   it("should emit click-options when clicking on the options", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      showOptions: true
-    })
+      showOptions: true,
+    });
 
     const options = wrapper.find(".sw-popover-item__options");
 
-    await options.trigger('click');
+    await options.trigger("click");
 
-    expect(wrapper.emitted('click-options')).toBeTruthy();
+    expect(wrapper.emitted("click-options")).toBeTruthy();
   });
 
   it("should show the borderTop", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      borderTop: true
-    })
+      borderTop: true,
+    });
 
-    expect(wrapper.classes()).toContain('sw-popover-item--border-top');
-    expect(wrapper.classes()).not.toContain('sw-popover-item--border-bottom');
+    expect(wrapper.classes()).toContain("sw-popover-item--border-top");
+    expect(wrapper.classes()).not.toContain("sw-popover-item--border-bottom");
   });
 
   it("should show the borderBottom", async () => {
     const wrapper = createWrapper();
 
     await wrapper.setProps({
-      borderBottom: true
-    })
+      borderBottom: true,
+    });
 
-    expect(wrapper.classes()).not.toContain('sw-popover-item--border-top');
-    expect(wrapper.classes()).toContain('sw-popover-item--border-bottom');
+    expect(wrapper.classes()).not.toContain("sw-popover-item--border-top");
+    expect(wrapper.classes()).toContain("sw-popover-item--border-bottom");
   });
 
   it("should show both borders", async () => {
@@ -522,17 +522,17 @@ describe("sw-popover-item", () => {
 
     await wrapper.setProps({
       borderTop: true,
-      borderBottom: true
-    })
+      borderBottom: true,
+    });
 
-    expect(wrapper.classes()).toContain('sw-popover-item--border-top');
-    expect(wrapper.classes()).toContain('sw-popover-item--border-bottom');
+    expect(wrapper.classes()).toContain("sw-popover-item--border-top");
+    expect(wrapper.classes()).toContain("sw-popover-item--border-bottom");
   });
 
   it("should show no borders", async () => {
     const wrapper = createWrapper();
 
-    expect(wrapper.classes()).not.toContain('sw-popover-item--border-top');
-    expect(wrapper.classes()).not.toContain('sw-popover-item--border-bottom');
+    expect(wrapper.classes()).not.toContain("sw-popover-item--border-top");
+    expect(wrapper.classes()).not.toContain("sw-popover-item--border-bottom");
   });
 });

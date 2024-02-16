@@ -20,9 +20,7 @@
       {{ label }}
     </template>
 
-    <template
-      #field-prefix
-    >
+    <template #field-prefix>
       <slot name="prefix" />
     </template>
 
@@ -39,20 +37,15 @@
         @change.stop="onChange"
         @focus="setFocus"
         @blur="removeFocus"
-      >
+      />
     </template>
 
-    <template
-      #field-suffix
-    >
+    <template #field-suffix>
       <slot name="suffix" />
     </template>
 
     <template #error>
-      <sw-field-error
-        v-if="computedError"
-        :error="computedError"
-      />
+      <sw-field-error v-if="computedError" :error="computedError" />
     </template>
 
     <template #field-hint>
@@ -62,11 +55,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import SwTextField from '../sw-text-field/sw-text-field.vue';
+import { defineComponent } from "vue";
+import SwTextField from "../sw-text-field/sw-text-field.vue";
 
 export default defineComponent({
-  name: 'SwEmailField',
+  name: "SwEmailField",
 
   extends: SwTextField,
 
@@ -120,7 +113,7 @@ export default defineComponent({
         // @ts-expect-error - ref is available
         detail: this.$refs.input.validationMessage,
       };
-    }
-  }
+    },
+  },
 });
 </script>

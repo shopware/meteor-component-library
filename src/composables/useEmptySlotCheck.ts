@@ -1,5 +1,5 @@
-import { Fragment } from 'react';
-import { Comment, Text, type Slot, type VNode } from 'vue';
+import { Fragment } from "react";
+import { Comment, Text, type Slot, type VNode } from "vue";
 
 function hasSlotContent(slot: Slot | undefined | null, props: any = {}) {
   return !isSlotEmpty(slot, props);

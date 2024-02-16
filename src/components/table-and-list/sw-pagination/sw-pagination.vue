@@ -1,29 +1,23 @@
 <template>
   <div class="sw-pagination">
     <span class="sw-pagination__info-text">
-      {{ firstVisibleItemNumber }}-{{ lastVisibleItemNumber }} {{ $t('sw-pagination.of') }} {{ totalItems }}
+      {{ firstVisibleItemNumber }}-{{ lastVisibleItemNumber }} {{ $t("sw-pagination.of") }}
+      {{ totalItems }}
     </span>
 
-    <sw-segmented-control
-      disable-context
-      :actions="segmentedControlActions"
-    >
+    <sw-segmented-control disable-context :actions="segmentedControlActions">
       <template #label__pagination-first>
-        <sw-icon
-          name="solid-double-chevron-left-xxs"
-        />
+        <sw-icon name="solid-double-chevron-left-xxs" />
       </template>
 
       <template #label__pagination-previous>
-        <sw-icon
-          name="solid-chevron-left-xs"
-        />
+        <sw-icon name="solid-chevron-left-xs" />
       </template>
 
       <template #label__pagination-current>
         <sw-number-field
           class="sw-pagination__current-input"
-          :model-value="(currentPage as never)"
+          :model-value="currentPage as never"
           :min="1"
           :max="totalPages"
           number-type="int"
@@ -32,127 +26,126 @@
       </template>
 
       <template #label__pagination-next>
-        <sw-icon
-          name="solid-chevron-right-xs"
-        />
+        <sw-icon name="solid-chevron-right-xs" />
       </template>
 
       <template #label__pagination-last>
-        <sw-icon
-          name="solid-double-chevron-right-xxs"
-        />
+        <sw-icon name="solid-double-chevron-right-xxs" />
       </template>
     </sw-segmented-control>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watch } from 'vue';
-import SwSegmentedControl from '../../navigation/sw-segmented-control/sw-segmented-control.vue'
-import SwIcon from '../../icons-media/sw-icon/sw-icon.vue';
-import type { SegmentedControlActionsProp } from '../../navigation/sw-segmented-control/sw-segmented-control.vue'
-import SwNumberField from '../../form/sw-number-field/sw-number-field.vue';
+import { defineComponent, computed, watch } from "vue";
+import SwSegmentedControl from "../../navigation/sw-segmented-control/sw-segmented-control.vue";
+import SwIcon from "../../icons-media/sw-icon/sw-icon.vue";
+import type { SegmentedControlActionsProp } from "../../navigation/sw-segmented-control/sw-segmented-control.vue";
+import SwNumberField from "../../form/sw-number-field/sw-number-field.vue";
 
 export default defineComponent({
   components: {
     "sw-segmented-control": SwSegmentedControl,
     "sw-icon": SwIcon,
-    'sw-number-field': SwNumberField
+    "sw-number-field": SwNumberField,
   },
   props: {
     currentPage: {
       type: Number,
-      required: true
+      required: true,
     },
     limit: {
       type: Number,
-      required: true
+      required: true,
     },
     totalItems: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   i18n: {
     messages: {
       en: {
-        'sw-pagination': {
-          of: 'of'
-        }
+        "sw-pagination": {
+          of: "of",
+        },
       },
       de: {
-        'sw-pagination': {
-          of: 'von'
-        }
-      }
-    }
+        "sw-pagination": {
+          of: "von",
+        },
+      },
+    },
   },
-  emits: [
-    'change-current-page',
-  ],
+  emits: ["change-current-page"],
   setup(props, { emit }) {
-    watch(() => props.limit, () => {
-      emit('change-current-page', 1)
-    })
+    watch(
+      () => props.limit,
+      () => {
+        emit("change-current-page", 1);
+      },
+    );
 
-    const firstVisibleItemNumber = computed(() => ((props.currentPage - 1) * props.limit) + 1);
+    const firstVisibleItemNumber = computed(() => (props.currentPage - 1) * props.limit + 1);
     const lastVisibleItemNumber = computed(() => {
       const lastItemNumberWithLimitOnly = props.limit * props.currentPage;
 
-      return lastItemNumberWithLimitOnly > props.totalItems ? props.totalItems : lastItemNumberWithLimitOnly;
+      return lastItemNumberWithLimitOnly > props.totalItems
+        ? props.totalItems
+        : lastItemNumberWithLimitOnly;
     });
 
     const totalPages = computed(() => {
       return Math.ceil(props.totalItems / props.limit);
-    })
+    });
 
     const previousPageIsPossible = computed(() => props.currentPage > 1);
     const nextPageIsPossible = computed(() => props.currentPage < totalPages.value);
 
-    const segmentedControlActions = computed<SegmentedControlActionsProp>(() => ([
+    const segmentedControlActions = computed<SegmentedControlActionsProp>(() => [
       {
-        id: 'pagination-first',
-        onClick: () => emit('change-current-page', 1),
+        id: "pagination-first",
+        onClick: () => emit("change-current-page", 1),
         disabled: !previousPageIsPossible.value,
         minSquare: true,
       },
       {
-        id: 'pagination-previous',
-        onClick: () => emit('change-current-page', props.currentPage - 1),
+        id: "pagination-previous",
+        onClick: () => emit("change-current-page", props.currentPage - 1),
         disabled: !previousPageIsPossible.value,
         minSquare: true,
       },
       {
-        id: 'pagination-current',
+        id: "pagination-current",
         disabled: totalPages.value <= 1,
         minSquare: true,
       },
       {
-        id: 'pagination-next',
-        onClick: () => emit('change-current-page', props.currentPage + 1),
+        id: "pagination-next",
+        onClick: () => emit("change-current-page", props.currentPage + 1),
         disabled: !nextPageIsPossible.value,
         minSquare: true,
       },
       {
-        id: 'pagination-last',
-        onClick: () => emit('change-current-page', totalPages.value),
+        id: "pagination-last",
+        onClick: () => emit("change-current-page", totalPages.value),
         disabled: !nextPageIsPossible.value,
         minSquare: true,
       },
-    ]));
+    ]);
 
     return {
       firstVisibleItemNumber,
       lastVisibleItemNumber,
       totalPages,
-      segmentedControlActions
+      segmentedControlActions,
     };
-  }
-})
+  },
+});
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables.scss';
+@import "../../assets/scss/variables.scss";
 
 .sw-pagination {
   display: flex;
@@ -203,7 +196,9 @@ export default defineComponent({
       margin-bottom: 0;
     }
 
-    .sw-field__label, .sw-field__hint, .sw-field--controls {
+    .sw-field__label,
+    .sw-field__hint,
+    .sw-field--controls {
       display: none;
     }
 

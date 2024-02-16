@@ -1,38 +1,38 @@
 export default {
   change: {
-    action: 'change',
+    action: "change",
     table: {
-      category: 'Events'
-    }
+      category: "Events",
+    },
   },
   updateModelValue: {
-    action: 'updateModelValue',
+    action: "updateModelValue",
     table: {
-      category: 'Events'
-    }
+      category: "Events",
+    },
   },
   inheritanceRemove: {
-    action: 'inheritance-remove',
+    action: "inheritance-remove",
     table: {
-      category: 'Events'
-    }
+      category: "Events",
+    },
   },
   inheritanceRestore: {
-    action: 'inheritance-restore',
+    action: "inheritance-restore",
     table: {
-      category: 'Events'
-    }
+      category: "Events",
+    },
   },
   label: {
-    control: { type: 'text' },
+    control: { type: "text" },
   },
   prefix: {
-    control: { type: 'text' },
+    control: { type: "text" },
   },
   suffix: {
-    control: { type: 'text' },
+    control: { type: "text" },
   },
   hint: {
-    control: { type: 'text' },
+    control: { type: "text" },
   },
 };

@@ -1,14 +1,17 @@
-import { action } from '@storybook/addon-actions';
-import SwEmailField from './sw-email-field.vue';
-import baseFieldArgTypes from '../_internal/sw-base-field/arg-types';
+import { action } from "@storybook/addon-actions";
+import SwEmailField from "./sw-email-field.vue";
+import baseFieldArgTypes from "../_internal/sw-base-field/arg-types";
 import type { StoryObj } from "@storybook/vue3";
 import type { SlottedMeta } from "@/_internal/story-helper";
-import { fn } from '@storybook/test';
+import { fn } from "@storybook/test";
 
-export type SwEmailFieldMeta = SlottedMeta<typeof SwEmailField, 'default' | 'updateModelValue' | 'change' | 'hint' | 'suffix' | 'prefix' | 'placeholder' | 'error'>;
+export type SwEmailFieldMeta = SlottedMeta<
+  typeof SwEmailField,
+"default" | "updateModelValue" | "change" | "hint" | "suffix" | "prefix" | "placeholder" | "error"
+>;
 
 export default {
-  title: 'Components/Form/sw-email-field',
+  title: "Components/Form/sw-email-field",
   component: SwEmailField,
   render: (args) => ({
     template: `
@@ -45,11 +48,11 @@ export default {
     components: { SwEmailField },
     data() {
       return {
-        currentValue: args.modelValue
+        currentValue: args.modelValue,
       };
     },
     watch: {
-      'args.modelValue'(v) {
+      "args.modelValue"(v) {
         if (this.currentValue === v) {
           return;
         }
@@ -84,21 +87,20 @@ export default {
     setup: () => {
       return {
         args,
-      }
-    }
+      };
+    },
   }),
   argTypes: {
     ...baseFieldArgTypes,
   },
   args: {
-    label: 'Emailfield',
-    updateModelValue: fn(action('updateModelValue')),
+    label: "Emailfield",
+    updateModelValue: fn(action("updateModelValue")),
   },
 } as SwEmailFieldMeta;
 
 export type SwEmailFieldStory = StoryObj<SwEmailFieldMeta>;
 
-export const DefaultStory: SwEmailFieldStory =  {
-  name: 'sw-email-field',
+export const DefaultStory: SwEmailFieldStory = {
+  name: "sw-email-field",
 };
-

@@ -32,11 +32,7 @@
           v-bind="{ identification, error, disabled, size, expand, collapse }"
         />
         <div class="sw-select__selection-indicators">
-          <sw-loader
-            v-if="isLoading"
-            class="sw-select__select-indicator"
-            size="16px"
-          />
+          <sw-loader v-if="isLoading" class="sw-select__select-indicator" size="16px" />
 
           <button
             v-if="!disabled && showClearableButton"
@@ -52,19 +48,13 @@
             />
           </button>
 
-          <sw-icon
-            class="sw-select__select-indicator"
-            name="solid-chevron-down-xs"
-          />
+          <sw-icon class="sw-select__select-indicator" name="solid-chevron-down-xs" />
         </div>
       </div>
 
       <template v-if="expanded">
         <transition name="sw-select-result-list-fade-down">
-          <slot
-            name="results-list"
-            v-bind="{ collapse }"
-          />
+          <slot name="results-list" v-bind="{ collapse }" />
         </transition>
       </template>
     </template>
@@ -78,29 +68,26 @@
     </template>
 
     <template #error>
-      <sw-field-error
-        v-if="error"
-        :error="error"
-      />
+      <sw-field-error v-if="error" :error="error" />
     </template>
   </sw-base-field>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import SwBaseField from '../sw-base-field/sw-base-field.vue';
-import SwIcon from '../../../icons-media/sw-icon/sw-icon.vue';
-import SwLoader from '../../../feedback-indicator/sw-loader/sw-loader.vue';
-import SwFieldError from '../../_internal/sw-field-error/sw-field-error.vue';
+import { defineComponent } from "vue";
+import SwBaseField from "../sw-base-field/sw-base-field.vue";
+import SwIcon from "../../../icons-media/sw-icon/sw-icon.vue";
+import SwLoader from "../../../feedback-indicator/sw-loader/sw-loader.vue";
+import SwFieldError from "../../_internal/sw-field-error/sw-field-error.vue";
 
 export default defineComponent({
-  name: 'SwSelectBase',
+  name: "SwSelectBase",
 
   components: {
-    'sw-base-field': SwBaseField,
-    'sw-icon': SwIcon,
-    'sw-loader': SwLoader,
-    'sw-field-error': SwFieldError,
+    "sw-base-field": SwBaseField,
+    "sw-icon": SwIcon,
+    "sw-loader": SwLoader,
+    "sw-field-error": SwFieldError,
   },
 
   inheritAttrs: false,
@@ -187,8 +174,8 @@ export default defineComponent({
   },
 
   computed: {
-    swFieldClasses(): { 'has--focus': boolean } {
-      return { 'has--focus': this.expanded };
+    swFieldClasses(): { "has--focus": boolean } {
+      return { "has--focus": this.expanded };
     },
   },
 
@@ -211,18 +198,18 @@ export default defineComponent({
       }
 
       this.expanded = true;
-      document.addEventListener('click', this.listenToClickOutside);
-      this.$emit('select-expanded');
+      document.addEventListener("click", this.listenToClickOutside);
+      this.$emit("select-expanded");
     },
 
     collapse(event?: Event) {
-      document.removeEventListener('click', this.listenToClickOutside);
+      document.removeEventListener("click", this.listenToClickOutside);
       this.expanded = false;
 
       // @ts-expect-error - target is set and contains dataset
       // do not let clearable button trigger change event
       if (event?.target?.dataset.clearableButton === undefined) {
-        this.$emit('select-collapsed');
+        this.$emit("select-collapsed");
       }
 
       // @ts-expect-error - event is a click event
@@ -234,12 +221,13 @@ export default defineComponent({
     },
 
     focusPreviousFormElement() {
-      const focusableSelector = 'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])';
+      const focusableSelector =
+        'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])';
       const myFocusable = this.$el.querySelector(focusableSelector);
       const keyboardFocusable = [
         ...document.querySelectorAll(focusableSelector),
-      // @ts-expect-error - target is set and contains dataset
-      ].filter((el) => !el.hasAttribute('disabled') && el.dataset.clearableButton === undefined);
+        // @ts-expect-error - target is set and contains dataset
+      ].filter((el) => !el.hasAttribute("disabled") && el.dataset.clearableButton === undefined);
 
       keyboardFocusable.forEach((element, index) => {
         if (index > 0 && element === myFocusable) {
@@ -255,7 +243,7 @@ export default defineComponent({
     listenToClickOutside(event: Event) {
       // @ts-expect-error - path exists in event
       let { path } = event;
-      if (typeof path === 'undefined') {
+      if (typeof path === "undefined") {
         path = this.computePath(event);
       }
 
@@ -279,7 +267,7 @@ export default defineComponent({
     },
 
     emitClear() {
-      this.$emit('clear');
+      this.$emit("clear");
     },
 
     focusParentSelect(event: KeyboardEvent) {
