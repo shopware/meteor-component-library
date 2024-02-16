@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     
-    <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     
     <link
       rel="prefetch"
@@ -46,34 +46,34 @@
     
     <link href="./sb-addons/interactions-8/manager-bundle.js" rel="modulepreload" />
     
-    <link href="./sb-addons/a11y-9/manager-bundle.js" rel="modulepreload" />
+    <link href="./sb-addons/storybook-dark-mode-esm-preset-9/manager-bundle.js" rel="modulepreload" />
     
-    <link href="./sb-addons/storybook-dark-mode-esm-preset-10/manager-bundle.js" rel="modulepreload" />
+    <link href="./sb-addons/storybook-10/manager-bundle.js" rel="modulepreload" />
       <style>
   /*
    * Hide all interaction tests in the menu
    * in development
    */
-   body:not(.show-interaction-tests) [id$='interaction-tests'],
-   body:not(.show-interaction-tests) [data-parent-id^='interaction-tests'] {
+  body:not(.show-interaction-tests) [id$="interaction-tests"],
+  body:not(.show-interaction-tests) [data-parent-id^="interaction-tests"] {
     display: none !important;
-   }
+  }
 
-   body.dark * {
-      color-scheme: dark;
-   }
+  body.dark * {
+    color-scheme: dark;
+  }
 
-   body.light * {
-      color-scheme: light;
-   }
+  body.light * {
+    color-scheme: light;
+  }
 </style>
 
 <script>
   setTimeout(() => {
-    if (window.CONFIG_TYPE === 'DEVELOPMENT') {
-      document.body.classList.add('show-interaction-tests');
+    if (window.CONFIG_TYPE === "DEVELOPMENT") {
+      document.body.classList.add("show-interaction-tests");
     }
-  }, 150)
+  }, 150);
 </script>
  
 
@@ -98,7 +98,7 @@
   "storyStoreV7": true,
   "argTypeTargetsV7": true,
   "legacyDecoratorFileOrder": false,
-  "interactionsDebugger": true
+  "disallowImplicitActionsInRenderV8": false
 };
         
       
@@ -150,9 +150,9 @@
       
       import './sb-addons/interactions-8/manager-bundle.js';
       
-      import './sb-addons/a11y-9/manager-bundle.js';
+      import './sb-addons/storybook-dark-mode-esm-preset-9/manager-bundle.js';
       
-      import './sb-addons/storybook-dark-mode-esm-preset-10/manager-bundle.js';
+      import './sb-addons/storybook-10/manager-bundle.js';
       
     </script>
 
