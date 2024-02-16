@@ -26,7 +26,7 @@ jobs:
         if: steps.node-cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Build distributed files
-        run: npm run build-vue
+        run: npm run build-only
       - uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
