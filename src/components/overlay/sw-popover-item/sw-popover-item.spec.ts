@@ -120,7 +120,7 @@ describe("sw-popover-item", () => {
 
     await checkbox.setValue(true);
 
-    expect(wrapper.emitted('change-checkbox')).toEqual([[true]]);
+    expect(wrapper.emitted('change-checkbox')).toStrictEqual([[true]]);
   })
 
   it("should emit change-checkbox with false value when clicking on the checkbox", async () => {
@@ -135,7 +135,7 @@ describe("sw-popover-item", () => {
 
     await checkbox.setValue(false);
 
-    expect(wrapper.emitted('change-checkbox')).toEqual([[false]]);
+    expect(wrapper.emitted('change-checkbox')).toStrictEqual([[false]]);
   })
 
   it("should render no icon", async () => {
@@ -314,7 +314,7 @@ describe("sw-popover-item", () => {
 
     await switchElement.setValue(true);
 
-    expect(wrapper.emitted('change-switch')).toEqual([[true]]);
+    expect(wrapper.emitted('change-switch')).toStrictEqual([[true]]);
   });
 
   it("should emit change-switch with false value when clicking on the switch input", async () => {
@@ -329,7 +329,7 @@ describe("sw-popover-item", () => {
 
     await switchElement.setValue(false);
 
-    expect(wrapper.emitted('change-switch')).toEqual([[false]]);
+    expect(wrapper.emitted('change-switch')).toStrictEqual([[false]]);
   });
 
   it("should show visibility", async() => {
@@ -399,7 +399,7 @@ describe("sw-popover-item", () => {
 
     await visibility.trigger('click');
 
-    expect(wrapper.emitted('change-visibility')).toEqual([[true]]);
+    expect(wrapper.emitted('change-visibility')).toStrictEqual([[true]]);
   });
 
   it("should emit change-visibility with false value when clicking on the visibility", async () => {
@@ -414,7 +414,7 @@ describe("sw-popover-item", () => {
 
     await visibility.trigger('click');
 
-    expect(wrapper.emitted('change-visibility')).toEqual([[false]]);
+    expect(wrapper.emitted('change-visibility')).toStrictEqual([[false]]);
   });
 
   it("should show options", async () => {

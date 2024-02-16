@@ -28,7 +28,7 @@ module.exports = {
     "vitest/require-hook": "off",
     "vitest/prefer-expect-assertions": "off",
     "vitest/max-expects": "off",
-    "vitest/prefer-strict-equal": "off",
+    "vitest/prefer-strict-equal": "error",
     "vitest/no-focused-tests": "error",
   }
 }

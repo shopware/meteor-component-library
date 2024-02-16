@@ -175,7 +175,7 @@ describe('src/app/component/form/sw-datepicker', () => {
     // can't test with DOM because of the flatpickr dependency
     wrapper.vm.timezoneFormattedValue = '2023-03-22T00:00:00.000+00:00';
 
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['2023-03-22T00:00:00.000+00:00']);
+    expect(wrapper.emitted('update:modelValue')?.[0]).toStrictEqual(['2023-03-22T00:00:00.000+00:00']);
   });
 
   it('should not convert the date when a timezone is set (type=time)', async () => {
@@ -203,7 +203,7 @@ describe('src/app/component/form/sw-datepicker', () => {
     // can't test with DOM because of the flatpickr dependency
     wrapper.vm.timezoneFormattedValue = '2023-03-22T00:00:00.000+00:00';
 
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['2023-03-22T00:00:00.000+00:00']);
+    expect(wrapper.emitted('update:modelValue')?.[0]).toStrictEqual(['2023-03-22T00:00:00.000+00:00']);
   });
 
   it('should convert the date when a timezone is set (type=datetime)', async () => {
@@ -217,7 +217,7 @@ describe('src/app/component/form/sw-datepicker', () => {
 
     // Skip this test because data-fns-tz is not working correctly in the test environment
     // Can't test with DOM because of the flatpickr dependency
-    // expect(wrapper.vm.timezoneFormattedValue).toEqual('2023-03-27T02:00:00.000Z');
+    // expect(wrapper.vm.timezoneFormattedValue).toStrictEqual('2023-03-27T02:00:00.000Z');
   });
 
   it('should emit a converted date when a timezone is set (type=datetime)', async () => {
@@ -233,6 +233,6 @@ describe('src/app/component/form/sw-datepicker', () => {
     wrapper.vm.timezoneFormattedValue = '2023-03-22T00:00:00.000+00:00';
 
     // Skip this test because data-fns-tz is not working correctly in the test environment
-    // expect(wrapper.emitted('update:modelValue')[0]).toEqual(['2023-03-21T23:00:00.000Z']);
+    // expect(wrapper.emitted('update:modelValue')[0]).toStrictEqual(['2023-03-21T23:00:00.000Z']);
   });
 });

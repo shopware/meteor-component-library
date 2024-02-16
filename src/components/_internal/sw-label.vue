@@ -108,12 +108,7 @@ export default defineComponent({
   },
 
   computed: {
-    labelClasses(): (string | {
-      [x: string]: boolean;
-      'sw-label--dismissable': boolean;
-      'sw-label--ghost': boolean;
-      'sw-label--caps': boolean;
-    })[] {
+    labelClasses(){
       return [
         `sw-label--appearance-${this.appearance}`,
         `sw-label--size-${this.size}`,

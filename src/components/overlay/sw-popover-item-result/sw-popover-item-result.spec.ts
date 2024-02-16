@@ -152,7 +152,7 @@ describe("sw-popover-item-result", () => {
     await groupActions.at(0)!.trigger("click");
 
     expect(wrapper.emitted("click-group-action")).toBeTruthy();
-    expect(wrapper.emitted("click-group-action")![0]).toEqual(["visible"]);
+    expect(wrapper.emitted("click-group-action")![0]).toStrictEqual(["visible"]);
 
     /** When user clicks on "Show all" action then the id of the group header should be emitted.
     * Here "hidden", because the "hidden" group header contains "Show all" action label.
@@ -160,7 +160,7 @@ describe("sw-popover-item-result", () => {
     expect(groupActions.at(1)!.text()).toContain("Show all");
     await groupActions.at(1)!.trigger("click");
 
-    expect(wrapper.emitted("click-group-action")![1]).toEqual(["hidden"]);
+    expect(wrapper.emitted("click-group-action")![1]).toStrictEqual(["hidden"]);
   })
 
   it("should render the options for the groups", async () => {
@@ -410,7 +410,7 @@ describe("sw-popover-item-result", () => {
 
     // expect correct event to be emitted
     expect(wrapper.emitted('change-order')).toBeTruthy();
-    expect(wrapper.emitted('change-order')?.[0]).toEqual([{
+    expect(wrapper.emitted('change-order')?.[0]).toStrictEqual([{
       dropId: "manufacturer",
       dropZone: "after",
       itemId: "active",

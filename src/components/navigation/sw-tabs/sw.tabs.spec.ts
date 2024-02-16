@@ -48,7 +48,7 @@ describe('src/app/component/navigation/sw-tabs', () => {
 
     await wrapper.find('.sw-tabs--item[data-item-name=bar]').trigger('click');
 
-    expect(wrapper.emitted('new-item-active')?.[0]).toEqual(['bar']);
+    expect(wrapper.emitted('new-item-active')?.[0]).toStrictEqual(['bar']);
   });
 
   it('should emit on clicked vertical tab', async () => {
@@ -58,6 +58,6 @@ describe('src/app/component/navigation/sw-tabs', () => {
 
     await wrapper.find('.sw-tabs--item[data-item-name=bar]').trigger('click');
 
-    expect(wrapper.emitted('new-item-active')?.[0]).toEqual(['bar']);
+    expect(wrapper.emitted('new-item-active')?.[0]).toStrictEqual(['bar']);
   });
 });

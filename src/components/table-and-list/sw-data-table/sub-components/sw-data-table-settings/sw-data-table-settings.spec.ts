@@ -169,7 +169,7 @@ describe("sw-data-table-settings", () => {
 
     // Check if the change-column-order event was emitted correctly
     expect(wrapper.emitted()['change-column-order']).toBeTruthy();
-    expect(wrapper.emitted()['change-column-order']![0]).toEqual([{
+    expect(wrapper.emitted()['change-column-order']![0]).toStrictEqual([{
       itemId: 'price',
       dropZone: 'before',
       dropId: 'manufacturer.name',
@@ -177,7 +177,7 @@ describe("sw-data-table-settings", () => {
 
     // Check if the change-column-visibility was emitted correctly
     expect(wrapper.emitted()['change-column-visibility']).toBeTruthy();
-    expect(wrapper.emitted()['change-column-visibility']![0]).toEqual(['price', true]);
+    expect(wrapper.emitted()['change-column-visibility']![0]).toStrictEqual(['price', true]);
   });
 
   it("should emit the correct events when the columns are changed with visibility to false", async () => {
@@ -199,7 +199,7 @@ describe("sw-data-table-settings", () => {
 
     // Check if the change-column-order event was emitted correctly
     expect(wrapper.emitted()['change-column-order']).toBeTruthy();
-    expect(wrapper.emitted()['change-column-order']![0]).toEqual([{
+    expect(wrapper.emitted()['change-column-order']![0]).toStrictEqual([{
       itemId: 'active',
       dropZone: 'before',
       dropId: 'stock',
@@ -207,7 +207,7 @@ describe("sw-data-table-settings", () => {
 
     // Check if the change-column-visibility was emitted correctly
     expect(wrapper.emitted()['change-column-visibility']).toBeTruthy();
-    expect(wrapper.emitted()['change-column-visibility']![0]).toEqual(['active', false]);
+    expect(wrapper.emitted()['change-column-visibility']![0]).toStrictEqual(['active', false]);
   });
 
   it("should change the visibility of all non-pinned column items to false when click on group header of visibility", async () => {

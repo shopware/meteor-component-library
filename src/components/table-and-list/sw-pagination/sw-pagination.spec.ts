@@ -50,7 +50,7 @@ describe("sw-pagination", () => {
       })
       const infoText = wrapper.find('.sw-pagination__info-text').text();
 
-      expect(infoText).toEqual(testCase.expectedText);
+      expect(infoText).toStrictEqual(testCase.expectedText);
     })
   });
 
@@ -61,7 +61,7 @@ describe("sw-pagination", () => {
       await wrapper.find('.sw-segmented-control__action-id-pagination-first')
         .trigger('click');
       
-      expect(wrapper.emitted()['change-current-page'][0]).toEqual([1]);
+      expect(wrapper.emitted()['change-current-page'][0]).toStrictEqual([1]);
     });
 
     it('should emit the previous page', async () => {
@@ -74,7 +74,7 @@ describe("sw-pagination", () => {
       await wrapper.find('.sw-segmented-control__action-id-pagination-previous')
         .trigger('click');
       
-      expect(wrapper.emitted()['change-current-page'][0]).toEqual([3]);
+      expect(wrapper.emitted()['change-current-page'][0]).toStrictEqual([3]);
     });
 
     it('should emit the next page', async () => {
@@ -87,7 +87,7 @@ describe("sw-pagination", () => {
       await wrapper.find('.sw-segmented-control__action-id-pagination-next')
         .trigger('click');
       
-      expect(wrapper.emitted()['change-current-page'][0]).toEqual([7]);
+      expect(wrapper.emitted()['change-current-page'][0]).toStrictEqual([7]);
     });
 
     it('should emit the last page', async () => {
@@ -100,7 +100,7 @@ describe("sw-pagination", () => {
       await wrapper.find('.sw-segmented-control__action-id-pagination-last')
         .trigger('click');
       
-      expect(wrapper.emitted()['change-current-page'][0]).toEqual([9]);
+      expect(wrapper.emitted()['change-current-page'][0]).toStrictEqual([9]);
     });
 
     it('should emit the given page', async () => {
@@ -114,7 +114,7 @@ describe("sw-pagination", () => {
       await pageInput.setValue(7)
       await pageInput.trigger('change')
 
-      expect(wrapper.emitted()['change-current-page'][0]).toEqual([7]);
+      expect(wrapper.emitted()['change-current-page'][0]).toStrictEqual([7]);
     });
   });
 });

@@ -100,7 +100,7 @@ export default defineComponent({
     },
 
     hasDescriptionSlot(): boolean {
-      return !!this.$slots.description || !!this.$slots.description;
+      return !!this.$slots.description;
     },
   },
 

@@ -946,7 +946,7 @@ describe("sw-data-table", () => {
       await window.dispatchEvent(new Event('mouseup'));
 
       // check if columnChanges prop was updated correctly
-      expect(wrapper.props().columnChanges).toEqual({ name: { width: 155 } });
+      expect(wrapper.props().columnChanges).toStrictEqual({ name: { width: 155 } });
     });
 
     it('should load the new widths from the property columnChanges when they were defined beforehand', async () => {
@@ -1058,7 +1058,7 @@ describe("sw-data-table", () => {
         },
       });
 
-      expect(wrapper.props().columnChanges).toEqual({
+      expect(wrapper.props().columnChanges).toStrictEqual({
         active: { visible: false },
         available: { width: 987 },
       });
@@ -1068,7 +1068,7 @@ describe("sw-data-table", () => {
       await wrapper.vm.$nextTick();
 
       // check if all changes were resetted
-      expect(wrapper.props().columnChanges).toEqual({
+      expect(wrapper.props().columnChanges).toStrictEqual({
         active: {},
         available: {},
       });
@@ -1077,7 +1077,7 @@ describe("sw-data-table", () => {
     it('should change the column order', async () => {
       const wrapper = createWrapper();
 
-      expect(wrapper.props().columnChanges).toEqual({});
+      expect(wrapper.props().columnChanges).toStrictEqual({});
 
       const SwDataTableSettings = wrapper.findComponent({ name: 'SwDataTableSettings' });
       await SwDataTableSettings.vm.$emit('change-column-order', {
@@ -1088,7 +1088,7 @@ describe("sw-data-table", () => {
       await wrapper.vm.$nextTick();
 
       // check if order was updated correctly
-      expect(wrapper.props().columnChanges).toEqual({
+      expect(wrapper.props().columnChanges).toStrictEqual({
         name: { position: 0 },
         price: { position: 100 },
         'manufacturer.name': { position: 200 },
@@ -1101,14 +1101,14 @@ describe("sw-data-table", () => {
     it('should change the column visibility', async () => {
       const wrapper = createWrapper();
 
-      expect(wrapper.props().columnChanges).toEqual({});
+      expect(wrapper.props().columnChanges).toStrictEqual({});
 
       const SwDataTableSettings = wrapper.findComponent({ name: 'SwDataTableSettings' });
       await SwDataTableSettings.vm.$emit('change-column-visibility', 'active', false);
       await wrapper.vm.$nextTick();
 
       // check if order was updated correctly
-      expect(wrapper.props().columnChanges).toEqual({
+      expect(wrapper.props().columnChanges).toStrictEqual({
         active: { visible: false }
       });
     });
