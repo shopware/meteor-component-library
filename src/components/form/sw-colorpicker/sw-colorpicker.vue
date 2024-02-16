@@ -326,8 +326,8 @@ export default defineComponent({
 
   data(): {
     localValue:
-    | string
-    | { string: string; red: string; green: string; blue: string; alpha?: string };
+      | string
+      | { string: string; red: string; green: string; blue: string; alpha?: string };
     visible: boolean;
     isDragging: boolean;
     userInput: null;
@@ -504,14 +504,14 @@ export default defineComponent({
 
     hexValue: {
       get():
-      | string
-      | {
-        string: string;
-        red: string;
-        green: string;
-        blue: string;
-        alpha?: string | undefined;
-      } {
+        | string
+        | {
+            string: string;
+            red: string;
+            green: string;
+            blue: string;
+            alpha?: string | undefined;
+          } {
         if (this.alphaValue < 1) {
           return this.convertHSLtoHEX(
             this.hueValue,
@@ -548,14 +548,14 @@ export default defineComponent({
     },
 
     convertedValue():
-    | string
-    | {
-      string: string;
-      red: string;
-      green: string;
-      blue: string;
-      alpha?: string;
-    } {
+      | string
+      | {
+          string: string;
+          red: string;
+          green: string;
+          blue: string;
+          alpha?: string;
+        } {
       switch (this.colorOutput) {
         case "auto": {
           return this.alphaValue < 1 ? this.rgbValue : this.hexValue;
@@ -886,12 +886,12 @@ export default defineComponent({
     ):
       | string
       | {
-        string: string;
-        red: string;
-        green: string;
-        blue: string;
-        alpha?: string | undefined;
-      } {
+          string: string;
+          red: string;
+          green: string;
+          blue: string;
+          alpha?: string | undefined;
+        } {
       const hsla = {
         hue: previousHue,
         saturation: previousSaturation,
@@ -912,12 +912,12 @@ export default defineComponent({
       },
     ):
       | {
-        string: string;
-        red: string;
-        green: string;
-        blue: string;
-        alpha?: string;
-      }
+          string: string;
+          red: string;
+          green: string;
+          blue: string;
+          alpha?: string;
+        }
       | string {
       const validModes = ["hex", "rgb"];
       if (!validModes.includes(mode)) {

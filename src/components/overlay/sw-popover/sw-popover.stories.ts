@@ -9,7 +9,7 @@ import type { StoryObj } from "@storybook/vue3";
 
 export type SwPopoverMeta = SlottedMeta<
   typeof SwPopover,
-"default" | "go-back" | "goBack" | "click-options" | "clickOptions"
+  "default" | "go-back" | "goBack" | "click-options" | "clickOptions"
 >;
 
 export default {

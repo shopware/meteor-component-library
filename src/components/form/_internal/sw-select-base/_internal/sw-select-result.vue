@@ -80,11 +80,11 @@ export default defineComponent({
     resultClasses(): (
       | string
       | {
-        [className: string]: boolean;
-        "is--active": boolean;
-        "is--disabled": boolean;
-        "has--description": boolean;
-      }
+          [className: string]: boolean;
+          "is--active": boolean;
+          "is--disabled": boolean;
+          "has--description": boolean;
+        }
     )[] {
       return [
         {

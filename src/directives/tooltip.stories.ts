@@ -5,13 +5,13 @@ import { defineComponent } from "vue";
 
 const meta: SlottedMeta<
   typeof SwIcon,
-| "message"
-| "width"
-| "showDelay"
-| "hideDelay"
-| "disabled"
-| "appearance"
-| "showOnDisabledElements"
+  | "message"
+  | "width"
+  | "showDelay"
+  | "hideDelay"
+  | "disabled"
+  | "appearance"
+  | "showOnDisabledElements"
 > = {
   title: "Directives/Tooltip",
   component: SwIcon,

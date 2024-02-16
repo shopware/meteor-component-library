@@ -119,10 +119,10 @@ export default defineComponent({
     },
 
     avatarImage():
-    | {
-      "background-image": string;
-    }
-    | StyleValue {
+      | {
+          "background-image": string;
+        }
+      | StyleValue {
       if (this.imageUrl) {
         return { "background-image": `url('${this.imageUrl}')` };
       }

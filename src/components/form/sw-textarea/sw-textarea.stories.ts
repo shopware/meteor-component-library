@@ -4,15 +4,15 @@ import type { SlottedMeta } from "@/_internal/story-helper";
 
 export type SwTextareaMeta = SlottedMeta<
   typeof SwTextarea,
-| "default"
-| "change"
-| "hint"
-| "label"
-| "placeholder"
-| "error"
-| "inheritanceRestore"
-| "inheritanceRemove"
-| "isInherited"
+  | "default"
+  | "change"
+  | "hint"
+  | "label"
+  | "placeholder"
+  | "error"
+  | "inheritanceRestore"
+  | "inheritanceRemove"
+  | "isInherited"
 >;
 
 export default {

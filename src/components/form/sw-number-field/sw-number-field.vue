@@ -218,7 +218,7 @@ export default defineComponent({
 
       return this.fillDigits && this.numberType !== "int"
         ? // @ts-expect-error - wrong type because of component extends
-        this.currentValue.toFixed(this.digits)
+          this.currentValue.toFixed(this.digits)
         : this.currentValue.toString();
     },
 
@@ -366,7 +366,7 @@ export default defineComponent({
       const float = parseFloat(splits.join(".")).toFixed(decimals);
       return decimals > this.digits
         ? // @ts-expect-error - can be calculated
-        Math.round(float * 10 ** this.digits) / 10 ** this.digits
+          Math.round(float * 10 ** this.digits) / 10 ** this.digits
         : Number(float);
     },
 

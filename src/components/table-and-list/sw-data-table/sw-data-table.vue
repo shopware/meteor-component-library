@@ -734,15 +734,15 @@ export default defineComponent({
      */
     bulkEditMoreActions: {
       type: Array as PropType<
-      {
-        id: string;
-        label: string;
-        onClick: () => void;
-        icon?: "default" | "critical" | "active" | string;
-        type?: SwPopoverItemType;
-        metaCopy?: string;
-        contextualDetail?: string;
-      }[]
+        {
+          id: string;
+          label: string;
+          onClick: () => void;
+          icon?: "default" | "critical" | "active" | string;
+          type?: SwPopoverItemType;
+          metaCopy?: string;
+          contextualDetail?: string;
+        }[]
       >,
       required: false,
       default: () => [],

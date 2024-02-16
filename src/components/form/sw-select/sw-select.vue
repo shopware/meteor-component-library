@@ -182,7 +182,7 @@ export default defineComponent({
      */
     modelValue: {
       type: [String, Number, Boolean, Array, null, undefined] as PropType<
-      string | number | boolean | unknown[] | null | undefined
+        string | number | boolean | unknown[] | null | undefined
       >,
       required: false,
       default: null,

@@ -5,16 +5,16 @@ import type { SlottedMeta } from "@/_internal/story-helper";
 
 export type SwUrlFieldMeta = SlottedMeta<
   typeof SwUrlField,
-| "default"
-| "change"
-| "hint"
-| "label"
-| "placeholder"
-| "error"
-| "inheritanceRestore"
-| "inheritanceRemove"
-| "isInherited"
-| "updateModelValue"
+  | "default"
+  | "change"
+  | "hint"
+  | "label"
+  | "placeholder"
+  | "error"
+  | "inheritanceRestore"
+  | "inheritanceRemove"
+  | "isInherited"
+  | "updateModelValue"
 >;
 
 export default {

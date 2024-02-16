@@ -6,7 +6,7 @@ import { fn } from "@storybook/test";
 
 export type SwDatepickerMeta = SlottedMeta<
   typeof SwDatepicker,
-"default" | "updateModelValue" | "modelValue"
+  "default" | "updateModelValue" | "modelValue"
 >;
 
 export default {

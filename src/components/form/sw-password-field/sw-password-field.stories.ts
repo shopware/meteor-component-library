@@ -7,16 +7,16 @@ import { fn } from "@storybook/test";
 
 export type SwPasswordFieldMeta = SlottedMeta<
   typeof SwPasswordField,
-| "default"
-| "inheritanceRemove"
-| "inheritanceRestore"
-| "isInherited"
-| "change"
-| "value"
-| "hint"
-| "suffix"
-| "prefix"
-| "error"
+  | "default"
+  | "inheritanceRemove"
+  | "inheritanceRestore"
+  | "isInherited"
+  | "change"
+  | "value"
+  | "hint"
+  | "suffix"
+  | "prefix"
+  | "error"
 >;
 
 export default {

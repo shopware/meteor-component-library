@@ -10,6 +10,7 @@ module.exports = {
     'plugin:storybook/recommended',
     'plugin:vitest-globals/recommended',
     'plugin:vitest/all',
+    'prettier'
   ],
   parserOptions: {
     ecmaVersion: 'latest'
@@ -20,7 +21,6 @@ module.exports = {
     "vitest-globals/env": true
   },
   rules: {
-    "@typescript-eslint/indent": ["error", 2],
     "vitest/consistent-test-filename": ["error",{
       pattern: ".*\\.spec\\.ts$",
     }],

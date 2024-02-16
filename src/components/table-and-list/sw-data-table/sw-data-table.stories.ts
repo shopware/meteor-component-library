@@ -9,35 +9,35 @@ import { defineComponent } from "vue";
 
 export type SwDataTableMeta = SlottedMeta<
   typeof SwDataTable,
-| "_storybook_internal_show_experimental_warning_"
-| "reload"
-| "pagination-limit-change"
-| "paginationLimitChange"
-| "pagination-current-page-change"
-| "paginationCurrentPageChange"
-| "search-value-change"
-| "searchValueChange"
-| "sort-change"
-| "sortChange"
-| "open-details"
-| "openDetails"
-| "selection-change"
-| "selectionChange"
-| "multiple-selection-change"
-| "multipleSelectionChange"
-| "bulk-edit"
-| "bulkEdit"
-| "bulk-delete"
-| "bulkDelete"
-| "change-show-outlines"
-| "changeShowOutlines"
-| "change-show-stripes"
-| "changeShowStripes"
-| "change-outline-framing"
-| "changeOutlineFraming"
-| "change-enable-row-numbering"
-| "changeEnableRowNumbering"
-| "_remove_primary_toolbar_button_"
+  | "_storybook_internal_show_experimental_warning_"
+  | "reload"
+  | "pagination-limit-change"
+  | "paginationLimitChange"
+  | "pagination-current-page-change"
+  | "paginationCurrentPageChange"
+  | "search-value-change"
+  | "searchValueChange"
+  | "sort-change"
+  | "sortChange"
+  | "open-details"
+  | "openDetails"
+  | "selection-change"
+  | "selectionChange"
+  | "multiple-selection-change"
+  | "multipleSelectionChange"
+  | "bulk-edit"
+  | "bulkEdit"
+  | "bulk-delete"
+  | "bulkDelete"
+  | "change-show-outlines"
+  | "changeShowOutlines"
+  | "change-show-stripes"
+  | "changeShowStripes"
+  | "change-outline-framing"
+  | "changeOutlineFraming"
+  | "change-enable-row-numbering"
+  | "changeEnableRowNumbering"
+  | "_remove_primary_toolbar_button_"
 >;
 export default {
   title: "Components/Table and list/sw-data-table",
@@ -213,13 +213,13 @@ export default {
 
             return value
               ? {
-                variant: "positive",
-                label: "Active",
-              }
+                  variant: "positive",
+                  label: "Active",
+                }
               : {
-                variant: "critical",
-                label: "Inactive",
-              };
+                  variant: "critical",
+                  label: "Inactive",
+                };
           },
         },
       },

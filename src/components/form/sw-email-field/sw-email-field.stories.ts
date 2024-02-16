@@ -7,7 +7,7 @@ import { fn } from "@storybook/test";
 
 export type SwEmailFieldMeta = SlottedMeta<
   typeof SwEmailField,
-"default" | "updateModelValue" | "change" | "hint" | "suffix" | "prefix" | "placeholder" | "error"
+  "default" | "updateModelValue" | "change" | "hint" | "suffix" | "prefix" | "placeholder" | "error"
 >;
 
 export default {

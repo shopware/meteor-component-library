@@ -5,17 +5,17 @@ import type { SlottedMeta } from "@/_internal/story-helper";
 
 export type SwTextFieldMeta = SlottedMeta<
   typeof SwTextField,
-| "default"
-| "change"
-| "prefix"
-| "suffix"
-| "hint"
-| "label"
-| "placeholder"
-| "error"
-| "inheritanceRestore"
-| "inheritanceRemove"
-| "isInherited"
+  | "default"
+  | "change"
+  | "prefix"
+  | "suffix"
+  | "hint"
+  | "label"
+  | "placeholder"
+  | "error"
+  | "inheritanceRestore"
+  | "inheritanceRemove"
+  | "isInherited"
 >;
 
 export default {

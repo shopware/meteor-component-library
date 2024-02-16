@@ -49,13 +49,13 @@ export const TestPageChange = {
 };
 
 (TestPageChange.args = Default.args),
-(TestPageChange.play = async () => {
-  document.querySelector(".sw-segmented-control__action-id-pagination-next").click();
+  (TestPageChange.play = async () => {
+    document.querySelector(".sw-segmented-control__action-id-pagination-next").click();
 
-  await flushPromises();
+    await flushPromises();
 
-  const infoText = document.querySelector(".sw-pagination__info-text");
+    const infoText = document.querySelector(".sw-pagination__info-text");
 
-  expect(infoText).not.toBeNull();
-  expect(infoText.innerText).toEqual("26-50 of 100");
-});
+    expect(infoText).not.toBeNull();
+    expect(infoText.innerText).toEqual("26-50 of 100");
+  });

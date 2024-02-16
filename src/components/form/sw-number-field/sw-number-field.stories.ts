@@ -5,16 +5,16 @@ import type { SlottedMeta } from "@/_internal/story-helper";
 
 export type SwNumberFieldMeta = SlottedMeta<
   typeof SwNumberField,
-| "default"
-| "inheritanceRemove"
-| "inheritanceRestore"
-| "isInherited"
-| "change"
-| "modelValue"
-| "hint"
-| "suffix"
-| "prefix"
-| "error"
+  | "default"
+  | "inheritanceRemove"
+  | "inheritanceRestore"
+  | "isInherited"
+  | "change"
+  | "modelValue"
+  | "hint"
+  | "suffix"
+  | "prefix"
+  | "error"
 >;
 
 export default {

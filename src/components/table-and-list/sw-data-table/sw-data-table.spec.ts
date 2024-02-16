@@ -38,13 +38,13 @@ const columnsFixture: ColumnDefinition[] = [
 
         return value
           ? {
-            variant: "positive",
-            label: "Active",
-          }
+              variant: "positive",
+              label: "Active",
+            }
           : {
-            variant: "critical",
-            label: "Inactive",
-          };
+              variant: "critical",
+              label: "Inactive",
+            };
       },
     },
     position: 200,

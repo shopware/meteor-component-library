@@ -4,7 +4,7 @@ import type { SlottedMeta } from "@/_internal/story-helper";
 
 export type SwSwitchMeta = SlottedMeta<
   typeof SwSwitch,
-"default" | "error" | "inheritanceRemove" | "change" | "label"
+  "default" | "error" | "inheritanceRemove" | "change" | "label"
 >;
 
 export default {

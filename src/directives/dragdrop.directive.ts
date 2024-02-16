@@ -12,46 +12,46 @@ export interface DragConfig<DATA = unknown> {
   invalidDragCls: string;
   preventEvent: boolean;
   validateDrop:
-  | null
-  | ((
-    dragConfigData: DragConfig<DATA>["data"],
-    dropConfigData: DropConfig<DATA>["data"],
-  ) => boolean);
+    | null
+    | ((
+        dragConfigData: DragConfig<DATA>["data"],
+        dropConfigData: DropConfig<DATA>["data"],
+      ) => boolean);
   validateDrag:
-  | null
-  | ((
-    dragConfigData: DragConfig<DATA>["data"],
-    dropConfigData: DropConfig<DATA>["data"],
-  ) => boolean);
+    | null
+    | ((
+        dragConfigData: DragConfig<DATA>["data"],
+        dropConfigData: DropConfig<DATA>["data"],
+      ) => boolean);
   validateDragStart:
-  | null
-  | ((
-    dragConfigData: DragConfig<DATA>["data"],
-    el: HTMLElement,
-    event: MouseEvent | TouchEvent,
-  ) => boolean);
+    | null
+    | ((
+        dragConfigData: DragConfig<DATA>["data"],
+        el: HTMLElement,
+        event: MouseEvent | TouchEvent,
+      ) => boolean);
   onDragStart:
-  | null
-  | ((dragConfig: DragConfig<DATA>, el: HTMLElement, dragElement: HTMLElement) => void);
+    | null
+    | ((dragConfig: DragConfig<DATA>, el: HTMLElement, dragElement: HTMLElement) => void);
   onDragEnter:
-  | null
-  | ((
-    dragConfigData: DragConfig<DATA>["data"],
-    dropConfigData: DropConfig<DATA>["data"],
-    valid: boolean,
-  ) => void);
+    | null
+    | ((
+        dragConfigData: DragConfig<DATA>["data"],
+        dropConfigData: DropConfig<DATA>["data"],
+        valid: boolean,
+      ) => void);
   onDragLeave:
-  | null
-  | ((
-    dragConfigData: DragConfig<DATA>["data"],
-    dropConfigData: DropConfig<DATA>["data"],
-  ) => void);
+    | null
+    | ((
+        dragConfigData: DragConfig<DATA>["data"],
+        dropConfigData: DropConfig<DATA>["data"],
+      ) => void);
   onDrop:
-  | null
-  | ((
-    dragConfigData: DragConfig<DATA>["data"],
-    dropConfigData: DropConfig<DATA>["data"],
-  ) => void);
+    | null
+    | ((
+        dragConfigData: DragConfig<DATA>["data"],
+        dropConfigData: DropConfig<DATA>["data"],
+      ) => void);
   data: null | DATA;
   disabled: boolean;
 }
@@ -62,17 +62,17 @@ export interface DropConfig<DATA = unknown> {
   validDropCls: string;
   invalidDropCls: string;
   validateDrop:
-  | null
-  | ((
-    dragConfigData: DragConfig<DATA>["data"],
-    dropConfigData: DropConfig<DATA>["data"],
-  ) => boolean);
+    | null
+    | ((
+        dragConfigData: DragConfig<DATA>["data"],
+        dropConfigData: DropConfig<DATA>["data"],
+      ) => boolean);
   onDrop:
-  | null
-  | ((
-    dragConfigData: DragConfig<DATA>["data"],
-    dropConfigData: DropConfig<DATA>["data"],
-  ) => void);
+    | null
+    | ((
+        dragConfigData: DragConfig<DATA>["data"],
+        dropConfigData: DropConfig<DATA>["data"],
+      ) => void);
   data: null | DATA;
 }
 
