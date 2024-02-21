@@ -1,1 +1,0 @@
-function s(e){return new Promise((r,i)=>{const t=(n=0)=>{if(n>100){i(new Error(`"waitUntilRendered": condition ${e.toString().replace(/(\r\n|\n|\r)/gm,"")} not met after 2.5 seconds`));return}e()?r(!0):window.setTimeout(()=>t(n+1),25)};t()})}export{s as w};
